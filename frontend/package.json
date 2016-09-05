@@ -6,6 +6,8 @@
     "react-scripts": "0.4.1"
   },
   "dependencies": {
+    "dejavu-sans-condensed": "^1.0.0",
+    "ptsans-npm-webfont": "0.0.4",
     "react": "^15.3.1",
     "react-dom": "^15.3.1"
   },

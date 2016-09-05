@@ -1,0 +1,21 @@
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+}
+
+.App-menu {
+  background-color: rgba(254, 185, 19, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}
+
+.App-main {
+  padding-left: 2em;
+}

@@ -3,9 +3,9 @@
  */
 import React, { Component } from 'react';
 
-const MenuLink = (props) => {
-    return <a href={props.target || '#'}>
-        {props.name || 'Link'}
+const MenuLink = ({target, name}) => {
+    return <a href={target || '#'}>
+        {name || 'Link'}
     </a>
 }
 

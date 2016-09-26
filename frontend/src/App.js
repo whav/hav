@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from './logo.png';
 import './App.css';
 import MainMenu from './Menu'
 
@@ -12,8 +12,10 @@ class App extends Component {
           <MainMenu />
         </div>
         <div className="App-main">
-          <h1>Welcome to the HAV</h1>
-          <p>At some point there will be some actual content here.</p>
+            <main>
+                <h1>Welcome to the HAV</h1>
+                <p>At some point there will be some actual content here.</p>
+            </main>
         </div>
       </div>
     );

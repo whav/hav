@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.6.0"
+    "react-scripts": "^0.6.1"
   },
   "dependencies": {
     "dejavu-sans-condensed": "^1.0.0",
@@ -20,5 +20,5 @@
   "eslintConfig": {
     "extends": "./node_modules/react-scripts/config/eslint.js"
   },
-  "homepage" : "http://127.0.0.1:3000/"
+  "homepage": "http://127.0.0.1:3000/"
 }

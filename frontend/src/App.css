@@ -14,9 +14,8 @@
 }
 
 .App-logo {
-  max-width: 200px;
-  margin-bottom: 2em;
-  margin-top: 1em;
+  width: 90%;
+  margin: 1em auto 2em auto;
 }
 
 .App-menu {

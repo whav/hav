@@ -1,10 +1,7 @@
 {
-  "name": "frontend",
+  "name": "hav-frontend",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "react-scripts": "^0.6.1"
-  },
   "dependencies": {
     "dejavu-sans-condensed": "^1.0.0",
     "ptsans-npm-webfont": "0.0.4",
@@ -12,13 +9,16 @@
     "react-dom": "^15.3.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "babel": "./node_modules/.bin/babel-node --presets es2015",
+    "webpack": "npm run babel -- ./node_modules/.bin/webpack --progress",
+    "build": "NODE_ENV=production npm run webpack",
+    "build-dev": "NODE_ENV=local npm run webpack",
+    "dev": "NODE_ENV=local npm run babel -- ./node_modules/.bin/webpack --progress --watch",
+    "hmr": "NODE_ENV=local-hmr npm run babel -- ./node_modules/.bin/webpack-dev-server --progress --hot"
   },
-  "eslintConfig": {
-    "extends": "./node_modules/react-scripts/config/eslint.js"
-  },
-  "homepage": "http://127.0.0.1:3000/"
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "webpack": "^2.1.0-beta.25"
+  }
 }

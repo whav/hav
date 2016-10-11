@@ -1,7 +1,7 @@
 import path from 'path';
+
 import webpack from 'webpack';
 import BundleTracker from 'webpack-bundle-tracker';
-
 import baseConfig from './webpack.base.config.js';
 
 module.exports = (opts) => {

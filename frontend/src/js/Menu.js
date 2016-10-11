@@ -1,6 +1,3 @@
-/**
- * Created by sean on 05/09/16.
- */
 import React, { Component } from 'react';
 
 const MenuLink = ({target, name}) => {

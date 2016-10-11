@@ -1,7 +1,6 @@
 var path = require("path");
 var webpack = require('webpack');
 var BundleTracker = require('webpack-bundle-tracker');
-var precss       = require('precss');
 var autoprefixer = require('autoprefixer');
 
 
@@ -26,10 +25,10 @@ module.exports = (opts) => {
   return {
     context: PROJECT_ROOT,
     entry: {
-        main: './js/index',
+        main: './src/js/index',
         vendor: [
-            './css/App.css',
-            './css/index.css',
+            './src/css/App.css',
+            './src/css/index.css',
             'react',
             'react-dom',
         ]
@@ -39,7 +38,7 @@ module.exports = (opts) => {
         filename: "[name]-[hash].js"
     },
     plugins,
-    resolve: {extensions: ['', '.js']},
+    resolve: {extensions: ['.js', '.json']},
     module: {
         loaders: [
             {test: /\.css$/, loaders: ['style', 'css?-autoprefixer', 'postcss']},
@@ -63,20 +62,9 @@ module.exports = (opts) => {
             {
                 test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel', // 'babel-loader' is also a legal name to reference
-                query: {
-                    presets: ['react', 'es2015', 'stage-2'],
-                    cacheDirectory: true
-                }
+                loader: 'babel'
             }
         ],
-    },
-    postcss: function () {
-      return [
-        precss,
-        autoprefixer
-      ];
     }
-
   };
 };

@@ -12,7 +12,7 @@ module.exports = (opts) => {
     config = baseConfig(opts),
     output_path = path.resolve(PROJECT_ROOT, 'production/');
 
-
+  console.log(PROJECT_ROOT);
   return {
     ...config,
     output: {

@@ -11,6 +11,8 @@
  * @returns {object} - returns a webpack config object
  */
 
+console.log('Webpack!')
+
 const OPTIONS = {
   PROJECT_ROOT: __dirname,
   NODE_ENV: process.env.NODE_ENV,

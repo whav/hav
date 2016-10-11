@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "babel": "./node_modules/.bin/babel-node --presets es2015",
+    "babel": "./node_modules/.bin/babel-node",
     "webpack": "npm run babel -- ./node_modules/.bin/webpack --progress",
     "build": "NODE_ENV=production npm run webpack",
     "build-dev": "NODE_ENV=local npm run webpack",
@@ -18,7 +18,19 @@
     "hmr": "NODE_ENV=local-hmr npm run babel -- ./node_modules/.bin/webpack-dev-server --progress --hot"
   },
   "devDependencies": {
+    "autoprefixer": "^6.5.0",
     "babel-cli": "^6.16.0",
-    "webpack": "^2.1.0-beta.25"
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-3": "^6.17.0",
+    "css-loader": "^0.25.0",
+    "file-loader": "^0.9.0",
+    "postcss-loader": "^0.13.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^2.1.0-beta.25",
+    "webpack-bundle-tracker": "0.0.93"
   }
 }

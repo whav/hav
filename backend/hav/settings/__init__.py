@@ -37,8 +37,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Wagtail dependencies start here
+    'wagtail.wagtailforms',
+    'wagtail.wagtailredirects',
+    'wagtail.wagtailembeds',
+    'wagtail.wagtailsites',
+    'wagtail.wagtailusers',
+    'wagtail.wagtailsnippets',
+    'wagtail.wagtaildocs',
+    'wagtail.wagtailimages',
+    'wagtail.wagtailsearch',
+    'wagtail.wagtailadmin',
+    'wagtail.wagtailcore',
+    'modelcluster',
+    'taggit',
+    # and end here
     'channels',
-    'webpack_loader'
+    'webpack_loader',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'wagtail.wagtailcore.middleware.SiteMiddleware',
+    'wagtail.wagtailredirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'hav.urls'
@@ -87,7 +104,6 @@ DATABASES = {
         'NAME': 'whav'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -146,3 +162,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     WEBPACK_BUILD_PATH,
 )
+
+WAGTAIL_SITE_NAME = 'Himalaya Archive Vienna'

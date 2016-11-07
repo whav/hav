@@ -1,4 +1,4 @@
-import baseConfig from './webpack.local.config.js';
+import baseConfig from './webpack.dev.config.js';
 
 
 module.exports = (opts) => {

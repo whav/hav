@@ -10,7 +10,7 @@ module.exports = (opts) => {
   const
     {CDN_PATH, PROJECT_ROOT} = opts,
     config = baseConfig(opts),
-    output_path = path.resolve(PROJECT_ROOT, 'production/');
+    output_path = path.resolve(PROJECT_ROOT, 'dist/');
 
   console.log(PROJECT_ROOT);
   return {
@@ -26,7 +26,7 @@ module.exports = (opts) => {
       // production bundle stats file
       new BundleTracker({
         path: output_path,
-        filename: 'webpack-stats-production.json'
+        filename: 'webpack-stats.json'
       }),
       // pass options to uglify
       new webpack.LoaderOptionsPlugin({

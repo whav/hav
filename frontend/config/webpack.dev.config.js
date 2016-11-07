@@ -16,7 +16,6 @@ module.exports = (opts) => {
     output: {
       ...config.output,
       publicPath: '/static/wp/',
-
     },
     plugins: [
       ...config.plugins,

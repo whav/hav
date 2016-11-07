@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load render_bundle from webpack_loader %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,6 +10,7 @@
 </head>
 <body>
 <div id="root"></div>
-<script type="text/javascript" src="{% static 'static/js/bundle.js' %}"></script>
+{% render_bundle 'vendor' %}
+{% render_bundle 'main' %}
 </body>
 </html>

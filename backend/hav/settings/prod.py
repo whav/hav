@@ -1,3 +1,3 @@
-from . import *
+from . import *  #noqa
 
 DEBUG = False

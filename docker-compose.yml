@@ -1,0 +1,14 @@
+version: '2'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 8000:80
+  db:
+    image: postgres
+  django:
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile

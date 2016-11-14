@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     # and end here
     'channels',
     'webpack_loader',
+    'cms',
 ]
 
 MIDDLEWARE = [
@@ -162,5 +163,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     WEBPACK_BUILD_PATH,
 )
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'dist/media/')
+
 
 WAGTAIL_SITE_NAME = 'Himalaya Archive Vienna'

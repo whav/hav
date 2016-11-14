@@ -11,3 +11,6 @@ WEBPACK_LOADER['DEFAULT']['STATS_FILE'] = os.path.join(
 )
 
 WAGTAIL_SITE_NAME = 'HAV Development page'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'dist/media/')
+MEDIA_URL = '/media/'

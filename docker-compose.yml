@@ -12,3 +12,5 @@ services:
     build:
       context: .
       dockerfile: ./docker/backend/Dockerfile
+    environment:
+      - DEBUG

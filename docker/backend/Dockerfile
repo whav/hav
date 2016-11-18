@@ -6,4 +6,4 @@ ADD ./backend/ /code/
 RUN pip install -U pip
 RUN pip install -r requirements.txt
 RUN pip install -r requirements-dev.txt
-RUN python manage.py runserver
+RUN cd /code && ls -lah && python manage.py runserver

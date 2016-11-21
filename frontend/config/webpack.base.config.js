@@ -31,7 +31,8 @@ module.exports = (opts) => {
             './src/css/index.css',
             'react',
             'react-dom',
-        ]
+        ],
+        upload: './src/js/incoming'
     },
     output: {
         path: path.resolve(PROJECT_ROOT, './build/'),
@@ -41,28 +42,28 @@ module.exports = (opts) => {
     resolve: {extensions: ['.js', '.json']},
     module: {
         loaders: [
-            {test: /\.css$/, loaders: ['style', 'css?-autoprefixer', 'postcss']},
+            {test: /\.css$/, loaders: ['style-loader', 'css-loader?-autoprefixer', 'postcss-loader']},
             {
                 test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url?limit=10000"
+                loader: "url-loader?limit=10000"
             },
             {
                 test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
-                loader: 'file'
+                loader: 'file-loader'
             },
             {
                 test: /\.(png|jpg|jpeg)?$/,
-                loader: "url?limit=10000"
+                loader: "url-loader?limit=10000"
             },
             {
                 test: /\.json$/,
-                loader: 'json'
+                loader: 'json-loader'
             },
             // everything else
             {
                 test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel'
+                loader: 'babel-loader'
             }
         ],
     }

@@ -22,12 +22,9 @@ module.exports = (() => {
     case 'production':
       return require('./config/webpack.production.config.js');
     case 'development':
+      console.log('development selected..')
       return require('./config/webpack.dev.config.js');
-    // case 'local-hmr':
-    //     return require('./config/webpack.dev.hmr.config.js');
-    // case 'test':
-    //   return require('./config/webpack.test.config.js');
     default:
-      return require('./config/webpack.dev.config.js');
+      return require('./config/webpack.production.config.js');
   }
 })()(OPTIONS);

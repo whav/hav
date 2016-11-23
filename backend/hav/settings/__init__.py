@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'webpack_loader'
+    'webpack_loader',
+    'rest_framework',
+    'incoming',
 ]
 
 MIDDLEWARE = [
@@ -79,10 +81,12 @@ WSGI_APPLICATION = 'hav.wsgi.application'
 
 DATABASES = {
     'default': {
+        # 'HOST': 'db',
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'hav',
     },
     'whav': {
+        # 'HOST': 'db',
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'whav'
     }
@@ -144,5 +148,5 @@ WEBPACK_LOADER = {
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    WEBPACK_BUILD_PATH,
+    ('wp', WEBPACK_BUILD_PATH),
 )

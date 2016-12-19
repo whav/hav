@@ -17,7 +17,7 @@
     "build": "NODE_ENV=production npm run webpack",
     "build-dev": "NODE_ENV=development npm run webpack",
     "dev": "NODE_ENV=development npm run babel -- ./node_modules/.bin/webpack --progress --watch",
-    "hmr": "NODE_ENV=development-hmr npm run babel -- ./node_modules/.bin/webpack-dev-server --progress --hot"
+    "hmr": "NODE_ENV=development BABEL_ENV=hmr npm run babel -- ./node_modules/.bin/webpack-dev-server --progress --hot"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.0",
@@ -33,7 +33,7 @@
     "postcss-loader": "^0.13.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^2.1.0-beta.25",
+    "webpack": "2.2.0-rc.1",
     "webpack-bundle-tracker": "0.0.93",
     "webpack-cleanup-plugin": "^0.4.1",
     "webpack-dev-server": "^1.16.2"

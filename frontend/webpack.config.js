@@ -14,15 +14,18 @@
 const OPTIONS = {
   PROJECT_ROOT: __dirname,
   NODE_ENV: process.env.NODE_ENV,
-  CDN_PATH: process.env.CDN_PATH,
+  CDN_PATH: process.env.CDN_PATH
 };
 
 module.exports = (() => {
+  let hmr = process.env.BABEL_ENV || false;
   switch (process.env.NODE_ENV) {
     case 'production':
       return require('./config/webpack.production.config.js');
     case 'development':
-      console.log('development selected..')
+      if (hmr) {
+        return require('./config/webpack.dev.hmr.config.js')
+      }
       return require('./config/webpack.dev.config.js');
     default:
       return require('./config/webpack.production.config.js');

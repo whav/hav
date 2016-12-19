@@ -17,8 +17,7 @@ module.exports = (opts) => {
         'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      filename: 'vendor.bundle.js'
+      name: 'vendor'
     })
   ];
 
@@ -31,8 +30,7 @@ module.exports = (opts) => {
             './src/css/index.css',
             'react',
             'react-dom',
-        ],
-        upload: './src/js/incoming'
+        ]
     },
     output: {
         path: path.resolve(PROJECT_ROOT, './build/'),

@@ -43,8 +43,6 @@ module.exports = (opts) => {
         },
         sourceMap: false,
       }),
-      // removes duplicate modules
-      new webpack.optimize.DedupePlugin(),
       // this cleans up the build directory
       new WebpackCleanupPlugin({
         exclude: ["webpack-stats-production.json"]

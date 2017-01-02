@@ -5,7 +5,6 @@ import MainMenu from './Menu'
 
 class App extends Component {
   render() {
-      console.log('Hav App');
     return (
       <div className="App">
         <div className="App-menu">
@@ -14,8 +13,7 @@ class App extends Component {
         </div>
         <div className="App-main">
             <main>
-                <h1>Hi and welcome to the HAV</h1>
-                <p>At some point there will be some actual content here.</p>
+                {this.props.children}
             </main>
         </div>
       </div>

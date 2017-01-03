@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'channels',
     'webpack_loader',
     'rest_framework',
+    'rest_framework.authtoken',
     'incoming',
 ]
 
@@ -124,6 +125,13 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
 
 WEBPACK_BUILD_PATH = os.path.normpath(
     os.path.join(BASE_DIR, '../frontend/build/')

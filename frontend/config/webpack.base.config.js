@@ -30,7 +30,8 @@ module.exports = (opts) => {
             './src/css/index.css',
             'react',
             'react-dom',
-        ]
+        ],
+        upload: './src/js/incoming'
     },
     output: {
         path: path.resolve(PROJECT_ROOT, './build/'),

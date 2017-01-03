@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import UploadedFile, UploadedFileFolder
+from incoming.models import UploadedFile, UploadedFileFolder
 
 
 class SimpleFolderSerializer(serializers.ModelSerializer):

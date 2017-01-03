@@ -1,21 +1,25 @@
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'
 import Dropzone from 'react-dropzone'
-
+import {getCSRFCookie} from './utils/xhr'
 
 class Upload extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            progress: null,
-            finished: false
+            uploadProgress: null,
+            finished: false,
+            failed: false,
+            canceled: false,
+            errror: false
         }
-        this.updateProgress = this.updateProgress.bind(this)
+        this.onUploadProgress = this.onUploadProgress.bind(this)
         this.onTransferComplete = this.onTransferComplete.bind(this)
+        this.onTransferCanceled = this.onTransferCanceled.bind(this)
+        this.onTransferFailed = this.onTransferFailed.bind(this)
     }
 
-    updateProgress(progressEvent) {
-        console.log(progressEvent);
+    onUploadProgress(progressEvent) {
         if (progressEvent.lengthComputable) {
             var percentComplete = progressEvent.loaded / progressEvent.total;
             this.setState({progress: percentComplete});
@@ -25,36 +29,63 @@ class Upload extends React.Component {
     onTransferComplete() {
         this.setState({
             progress: 100,
-            finished: new Date()
+            finished: new Date(),
+            failed: false
+        })
+    }
+
+    onTransferFailed() {
+        this.setState({
+            failed: false,
+            progress: 0
+        })
+    }
+
+    onTransferCanceled() {
+        this.setState({
+            canceled: true
         })
     }
 
     componentDidMount() {
-        // create a formdata object and attach the file to it
-        // let formData = new FormData();
-        // formData.append(
-        //     'file',
-        //     this.props.file,
-        //     this.props.file.name
-        // );
+        let csrftoken = getCSRFCookie();
         let request = new XMLHttpRequest();
-        request.open('POST', '/api/up/', true);
+        request.open('POST', '/api/v1/upload/', true);
+        request.setRequestHeader(
+            'Content-Disposition',
+            `attachment; filename=${this.props.file.name}`
+        )
+        request.setRequestHeader("X-CSRFToken", csrftoken);
         request.withCredentials = true;
         // attach event handlers
-        request.addEventListener('progress', this.updateProgress);
-        request.addEventListener('load', this.onTransferComplete);
+        request.upload.addEventListener('progress', this.onUploadProgress);
+        request.upload.addEventListener('load', this.onTransferComplete);
+        request.upload.addEventListener('error', this.onTransferFailed);
+        request.upload.addEventListener('abort', this.onTransferCanceled);
+        request.addEventListener(
+            'load',
+            this.onTransferComplete
+        )
         request.send(this.props.file);
         this.request = request;
     }
 
     render() {
-        return <p>
-            {this.props.file.name} <br />
-            {this.props.added.toISOString()}
-            {this.state.progress}
-            <br />
-            { this.state.finished ? 'done' : <progress value={this.state.progress} max={100}></progress> }
-        </p>
+        return <div>
+                <p>
+                    {this.props.file.name} <br />
+                    {this.props.added.toISOString()}
+                    {this.state.progress}
+                    <br />
+                    {
+                        this.state.finished ?
+                        'done' :
+                        <progress value={this.state.progress}></progress>
+                    }
+                </p>,
+                <pre>{JSON.stringify(this.state, null, 2)}</pre>
+                <hr />
+        </div>
     }
 }
 

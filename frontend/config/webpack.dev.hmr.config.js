@@ -6,6 +6,9 @@ module.exports = (opts) => {
 
   return {
     ...config,
+    plugins: [
+        ...config.plugins,
+    ],
     output: {
       ...config.output,
       publicPath: 'http://localhost:8080/bundles/'

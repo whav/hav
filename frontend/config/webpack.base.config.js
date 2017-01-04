@@ -24,14 +24,12 @@ module.exports = (opts) => {
   return {
     context: PROJECT_ROOT,
     entry: {
-        main: './src/js/index',
+        hav: './src/hav/index',
+        havAdmin: './src/admin/index',
         vendor: [
-            './src/css/App.css',
-            './src/css/index.css',
             'react',
             'react-dom',
         ],
-        upload: './src/js/incoming'
     },
     output: {
         path: path.resolve(PROJECT_ROOT, './build/'),

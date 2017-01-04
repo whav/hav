@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react'
 import Dropzone from 'react-dropzone'
-import {getCSRFCookie} from './utils/xhr'
+
+import {getCSRFCookie} from '../utils/xhr'
 
 class Upload extends React.Component {
 

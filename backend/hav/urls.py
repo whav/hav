@@ -6,14 +6,14 @@ from api.urls import api_urls
 from incoming.views import debug
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^dbadmin/', admin.site.urls),
     url(
         r'^$',
-        TemplateView.as_view(template_name='index.html')
+        TemplateView.as_view(template_name='hav/index.html')
     ),
     # API urls
     url(r'api/', include(api_urls, namespace='api')),
-    url(r'incoming/', debug)
+    url(r'admin/', debug)
 ]
 
 

@@ -4,7 +4,6 @@ import App from './App';
 import Uploader from './Uploader'
 import Admin from './Admin'
 
-import '../css/index.css';
 
 ReactDOM.render(
     <App>

@@ -1,3 +1,4 @@
+
 @import "../../node_modules/dejavu-sans-condensed/css/dejavu-sans-condensed.css";
 @import "../../node_modules/ptsans-npm-webfont/style.css";
 
@@ -6,6 +7,13 @@
   margin: 0;
   padding: 0;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
 
 .App {
   width: 100vw;
@@ -44,3 +52,4 @@
   padding: 2em;
   font-family: 'PT Sans', sans-serif;
 }
+

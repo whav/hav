@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
-import logo from '../assets/logo.png';
-import '../css/App.css';
-import MainMenu from './Menu'
+import React, { Component } from 'react'
+import logo from '../assets/logo.png'
+import MainMenu from './menu'
+
+// css imports
+import './index.css'
 
 class App extends Component {
   render() {

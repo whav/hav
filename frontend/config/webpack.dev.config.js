@@ -25,6 +25,7 @@ module.exports = (opts) => {
         filename: 'webpack-stats-development.json'
       }),
       new webpack.NoErrorsPlugin(),
+      new webpack.NamedModulesPlugin()
     ]
   };
 };

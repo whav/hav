@@ -5,11 +5,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './app';
+import Uploader from './uploader'
 
 ReactDOM.render(
     <App>
-        <h1>Hello and welcome to the HAV Admin</h1>
-        <p>At some point there will be some actual content here.</p>
+        <Uploader/>
     </App>,
     document.getElementById('root')
 );

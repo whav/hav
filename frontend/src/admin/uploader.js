@@ -12,7 +12,7 @@ class Upload extends React.Component {
             finished: false,
             failed: false,
             canceled: false,
-            errror: false
+            error: false
         }
         this.onUploadProgress = this.onUploadProgress.bind(this)
         this.onTransferComplete = this.onTransferComplete.bind(this)
@@ -27,22 +27,35 @@ class Upload extends React.Component {
         }
     }
 
-    onTransferComplete() {
+    onTransferComplete(e) {
+        let request = e.target;
         this.setState({
-            progress: 100,
-            finished: new Date(),
-            failed: false
+            finished: new Date()
         })
+        if (request.status === 201) {
+            this.setState({
+                failed: false,
+                progress: 100
+            })
+        } else {
+            this.setState({
+                failed: true,
+                error: request.status,
+                errorMsg: request.statusText || ''
+            })
+        }
     }
 
-    onTransferFailed() {
+    onTransferFailed(e) {
+        console.log('failed', e)
         this.setState({
-            failed: false,
+            failed: true,
             progress: 0
         })
     }
 
-    onTransferCanceled() {
+    onTransferCanceled(e) {
+        console.log('canceled')
         this.setState({
             canceled: true
         })
@@ -73,19 +86,26 @@ class Upload extends React.Component {
 
     render() {
         return <div>
-                <p>
-                    {this.props.file.name} <br />
-                    {this.props.added.toISOString()}
-                    {this.state.progress}
-                    <br />
-                    {
-                        this.state.finished ?
-                        'done' :
-                        <progress value={this.state.progress}></progress>
-                    }
-                </p>,
-                <pre>{JSON.stringify(this.state, null, 2)}</pre>
-                <hr />
+            { this.state.failed ?
+                <h3 style={{color: 'red'}}>
+                    Failed
+                    &nbsp;{this.state.error || null}
+                    &nbsp;{this.state.errorMsg || null}
+                </h3>
+                : null }
+            <p>
+                {this.props.file.name} <br />
+                {this.props.added.toISOString()}
+                {this.state.progress}
+                <br />
+                {
+                    this.state.finished ?
+                    'done' :
+                    <progress value={this.state.progress}></progress>
+                }
+            </p>,
+            <pre>{JSON.stringify(this.state, null, 2)}</pre>
+            <hr />
         </div>
     }
 }
@@ -94,6 +114,7 @@ Upload.propTypes = {
     file: PropTypes.instanceOf(File),
     added: PropTypes.instanceOf(Date)
 }
+
 
 class Uploader extends React.Component {
 

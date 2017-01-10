@@ -1,6 +1,10 @@
 import os
 from . import *  #noqa
 
+ALLOWED_HOSTS += [
+    '*'
+]
+
 DEBUG = True
 
 STATIC_URL = '/static/'

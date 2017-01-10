@@ -13,8 +13,17 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 
 # this path holds the settings folder
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_DIR = os.path.normpath(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(
+                __file__
+            )
+        )
+    )
+)
 BASE_DIR = os.path.dirname(PROJECT_DIR)
+ROOT_DIR = os.path.dirname(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -134,7 +143,7 @@ REST_FRAMEWORK = {
 }
 
 WEBPACK_BUILD_PATH = os.path.normpath(
-    os.path.join(BASE_DIR, '../frontend/build/')
+    os.path.join(ROOT_DIR, 'frontend/build/')
 )
 
 WEBPACK_LOADER = {
@@ -158,3 +167,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     ('wp', WEBPACK_BUILD_PATH),
 )
+
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'dist/media')
+
+print(MEDIA_ROOT)

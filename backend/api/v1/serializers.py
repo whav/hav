@@ -54,5 +54,6 @@ class UploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadedFile
         fields = [
-            'file',
+            'pk',
+            'file'
         ]

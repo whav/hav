@@ -1,0 +1,62 @@
+version: '2'
+
+services:
+
+  nginx:
+    depends_on:
+      - "django"
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    volumes:
+      - ./frontend/build:/build
+    ports:
+      - 8000:80
+    links:
+      - django:django
+
+  hav_db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=$HAV_PG_PW
+      - POSTGRES_USER=$HAV_PG_USER
+      - POSTGRES_DB=$HAV_PG_DB
+    expose:
+      - 5432
+
+  whav_db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=$WHAV_PG_PW
+      - POSTGRES_USER=$WHAV_PG_USER
+      - POSTGRES_DB=$WHAV_PG_DB
+    expose:
+      - 5432
+
+  django:
+    depends_on:
+      - "hav_db"
+      - "whav_db"
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/code
+      - ./frontend/build:/build
+    expose:
+      - 8000
+    environment:
+      - DEBUG
+      - HAV_PG_USER
+      - HAV_PG_DB
+      - HAV_PG_PW
+      - WHAV_PG_USER
+      - WHAV_PG_DB
+      - WHAV_PG_PW
+      - DJANGO_SETTINGS_MODULE
+
+#
+#volumes:
+#  - ./backend
+#  - ./dist/media

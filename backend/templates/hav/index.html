@@ -11,6 +11,8 @@
 <body>
 <div id="root"></div>
 {% render_bundle 'vendor' %}
-{% render_bundle 'main' %}
+{% block webpackEntryPoint %}
+{% render_bundle 'hav' %}
+{% endblock %}
 </body>
 </html>

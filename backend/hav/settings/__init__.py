@@ -13,8 +13,17 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 
 # this path holds the settings folder
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_DIR = os.path.normpath(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(
+                __file__
+            )
+        )
+    )
+)
 BASE_DIR = os.path.dirname(PROJECT_DIR)
+ROOT_DIR = os.path.dirname(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -54,7 +63,13 @@ INSTALLED_APPS = [
     # and end here
     'channels',
     'webpack_loader',
+<<<<<<< HEAD
     'cms',
+=======
+    'rest_framework',
+    'rest_framework.authtoken',
+    'incoming',
+>>>>>>> master
 ]
 
 MIDDLEWARE = [
@@ -75,7 +90,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(PROJECT_DIR, 'templates')
+            os.path.join(BASE_DIR, 'templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -97,10 +112,12 @@ WSGI_APPLICATION = 'hav.wsgi.application'
 
 DATABASES = {
     'default': {
+        # 'HOST': 'db',
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'hav',
     },
     'whav': {
+        # 'HOST': 'db',
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'whav'
     }
@@ -138,8 +155,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+
 WEBPACK_BUILD_PATH = os.path.normpath(
-    os.path.join(BASE_DIR, '../frontend/build/')
+    os.path.join(ROOT_DIR, 'frontend/build/')
 )
 
 WEBPACK_LOADER = {
@@ -161,11 +185,17 @@ WEBPACK_LOADER = {
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    WEBPACK_BUILD_PATH,
+    ('wp', WEBPACK_BUILD_PATH),
 )
 
+<<<<<<< HEAD
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'dist/media/')
 
 
 WAGTAIL_SITE_NAME = 'Himalaya Archive Vienna'
+=======
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'dist/media')
+
+print(MEDIA_ROOT)
+>>>>>>> master

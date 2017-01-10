@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import logo from '../assets/logo.png';
-import '../css/App.css';
-import MainMenu from './Menu'
+import React, { Component } from 'react'
+import logo from '../assets/logo.png'
+import MainMenu from './menu'
+
+// css imports
+import './index.css'
 
 class App extends Component {
   render() {
-      console.log('Hav App');
     return (
       <div className="App">
         <div className="App-menu">
@@ -14,8 +15,7 @@ class App extends Component {
         </div>
         <div className="App-main">
             <main>
-                <h1>Hi and welcome to the HAV</h1>
-                <p>At some point there will be some actual content here.</p>
+                {this.props.children}
             </main>
         </div>
       </div>

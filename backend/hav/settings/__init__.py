@@ -63,13 +63,10 @@ INSTALLED_APPS = [
     # and end here
     'channels',
     'webpack_loader',
-<<<<<<< HEAD
     'cms',
-=======
     'rest_framework',
     'rest_framework.authtoken',
     'incoming',
->>>>>>> master
 ]
 
 MIDDLEWARE = [
@@ -166,6 +163,10 @@ WEBPACK_BUILD_PATH = os.path.normpath(
     os.path.join(ROOT_DIR, 'frontend/build/')
 )
 
+WEBPACK_ASSET_PATH = os.path.normpath(
+    os.path.join(ROOT_DIR, 'frontend/src/assets/')
+)
+
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
@@ -186,16 +187,13 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     ('wp', WEBPACK_BUILD_PATH),
+    ('frontend_assets', WEBPACK_ASSET_PATH)
 )
 
-<<<<<<< HEAD
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'dist/media/')
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'dist/media')
 
 
 WAGTAIL_SITE_NAME = 'Himalaya Archive Vienna'
-=======
-MEDIA_ROOT = os.path.join(ROOT_DIR, 'dist/media')
 
-print(MEDIA_ROOT)
->>>>>>> master
+

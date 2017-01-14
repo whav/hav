@@ -8,13 +8,13 @@ from api.urls import api_urls
 from incoming.views import debug
 
 urlpatterns = [
-    url(r'content/', include('cms.urls')),
-    url(r'^dbadmin/', admin.site.urls),
     url(
         r'^$',
-        TemplateView.as_view(template_name='hav/index.html')
+        TemplateView.as_view(template_name='hav/teaser.html')
     ),
     # API urls
     url(r'api/', include(api_urls, namespace='api')),
-    url(r'admin/', debug)
+    url(r'admin/', debug),
+    url(r'^dbadmin/', admin.site.urls),
+    url(r'', include('cms.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

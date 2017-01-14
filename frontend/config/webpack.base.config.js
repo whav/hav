@@ -17,13 +17,20 @@ module.exports = (opts) => {
         'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor'
+        name: 'vendor',
+        chunks: [
+            'hav',
+            'havAdmin'
+        ]
     })
   ];
 
   return {
     context: PROJECT_ROOT,
     entry: {
+        cms: [
+            './src/cms/cms.css'
+        ],
         hav: './src/hav/index',
         havAdmin: './src/admin/index',
         vendor: [

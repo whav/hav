@@ -1,18 +1,1 @@
-<!DOCTYPE html>
-{% load static %}
-{% load render_bundle from webpack_loader %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
-    <title>HAV</title>
-</head>
-<body>
-<div id="root"></div>
-{% render_bundle 'vendor' %}
-{% block webpackEntryPoint %}
-{% render_bundle 'hav' %}
-{% endblock %}
-</body>
-</html>
+{% extends 'cms/base.html' %}

@@ -1,29 +1,19 @@
-<!DOCTYPE html>
-{% load static wagtailuserbar %}
+{% extends 'hav/index.html' %}
+
+{% load wagtailuserbar %}
 {% load render_bundle from webpack_loader %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
-    <title>HAV</title>
+
+{% block extra-head %}
+    {{ block.super }}
     {% render_bundle 'cms' %}
-</head>
-<body>
-{% block body %}
-<div class="App">
-    <nav class="App-menu">
-        <img src="{% static 'frontend_assets/logo.png' %}" alt="Hav Logo" class="App-logo"/>
-        {% block menu %}
-        {% include 'cms/menu/main.html' %}
-        {% endblock menu %}
-    </nav>
-    <main class="App-main">
-    {% block main %}
-    {% endblock main %}
-    </main>
-</div>
-{% endblock body %}
-{% wagtailuserbar %}
-</body>
-</html>
+{% endblock extra-head %}
+
+{% block primary-menu %}
+    {% include 'cms/menu/main.html' %}
+{% endblock primary-menu %}
+
+{% block main %}
+    {{ block.super }}
+    {% block page %}{% endblock page %}
+    {% wagtailuserbar %}
+{% endblock main %}

@@ -18,3 +18,12 @@
     width: 100%;
     height: 100%;
 }
+
+/* restrict width for cms content */
+.main-content {
+    max-width: 60rem;
+}
+
+.main-content .block {
+    padding-top: 1em;
+}

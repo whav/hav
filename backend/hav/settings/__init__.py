@@ -46,8 +46,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Wagtail dependencies start here
+    'wagtail.wagtailforms',
+    'wagtail.wagtailredirects',
+    'wagtail.wagtailembeds',
+    'wagtail.wagtailsites',
+    'wagtail.wagtailusers',
+    'wagtail.wagtailsnippets',
+    'wagtail.wagtaildocs',
+    'wagtail.wagtailimages',
+    'wagtail.wagtailsearch',
+    'wagtail.wagtailadmin',
+    'wagtail.wagtailcore',
+    'modelcluster',
+    'taggit',
+    # and end here
     'channels',
     'webpack_loader',
+    'cms',
     'rest_framework',
     'rest_framework.authtoken',
     'incoming',
@@ -61,6 +77,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'wagtail.wagtailcore.middleware.SiteMiddleware',
+    'wagtail.wagtailredirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'hav.urls'
@@ -101,7 +119,6 @@ DATABASES = {
         'NAME': 'whav'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -146,6 +163,10 @@ WEBPACK_BUILD_PATH = os.path.normpath(
     os.path.join(ROOT_DIR, 'frontend/build/')
 )
 
+WEBPACK_ASSET_PATH = os.path.normpath(
+    os.path.join(ROOT_DIR, 'frontend/src/assets/')
+)
+
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
@@ -166,8 +187,13 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     ('wp', WEBPACK_BUILD_PATH),
+    ('frontend_assets', WEBPACK_ASSET_PATH)
 )
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(ROOT_DIR, 'dist/media')
 
-print(MEDIA_ROOT)
+
+WAGTAIL_SITE_NAME = 'Himalaya Archive Vienna'
+
+

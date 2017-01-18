@@ -1,5 +1,6 @@
-Django==1.10.4
+Django==1.10.5
 psycopg2==2.6.2
-django-webpack-loader==0.3.3
-channels==0.17.3
+django-webpack-loader==0.4.1
+channels==1.0.1
 django-model-utils==2.6
+wagtail==1.8

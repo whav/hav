@@ -1,18 +1,40 @@
 <!DOCTYPE html>
-{% load static %}
-{% load render_bundle from webpack_loader %}
+{% load static wagtailuserbar %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
     <title>HAV</title>
+    {% block extra-head %}{% endblock %}
 </head>
 <body>
-<div id="root"></div>
-{% render_bundle 'vendor' %}
-{% block webpackEntryPoint %}
-{% render_bundle 'hav' %}
-{% endblock %}
+{% block body %}
+<div class="App">
+    {% block main-menu %}
+    <nav class="App-menu">
+        <nav class="nav-primary">
+            {% block nav-logo %}
+            <img src="{% static 'frontend_assets/logo.png' %}" alt="Hav Logo" class="App-logo"/>
+            {% endblock nav-logo %}
+            {% block primary-menu %}
+            {% endblock %}
+        </nav>
+        <nav class="nav-secondary">
+            {% block secondary-menu %}
+                {% if user.is_staff %}
+                {% include 'hav/admin_links.html' %}
+                {% endif %}
+            {% endblock %}
+        </nav>
+
+    </nav>
+    {% endblock main-menu %}
+
+    <main class="App-main">
+    {% block main %}{% endblock main %}
+    </main>
+</div>
+{% endblock body %}
 </body>
 </html>

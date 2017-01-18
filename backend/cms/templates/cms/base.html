@@ -1,0 +1,19 @@
+{% extends 'hav/index.html' %}
+
+{% load wagtailuserbar %}
+{% load render_bundle from webpack_loader %}
+
+{% block extra-head %}
+    {{ block.super }}
+    {% render_bundle 'cms' %}
+{% endblock extra-head %}
+
+{% block primary-menu %}
+    {% include 'cms/menu/main.html' %}
+{% endblock primary-menu %}
+
+{% block main %}
+    {{ block.super }}
+    {% block page %}{% endblock page %}
+    {% wagtailuserbar %}
+{% endblock main %}

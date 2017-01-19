@@ -27,3 +27,19 @@
 .main-content .block {
     padding-top: 1em;
 }
+
+.carousel {
+    width: 100%;
+    padding: 1em;
+}
+
+.carousel-control ul {
+    list-style-type: none;
+    text-align: center;
+}
+.carousel-control ul li:after {
+    content: '\25cb';
+    list-style: none;
+    display: inline;
+
+}

@@ -24,7 +24,7 @@ module.exports = (opts) => {
         path: output_path,
         filename: 'webpack-stats-development.json'
       }),
-      new webpack.NoErrorsPlugin(),
+      new webpack.NoEmitOnErrorsPlugin(),
       new webpack.NamedModulesPlugin()
     ]
   };

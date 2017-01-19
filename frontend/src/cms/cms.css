@@ -28,6 +28,22 @@
     padding-top: 1em;
 }
 
+.media > .media-body {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.media-body > img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.media > .media-caption {
+    text-align: center;
+}
+
 .carousel {
     width: 100%;
     padding: 1em;
@@ -37,9 +53,22 @@
     list-style-type: none;
     text-align: center;
 }
+
+.carousel .carousel-item {
+    display: none;
+}
+
+.carousel .carousel-item.active {
+    display: block;
+}
+.carousel-control ul li {
+    display: inline;
+    padding: 0.5em;
+}
 .carousel-control ul li:after {
     content: '\25cb';
-    list-style: none;
-    display: inline;
+}
 
+.carousel-control ul li.active:after {
+    content: '\25cf';
 }

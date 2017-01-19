@@ -3,11 +3,6 @@
 {% load wagtailuserbar %}
 {% load render_bundle from webpack_loader %}
 
-{% block extra-head %}
-    {{ block.super }}
-    {% render_bundle 'cms' %}
-{% endblock extra-head %}
-
 {% block primary-menu %}
     {% include 'cms/menu/main.html' %}
 {% endblock primary-menu %}
@@ -17,3 +12,9 @@
     {% block page %}{% endblock page %}
     {% wagtailuserbar %}
 {% endblock main %}
+
+{% block extra-body %}
+    {{ block.super }}
+    {% render_bundle 'cms' %}
+{% endblock %}
+

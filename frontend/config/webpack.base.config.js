@@ -29,7 +29,7 @@ module.exports = (opts) => {
     context: PROJECT_ROOT,
     entry: {
         cms: [
-            './src/cms/cms.css'
+            './src/cms/index'
         ],
         hav: './src/hav/index',
         havAdmin: './src/admin/index',

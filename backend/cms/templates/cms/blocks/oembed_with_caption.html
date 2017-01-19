@@ -1,0 +1,4 @@
+{% extends './media_with_caption.html' %}
+{% load wagtailcore_tags %}
+{% block extra-classes %}oEmbedWithCaption{% endblock %}
+{% block media %}{% include_block value.embed %}{% endblock media %}

@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # this needs to go before the wagtail stuff because it overrides
+    # some wagtail admin templates
+    'cms',
     # Wagtail dependencies start here
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
@@ -63,7 +66,6 @@ INSTALLED_APPS = [
     # and end here
     'channels',
     'webpack_loader',
-    'cms',
     'rest_framework',
     'rest_framework.authtoken',
     'incoming',

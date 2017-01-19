@@ -1,0 +1,15 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+{% with length=value|length %}
+<div class="carousel">
+    {% for item in value %}
+        <div class="carousel-item {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}">
+            {% include_block item %}
+        </div>
+    {% endfor %}
+    {% if value|length > 1 %}
+    <div class="carousel-control">
+        <ul>{% for item in value%}<li>{{ forloop.counter }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+</div>
+{% endwith %}

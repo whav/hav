@@ -122,13 +122,14 @@ class DirectorySerializer(BaseDirectorySerializer):
 
 class FileBrowser(IncomingBaseMixin, APIView):
 
-    root = settings.MEDIA_ROOT
+    root = None
 
     def build_absolute_path(self, path):
         absolute = os.path.join(self.root, path)
         return os.path.normpath(absolute)
 
     def get(self, request, path=None, **kwargs):
+        path = path or '/'
         root_path = Path(self.root).resolve()
         parts = path.split('/')
         parts = [url2pathname(p) for p in parts]

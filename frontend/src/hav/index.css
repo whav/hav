@@ -1,6 +1,5 @@
-
-@import "../../node_modules/dejavu-sans-condensed/css/dejavu-sans-condensed.css";
-@import "../../node_modules/ptsans-npm-webfont/style.css";
+@import "dejavu-sans-condensed/css/dejavu-sans-condensed.css";
+@import "ptsans-npm-webfont/style.css";
 
 * {
   box-sizing: border-box;

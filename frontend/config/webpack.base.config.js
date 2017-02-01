@@ -1,8 +1,6 @@
 var path = require("path");
 var webpack = require('webpack');
-var BundleTracker = require('webpack-bundle-tracker');
 var autoprefixer = require('autoprefixer');
-
 
 module.exports = (opts) => {
   const {PROJECT_ROOT, NODE_ENV} = opts;
@@ -32,7 +30,10 @@ module.exports = (opts) => {
             './src/cms/index'
         ],
         hav: './src/hav/index',
-        havAdmin: './src/admin/index',
+        havAdmin: [
+            // 'tachyons/css/tachyons.css',
+            './src/admin/index'
+        ],
         vendor: [
             'react',
             'react-dom',
@@ -43,25 +44,33 @@ module.exports = (opts) => {
         filename: "[name]-[hash].js"
     },
     plugins,
-    resolve: {extensions: ['.js', '.json']},
+    resolve: {extensions: ['.js', '.json', '.css']},
     module: {
-        loaders: [
-            {test: /\.css$/, loaders: ['style-loader', 'css-loader?-autoprefixer', 'postcss-loader']},
+        rules: [
             {
-                test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?limit=10000"
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader?importLoaders=1',
+                    'postcss-loader'
+                ]
             },
             {
                 test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
                 loader: 'file-loader'
             },
             {
-                test: /\.(png|jpg|jpeg)?$/,
-                loader: "url-loader?limit=10000"
+                test: /\.(png|jpg|jpeg|woff|woff2)$/,
+                loader: "url-loader",
+                options: {
+                    limit: 10000
+                }
             },
+            // react-icons does not have an es5 build
+            // so we need to pipe it through babel
             {
-                test: /\.json$/,
-                loader: 'json-loader'
+                test: /react-icons\/(.)*(.js)$/,
+                loader: 'babel-loader',
             },
             // everything else
             {

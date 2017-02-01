@@ -13,7 +13,7 @@ from incoming.views import debug
 
 
 hav_admin_patterns = [
-    url(r'^incoming/', include('incoming.urls'))
+    url(r'', TemplateView.as_view(template_name='administration/index.html'), name='root')
 ]
 
 urlpatterns = [

@@ -18,10 +18,12 @@ from .permissions import IncomingBaseMixin
 class FileStatsSerializer(serializers.BaseSerializer):
 
     def to_representation(self, path):
-        mode = path.stat().st_mode
+        stats = path.stat()
+        mode = stats.st_mode
         return {
             'isDirectory': stat.S_ISDIR(mode),
             'isRegularFile': stat.S_ISREG(mode),
+            'size': stats.st_size,
             'read': os.access(path, os.R_OK),
             'write': os.access(path, os.W_OK),
             'execute': os.access(path, os.X_OK)

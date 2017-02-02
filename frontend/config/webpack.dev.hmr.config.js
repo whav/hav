@@ -1,4 +1,4 @@
-import baseConfig from './webpack.dev.config.js';
+let baseConfig = require('./webpack.dev.config.js');
 
 module.exports = (opts) => {
 

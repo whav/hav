@@ -1,8 +1,8 @@
-import path from 'path';
+let path = require('path');
+let webpack = require('webpack');
+let BundleTracker = require('webpack-bundle-tracker');
+let baseConfig = require('./webpack.base.config');
 
-import webpack from 'webpack';
-import BundleTracker from 'webpack-bundle-tracker';
-import baseConfig from './webpack.base.config.js';
 
 module.exports = (opts) => {
 

@@ -166,7 +166,7 @@ REST_FRAMEWORK = {
 }
 
 WEBPACK_BUILD_PATH = os.path.normpath(
-    os.path.join(ROOT_DIR, 'frontend/build/')
+    os.path.join(ROOT_DIR, 'frontend/dist/')
 )
 
 WEBPACK_ASSET_PATH = os.path.normpath(

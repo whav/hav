@@ -29,9 +29,10 @@ module.exports = (opts) => {
         cms: [
             './src/cms/index'
         ],
-        hav: './src/hav/index',
+        hav: [
+            './src/hav/index',
+        ],
         havAdmin: [
-            // 'tachyons/css/tachyons.css',
             './src/admin/index'
         ],
         vendor: [

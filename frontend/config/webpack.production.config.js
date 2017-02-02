@@ -1,9 +1,8 @@
-import path from 'path';
-import webpack from 'webpack';
-import BundleTracker from 'webpack-bundle-tracker';
-import baseConfig from './webpack.base.config.js';
-
-import WebpackCleanupPlugin from 'webpack-cleanup-plugin';
+let path = require('path');
+let webpack = require('webpack');
+let BundleTracker = require('webpack-bundle-tracker');
+let baseConfig = require('./webpack.base.config');
+let WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 
 module.exports = (opts) => {
 
@@ -45,7 +44,7 @@ module.exports = (opts) => {
       }),
       // this cleans up the build directory
       new WebpackCleanupPlugin({
-        exclude: ["webpack-stats-production.json"]
+        exclude: ["webpack-stats.json"]
       })
     ],
   };

@@ -11,8 +11,8 @@
     "postcss-cssnext": "^2.9.0",
     "postcss-url": "^5.1.2",
     "ptsans-npm-webfont": "0.0.4",
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1",
+    "react": "15.4.2",
+    "react-dom": "^15.4.2",
     "react-dropzone": "^3.7.3",
     "react-icons": "^2.2.3",
     "react-router": "next",
@@ -27,7 +27,7 @@
     "build": "NODE_ENV=production npm run webpack",
     "build-dev": "NODE_ENV=development npm run webpack",
     "dev": "NODE_ENV=development npm run babel -- ./node_modules/.bin/webpack --progress --watch",
-    "hmr": "NODE_ENV=development BABEL_ENV=hmr npm run babel -- ./node_modules/.bin/webpack-dev-server --progress --hot"
+    "hmr": "NODE_ENV=development BABEL_ENV=hmr npm run babel -- ./node_modules/.bin/webpack-dev-server --progress"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.0",
@@ -50,6 +50,6 @@
     "webpack": "^2.2.1",
     "webpack-bundle-tracker": "0.0.93",
     "webpack-cleanup-plugin": "^0.4.1",
-    "webpack-dev-server": "^1.16.3"
+    "webpack-dev-server": "next"
   }
 }

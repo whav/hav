@@ -4,26 +4,38 @@
 
 import React from 'react'
 import {Link} from 'react-router-dom'
+import classNames from 'classnames'
+
 
 const css = {
-    navUl: 'list pr2 tr'
+    navUl: 'list pr2 tr',
+    liAll: 'link black',
+    liInactive: 'underline-hover',
+    liActive: 'active underline'
 }
 
+const NavItem = (props) => {
+    let {path, title, active} = props;
+    let liClasses = classNames(
+        css.liAll,
+        active ? css.liActive : css.liInactive
+    );
 
-const NavItem = ({name, to, active}) => {
-    return <Link to={to}>{name}</Link>;
+    return <Link to={path} className={liClasses}>
+        {title}
+    </Link>;
 }
 
 class Nav extends React.Component {
     render() {
-        let {match} = this.props;
+        let {match, routes} = this.props;
         return <ul className={css.navUl}>
-            <li>
-                <NavItem name="Home" to='/' active={match.active}/>
-            </li>
-            <li>
-                <NavItem name="Incoming" to='/incoming/' active={match.active}/>
-            </li>
+            {routes.map((rc, index) => {
+                let isActive = match && (match.url === rc.path);
+                return <li key={index}>
+                    <NavItem path={rc.path} title={rc.title} active={isActive}/>
+                </li>
+            })}
         </ul>
     }
 }

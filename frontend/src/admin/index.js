@@ -4,52 +4,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Navigation from './nav'
-import FileBrowser from './browser'
-import LoadingIndicator from './ui/loading'
+// AppContainer is a necessary wrapper component for HMR
+import { AppContainer } from 'react-hot-loader';
 
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch
-} from 'react-router-dom'
+import HavAdminApp from './app'
 
-require('./index.css');
-
-const logo = require('../assets/logo.png')
-
-const css = {
-    app: 'hav-admin-app',
-    logo: 'mw-100 pa2',
-    menu: 'w-20 pa2 bg-yellow black h-100 hav-admin-menu',
-    main: 'w-80 pl4 pt4 pb4 hav-admin-content'
+const render = (Component) => {
+    ReactDOM.render(
+        <AppContainer>
+            <Component />
+        </AppContainer>,
+        document.getElementById('root')
+    );
 }
 
-const App = ({children}) => <div className={css.app}>{children}</div>
+render(HavAdminApp)
 
-const Welcome = () => {
-    return <div>
-        <h1>Here be stuff</h1>
-        <LoadingIndicator rotate={true} text="Me be loading!"/>
-    </div>
+
+// Hot Module Replacement API
+if (module.hot) {
+  module.hot.accept('./app.js', () => {
+    render(HavAdminApp)
+  });
 }
 
-ReactDOM.render(
-    <Router basename="/admin">
-    <App>
-        <div className={css.menu}>
-            <img src={logo} alt="hav logo" className={css.logo} />
-            <nav>
-                <Route component={Navigation} />
-            </nav>
-        </div>
-        <div className={css.main}>
-            <Switch>
-                <Route exact path='/' component={Welcome} />
-                <Route path="/incoming/" component={FileBrowser} />
-            </Switch>
-        </div>
-    </App>
-    </Router>,
-    document.getElementById('root')
-);
+
+
+
+
+
+

@@ -3,6 +3,7 @@ let webpack = require('webpack');
 let BundleTracker = require('webpack-bundle-tracker');
 let baseConfig = require('./webpack.base.config');
 let WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = (opts) => {
 
@@ -11,7 +12,6 @@ module.exports = (opts) => {
     config = baseConfig(opts),
     output_path = path.resolve(PROJECT_ROOT, 'dist/');
 
-  console.log(PROJECT_ROOT);
   return {
     ...config,
     output: {

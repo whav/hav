@@ -27,13 +27,29 @@ const NavItem = (props) => {
 }
 
 class Nav extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.isActive = this.isActive.bind(this)
+    }
+
+    isActive(route) {
+        let {match} = this.props;
+        if (route.menuExact) {
+            return match.url === route.path;
+        } else {
+            return (match.url !== '/') && match.url.startsWith(route.menuPath);
+        }
+        return false
+    }
+
     render() {
         let {match, routes} = this.props;
         return <ul className={css.navUl}>
             {routes.map((rc, index) => {
-                let isActive = match && (match.url === rc.path);
+                let isActive = match && this.isActive(rc);
                 return <li key={index}>
-                    <NavItem path={rc.path} title={rc.title} active={isActive}/>
+                    <NavItem path={rc.menuPath || rc.path} title={rc.title} active={isActive}/>
                 </li>
             })}
         </ul>

@@ -3,7 +3,7 @@
 
 html, body, #root, .hav-admin-app {
     height: 100vh;
-    width: 100%;
+    width: 100vw;
 }
 
 .hav-admin-app {
@@ -11,12 +11,13 @@ html, body, #root, .hav-admin-app {
 }
 
 .hav-admin-content {
-    /*overflow-y: scroll;*/
+    overflow-y: scroll;
 }
 
 .hav-admin-menu {
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 .hav-admin-menu nav {
@@ -36,3 +37,5 @@ html, body, #root, .hav-admin-app {
 }
 
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+

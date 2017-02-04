@@ -1,0 +1,17 @@
+/*remove duplicate horizontal rules*/
+.filebrowser hr ~ hr {
+    display: none;
+}
+
+.fb-directory-listing {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.fb-directory-listing .fb-directory-listing-item {
+    flex: 0 0 auto;
+    width: 10%;
+    word-break: break-all;
+}

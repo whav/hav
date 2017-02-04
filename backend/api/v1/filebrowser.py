@@ -44,8 +44,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     def get_root(self):
         return self.context['root']
 
-    def get_url_for_path(self, path):
-        request = self.context.get('request')
+    def get_path(self, path):
         root = self.context.get('root')
         location = ''
         relative_path = path.relative_to(root)
@@ -56,11 +55,15 @@ class FileBrowserBaseSerializer(serializers.Serializer):
             location = os.path.join(*parts, suffix)
             location = quote(location)
 
+        return location
+
+    def get_url_for_path(self, path):
+        request = self.context.get('request')
         return request.build_absolute_uri(
             reverse(
                 'api:v1:filebrowser',
                 kwargs={
-                    'path': location
+                    'path': self.get_path(path)
                 }
             )
         )
@@ -82,6 +85,7 @@ class FileSerializer(FileBrowserBaseSerializer):
 class BaseDirectorySerializer(FileBrowserBaseSerializer):
 
     url = serializers.SerializerMethodField()
+    path = serializers.SerializerMethodField()
 
     def get_url(self, path):
         return self.get_url_for_path(path)
@@ -100,7 +104,7 @@ class DirectorySerializer(BaseDirectorySerializer):
         root = self.get_root()
         parent_dirs = [p for p in path.parents if p >= root]
         parent_dirs.reverse()
-        return DirectorySerializer(
+        return BaseDirectorySerializer(
             parent_dirs,
             many=True,
             context=self.context
@@ -113,10 +117,11 @@ class DirectorySerializer(BaseDirectorySerializer):
             context=self.context
         ).data
 
-
     def get_files(self, path):
+        files = [f for f in path.iterdir() if not f.is_dir()]
+        files.sort(key=lambda x: x.name)
         return FileSerializer(
-            [f for f in path.iterdir() if not f.is_dir()],
+            files,
             many=True,
             context=self.context
         ).data
@@ -131,6 +136,8 @@ class FileBrowser(IncomingBaseMixin, APIView):
         return os.path.normpath(absolute)
 
     def get(self, request, path=None, **kwargs):
+
+        print('GET hit ...')
         path = path or '/'
         root_path = Path(self.root).resolve()
         parts = path.split('/')
@@ -144,14 +151,14 @@ class FileBrowser(IncomingBaseMixin, APIView):
             assert(path >= root_path)
         except (FileNotFoundError, AssertionError):
             raise Http404()
-
+        print('File path resolved..')
         serializer = DirectorySerializer(
             instance=path,
             context={
                 'root': root_path,
                 'request': request
             })
-
+        print('Serializer initialized')
         return Response(serializer.data)
 
 

@@ -1,8 +1,9 @@
 {
   "presets": [
-    ["es2015", {"modules": false}],
-    "stage-3",
-    "react"
+    [
+      "es2015", {"modules": false}],
+      "stage-3",
+      "react"
   ],
   "env": {
     "hmr": {

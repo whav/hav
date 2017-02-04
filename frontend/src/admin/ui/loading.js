@@ -2,7 +2,7 @@
  * Created by sean on 01/02/17.
  */
 import React from 'react'
-import FaBeer from 'react-icons/fa/beer'
+import GoHistory from 'react-icons/go/history'
 import classNames from 'classnames'
 
 const sizesToClass = {
@@ -17,7 +17,7 @@ export default class LoadingIndicator extends React.Component {
 
         return <div className={classNames('loading-indicator', sizesToClass[size], {...this.props.className})}>
             <div className={classNames('loading-indicator-icon', {rotating: rotate})}>
-                <FaBeer />
+                <GoHistory />
             </div>
             { text ? <p>{text}</p> : null }
         </div>

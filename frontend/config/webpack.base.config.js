@@ -11,9 +11,6 @@ module.exports = (opts) => {
         NODE_ENV: JSON.stringify(NODE_ENV),
       },
     }),
-    new webpack.ProvidePlugin({
-        'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
-    }),
     new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         chunks: [
@@ -36,6 +33,7 @@ module.exports = (opts) => {
             './src/admin/index'
         ],
         vendor: [
+            'whatwg-fetch',
             'react',
             'react-dom',
         ],
@@ -48,6 +46,9 @@ module.exports = (opts) => {
     resolve: {extensions: ['.js', '.json', '.css']},
     module: {
         rules: [
+            // keep this first!
+            // production/dev configs (might) split out the css
+            // and depend on this being the first rule
             {
                 test: /\.css$/,
                 use: [

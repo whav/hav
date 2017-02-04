@@ -12,8 +12,8 @@ import {
 import Nav from './nav'
 import routes from './routes'
 
-// css and stuff
-require('./index.css');
+// css, images and stuff
+require('./ui/index.css');
 const logo = require('../assets/logo.png')
 const css = {
     logo: 'mw-100 pa2',

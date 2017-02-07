@@ -2,23 +2,35 @@
  * Created by sean on 06/02/17.
  */
 import React from 'react'
+import Dropzone from 'react-dropzone'
 
-class UploadControl extends React.Component {
+import GoCloudUpload from 'react-icons/go/cloud-upload'
+
+export class UploadControl extends React.Component {
+    constructor(props){
+        super(props);
+        this.handleDrop = this.handleDrop.bind(this)
+    }
+    handleDrop(acceptedFiles, rejectedFiles) {
+        console.log(acceptedFiles);
+        this.props.uploadFiles(...acceptedFiles);
+        rejectedFiles.forEach((f) => console.error('Rejected file', f));
+    }
     render() {
-        return <div>
-            <h4>Here be upload!</h4>
-        </div>
+        return <Dropzone onDrop={this.handleDrop} className="f5 no-underline black bg-animate hover-bg-black hover-white inline-flex items-center pa3 ba border-box mr4">
+                <GoCloudUpload/>
+                <span className="pl1">Add new files</span>
+            </Dropzone>
     }
 }
 
-class FolderControls extends React.Component {
+class DirectoryControls extends React.Component {
     render() {
         return <div className="folder-controls">
-            <UploadControl />
             {this.props.children}
         </div>
-
     }
 }
 
-export default FolderControls;
+
+export default DirectoryControls;

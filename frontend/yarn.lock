@@ -4111,9 +4111,9 @@ react-dom@^15.4.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
-react-dropzone@^3.7.3:
-  version "3.7.3"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-3.7.3.tgz#7852b6652a43afc7fa072021f3369123ea4a61e0"
+react-dropzone@^3.9.2:
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-3.9.2.tgz#84703d1ee20ea4118f64fa38c14218415fecb1e9"
   dependencies:
     attr-accept "^1.0.3"
 

@@ -1,8 +1,25 @@
-/*remove duplicate horizontal rules*/
-.filebrowser hr ~ hr {
-    display: none;
+/* layout the main file browser div with header, main and footer */
+.filebrowser {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 100%;
 }
 
+.filebrowser header {
+    flex: 0 0 auto;
+    border-bottom: 1px solid grey;
+}
+
+.filebrowser main {
+    flex: 1 0 auto;
+}
+
+.filebrowser footer {
+    flex: 0 0 auto;
+}
+
+/* directory and file listing */
 .fb-directory-listing {
     width: 100%;
     display: flex;
@@ -14,4 +31,16 @@
     flex: 0 0 auto;
     width: 10%;
     word-break: break-all;
+}
+
+.folder-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 1em 0;
+}
+
+.folder-controls > * {
+    display: block;
+    /*flex-basis: 50%;*/
 }

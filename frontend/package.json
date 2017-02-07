@@ -15,7 +15,7 @@
     "ptsans-npm-webfont": "0.0.4",
     "react": "15.4.2",
     "react-dom": "^15.4.2",
-    "react-dropzone": "^3.7.3",
+    "react-dropzone": "^3.9.2",
     "react-icons": "^2.2.3",
     "react-router": "4.0.0-beta.2",
     "react-router-dom": "next",

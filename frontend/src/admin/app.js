@@ -18,7 +18,7 @@ const logo = require('../assets/logo.png')
 const css = {
     logo: 'mw-100 pa2',
     menu: 'w-20 pa2 bg-yellow black h-100 hav-admin-menu',
-    main: 'w-80 pl4 pt4 pb4 hav-admin-content',
+    main: 'w-80 pa3 hav-admin-content',
     app: 'hav-admin-app'
 }
 

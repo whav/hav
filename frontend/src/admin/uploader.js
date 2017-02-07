@@ -3,7 +3,7 @@ import Dropzone from 'react-dropzone'
 
 import {getCSRFCookie} from '../utils/xhr'
 
-class Upload extends React.Component {
+export class Upload extends React.Component {
 
     constructor(props) {
         super(props)
@@ -18,6 +18,7 @@ class Upload extends React.Component {
         this.onTransferComplete = this.onTransferComplete.bind(this)
         this.onTransferCanceled = this.onTransferCanceled.bind(this)
         this.onTransferFailed = this.onTransferFailed.bind(this)
+
     }
 
     onUploadProgress(progressEvent) {
@@ -37,6 +38,12 @@ class Upload extends React.Component {
                 failed: false,
                 progress: 100
             })
+            let data = request.response;
+            if (typeof data === 'string') {
+                console.warn('Casting string to json');
+                data = JSON.parse(data)
+            }
+            this.props.onUploadDone(data);
         } else {
             this.setState({
                 failed: true,
@@ -64,11 +71,15 @@ class Upload extends React.Component {
     componentDidMount() {
         let csrftoken = getCSRFCookie();
         let request = new XMLHttpRequest();
-        request.open('POST', '/api/v1/upload/', true);
-        request.setRequestHeader(
-            'Content-Disposition',
-            `attachment; filename=${this.props.file.name}`
-        )
+        request.open('PUT', this.props.target, true);
+        request.responseType = 'json';
+        if (this.props.setFilenameHeaders) {
+            request.setRequestHeader(
+                'Content-Disposition',
+                `attachment; filename=${this.props.file.name}`
+            )
+        }
+
         request.setRequestHeader("X-CSRFToken", csrftoken);
         request.withCredentials = true;
         // attach event handlers
@@ -112,7 +123,10 @@ class Upload extends React.Component {
 
 Upload.propTypes = {
     file: PropTypes.instanceOf(File),
-    added: PropTypes.instanceOf(Date)
+    added: PropTypes.instanceOf(Date),
+    target: PropTypes.string.isRequired,
+    onUploadDone: PropTypes.func.isRequired,
+    setFilenameHeaders: PropTypes.bool
 }
 
 

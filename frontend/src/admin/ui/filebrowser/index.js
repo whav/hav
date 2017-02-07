@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom'
 import GoFileDirectory from 'react-icons/go/file-directory'
 import GoFileMedia from 'react-icons/go/file-media'
 import GoChevronRight from 'react-icons/go/chevron-right'
+import classNames from 'classnames'
 import filesize from 'filesize'
 
 const css = {
@@ -13,7 +14,10 @@ const css = {
     liDirectoryListing: 'di',
     divListing: 'fb-directory-listing tc',
     divListingItem: 'fb-directory-listing-item',
-    tableFileListing: 'collapse ba br2 b--black-10 pv2 ph3 mt4'
+    tableFileListing: 'collapse ba br2 b--black-10 pv2 ph3 mt4 tl',
+    tableRow: 'pointer dim',
+    tableRowSelected: 'bg-yellow',
+    tableCell: 'pa2'
 }
 
 require('./index.css')
@@ -82,20 +86,109 @@ export class File extends React.Component {
     }
 }
 
-const FileTableItem = ({file}) => {
-    return <tr>
-        <td>{file.name}</td>
-        <td>{filesize(file.size)}</td>
+const FileTableItem = ({file, selected, handleSelect}) => {
+    return <tr className={classNames(css.tableRow, {[css.tableRowSelected]: selected})}
+               onClick={() => handleSelect(file, !selected)}>
+        <td className={css.tableCell}>
+            <input type="checkbox"
+                   checked={selected}
+                   onChange={(e) => handleSelect(file, e.target.checked)}
+            />
+        </td>
+        <td className={css.tableCell}>{file.name}</td>
+        <td className={css.tableCell}>{file.mime}</td>
+        <td className={css.tableCell}>{filesize(file.stat.size)}</td>
     </tr>
 }
 
 export class FileTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedFiles: []
+        }
+        this.handleSelect = this.handleSelect.bind(this);
+        this.selectAll = this.selectAll.bind(this);
+        this.deselectAll = this.selectAll.bind(this, false);
+
+    }
+
+    selectAll(select=true){
+
+        if (select) {
+            this.setState({
+                selectedFiles: [...this.props.files]
+            })
+        } else {
+            this.setState({
+                selectedFiles: []
+            })
+        }
+    }
+
+    handleSelect(file, isSelected){
+        if (isSelected) {
+            this.setState(
+                (prevState) => {
+                    if (!prevState.selectedFiles.includes(file)){
+                        return {
+                            selectedFiles: [
+                                ...prevState.selectedFiles,
+                                file
+                            ]
+                        }
+                    }
+                }
+            )
+        } else {
+            this.setState((prevState) => {
+                let selected = prevState.selectedFiles;
+                let index =  selected.indexOf(file);
+                if (index >= 0) {
+                    return {
+                        selectedFiles: [
+                            ...selected.slice(0, index),
+                            ...selected.slice(index + 1)
+                        ]
+                    }
+                }
+            })
+        }
+    }
     render() {
         let {files} = this.props;
-        return <table>
+        if (files.length === 0) {
+            return null;
+        }
+        return <table className="w-100 pt3 collapse">
+            <thead className="tl">
+                <tr className={css.tableRow}>
+                    <th className={css.tableCell}>
+                        <input type='checkbox' onChange={(e) => e.target.checked ? this.selectAll() : this.deselectAll()} />
+                    </th>
+                    <th className={css.tableCell}>
+                        Name
+                    </th>
+                    <th className={css.tableCell}>
+                        Mime
+                    </th>
+                    <th className={css.tableCell}>
+                        Size
+                    </th>
+                </tr>
+            </thead>
             <tbody>
-            {files.map((file, index) => <FileTableItem file={file} key={index}/>)}
+            {files.map((file, index) => {
+                let selected = this.state.selectedFiles.includes(file);
+                return <FileTableItem onClick={() => this.handleSelect(file)}
+                                      file={file}
+                                      selected={selected}
+                                      handleSelect={this.handleSelect}
+                                      key={index}
+                />
+            })}
             </tbody>
         </table>
     }
 }
+

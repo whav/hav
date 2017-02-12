@@ -18,7 +18,6 @@ export class Upload extends React.Component {
         this.onTransferComplete = this.onTransferComplete.bind(this)
         this.onTransferCanceled = this.onTransferCanceled.bind(this)
         this.onTransferFailed = this.onTransferFailed.bind(this)
-
     }
 
     onUploadProgress(progressEvent) {
@@ -87,10 +86,6 @@ export class Upload extends React.Component {
         request.upload.addEventListener('load', this.onTransferComplete);
         request.upload.addEventListener('error', this.onTransferFailed);
         request.upload.addEventListener('abort', this.onTransferCanceled);
-        request.addEventListener(
-            'load',
-            this.onTransferComplete
-        )
         request.send(this.props.file);
         this.request = request;
     }

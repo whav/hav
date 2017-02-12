@@ -12,12 +12,11 @@ export class UploadControl extends React.Component {
         this.handleDrop = this.handleDrop.bind(this)
     }
     handleDrop(acceptedFiles, rejectedFiles) {
-        console.log(acceptedFiles);
-        this.props.uploadFiles(...acceptedFiles);
-        rejectedFiles.forEach((f) => console.error('Rejected file', f));
+        this.props.uploadFiles(acceptedFiles, rejectedFiles)
     }
     render() {
-        return <Dropzone onDrop={this.handleDrop} className="f5 no-underline black bg-animate hover-bg-black hover-white inline-flex items-center pa3 ba border-box mr4">
+        return <Dropzone onDrop={this.handleDrop}
+                         className="f5 no-underline black bg-animate hover-bg-black hover-white inline-flex items-center pa3 ba border-box mr4">
                 <GoCloudUpload/>
                 <span className="pl1">Add new files</span>
             </Dropzone>

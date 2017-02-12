@@ -8,16 +8,21 @@ import GoFileMedia from 'react-icons/go/file-media'
 import GoChevronRight from 'react-icons/go/chevron-right'
 import classNames from 'classnames'
 import filesize from 'filesize'
+import pathToRegexp from 'path-to-regexp'
+
+import LoadingIndicator from '../loading'
+import DirectoryControl from './controls'
+import Uploader from '../../containers/uploads'
 
 const css = {
     olDirectoryListing: 'list pl0',
     liDirectoryListing: 'di',
-    divListing: 'fb-directory-listing tc',
-    divListingItem: 'fb-directory-listing-item',
-    tableFileListing: 'collapse ba br2 b--black-10 pv2 ph3 mt4 tl',
-    tableRow: 'pointer dim',
-    tableRowSelected: 'bg-yellow',
-    tableCell: 'pa2'
+    dirListing: 'fb-directory-listing tc bb',
+    dirListingItem: 'fb-directory-listing-item',
+    fileList: 'dt w-100',
+    fileListItem: 'dt-row pointer dim pb4',
+    fileListItemSelected: 'bg-yellow',
+    fileListItemDetail: 'dtc v-mid pa2 bb'
 }
 
 require('./index.css')
@@ -53,7 +58,7 @@ export class DirectoryListing extends React.Component {
     render() {
         let {dirs} = this.props;
         if (dirs.length === 0) return null;
-        return <div className={css.divListing}>
+        return <div className={css.dirListing}>
             {
                 dirs.map((dir, index) => {
                     return <Directory key={index} {...dir} />
@@ -66,7 +71,7 @@ export class DirectoryListing extends React.Component {
 export class Directory extends React.Component {
     render() {
         let {name, link} = this.props;
-        return <div className={css.divListingItem}>
+        return <div className={css.dirListingItem}>
             <Link to={link} className="pa1 link black bg-animate hover-bg-yellow db h-100">
                 <GoFileDirectory className="f1"/>
                 <br />
@@ -86,19 +91,23 @@ export class File extends React.Component {
     }
 }
 
-const FileTableItem = ({file, selected, handleSelect}) => {
-    return <tr className={classNames(css.tableRow, {[css.tableRowSelected]: selected})}
+const FileItem = ({file, selected, handleSelect}) => {
+    return <div className={classNames(css.fileListItem, {[css.fileListItemSelected]: selected})}
                onClick={() => handleSelect(file, !selected)}>
-        <td className={css.tableCell}>
+        <div className={css.fileListItemDetail}>
             <input type="checkbox"
                    checked={selected}
                    onChange={(e) => handleSelect(file, e.target.checked)}
             />
-        </td>
-        <td className={css.tableCell}>{file.name}</td>
-        <td className={css.tableCell}>{file.mime}</td>
-        <td className={css.tableCell}>{filesize(file.stat.size)}</td>
-    </tr>
+        </div>
+        <div className={css.fileListItemDetail}>
+            {/*className='db w4'*/}
+            {file.preview_url ? <img src={file.preview_url} /> : null}
+        </div>
+        <div className={css.fileListItemDetail}>{file.name}</div>
+        <div className={css.fileListItemDetail}>{file.mime}</div>
+        <div className={css.fileListItemDetail}>{filesize(file.stat.size)}</div>
+    </div>
 }
 
 export class FileTable extends React.Component {
@@ -110,7 +119,6 @@ export class FileTable extends React.Component {
         this.handleSelect = this.handleSelect.bind(this);
         this.selectAll = this.selectAll.bind(this);
         this.deselectAll = this.selectAll.bind(this, false);
-
     }
 
     selectAll(select=true){
@@ -160,35 +168,19 @@ export class FileTable extends React.Component {
         if (files.length === 0) {
             return null;
         }
-        return <table className="w-100 pt3 collapse">
-            <thead className="tl">
-                <tr className={css.tableRow}>
-                    <th className={css.tableCell}>
-                        <input type='checkbox' onChange={(e) => e.target.checked ? this.selectAll() : this.deselectAll()} />
-                    </th>
-                    <th className={css.tableCell}>
-                        Name
-                    </th>
-                    <th className={css.tableCell}>
-                        Mime
-                    </th>
-                    <th className={css.tableCell}>
-                        Size
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-            {files.map((file, index) => {
-                let selected = this.state.selectedFiles.includes(file);
-                return <FileTableItem onClick={() => this.handleSelect(file)}
+        return <div className={css.fileList}>
+            {files.map(
+                (file, index) => {
+                    let selected = this.state.selectedFiles.includes(file);
+                    return <FileItem onClick={() => this.handleSelect(file)}
                                       file={file}
                                       selected={selected}
                                       handleSelect={this.handleSelect}
                                       key={index}
-                />
-            })}
-            </tbody>
-        </table>
+                    />
+                })
+            }
+        </div>
     }
 }
 

@@ -5,6 +5,7 @@ from urllib.request import pathname2url, url2pathname
 from mimetypes import guess_type
 
 from django.http import Http404
+from django.conf import settings
 from django.utils.http import quote
 from django.core.urlresolvers import reverse
 from django.core.files.storage import FileSystemStorage
@@ -16,6 +17,29 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.exceptions import APIException
 
 from .permissions import IncomingBaseMixin
+
+from libthumbor import CryptoURL
+
+crypto = CryptoURL(settings.THUMBOR_SECURITY_KEY)
+
+
+default_thumbnail_kwargs = {
+    "width": 200,
+    "height": 200,
+    "smart": False,
+    "fit_in": True
+}
+
+
+def thumbnail_url(image_path, **kwargs):
+
+    for k, v in default_thumbnail_kwargs.items():
+        kwargs.setdefault(k, v)
+
+    return settings.THUMBOR_SERVER.strip('/') + crypto.generate(
+        image_url=image_path,
+        **kwargs
+    )
 
 
 class FileStatsSerializer(serializers.BaseSerializer):
@@ -76,13 +100,19 @@ class FileSerializer(FileBrowserBaseSerializer):
 
     path = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
+    preview_url = serializers.SerializerMethodField()
 
     def get_path(self, path):
         root = self.get_root()
         return path.relative_to(root).as_posix()
 
     def get_mime(self, path):
-        return guess_type(path.name)
+        return guess_type(path.name)[0]
+
+    def get_preview_url(self, path):
+        mime = self.get_mime(path) or ''
+        if mime.startswith('image/'):
+            return thumbnail_url(self.get_path(path))
 
 
 class BaseDirectorySerializer(FileBrowserBaseSerializer):

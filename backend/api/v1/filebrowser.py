@@ -24,7 +24,6 @@ crypto = CryptoURL(settings.THUMBOR_SECURITY_KEY)
 
 
 default_thumbnail_kwargs = {
-    "width": 200,
     "height": 200,
     "smart": False,
     "fit_in": True

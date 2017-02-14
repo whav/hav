@@ -5,24 +5,25 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import GoFileDirectory from 'react-icons/go/file-directory'
 import GoFileMedia from 'react-icons/go/file-media'
-import GoChevronRight from 'react-icons/go/chevron-right'
 import classNames from 'classnames'
 import filesize from 'filesize'
-import pathToRegexp from 'path-to-regexp'
-
-import LoadingIndicator from '../loading'
-import DirectoryControl from './controls'
-import Uploader from '../../containers/uploads'
 
 const css = {
+    // directory listing
     olDirectoryListing: 'list pl0',
     liDirectoryListing: 'di',
     dirListing: 'fb-directory-listing tc bb',
     dirListingItem: 'fb-directory-listing-item',
-    fileList: 'dt w-100',
-    fileListItem: 'dt-row pointer dim pb4',
-    fileListItemSelected: 'bg-yellow',
-    fileListItemDetail: 'dtc v-mid pa2 bb'
+    // table view
+    fileTable: 'dt w-100',
+    fileTableItem: 'dt-row pointer dim pb4',
+    fileTableItemSelected: 'bg-lightest-blue',
+    fileTableItemDetail: 'dtc v-mid pa2 bb fb-table-item-detail',
+    // flexbox gallery
+    fileGallery: 'fb-file-gallery',
+    fileGalleryItem: 'fb-file-gallery-item pa2 ba collapse',
+    fileGalleryItemSelected: 'bg-lightest-blue',
+
 }
 
 require('./index.css')
@@ -91,96 +92,138 @@ export class File extends React.Component {
     }
 }
 
-const FileItem = ({file, selected, handleSelect}) => {
-    return <div className={classNames(css.fileListItem, {[css.fileListItemSelected]: selected})}
-               onClick={() => handleSelect(file, !selected)}>
-        <div className={css.fileListItemDetail}>
-            <input type="checkbox"
-                   checked={selected}
-                   onChange={(e) => handleSelect(file, e.target.checked)}
-            />
-        </div>
-        <div className={css.fileListItemDetail}>
-            {/*className='db w4'*/}
-            {file.preview_url ? <img src={file.preview_url} /> : null}
-        </div>
-        <div className={css.fileListItemDetail}>{file.name}</div>
-        <div className={css.fileListItemDetail}>{file.mime}</div>
-        <div className={css.fileListItemDetail}>{filesize(file.stat.size)}</div>
+const FileTableItem = ({file, selected, toggleSelect}) => {
+    let idCN = css.fileTableItemDetail;
+    return <div className={classNames(css.fileTableItem, {[css.fileTableItemSelected]: selected})}
+               onClick={() => toggleSelect(file)}>
+                <div className={idCN}>
+                    <input type="checkbox"
+                           checked={selected}
+                           onChange={() => toggleSelect(file)}
+                    />
+                </div>
+                <div className={idCN}>
+                    {file.preview_url ? <img src={file.preview_url} /> : null}
+                </div>
+                <div className={idCN}>{file.name}</div>
+                <div className={idCN}>{file.mime}</div>
+                <div className={idCN}>{filesize(file.stat.size)}</div>
+            </div>
+}
+
+const FilePlaceHolder = ({className}) => {
+    return <GoFileMedia className={className} />
+}
+
+const FileGalleryItem = ({file, selected, toggleSelect}) => {
+    return <div
+        onClick={() => toggleSelect(file)}
+        className={classNames(css.fileGalleryItem, {[css.fileGalleryItemSelected]: selected})} >
+        {file.preview_url ? <img src={file.preview_url} /> : <FilePlaceHolder /> }
+        {file.name}
     </div>
 }
 
-export class FileTable extends React.Component {
+
+const ImageGalleryItem = ({file, selected, toggleSelect}) => {
+    let cn = classNames('image-gallery-item', {[css.fileGalleryItemSelected]: selected})
+    return <div className={cn} onClick={() => toggleSelect(file)}>
+        { file.preview_url ?
+            <img src={file.preview_url} alt={file.name}/>
+            :
+            <FilePlaceHolder/>}
+    </div>
+}
+
+const fileListDisplayOptions = {
+    'tiles': FileGalleryItem,
+    'gallery': ImageGalleryItem,
+    'table': FileTableItem
+}
+
+export const fileListDisplayValues = Object.keys(fileListDisplayOptions);
+
+const FilesWrapper = ({type, ...props}) => {
+    let cn = ''
+    switch (type) {
+        case 'table':
+            cn = css.fileTable;
+            break;
+        default:
+            cn = css.fileGallery;
+    }
+    return <div className={cn}>
+        {props.children}
+    </div>
+}
+
+export class FileList extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
             selectedFiles: []
         }
+
         this.handleSelect = this.handleSelect.bind(this);
         this.selectAll = this.selectAll.bind(this);
-        this.deselectAll = this.selectAll.bind(this, false);
+        this.deselectAll = this.selectAll.bind(this);
     }
 
-    selectAll(select=true){
-
-        if (select) {
-            this.setState({
-                selectedFiles: [...this.props.files]
-            })
-        } else {
-            this.setState({
-                selectedFiles: []
-            })
-        }
+    selectAll(){
+        this.setState({
+            selectedFiles: [...this.props.files]
+        })
     }
 
-    handleSelect(file, isSelected){
-        if (isSelected) {
-            this.setState(
-                (prevState) => {
-                    if (!prevState.selectedFiles.includes(file)){
-                        return {
-                            selectedFiles: [
-                                ...prevState.selectedFiles,
-                                file
-                            ]
-                        }
-                    }
-                }
-            )
-        } else {
-            this.setState((prevState) => {
-                let selected = prevState.selectedFiles;
-                let index =  selected.indexOf(file);
-                if (index >= 0) {
+    deselectAll() {
+        this.setState({
+            selectedState: []
+        })
+    }
+
+    handleSelect(file) {
+        this.setState(
+            (prevState) => {
+                let selectedFiles = prevState.selectedFiles;
+                let isSelected = selectedFiles.includes(file);
+                if (!isSelected) {
                     return {
                         selectedFiles: [
-                            ...selected.slice(0, index),
-                            ...selected.slice(index + 1)
+                            ...selectedFiles,
+                            file
+                        ]
+                    }
+                } else {
+                    let index = selectedFiles.indexOf(file);
+                    return {
+                        selectedFiles: [
+                            ...selectedFiles.slice(0, index),
+                            ...selectedFiles.slice(index + 1)
                         ]
                     }
                 }
-            })
-        }
+        })
     }
+
     render() {
-        let {files} = this.props;
+        let {files, displayType} = this.props;
         if (files.length === 0) {
             return null;
         }
-        return <div className={css.fileList}>
-            {files.map(
-                (file, index) => {
-                    let selected = this.state.selectedFiles.includes(file);
-                    return <FileItem onClick={() => this.handleSelect(file)}
-                                      file={file}
-                                      selected={selected}
-                                      handleSelect={this.handleSelect}
-                                      key={index}
-                    />
-                })
+        let Component = fileListDisplayOptions[displayType];
+        let rendererFiles = files.map((file, index) => {
+            let props = {
+                file: file,
+                selected: this.state.selectedFiles.includes(file),
+                toggleSelect: this.handleSelect
             }
-        </div>
+            return <Component key={index} {...props} />
+        });
+
+        return <FilesWrapper type={displayType}>
+                {rendererFiles}
+            </FilesWrapper>
     }
 }
 

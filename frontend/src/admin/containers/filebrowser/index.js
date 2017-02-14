@@ -4,12 +4,12 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import {requestDirectoryAction} from '../../actions/browser'
+import {requestDirectoryAction, switchFilebrowserDisplayType} from '../../actions/browser'
 
 import LoadingIndicator from '../../ui/loading'
-import {DirectoryListingBreadcrumbs, DirectoryListing, FileTable} from '../../ui/filebrowser'
+import {DirectoryListingBreadcrumbs, DirectoryListing, FileList, fileListDisplayValues} from '../../ui/filebrowser'
 import {SingleUpload} from '../../ui/filebrowser/uploads'
-import DirectoryControl from '../../ui/filebrowser/controls'
+import {DirectoryControls, FilebrowserSettingsControl} from '../../ui/filebrowser/controls'
 import UploadTrigger from '../uploads'
 import {getStateKeyForPath} from '../../reducers/browser'
 
@@ -28,6 +28,7 @@ class FileBrowser extends React.Component {
     constructor(props) {
         super(props)
     }
+
     componentDidMount() {
         this.props.loadCurrentDirectory()
     }
@@ -37,6 +38,7 @@ class FileBrowser extends React.Component {
             newProps.loadCurrentDirectory()
         }
     }
+
     render() {
         if (this.props.loading) {
             return <LoadingIndicator />;
@@ -45,7 +47,9 @@ class FileBrowser extends React.Component {
                 directory,
                 parentDirectories,
                 childrenDirectories,
-                files
+                files,
+                settings,
+                switchDisplayStyle
             } = this.props;
 
             let uploads = this.props.uploads;
@@ -68,6 +72,7 @@ class FileBrowser extends React.Component {
                 <header>
                     { breadcrumbs }
                     <h1>{directory.name}</h1>
+                    <FilebrowserSettingsControl {...settings} switchDisplayType={switchDisplayStyle}/>
                 </header>
                 <main>
                     { dirListing }
@@ -75,7 +80,7 @@ class FileBrowser extends React.Component {
                     {
                         isEmpty ?
                         <h2 className="tc red">This directory is empty.</h2>
-                        : <FileTable files={files} />
+                        : <FileList files={files} displayType={settings.selectedDisplayType}/>
                     }
                     {
                         uploads.map((f) => <SingleUpload key={f.name} file={f}/>)
@@ -83,9 +88,9 @@ class FileBrowser extends React.Component {
 
                 </main>
                 <footer>
-                    <DirectoryControl>
+                    <DirectoryControls>
                         <UploadTrigger uploadTo={this.props.dirPath} />
-                    </DirectoryControl>
+                    </DirectoryControls>
                 </footer>
             </div>
 
@@ -95,9 +100,6 @@ class FileBrowser extends React.Component {
 }
 
 FileBrowser.propTypes = {
-    // childrenDirs: React.PropTypes.array.isRequired,
-    // parentDirs: React.PropTypes.array.isRequired,
-    // files: React.PropTypes.array.isRequired,
     directory: React.PropTypes.object.isRequired,
     loading: React.PropTypes.bool.isRequired,
     dirPath: React.PropTypes.string,
@@ -117,6 +119,7 @@ export default connect(
         let rootState = state.filebrowser;
         let allDirs = rootState.directories;
         let directory = allDirs[storeKey];
+        let settings = rootState.settings;
         let mappedProps = {
             dirPath,
         }
@@ -143,6 +146,7 @@ export default connect(
             loading: false,
             directory: directory,
             uploads: directoryUploads,
+            settings,
             childrenDirectories,
             parentDirectories,
             files
@@ -152,6 +156,7 @@ export default connect(
         loadCurrentDirectory: () => {
             dispatch(requestDirectoryAction(props.match.params.path))
         },
-        navigateToDirectory: (path) => dispatch(requestDirectoryAction(path))
+        navigateToDirectory: (path) => dispatch(requestDirectoryAction(path)),
+        switchDisplayStyle: (style) => dispatch(switchFilebrowserDisplayType(style))
     })
 )(FileBrowser)

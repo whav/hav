@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux'
 
-import {RECEIVE_DIRECTORY_CONTENT} from '../actions/browser'
+import {RECEIVE_DIRECTORY_CONTENT, CHANGE_FILE_BROWSER_SETTINGS} from '../actions/browser'
 import {UPLOAD_COMPLETED} from '../actions/uploads'
 
 import {ROOT_PATH_KEY} from '../store'
+import {fileListDisplayValues} from '../ui/filebrowser/index'
 
 const getStateKeyForPath = (path) => {
     switch (path) {
@@ -93,11 +94,30 @@ const files = (state={}, action) => {
     }
 }
 
+// this is being used to hold filebrowser settings
+const settings = (
+    state={
+        selectedDisplayType: fileListDisplayValues[0],
+        availableDisplayTypes: fileListDisplayValues
+    },
+    action) => {
+    switch (action.type) {
+        case CHANGE_FILE_BROWSER_SETTINGS:
+            return {
+                ...state,
+                ...action.payload
+            }
+        default:
+            return state
+    }
+}
+
 
 
 const filebrowser = combineReducers({
     directories,
     files,
+    settings
 })
 
 export default filebrowser

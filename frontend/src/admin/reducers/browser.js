@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import {RECEIVE_DIRECTORY_CONTENT, CHANGE_FILE_BROWSER_SETTINGS} from '../actions/browser'
+import {RECEIVE_DIRECTORY_CONTENT, CHANGE_FILE_BROWSER_SETTINGS, SELECT_FILES, TOGGLE_FILES_SELECT} from '../actions/browser'
 import {UPLOAD_COMPLETED} from '../actions/uploads'
 
 import {ROOT_PATH_KEY} from '../store'
@@ -24,6 +24,9 @@ const getStateKeyForPath = (path) => {
 
 
 const directories = (state={}, action) => {
+
+    const ownKey = getStateKeyForPath(action.path)
+
     switch (action.type) {
 
         case RECEIVE_DIRECTORY_CONTENT:
@@ -33,7 +36,6 @@ const directories = (state={}, action) => {
                 files,
                 ...own
             } = action.contents;
-            let ownKey = getStateKeyForPath(action.path)
             let updatedDirs = {}
 
             // create lists of paths for parents and children
@@ -62,7 +64,6 @@ const directories = (state={}, action) => {
                 ...state,
                 ...updatedDirs
             }
-
         default:
             return state
 
@@ -70,15 +71,40 @@ const directories = (state={}, action) => {
 }
 
 const files = (state={}, action) => {
+    const fileDefaults = {
+        selected: false
+    }
     let key = getStateKeyForPath(action.path)
     switch (action.type) {
         case RECEIVE_DIRECTORY_CONTENT:
             let {
                 files
             } = action.contents;
+
+            // patch in defaults
+            files = files.map((f) => ({
+                ...fileDefaults,
+                ...f
+            }))
+
             return {
                 ...state,
                 [key]: [...files]
+            }
+        case TOGGLE_FILES_SELECT:
+            let updatedFiles = state[key].map((f) => {
+                if (action.files.includes(f.name)) {
+                    return {
+                        ...f,
+                        selected: !f.selected
+                    }
+                }
+                return f
+
+            })
+            return {
+                ...state,
+                [key]: updatedFiles
             }
         case UPLOAD_COMPLETED:
             let existing_files = state[key] || []

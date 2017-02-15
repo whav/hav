@@ -92,9 +92,9 @@ export class File extends React.Component {
     }
 }
 
-const FileTableItem = ({file, selected, toggleSelect}) => {
+const FileTableItem = ({file, toggleSelect}) => {
     let idCN = css.fileTableItemDetail;
-    return <div className={classNames(css.fileTableItem, {[css.fileTableItemSelected]: selected})}
+    return <div className={classNames(css.fileTableItem, {[css.fileTableItemSelected]: file.selected})}
                onClick={() => toggleSelect(file)}>
                 <div className={idCN}>
                     <input type="checkbox"
@@ -115,18 +115,18 @@ const FilePlaceHolder = ({className}) => {
     return <GoFileMedia className={className} />
 }
 
-const FileGalleryItem = ({file, selected, toggleSelect}) => {
+const FileGalleryItem = ({file, toggleSelect}) => {
     return <div
         onClick={() => toggleSelect(file)}
-        className={classNames(css.fileGalleryItem, {[css.fileGalleryItemSelected]: selected})} >
+        className={classNames(css.fileGalleryItem, {[css.fileGalleryItemSelected]: file.selected})} >
         {file.preview_url ? <img src={file.preview_url} /> : <FilePlaceHolder /> }
         {file.name}
     </div>
 }
 
 
-const ImageGalleryItem = ({file, selected, toggleSelect}) => {
-    let cn = classNames('image-gallery-item', {[css.fileGalleryItemSelected]: selected})
+const ImageGalleryItem = ({file, toggleSelect}) => {
+    let cn = classNames('image-gallery-item', {[css.fileGalleryItemSelected]: file.selected})
     return <div className={cn} onClick={() => toggleSelect(file)}>
         { file.preview_url ?
             <img src={file.preview_url} alt={file.name}/>
@@ -136,8 +136,8 @@ const ImageGalleryItem = ({file, selected, toggleSelect}) => {
 }
 
 const fileListDisplayOptions = {
-    'tiles': FileGalleryItem,
     'gallery': ImageGalleryItem,
+    'tiles': FileGalleryItem,
     'table': FileTableItem
 }
 
@@ -161,53 +161,10 @@ export class FileList extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            selectedFiles: []
-        }
-
-        this.handleSelect = this.handleSelect.bind(this);
-        this.selectAll = this.selectAll.bind(this);
-        this.deselectAll = this.selectAll.bind(this);
-    }
-
-    selectAll(){
-        this.setState({
-            selectedFiles: [...this.props.files]
-        })
-    }
-
-    deselectAll() {
-        this.setState({
-            selectedState: []
-        })
-    }
-
-    handleSelect(file) {
-        this.setState(
-            (prevState) => {
-                let selectedFiles = prevState.selectedFiles;
-                let isSelected = selectedFiles.includes(file);
-                if (!isSelected) {
-                    return {
-                        selectedFiles: [
-                            ...selectedFiles,
-                            file
-                        ]
-                    }
-                } else {
-                    let index = selectedFiles.indexOf(file);
-                    return {
-                        selectedFiles: [
-                            ...selectedFiles.slice(0, index),
-                            ...selectedFiles.slice(index + 1)
-                        ]
-                    }
-                }
-        })
     }
 
     render() {
-        let {files, displayType} = this.props;
+        let {files, displayType, selectedFiles} = this.props;
         if (files.length === 0) {
             return null;
         }
@@ -215,8 +172,7 @@ export class FileList extends React.Component {
         let rendererFiles = files.map((file, index) => {
             let props = {
                 file: file,
-                selected: this.state.selectedFiles.includes(file),
-                toggleSelect: this.handleSelect
+                toggleSelect: this.props.handleSelect
             }
             return <Component key={index} {...props} />
         });

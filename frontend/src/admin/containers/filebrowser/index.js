@@ -4,7 +4,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import {requestDirectoryAction, switchFilebrowserDisplayType} from '../../actions/browser'
+import {requestDirectoryAction, switchFilebrowserDisplayType, selectFiles, toggleSelect} from '../../actions/browser'
 
 import LoadingIndicator from '../../ui/loading'
 import {DirectoryListingBreadcrumbs, DirectoryListing, FileList, fileListDisplayValues} from '../../ui/filebrowser'
@@ -49,7 +49,8 @@ class FileBrowser extends React.Component {
                 childrenDirectories,
                 files,
                 settings,
-                switchDisplayStyle
+                switchDisplayStyle,
+                selectFiles
             } = this.props;
 
             let uploads = this.props.uploads;
@@ -80,7 +81,10 @@ class FileBrowser extends React.Component {
                     {
                         isEmpty ?
                         <h2 className="tc red">This directory is empty.</h2>
-                        : <FileList files={files} displayType={settings.selectedDisplayType}/>
+                        : <FileList files={files}
+                                    displayType={settings.selectedDisplayType}
+                                    handleSelect={selectFiles}
+                            />
                     }
                     {
                         uploads.map((f) => <SingleUpload key={f.name} file={f}/>)
@@ -90,6 +94,7 @@ class FileBrowser extends React.Component {
                 <footer>
                     <DirectoryControls>
                         <UploadTrigger uploadTo={this.props.dirPath} />
+                        <span className="red">{selectFiles.length}</span>
                     </DirectoryControls>
                 </footer>
             </div>
@@ -100,14 +105,17 @@ class FileBrowser extends React.Component {
 }
 
 FileBrowser.propTypes = {
-    directory: React.PropTypes.object.isRequired,
     loading: React.PropTypes.bool.isRequired,
+    directory: React.PropTypes.object.isRequired,
     dirPath: React.PropTypes.string,
     loadCurrentDirectory: React.PropTypes.func.isRequired,
     navigateToDirectory: React.PropTypes.func.isRequired,
     parentDirectories: React.PropTypes.array,
     childrenDirectories: React.PropTypes.array,
-    files: React.PropTypes.array
+    files: React.PropTypes.array,
+    selectFiles: React.PropTypes.func.isRequired,
+    switchDisplayStyle: React.PropTypes.func.isRequired,
+    settings: React.PropTypes.object
 }
 
 
@@ -157,6 +165,10 @@ export default connect(
             dispatch(requestDirectoryAction(props.match.params.path))
         },
         navigateToDirectory: (path) => dispatch(requestDirectoryAction(path)),
-        switchDisplayStyle: (style) => dispatch(switchFilebrowserDisplayType(style))
+        switchDisplayStyle: (style) => dispatch(switchFilebrowserDisplayType(style)),
+        selectFiles: (...files) => {
+            let filenames = files.map((f) => f.name);
+            dispatch(toggleSelect(props.match.params.path, filenames))
+        }
     })
 )(FileBrowser)

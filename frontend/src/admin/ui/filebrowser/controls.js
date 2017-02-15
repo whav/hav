@@ -6,18 +6,17 @@ import Dropzone from 'react-dropzone'
 
 import GoCloudUpload from 'react-icons/go/cloud-upload'
 
-export class UploadControl extends React.Component {
+class UploadControl extends React.Component {
     constructor(props){
         super(props);
         this.handleDrop = this.handleDrop.bind(this)
     }
     handleDrop(acceptedFiles, rejectedFiles) {
-        console.log(acceptedFiles);
-        this.props.uploadFiles(...acceptedFiles);
-        rejectedFiles.forEach((f) => console.error('Rejected file', f));
+        this.props.uploadFiles(acceptedFiles, rejectedFiles)
     }
     render() {
-        return <Dropzone onDrop={this.handleDrop} className="f5 no-underline black bg-animate hover-bg-black hover-white inline-flex items-center pa3 ba border-box mr4">
+        return <Dropzone onDrop={this.handleDrop}
+                         className="f5 no-underline black bg-animate hover-bg-black hover-white inline-flex items-center pa3 ba border-box mr4">
                 <GoCloudUpload/>
                 <span className="pl1">Add new files</span>
             </Dropzone>
@@ -32,5 +31,20 @@ class DirectoryControls extends React.Component {
     }
 }
 
+const FilebrowserSettingsControl = ({selectedDisplayType, switchDisplayType, availableDisplayTypes}) => {
+    return <select value={selectedDisplayType}
+                   onChange={(e) => switchDisplayType(e.target.value)}>
+                    {
+                        availableDisplayTypes.map(
+                            (display_option) =>
+                                <option value={display_option} key={display_option}>{display_option}</option>
+                        )
+                    }
+    </select>;
+}
 
-export default DirectoryControls;
+export {
+    DirectoryControls,
+    FilebrowserSettingsControl,
+    UploadControl
+}

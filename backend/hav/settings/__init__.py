@@ -202,4 +202,4 @@ MEDIA_ROOT = os.path.join(ROOT_DIR, 'dist/media')
 
 WAGTAIL_SITE_NAME = 'Himalaya Archive Vienna'
 
-
+LOGIN_URL = 'admin:login'

@@ -8,9 +8,12 @@ import {
     Switch
 } from 'react-router-dom'
 
+import { Provider } from 'react-redux';
+import store from './store'
 
 import Nav from './nav'
 import routes from './routes'
+// import StateRouter from './containers/router'
 
 // css, images and stuff
 require('./ui/index.css');
@@ -27,7 +30,8 @@ const Navigation = (props) => <Nav routes={routes} {...props} />;
 
 const HavAdmin = () => {
     return (
-    <Router basename="/admin">
+    <Provider store={store}>
+        <Router basename="/admin">
         <App>
             <div className={css.menu}>
                 <img src={logo} alt="hav logo" className={css.logo} />
@@ -41,7 +45,8 @@ const HavAdmin = () => {
                 </Switch>
             </div>
         </App>
-    </Router>);
+        </Router>
+    </Provider>);
 };
 
 export default HavAdmin

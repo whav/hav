@@ -44,3 +44,49 @@
     display: block;
     /*flex-basis: 50%;*/
 }
+
+/* gallery like display of files */
+.fb-file-gallery {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.fb-file-gallery-item {
+    /*flex: 0 0;*/
+    text-align: center;
+    width: 250px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.fb-file-gallery-item > * {
+    display: block;
+}
+.fb-file-gallery-item > img, .fb-file-gallery-item svg {
+    display: block;
+    margin: auto;
+    /*font-size: 3rem;*/
+}
+
+.fb-table-item-detail > img {
+    display: block;
+    margin: auto;
+}
+
+.image-gallery-item {
+    padding: 1rem;
+    min-width: 100px;
+}
+
+.image-gallery-item.selected {
+    border: 1px dotted grey;
+}
+
+.image-gallery-item img, .image-gallery-item svg {
+    display: block;
+    height: auto;
+    width: 100%;
+    margin: auto;
+    vertical-align: middle;
+}

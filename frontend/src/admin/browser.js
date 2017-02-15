@@ -4,23 +4,17 @@ import pathToRegexp from 'path-to-regexp'
 
 import {DirectoryListing, DirectoryListingBreadcrumbs, FileTable} from './ui/filebrowser'
 import LoadingIndicator from './ui/loading'
-import DirectoryControl, {UploadControl} from './ui/filebrowser/controls'
-import {Upload} from './uploader'
+import DirectoryControl from './ui/filebrowser/controls'
+import Uploader from './containers/uploads'
 
 export default class FileBrowser extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            loading: true,
-            uploads: []
-        }
-        this.fetchPath = this.fetchPath.bind(this)
+
         this.getUrlforFilePath = this.getUrlforFilePath.bind(this)
-        this.handleUpload = this.handleUpload.bind(this)
-        this.handleUploadDone = this.handleUploadDone.bind(this)
 
         // this can be used to reverse urls inside the FileBrowser
-        let resolver = pathToRegexp.compile(this.props.path);
+        const resolver = pathToRegexp.compile(this.props.path);
         this.buildURL = ({path}) => {
             if (typeof path === 'string') {
                 if (path === '/' || path === '') {
@@ -30,77 +24,12 @@ export default class FileBrowser extends React.Component {
                 }
             }
             path = path.filter((p) => p !== "")
-            console.log('Reversing url with path:', path);
             return resolver({path: path});
         }
     }
 
     getUrlforFilePath(fileOrDirectory={path:''}) {
         return `/incoming/${fileOrDirectory.path}`
-    }
-
-
-    fetchPath(path='') {
-        this.setState({loading: true});
-        let url = `/api/v1/fb/${path}`;
-        if (!url.endsWith('/')){
-            url += '/'
-        }
-        fetch(url, {
-            credentials: 'same-origin',
-        }).then(
-            (response) => response.json()
-        ).then(
-            (json) => {
-                this.setState({
-                    loading: false,
-                    ...json
-                })
-                console.log(json.name, json)
-
-            }
-        )
-    }
-
-    handleUploadDone(data) {
-        this.setState({
-            files: [
-                ...this.state.files,
-                data
-            ]
-        })
-    }
-
-    handleUpload(...files) {
-        let addedFiles = files.map((f) => {
-            let targetURL = this.state.url + encodeURIComponent(f.name);
-            console.log(targetURL);
-            return {
-                file: f,
-                added: new Date(),
-                target: targetURL,
-                onUploadDone: this.handleUploadDone
-            }
-        })
-        this.setState({
-            uploads: [
-                ...this.state.uploads,
-                ...addedFiles
-            ]
-        })
-    }
-
-    componentWillReceiveProps(newProps) {
-        let {match} = newProps;
-
-        if (match.params.path != this.props.match.params.path) {
-            this.fetchPath(match.params.path);
-        }
-    }
-
-    componentDidMount() {
-        let path = this.props.match.params.path;
-        this.fetchPath(path);
     }
 
     render() {
@@ -120,7 +49,6 @@ export default class FileBrowser extends React.Component {
 
             let dirListing = <DirectoryListing dirs={
                     childrenDirs.map((d) => {
-                        console.log(d);
                         return {...d, link: this.buildURL(d)}
                     })}/>;
             let isEmpty = (childrenDirs.length + files.length) === 0;
@@ -145,7 +73,7 @@ export default class FileBrowser extends React.Component {
                 </main>
                 <footer>
                     <DirectoryControl>
-                        <UploadControl uploadFiles={this.handleUpload} />
+                        <Uploader uploadTo={this.props.match.params.path} />
                     </DirectoryControl>
                 </footer>
             </div>

@@ -20,7 +20,7 @@ WEBPACK_LOADER['DEFAULT']['STATS_FILE'] = os.path.join(
 
 WAGTAIL_SITE_NAME = 'HAV Development page'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'dist/media/')
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'dist/media/')
 MEDIA_URL = '/media/'
 
 
@@ -34,3 +34,5 @@ MIDDLEWARE = [
 ] + MIDDLEWARE
 
 # DEBUG_TOOLBAR_PATCH_SETTINGS = False
+THUMBOR_SECURITY_KEY = 'SECRET_HAV_KEY'
+THUMBOR_SERVER = 'http://127.0.0.1:8888/'

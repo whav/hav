@@ -3,7 +3,7 @@ from django.contrib import admin as django_admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
-
+from django.contrib.auth.decorators import user_passes_test
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtailcore import urls as wagtail_urls
@@ -13,7 +13,11 @@ from incoming.views import debug
 
 
 hav_admin_patterns = [
-    url(r'', TemplateView.as_view(template_name='administration/index.html'), name='root')
+    url(
+        r'',
+        user_passes_test(lambda u: u.is_superuser)(TemplateView.as_view(template_name='administration/index.html')),
+        name='root'
+    )
 ]
 
 urlpatterns = [

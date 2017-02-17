@@ -46,16 +46,16 @@ const getFinishedUploads = (uploads) => {
 }
 
 // save some stuff to localStorage
-store.subscribe(throttle(() => {
-    let state = store.getState();
-    let finishedUploads = getFinishedUploads(state.uploads);
-    console.log('Writing uploads to local storage', finishedUploads, new Date());
-    saveState(
-        localStorageKey,
-        {
-            uploads: finishedUploads
-        }
-    )
-}), 50000);
+// store.subscribe(throttle(() => {
+//     let state = store.getState();
+//     let finishedUploads = getFinishedUploads(state.uploads);
+//     // console.log('Writing uploads to local storage', finishedUploads, new Date());
+//     saveState(
+//         localStorageKey,
+//         {
+//             uploads: finishedUploads
+//         }
+//     )
+// }), 50000);
 
 export default store;

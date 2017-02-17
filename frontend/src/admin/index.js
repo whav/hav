@@ -22,9 +22,8 @@ render(HavAdminApp)
 
 // Hot Module Replacement API
 if (module.hot) {
-  module.hot.accept('./app.js', () => {
-    render(HavAdminApp)
-  });
+    console.log('HMR enabled');
+    module.hot.accept('./app.js', () => render(HavAdminApp));
 }
 
 

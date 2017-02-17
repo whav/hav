@@ -12,11 +12,11 @@ import { Provider } from 'react-redux';
 import store from './store'
 
 import Nav from './nav'
-import routes from './routes'
-// import StateRouter from './containers/router'
+import {routes, mainNav} from './routes'
 
 // css, images and stuff
 require('./ui/index.css');
+
 const logo = require('../assets/logo.png')
 const css = {
     logo: 'mw-100 pa2',
@@ -26,7 +26,7 @@ const css = {
 }
 
 const App = ({children}) => <div className={css.app}>{children}</div>
-const Navigation = (props) => <Nav routes={routes} {...props} />;
+const Navigation = ({...props}) => <Nav navItems={mainNav} {...props} />
 
 const HavAdmin = () => {
     return (
@@ -41,7 +41,11 @@ const HavAdmin = () => {
             </div>
             <div className={css.main}>
                 <Switch>
-                {routes.map((rc, index) => <Route key={index} exact={true} path={rc.path} component={rc.main} />)}
+                {
+                    routes.map(
+                        (rc, index) => <Route key={index} exact={true} path={rc.path} component={rc.main} />
+                    )
+                }
                 </Switch>
             </div>
         </App>

@@ -8,59 +8,48 @@ import {Uploads} from './containers/uploads'
 import GoHome from 'react-icons/go/home'
 import GoFileDirectory from 'react-icons/go/file-directory'
 import GoCloudUpload from 'react-icons/go/cloud-upload'
-import GoTriangleRight from 'react-icons/go/triangle-right'
+import GoDatabase from 'react-icons/go/database'
 
 const routes = [
     {
         path: '/',
-        main: Welcome,
+        main: Welcome
+    },
+    {
+        path: '/source/:repository/:path*/',
+        main: FileBrowser
+    },
+    {
+        path: '/uploads/',
+        main: Uploads,
+    }
+]
+
+const mainNav = [
+    {
         title: 'Home',
         icon: GoHome,
         menuExact: true,
-        routes: [
-            {
-                path: '/about/',
-                title: 'About',
-                main: Welcome
-            }
-        ]
+        link: '/'
     },
     {
-        path: '/incoming/:path*/',
-        menuPath: '/incoming/',
-        main: FileBrowser,
+        link: '/source/incoming/',
         icon: GoFileDirectory,
         title: 'Incoming',
         menuExact: false
     },
     {
-        path: '/uploads/',
-        main: Uploads,
+        link: '/source/whav/',
+        icon: GoDatabase,
+        title: 'WHAV',
+        menuExact: false
+    },
+    {
         icon: GoCloudUpload,
         title: 'Uploads',
-        menuExact: true
+        menuExact: true,
+        link: '/uploads/'
     }
 ]
 
-// this should be merged with all routes defined above
-const routeDefaults = {
-    title: 'NoName',
-    menuExact: false,
-    icon: GoTriangleRight,
-    routes: []
-}
-
-const applyDefaults = (route) => {
-    let rc = {
-        ...routeDefaults,
-        ...route
-    };
-    // menuPath
-    if (!rc.hasOwnProperty('menuPath')) {
-        rc.menuPath = rc.path;
-    }
-    rc.routes = rc.routes.map((subroute) => applyDefaults(subroute))
-    return rc
-}
-
-export default routes.map((r) => applyDefaults(r));
+export {mainNav, routes}

@@ -5,8 +5,9 @@
 const apiVersion = 'v1'
 const prefix = `/api/${apiVersion}`
 
-export const file_upload = `${prefix}/fb`
+export const file_upload = `${prefix}/`
 export const browser = file_upload
+
 
 
 

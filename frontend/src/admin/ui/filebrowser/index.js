@@ -95,19 +95,13 @@ export class File extends React.Component {
 const FileTableItem = ({file, toggleSelect}) => {
     let idCN = css.fileTableItemDetail;
     return <div className={classNames(css.fileTableItem, {[css.fileTableItemSelected]: file.selected})}
-               onClick={() => toggleSelect(file)}>
-                <div className={idCN}>
-                    <input type="checkbox"
-                           checked={selected}
-                           onChange={() => toggleSelect(file)}
-                    />
-                </div>
-                <div className={idCN}>
+               onClick={toggleSelect}>
+                <div className={classNames(idCN, 'tl')}>
                     {file.preview_url ? <img src={file.preview_url} /> : null}
                 </div>
                 <div className={idCN}>{file.name}</div>
                 <div className={idCN}>{file.mime}</div>
-                <div className={idCN}>{filesize(file.stat.size)}</div>
+                <div className={idCN}>{filesize(file.size)}</div>
             </div>
 }
 
@@ -117,7 +111,7 @@ const FilePlaceHolder = ({className}) => {
 
 const FileGalleryItem = ({file, toggleSelect}) => {
     return <div
-        onClick={() => toggleSelect(file)}
+        onClick={toggleSelect}
         className={classNames(css.fileGalleryItem, {[css.fileGalleryItemSelected]: file.selected})} >
         {file.preview_url ? <img src={file.preview_url} /> : <FilePlaceHolder /> }
         {file.name}
@@ -127,9 +121,9 @@ const FileGalleryItem = ({file, toggleSelect}) => {
 
 const ImageGalleryItem = ({file, toggleSelect}) => {
     let cn = classNames('image-gallery-item', {[css.fileGalleryItemSelected]: file.selected})
-    return <div className={cn} onClick={() => toggleSelect(file)}>
+    return <div className={cn} onClick={toggleSelect} title={file.name}>
         { file.preview_url ?
-            <img src={file.preview_url} alt={file.name}/>
+            <img src={encodeURI(file.preview_url)} alt={file.name}/>
             :
             <FilePlaceHolder/>}
     </div>
@@ -161,6 +155,36 @@ export class FileList extends React.Component {
 
     constructor(props) {
         super(props);
+        this.handleFileSelectEvent = this.handleFileSelectEvent.bind(this)
+    }
+
+    handleFileSelectEvent(file, event) {
+        console.log({
+            altKey: event.altKey,
+            shiftKey: event.shiftKey,
+            ctrlKey: event.ctrlKey,
+            metaKey: event.metaKey,
+        });
+
+        let {ctrlKey, shiftKey} = event;
+        let deselectOthers = true;
+        let spanSelection = false;
+
+        if (ctrlKey || shiftKey) {
+            deselectOthers = false
+        }
+
+        if (shiftKey) {
+            spanSelection=true
+        }
+
+        let modifiers = {
+            deselectOthers,
+            spanSelection
+        }
+
+        this.props.handleSelect([file], modifiers);
+
     }
 
     render() {
@@ -172,7 +196,7 @@ export class FileList extends React.Component {
         let rendererFiles = files.map((file, index) => {
             let props = {
                 file: file,
-                toggleSelect: this.props.handleSelect
+                toggleSelect: this.handleFileSelectEvent.bind(this, file)
             }
             return <Component key={index} {...props} />
         });

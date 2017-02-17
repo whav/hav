@@ -3,6 +3,7 @@
  */
 import React from 'react'
 import Dropzone from 'react-dropzone'
+import classNames from 'classnames'
 
 import GoCloudUpload from 'react-icons/go/cloud-upload'
 
@@ -32,15 +33,16 @@ class DirectoryControls extends React.Component {
 }
 
 const FilebrowserSettingsControl = ({selectedDisplayType, switchDisplayType, availableDisplayTypes}) => {
-    return <select value={selectedDisplayType}
-                   onChange={(e) => switchDisplayType(e.target.value)}>
-                    {
-                        availableDisplayTypes.map(
-                            (display_option) =>
-                                <option value={display_option} key={display_option}>{display_option}</option>
-                        )
-                    }
-    </select>;
+    return <span>
+        {
+            availableDisplayTypes.map(
+                (display_option) =>
+                    <button onClick={() => switchDisplayType(display_option)}
+                            className={classNames('pa1 ba mid-gray link', {'bw2 dark-gray': selectedDisplayType === display_option})}
+                            key={display_option}>{display_option}</button>
+                )
+        }
+    </span>
 }
 
 export {

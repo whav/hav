@@ -1,10 +1,7 @@
 /**
  * Created by sean on 09/02/17.
  */
-import {browser} from './urls'
-
-export const requestDirectory = (path) => {
-        let url = path ? `${browser}/${path}/` : `${browser}/`;
+export const requestDirectory = (url) => {
         return fetch(url, {
             credentials: 'same-origin',
         }).then(

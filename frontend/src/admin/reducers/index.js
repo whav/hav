@@ -3,12 +3,12 @@
  */
 import { combineReducers } from 'redux';
 import uploads from './uploads'
-import filebrowser from './browser'
+import repositories from './browser'
 
 
 const reducers = {
     uploads,
-    filebrowser,
+    repositories
 };
 
 export default combineReducers(reducers);

@@ -7,9 +7,12 @@ import Nav from './ui/nav'
 
 
 const Navigation = connect(
-    (state) => ({
-        uploads: state.uploads.length
-    }),
+    (state, props) => {
+        console.log(props);
+        return {
+            uploads: state.uploads.length
+        }
+    },
     (dispatch) => ({})
 )(Nav)
 

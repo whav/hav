@@ -3,8 +3,6 @@
  */
 import {getCSRFCookie} from '../../utils/xhr'
 
-import {file_upload} from './urls'
-
 let defaultAction = () => {
     console.warn('File Uploader default action called with arguments:', arguments);
 }
@@ -17,14 +15,14 @@ let calculateProgress = (progressEvent) => {
 }
 
 const uploadFile = (file,
-                    path,
+                    uploadTo,
                     onSuccess=defaultAction,
                     onProgress=defaultAction,
                     onFailure=defaultAction,
                     setFilenameHeaders=false
     ) => {
 
-    let url = `${file_upload}/${path}/${file.name}`
+    let url = `${uploadTo}${file.name}`
     let csrftoken = getCSRFCookie();
     let request = new XMLHttpRequest();
     request.open('PUT', url, true);

@@ -24,18 +24,15 @@ const getStateKeyForPath = (path) => {
 
 
 const directories = (state={}, action) => {
-
-    const ownKey = getStateKeyForPath(action.path)
-
+    let ownKey = getStateKeyForPath(action.path)
     switch (action.type) {
-
         case RECEIVE_DIRECTORY_CONTENT:
             let {
                 parentDirs,
                 childrenDirs,
                 files,
                 ...own
-            } = action.contents;
+            } = action.payload;
             let updatedDirs = {}
 
             // create lists of paths for parents and children
@@ -52,14 +49,14 @@ const directories = (state={}, action) => {
                     return key
             })
 
-            // add the loaded directory to
+            // add the loaded directory to the updated directories
             updatedDirs[ownKey] = {
                 ...own,
                 lastLoaded: new Date(),
                 parents,
                 children
             }
-
+            // and merge everything
             return {
                 ...state,
                 ...updatedDirs
@@ -70,7 +67,7 @@ const directories = (state={}, action) => {
     }
 }
 
-const files = (state={}, action) => {
+const repositoryFiles = (state={}, action) => {
     const fileDefaults = {
         selected: false
     }
@@ -79,9 +76,10 @@ const files = (state={}, action) => {
         case RECEIVE_DIRECTORY_CONTENT:
             let {
                 files
-            } = action.contents;
-
+            } = action.payload;
             // patch in defaults
+            // this also means that previously selected state is reset ..
+            // we might want to fix that but it matches current file managers
             files = files.map((f) => ({
                 ...fileDefaults,
                 ...f
@@ -89,29 +87,60 @@ const files = (state={}, action) => {
 
             return {
                 ...state,
-                [key]: [...files]
+                [key]: files
             }
         case TOGGLE_FILES_SELECT:
-            let updatedFiles = state[key].map((f) => {
-                if (action.files.includes(f.name)) {
+            let {deselectOthers=true, spanSelection=false} = action.modifiers;
+            let range = false;
+            let currentFiles = state[key];
+
+            if (spanSelection) {
+                let selectedFiles = currentFiles.filter((f) => f.selected).sort((a, b) => a - b).reverse();
+                if (selectedFiles.length === 0) {
+                    spanSelection = false;
+                } else {
+                    let previouslySelectedFile = selectedFiles[0];
+                    // grab the index of the previously selected file the file array
+                    let previouslySelectedIndex = currentFiles.indexOf(previouslySelectedFile);
+                    // and the index of the file that is now being selected
+                    // we simply assume its being selected
+                    let selectingFileIndex = currentFiles.findIndex((f) => f.name === action.files[0])
+                    range = [previouslySelectedIndex, selectingFileIndex]
+                    range.sort((a,b) => a-b)
+                }
+            }
+
+            let updatedFiles = currentFiles.map((f, index) => {
+
+                if (spanSelection && range && (range[0] <= index) && (index <= range[1])) {
                     return {
                         ...f,
-                        selected: !f.selected
+                        selected: new Date()
+                    }
+                } else if (action.files.includes(f.name)) {
+                    return {
+                        ...f,
+                        selected: f.selected  ? false : new Date()
+                    }
+                } else if (deselectOthers && f.selected) {
+                    return {
+                        ...f,
+                        selected: false
                     }
                 }
-                return f
-
+                return f;
             })
             return {
                 ...state,
                 [key]: updatedFiles
             }
         case UPLOAD_COMPLETED:
-            let existing_files = state[key] || []
+            // just append the new file to the existing ones
+            let existingFiles = state[key]
             return {
                 ...state,
                 [key]: [
-                    ...existing_files,
+                    ...existingFiles,
                     action.response
                 ]
             }
@@ -120,7 +149,34 @@ const files = (state={}, action) => {
     }
 }
 
-// this is being used to hold filebrowser settings
+const repository = (state={
+        directoriesByPath: {},
+        filesByPath: {}
+    }, action) => {
+    if (Object.keys(action).includes('path')) {
+        return {
+            ...state,
+            directoriesByPath: directories(state.directoriesByPath, action),
+            filesByPath: repositoryFiles(state.filesByPath, action)
+        }
+    }
+    return state;
+}
+
+// this switches between repositories
+const repositoriesByID = (state={}, action) => {
+    if (action.repository) {
+        let repoName = action.repository
+        let repoData = repository(state[repoName], action);
+        return {
+            ...state,
+            [repoName]: repoData
+        }
+    }
+    return state
+}
+
+// this is being used to hold global filebrowser settings
 const settings = (
     state={
         selectedDisplayType: fileListDisplayValues[0],
@@ -140,11 +196,10 @@ const settings = (
 
 
 
-const filebrowser = combineReducers({
-    directories,
-    files,
-    settings
+const fileBrowsers = combineReducers({
+    settings,
+    repositoriesByID
 })
 
-export default filebrowser
 export {getStateKeyForPath}
+export default fileBrowsers

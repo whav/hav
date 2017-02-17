@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'incoming',
+    'whav',
 ]
 
 MIDDLEWARE = [
@@ -123,7 +124,7 @@ DATABASES = {
 }
 
 DATABASE_ROUTERS = [
-    'hav.db_router.MigrateOnlyHAVDBRouter'
+    'hav.db_router.WhavDBRouter'
 ]
 
 # Password validation

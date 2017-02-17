@@ -1,21 +1,11 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.conf import settings
 from .views import UploadedFileCreateView, FolderAPIView, RootFolderAPIView
-from .filebrowser import FileBrowser, FileBrowserFile
-
-r'^(?P<path>.*/)?(?P<filename>(?:$|(.+?)(?:(\.[^.]*$)|$)))'
+from .fsBrowser.urls import fs_urls
+from .whavBrowser.urls import urlpatterns as whav_urls
 
 urlpatterns = [
     url(r'^upload/$', UploadedFileCreateView.as_view(), name='upload'),
-    url(r'^incoming/$', RootFolderAPIView.as_view(), name='folder_root'),
-    url(r'^incoming/(?P<pk>\d+)/$', FolderAPIView.as_view(), name='folder'),
-    url(
-        r'^fb/(?P<path>.*/)?$',
-        FileBrowser.as_view(root=settings.MEDIA_ROOT), name='filebrowser'
-    ),
-    url(r'^fb/(?P<path>.*/)?(?P<filename>(?:$|(.+?)(?:(\.[^.]*$)|$)))',
-        FileBrowserFile.as_view(root=settings.MEDIA_ROOT),
-        name='filebrowser_file'
-    ),
-
+    url(r'^incoming/', include(fs_urls(settings.MEDIA_ROOT), namespace='fs_browser')),
+    url(r'^whav/', include(whav_urls, namespace='whav_browser'))
 ]

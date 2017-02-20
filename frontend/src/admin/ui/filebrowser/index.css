@@ -45,10 +45,11 @@
     /*flex-basis: 50%;*/
 }
 
-/* gallery like display of files */
+/* TILE Display */
 .fb-file-gallery {
     display: flex;
     flex-wrap: wrap;
+    overflow: hidden;
 }
 
 .fb-file-gallery-item {
@@ -62,31 +63,65 @@
 }
 .fb-file-gallery-item > * {
     display: block;
+    overflow: hidden;
 }
+
 .fb-file-gallery-item > img, .fb-file-gallery-item svg {
     display: block;
     margin: auto;
-    /*font-size: 3rem;*/
+    max-height: 200px;
 }
 
-/*.fb-table-item-detail > img {*/
-    /*display: block;*/
-    /*margin: auto;*/
-/*}*/
+/* Gallery Style */
+
+.image-gallery {
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    /*justify-content: space-around;*/
+    /*cross axis*/
+    align-items: center;
+}
+
+.image-gallery::after {
+
+    content: '';
+    flex-grow: 1000000;
+    min-width: 20%;
+}
 
 .image-gallery-item {
-    padding: 1rem;
-    min-width: 100px;
+    flex: 1 1 auto;
+    max-height: 335px;
+    width: auto;
+    margin: 4px;
+    position: relative;
 }
 
-.image-gallery-item.selected {
-    border: 1px dotted grey;
-}
-
-.image-gallery-item img, .image-gallery-item svg {
+.image-gallery-item > i {
     display: block;
-    height: auto;
+}
+
+.image-gallery-item.no-preview {
+    max-width: 200px;
+    font-size: 100px;
+    text-align: center;
+}
+
+.image-gallery-selected {
+    font-size: 2.5rem;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.image-gallery-item img {
+    position: absolute;
+    top: 0;
     width: 100%;
-    margin: auto;
-    vertical-align: middle;
+    max-height: 300px;
+    vertical-align: bottom;
 }

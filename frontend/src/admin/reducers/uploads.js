@@ -8,7 +8,6 @@ import {
     UPLOAD_PROGRESS
 } from '../actions/uploads'
 
-import {getStateKeyForPath} from './browser'
 
 const uploadFile = (state={}, action) => {
     let {file} = action;
@@ -42,7 +41,6 @@ const uploadFile = (state={}, action) => {
 
 const uploads = (state={}, action) => {
     let {file, path} = action;
-    let key = getStateKeyForPath(path);
     switch (action.type) {
         // redirect action to the actual
         // upload file instances

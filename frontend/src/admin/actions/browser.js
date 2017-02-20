@@ -9,29 +9,26 @@ export const TOGGLE_FILES_SELECT = 'TOGGLE_FILES_SELECT'
 import {requestDirectory} from '../api/browser'
 
 
-export const toggleSelect = (repository, path, files, modifiers) => {
+export const toggleSelect = (path, files, modifiers) => {
     return {
         type: TOGGLE_FILES_SELECT,
-        repository,
         path,
         files,
         modifiers
     }
 }
 
-export const requestDirectoryAction = (url, repository, path) => {
+export const requestDirectoryAction = (path, url) => {
     return (dispatch) => {
         dispatch({
             type: REQUEST_DIRECTORY,
-            path,
-            repository
+            path
         });
         requestDirectory(url).then((data) => {
             dispatch({
                 type: RECEIVE_DIRECTORY_CONTENT,
                 payload: data,
-                path,
-                repository
+                path
             })
         })
     }

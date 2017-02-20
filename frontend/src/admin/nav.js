@@ -8,7 +8,6 @@ import Nav from './ui/nav'
 
 const Navigation = connect(
     (state, props) => {
-        console.log(props);
         return {
             uploads: state.uploads.length
         }

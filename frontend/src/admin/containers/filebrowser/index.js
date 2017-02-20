@@ -4,15 +4,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import {requestDirectoryAction, switchFilebrowserDisplayType, selectFiles, toggleSelect} from '../../actions/browser'
+import pathToRegexp from 'path-to-regexp'
 
+import {requestDirectoryAction, switchFilebrowserDisplayType, toggleSelect} from '../../actions/browser'
 import LoadingIndicator from '../../ui/loading'
 import {DirectoryListingBreadcrumbs, DirectoryListing, FileList, fileListDisplayValues} from '../../ui/filebrowser'
 import {SingleUpload} from '../../ui/filebrowser/uploads'
 import {DirectoryControls, FilebrowserSettingsControl} from '../../ui/filebrowser/controls'
 import UploadTrigger from '../uploads'
-import {getStateKeyForPath} from '../../reducers/browser'
 
+import {getDirectoryForPath, getFilesForPath, stripSlashes} from '../../reducers/browser'
 
 class FileBrowser extends React.Component {
 
@@ -51,6 +52,7 @@ class FileBrowser extends React.Component {
             let breadcrumbs = <DirectoryListingBreadcrumbs
                                     dirs={
                                         parentDirectories.map((d) => {
+                                            console.log(d)
                                             return {
                                                 ...d,
                                                 link: buildFrontendURL(d.path)
@@ -111,7 +113,6 @@ FileBrowser.propTypes = {
     // useful stuff here ...
     directory: React.PropTypes.object.isRequired,
     loadCurrentDirectory: React.PropTypes.func.isRequired,
-    navigateToDirectory: React.PropTypes.func.isRequired,
     parentDirectories: React.PropTypes.array,
     childrenDirectories: React.PropTypes.array,
     files: React.PropTypes.array,
@@ -123,41 +124,32 @@ FileBrowser.propTypes = {
 
 export default connect(
 
-    (state, props) => {
+    (rootState, props) => {
 
-        let {repository, path} = props.match.params;
-        let storeKey = getStateKeyForPath(path);
+        // the location of the root state is defined
+        // in the root reducer
+        const state = rootState.repositories;
+        const settings = state.settings;
+        const path = props.match.params;
 
-        // point some variables to the correct place in the state
-        let repoState = state.repositories.repositoriesByID[repository];
-        let settings = state.repositories.settings;
-
-        if(repoState === undefined) {
-            return {
-                loading: true,
-                directory: {}
-            }
+        // construct a helper function to build frontend urls
+        const reverseURL = pathToRegexp.compile(props.match.path)
+        const buildFrontendURL = (p) => {
+            p = stripSlashes(p)
+            return reverseURL({
+                repository: path.repository,
+                path: p ? p : undefined
+            })
         }
 
-        // resolve directories
-        let allDirs = repoState.directoriesByPath;
-        let directory = allDirs[storeKey];
-
-        const buildFrontendURL = (path) => {
-                let link = `/source/${repository}/`
-                if (path) {
-                    link = `${link}${path}`
-                }
-                // console.log('Frontend URL:', path, repository, link)
-                return link
-        }
+        let directory = getDirectoryForPath(path, state)
 
         let mappedProps = {
-            dirPath: path,
+            directory,
             path,
-            repository,
             buildFrontendURL
         }
+
         if ((directory === undefined) || !directory.lastLoaded) {
             return {
                 ...mappedProps,
@@ -166,20 +158,19 @@ export default connect(
             }
         }
 
-        let parentDirectories = directory.parents.map((key) => allDirs[key]),
-            childrenDirectories = directory.children.map((key) => allDirs[key]),
-            files = repoState.filesByPath[storeKey];
+        // populate parent, children and files from state
+        let parentDirectories = directory.parents.map((key) => getDirectoryForPath(key, state)),
+            childrenDirectories = directory.children.map((key) => getDirectoryForPath(key, state)),
+            files = getFilesForPath(path, state);
 
         // get the un-finished uploads
-        let _ = state.uploads[storeKey] || {},
+        let _ = state.uploads || {},
             directoryUploads = Object.values(_).filter((ul) => !ul.finished);
 
-        let dirPath = path || ''                                     // we don't want undefined in our urls
         return {
             ...mappedProps,
-            dirPath,
             loading: false,
-            directory: directory,
+            directory,
             uploads: directoryUploads,
             settings,
             childrenDirectories,
@@ -188,24 +179,23 @@ export default connect(
         }
     },
     (dispatch, props) => {
-        const {repository, path} = props.match.params;
-        let apiURL = `/api/v1/${repository}/`
-        if (path) {
-            console.log('using path...', path, Boolean(path))
-            apiURL = `${apiURL}${path}/`
+        let path = {...props.match.params};
+        let apiURL = `/api/v1/${path.repository}/`
+        if (path.path) {
+            apiURL = `${apiURL}${path.path}/`
         }
+        console.log(apiURL, path)
 
         return {
             uploadToURL: apiURL,
             loadCurrentDirectory: () => {
                 // console.log('API url built', apiURL, repository, path);
-                dispatch(requestDirectoryAction(apiURL, repository, path))
+                dispatch(requestDirectoryAction(path, apiURL))
             },
-            navigateToDirectory: (path) => dispatch(requestDirectoryAction(path)),
             switchDisplayStyle: (style) => dispatch(switchFilebrowserDisplayType(style)),
             selectFiles: (files, modifiers={}) => {
                 let filenames = files.map((f) => f.name);
-                dispatch(toggleSelect(repository, path, filenames, modifiers))
+                dispatch(toggleSelect(path, filenames, modifiers))
             }
         }
     }

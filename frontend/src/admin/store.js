@@ -5,20 +5,18 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 // import createLogger from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
-import throttle from 'lodash/throttle'
 import rootReducer from './reducers'
-import {loadState, saveState} from './localStorage'
+
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const localStorageKey = 'havAdmin'
+
 
 export const ROOT_PATH_KEY = '__ROOT__'
 
 
 const store =  createStore(
         rootReducer,
-        loadState(localStorageKey),
         composeEnhancers(
             applyMiddleware(
                 thunkMiddleware,
@@ -44,6 +42,12 @@ const getFinishedUploads = (uploads) => {
     })
     return finishedUploads;
 }
+
+
+// const localStorageKey = 'havAdmin'
+// import {loadState, saveState} from './localStorage'
+
+// loadState(localStorageKey),
 
 // save some stuff to localStorage
 // store.subscribe(throttle(() => {

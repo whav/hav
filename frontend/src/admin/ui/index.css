@@ -1,9 +1,13 @@
+@import "dejavu-sans-condensed/css/dejavu-sans-condensed.css";
+@import "ptsans-npm-webfont/style.css";
+
 @import 'tachyons/css/tachyons.css';
 @import 'css-animations/css/css-animations.css';
 
 html, body, #root, .hav-admin-app {
     height: 100vh;
     width: 100vw;
+    font-family: 'PT Sans', 'DejaVu Sans Condensed', sans-serif;
 }
 
 .hav-admin-app {

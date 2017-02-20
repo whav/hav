@@ -3,48 +3,74 @@ import { combineReducers } from 'redux'
 import {RECEIVE_DIRECTORY_CONTENT, CHANGE_FILE_BROWSER_SETTINGS, SELECT_FILES, TOGGLE_FILES_SELECT} from '../actions/browser'
 import {UPLOAD_COMPLETED} from '../actions/uploads'
 
-import {ROOT_PATH_KEY} from '../store'
 import {fileListDisplayValues} from '../ui/filebrowser/index'
 
-const getStateKeyForPath = (path) => {
-    switch (path) {
-        case '':
-        case '/':
-        case undefined:
-            return ROOT_PATH_KEY
-        default:
-            // remove opening/trailing slashes
-            while (path.startsWith('/') || path.endsWith('/')) {
-                if (path.startsWith('/')) { path = path.slice(1)}
-                if (path.endsWith('/')) { path = path.slice(0, -1)}
+const stripSlashes = (path) => {
+    if (path === undefined) { return ''; }
+    // remove opening/trailing slashes
+    while (path.startsWith('/')) { path = path.slice(1)}
+    while (path.endsWith('/'))   { path = path.slice(0,-1)}
+    return path
+}
+
+const emptyPaths = [undefined, '', '/']
+const getStateKeyForPath = (pathOrObj) => {
+    switch (typeof pathOrObj) {
+        case 'string':
+            return stripSlashes(pathOrObj)
+        case 'object':
+            let {repository, path} = pathOrObj;
+            if (repository !== undefined) {
+                let normRepo = stripSlashes(repository)
+                if (emptyPaths.includes(path)) {
+                    return normRepo;
+                }
+                return `${normRepo}/${stripSlashes(path)}`
             }
-            return path
+        default:
+            throw Error('Cannot get path for ', pathOrObj)
     }
 }
 
+const getDirectoryForPath = (path, state) => {
+    state.directoriesByPath[getStateKeyForPath(path)];
+    return state.directoriesByPath[getStateKeyForPath(path)]
+}
 
-const directories = (state={}, action) => {
-    let ownKey = getStateKeyForPath(action.path)
+const getFilesForPath = (path, state) => {
+    return state.filesByPath[getStateKeyForPath(path)]
+}
+
+export {getStateKeyForPath, getDirectoryForPath, getFilesForPath, stripSlashes}
+
+const directoriesByPath = (state={}, action) => {
+
     switch (action.type) {
+
         case RECEIVE_DIRECTORY_CONTENT:
+            let {path} = action;
+            const ownKey = getStateKeyForPath(path);
             let {
                 parentDirs,
                 childrenDirs,
-                files,
                 ...own
             } = action.payload;
+
+            // we don't want the files here
+            delete own.files
+
             let updatedDirs = {}
 
             // create lists of paths for parents and children
             // populates updatedDirs as a side effect
             let parents = parentDirs.map((d) => {
-                    let key = getStateKeyForPath(d.path)
-                    updatedDirs[key] = {...state[key], ...d}
-                    return key
+                let key = getStateKeyForPath({...path, path: d.path})
+                updatedDirs[key] = {...state[key], ...d}
+                return key
             })
 
             let children = childrenDirs.map((d) => {
-                    let key = getStateKeyForPath(d.path)
+                    let key = getStateKeyForPath({...path, path: d.path})
                     updatedDirs[key] = {...state[key], ...d}
                     return key
             })
@@ -56,6 +82,7 @@ const directories = (state={}, action) => {
                 parents,
                 children
             }
+
             // and merge everything
             return {
                 ...state,
@@ -67,13 +94,13 @@ const directories = (state={}, action) => {
     }
 }
 
-const repositoryFiles = (state={}, action) => {
+const filesByPath = (state={}, action) => {
     const fileDefaults = {
         selected: false
-    }
-    let key = getStateKeyForPath(action.path)
+    };
     switch (action.type) {
         case RECEIVE_DIRECTORY_CONTENT:
+            const ownKey = getStateKeyForPath(action.path)
             let {
                 files
             } = action.payload;
@@ -87,9 +114,10 @@ const repositoryFiles = (state={}, action) => {
 
             return {
                 ...state,
-                [key]: files
+                [ownKey]: files
             }
         case TOGGLE_FILES_SELECT:
+            const key = getStateKeyForPath(action.path)
             let {deselectOthers=true, spanSelection=false} = action.modifiers;
             let range = false;
             let currentFiles = state[key];
@@ -149,32 +177,6 @@ const repositoryFiles = (state={}, action) => {
     }
 }
 
-const repository = (state={
-        directoriesByPath: {},
-        filesByPath: {}
-    }, action) => {
-    if (Object.keys(action).includes('path')) {
-        return {
-            ...state,
-            directoriesByPath: directories(state.directoriesByPath, action),
-            filesByPath: repositoryFiles(state.filesByPath, action)
-        }
-    }
-    return state;
-}
-
-// this switches between repositories
-const repositoriesByID = (state={}, action) => {
-    if (action.repository) {
-        let repoName = action.repository
-        let repoData = repository(state[repoName], action);
-        return {
-            ...state,
-            [repoName]: repoData
-        }
-    }
-    return state
-}
 
 // this is being used to hold global filebrowser settings
 const settings = (
@@ -198,8 +200,9 @@ const settings = (
 
 const fileBrowsers = combineReducers({
     settings,
-    repositoriesByID
+    directoriesByPath,
+    filesByPath
 })
 
-export {getStateKeyForPath}
+
 export default fileBrowsers

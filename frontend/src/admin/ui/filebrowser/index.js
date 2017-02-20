@@ -5,6 +5,8 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import GoFileDirectory from 'react-icons/go/file-directory'
 import GoFileMedia from 'react-icons/go/file-media'
+import GoCheck from 'react-icons/go/check'
+
 import classNames from 'classnames'
 import filesize from 'filesize'
 
@@ -119,20 +121,111 @@ const FileGalleryItem = ({file, toggleSelect}) => {
 }
 
 
-const ImageGalleryItem = ({file, toggleSelect}) => {
-    let cn = classNames('image-gallery-item', {[css.fileGalleryItemSelected]: file.selected})
-    return <div className={cn} onClick={toggleSelect} title={file.name}>
-        { file.preview_url ?
-            <img src={encodeURI(file.preview_url)} alt={file.name}/>
-            :
-            <FilePlaceHolder/>}
-    </div>
-}
+// const ImageGalleryItem = ({file, toggleSelect, onLoad}) => {
+//     let cn = classNames(
+//         'image-gallery-item',
+//         {
+//             [css.fileGalleryItemSelected]: file.selected,
+//             'no-preview': !file.preview_url
+//         }
+//     );
+//
+//     return <div className={cn} onClick={toggleSelect} title={file.name}>
+//         { file.preview_url ?
+//             <img src={encodeURI(file.preview_url)}
+//                  alt={file.name}
+//                  onLoad={onLoad}/>
+//             :
+//             <FilePlaceHolder/>}
+//     </div>
+// }
 
 const fileListDisplayOptions = {
     'gallery': ImageGalleryItem,
     'tiles': FileGalleryItem,
     'table': FileTableItem
+}
+
+class ImageGalleryItem extends React.Component {
+    constructor(props) {
+        super(props);
+        this.loadCalled = false;
+        this.handleImageLoad = this.handleImageLoad.bind(this)
+    }
+
+    handleImageLoad(img) {
+        // return immediately if load called before
+        if (this.loadCalled) {return}
+        if (img.naturalHeight === 0 || img.naturalWidth === 0) {
+            return
+        }
+        this.setState({
+            ratio: img.naturalWidth / img.naturalHeight,
+            width: img.naturalWidth,
+            height: img.naturalHeight
+        })
+        this.loadCalled = true;
+    }
+    render() {
+        let {file, toggleSelect} = this.props;
+        let cn = classNames(
+            'image-gallery-item',
+            {
+                [css.fileGalleryItemSelected]: file.selected,
+                'no-preview': !file.preview_url
+            }
+        );
+
+        // this being stolen from
+        // https://github.com/xieranmaya/blog/issues/6
+        let divStyle = {};
+        let iStyle = {};
+        if (this.loadCalled) {
+            let {height, width} = this.state;
+            let wtf =  width * 200 / height;
+            divStyle = {
+                flexGrow: wtf,
+                width: wtf + 'px'
+            }
+            iStyle = {
+                paddingBottom: height / width*100 + '%'
+            }
+        }
+        return <div className={cn} onClick={toggleSelect} style={divStyle} title={file.name}>
+            <i style={iStyle} />
+            { file.preview_url ?
+                <img onLoad={(e) => this.handleImageLoad(e.target)}
+                     src={encodeURI(file.preview_url)}
+                     alt={file.name} />
+                :
+                <FilePlaceHolder className='gallery-item-file'/>}
+                { file.selected ?
+                    <span className="image-gallery-selected">
+                        <GoCheck className="green"/>
+                    </span>
+                    : null }
+        </div>
+    }
+}
+
+class ImageGallery extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        let { files, toggleSelect} = this.props;
+        let children = files.map(
+            (file, index) => {
+                return <ImageGalleryItem key={index}
+                                         file={file}
+                                         toggleSelect={(e) => toggleSelect(file, e)} />
+            })
+        return <div className="image-gallery">
+            {children}
+        </div>
+    }
+
 }
 
 export const fileListDisplayValues = Object.keys(fileListDisplayOptions);
@@ -142,6 +235,9 @@ const FilesWrapper = ({type, ...props}) => {
     switch (type) {
         case 'table':
             cn = css.fileTable;
+            break;
+        case 'gallery':
+            cn = 'image-gallery'
             break;
         default:
             cn = css.fileGallery;
@@ -159,13 +255,6 @@ export class FileList extends React.Component {
     }
 
     handleFileSelectEvent(file, event) {
-        console.log({
-            altKey: event.altKey,
-            shiftKey: event.shiftKey,
-            ctrlKey: event.ctrlKey,
-            metaKey: event.metaKey,
-        });
-
         let {ctrlKey, shiftKey} = event;
         let deselectOthers = true;
         let spanSelection = false;
@@ -193,17 +282,24 @@ export class FileList extends React.Component {
             return null;
         }
         let Component = fileListDisplayOptions[displayType];
-        let rendererFiles = files.map((file, index) => {
-            let props = {
-                file: file,
-                toggleSelect: this.handleFileSelectEvent.bind(this, file)
-            }
-            return <Component key={index} {...props} />
-        });
+        if (displayType === 'gallery') {
+            return <ImageGallery toggleSelect={this.handleFileSelectEvent}
+                                 files={files}
+            />
+        } else {
+            let rendererFiles = files.map((file, index) => {
+                let props = {
+                    file: file,
+                    toggleSelect: this.handleFileSelectEvent.bind(this, file)
+                    }
+                    return <Component key={index} {...props} />
+                });
 
-        return <FilesWrapper type={displayType}>
+            return <FilesWrapper type={displayType}>
                 {rendererFiles}
             </FilesWrapper>
+        }
+
     }
 }
 

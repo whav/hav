@@ -9,7 +9,6 @@ import {
 } from 'react-router-dom'
 
 import { Provider } from 'react-redux';
-import store from './store'
 
 import Nav from './nav'
 import {routes, mainNav} from './routes'
@@ -28,7 +27,7 @@ const css = {
 const App = ({children}) => <div className={css.app}>{children}</div>
 const Navigation = ({...props}) => <Nav navItems={mainNav} {...props} />
 
-const HavAdmin = () => {
+const HavAdmin = ({store}) => {
     return (
     <Provider store={store}>
         <Router basename="/admin">

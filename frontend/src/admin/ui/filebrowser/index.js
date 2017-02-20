@@ -6,7 +6,10 @@ import {Link} from 'react-router-dom'
 import GoFileDirectory from 'react-icons/go/file-directory'
 import GoFileMedia from 'react-icons/go/file-media'
 import GoCheck from 'react-icons/go/check'
-
+import FaFileImageO from 'react-icons/fa/file-image-o'
+import FaFileMovieO from 'react-icons/fa/file-movie-o'
+import FaFileAudioO from 'react-icons/fa/file-audio-o'
+import FaFilePdfO from 'react-icons/fa/file-pdf-o'
 import classNames from 'classnames'
 import filesize from 'filesize'
 
@@ -107,43 +110,51 @@ const FileTableItem = ({file, toggleSelect}) => {
             </div>
 }
 
-const FilePlaceHolder = ({className}) => {
-    return <GoFileMedia className={className} />
+const FilePlaceHolder = ({mime, className}) => {
+    let Icon = GoFileMedia
+    if (mime) {
+        let category = mime.split('/')[0];
+        switch (category) {
+            case 'video':
+                Icon = FaFileMovieO
+                break;
+            case 'image':
+                Icon = FaFileImageO
+                break
+            case 'audio':
+                Icon = FaFileAudioO
+                break
+            default:
+                break
+        }
+    }
+    return <Icon title={mime || ''} className={className} />
 }
 
 const FileGalleryItem = ({file, toggleSelect}) => {
     return <div
         onClick={toggleSelect}
         className={classNames(css.fileGalleryItem, {[css.fileGalleryItemSelected]: file.selected})} >
-        {file.preview_url ? <img src={file.preview_url} /> : <FilePlaceHolder /> }
+        {file.preview_url ? <img src={file.preview_url} /> : <FilePlaceHolder mime={file.mime} /> }
         {file.name}
     </div>
 }
 
-
-// const ImageGalleryItem = ({file, toggleSelect, onLoad}) => {
-//     let cn = classNames(
-//         'image-gallery-item',
-//         {
-//             [css.fileGalleryItemSelected]: file.selected,
-//             'no-preview': !file.preview_url
-//         }
-//     );
-//
-//     return <div className={cn} onClick={toggleSelect} title={file.name}>
-//         { file.preview_url ?
-//             <img src={encodeURI(file.preview_url)}
-//                  alt={file.name}
-//                  onLoad={onLoad}/>
-//             :
-//             <FilePlaceHolder/>}
-//     </div>
-// }
-
-const fileListDisplayOptions = {
-    'gallery': ImageGalleryItem,
-    'tiles': FileGalleryItem,
-    'table': FileTableItem
+const GGalleryItem =({file, toggleSelect, name=''}) => {
+    return <div className={classNames("g-gallery-item", {'selected': file.selected})} onClick={toggleSelect}>
+        <span className={classNames("g-gallery-select", {'green': file.selected})} >
+            <GoCheck />
+        </span>
+        <div className="g-gallery-item-preview">
+        {
+            file.preview_url ?
+            <img src={file.preview_url} title={`${file.name} ${file.mime}`} alt="preview image"/>
+            :
+            <FilePlaceHolder mime={file.mime}/>
+        }
+        </div>
+        <span className="g-gallery-item-name">{name || file.name}</span>
+    </div>
 }
 
 class ImageGalleryItem extends React.Component {
@@ -228,6 +239,14 @@ class ImageGallery extends React.Component {
 
 }
 
+// group all our display options for selection
+const fileListDisplayOptions = {
+    'g-gallery': GGalleryItem,
+    'gallery': ImageGalleryItem,
+    'tiles': FileGalleryItem,
+    'table': FileTableItem,
+}
+
 export const fileListDisplayValues = Object.keys(fileListDisplayOptions);
 
 const FilesWrapper = ({type, ...props}) => {
@@ -238,6 +257,9 @@ const FilesWrapper = ({type, ...props}) => {
             break;
         case 'gallery':
             cn = 'image-gallery'
+            break;
+        case 'ggallery':
+            cn = 'g-gallery'
             break;
         default:
             cn = css.fileGallery;

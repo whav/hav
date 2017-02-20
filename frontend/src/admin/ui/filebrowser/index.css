@@ -125,3 +125,85 @@
     max-height: 300px;
     vertical-align: bottom;
 }
+
+
+/*GGallery Style*/
+
+.g-gallery {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.g-gallery-item {
+    flex: 0 0;
+    width: auto;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.g-gallery-item.selected {
+    text-decoration: underline;
+}
+
+.g-gallery-item:hover {
+    background-color: rgba(86, 93, 100, 0.39);
+}
+.g-gallery-item-preview {
+    flex: 1 0;
+    text-align: center;
+    font-size: 3rem;
+    padding: 0.5rem;
+}
+
+.g-gallery-item-preview > img {
+    height: 200px;
+    max-width: none;
+}
+
+.g-gallery-item-preview > svg {
+    width: 3em;
+    margin-top: 1.5rem;
+}
+
+.g-gallery-select {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 2rem;
+    background-color: rgba(255, 255, 255, 0.51);
+    text-align: center;
+}
+
+/*hidden per default*/
+.g-gallery-select {
+    display: none;
+}
+
+/*but not when hovered */
+/* and not when selected */
+.g-gallery-item:hover .g-gallery-select,
+.g-gallery-item.selected .g-gallery-select {
+    display: block;
+}
+
+.g-gallery-item-name {
+    font-weight: bolder;
+    text-align: center;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    color: grey;
+}
+
+.g-gallery-item:hover .g-gallery-item-name {
+    color: inherit;
+}
+
+
+
+

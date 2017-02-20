@@ -33,7 +33,7 @@ class DirectoryControls extends React.Component {
 }
 
 const FilebrowserSettingsControl = ({selectedDisplayType, switchDisplayType, availableDisplayTypes}) => {
-    return <span>
+    return <span style={{display: 'none'}}>
         {
             availableDisplayTypes.map(
                 (display_option) =>

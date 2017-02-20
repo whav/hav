@@ -20,23 +20,27 @@ const css = {
 
 const NavItem = (props) => {
     let {link, title, icon, menuExact=true} = props;
-
-    let Icon = icon;
+    let Icon = icon ? icon : null;
     let liClasses = classNames(
         css.liAll
     );
 
-    return <NavLink to={link}
-                    exact={menuExact}
-                    activeClassName={css.liActive}
-                    className={liClasses}>
-        <span>
-            <Icon />
-        </span>
+    let inner = (<span>
+        <span><Icon /></span>
         <span className="pl2 dn di-m di-l">
             {title}
         </span>
-    </NavLink>;
+    </span>);
+
+    if (link) {
+        return <NavLink to={link}
+                    exact={menuExact}
+                    activeClassName={css.liActive}
+                    className={liClasses}>
+            {inner}
+        </NavLink>
+    }
+    return inner;
 }
 
 class NavUI extends React.Component {
@@ -45,8 +49,14 @@ class NavUI extends React.Component {
         let {navItems} = this.props;
         return <ul className={css.navUl}>
             {navItems.map((menuConfig, index) => {
+                let subItems = menuConfig.sub || [];
+                let subNav = null;
+                if (subItems.length) {
+                    subNav = <NavUI navItems={subItems} />
+                }
                 return <li key={index}>
                     <NavItem {...menuConfig} />
+                    {subNav}
                 </li>
             })}
         </ul>

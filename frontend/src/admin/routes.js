@@ -7,6 +7,7 @@ import {Uploads} from './containers/uploads'
 
 import GoHome from 'react-icons/go/home'
 import GoFileDirectory from 'react-icons/go/file-directory'
+import GoFileSubmodule from 'react-icons/go/file-submodule'
 import GoCloudUpload from 'react-icons/go/cloud-upload'
 import GoDatabase from 'react-icons/go/database'
 
@@ -33,16 +34,23 @@ const mainNav = [
         link: '/'
     },
     {
-        link: '/source/incoming/',
-        icon: GoFileDirectory,
-        title: 'Incoming',
-        menuExact: false
-    },
-    {
-        link: '/source/whav/',
-        icon: GoDatabase,
-        title: 'WHAV',
-        menuExact: false
+        title: 'Sources',
+        icon: GoFileSubmodule,
+        sub: [
+            {
+                link: '/source/incoming/',
+                icon: GoFileDirectory,
+                title: 'Incoming',
+                menuExact: false
+
+            },
+            {
+                link: '/source/whav/',
+                icon: GoDatabase,
+                title: 'WHAV',
+                menuExact: false
+            }
+        ]
     },
     {
         icon: GoCloudUpload,

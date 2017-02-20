@@ -20,7 +20,7 @@ THUMBOR_SERVER = THUMBOR_SERVER.strip('/')
 defaults = {
     'unsafe': UNSAFE,
     'smart': False,
-    "height": 200,
+    "height": 300,
     "fit_in": True
 }
 

@@ -104,6 +104,8 @@ class DirectorySerializer(BaseDirectorySerializer):
 
     files = serializers.SerializerMethodField()
 
+    allowUpload = serializers.SerializerMethodField()
+
     def get_parentDirs(self, path):
         path = path.resolve()
         root = self.get_root()
@@ -130,3 +132,6 @@ class DirectorySerializer(BaseDirectorySerializer):
             many=True,
             context=self.context
         ).data
+
+    def get_allowUpload(self, path):
+        return True

@@ -14,6 +14,7 @@ class WHAVFileSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
+
     size = serializers.SerializerMethodField()
 
     def get_name(self, media):
@@ -43,6 +44,8 @@ class BaseWHAVCollectionSerializer(serializers.Serializer):
     path = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
+    allowUpload = serializers.SerializerMethodField()
+
     def get_name(self, instance):
         return instance.name
 
@@ -61,11 +64,14 @@ class BaseWHAVCollectionSerializer(serializers.Serializer):
             )
         )
 
+    def get_allowUpload(self, instance):
+        return False
+
 
 class BaseRootWHAVCollectionSerializer(BaseWHAVCollectionSerializer):
 
     def get_name(self, _):
-        return 'Root'
+        return 'WHAV'
 
     def get_path(self, _):
         return ''

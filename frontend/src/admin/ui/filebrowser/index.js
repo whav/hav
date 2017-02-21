@@ -140,22 +140,7 @@ const FileGalleryItem = ({file, toggleSelect}) => {
     </div>
 }
 
-const GGalleryItem =({file, toggleSelect, name=''}) => {
-    return <div className={classNames("g-gallery-item", {'selected': file.selected})} onClick={toggleSelect}>
-        <span className={classNames("g-gallery-select", {'green': file.selected})} >
-            <GoCheck />
-        </span>
-        <div className="g-gallery-item-preview">
-        {
-            file.preview_url ?
-            <img src={file.preview_url} title={`${file.name} ${file.mime}`} alt="preview image"/>
-            :
-            <FilePlaceHolder mime={file.mime}/>
-        }
-        </div>
-        <span className="g-gallery-item-name">{name || file.name}</span>
-    </div>
-}
+
 
 class ImageGalleryItem extends React.Component {
     constructor(props) {
@@ -239,6 +224,36 @@ class ImageGallery extends React.Component {
 
 }
 
+export class GGalleryDirectory extends React.Component {
+    render() {
+        let {name, selected=false, navigate} = this.props;
+        return <div className={classNames('g-gallery-item', 'g-gallery-directory', {selected: selected})}
+                    onClick={navigate} >
+                <div className="g-gallery-item-preview">
+                    <GoFileDirectory className="f1"/>
+                </div>
+                <span className="g-gallery-item-name">{name}</span>
+        </div>
+    }
+}
+
+const GGalleryItem =({file, toggleSelect, name=''}) => {
+    return <div className={classNames("g-gallery-item", {'selected': file.selected})} onClick={toggleSelect}>
+        <span className={classNames("g-gallery-select", {'green': file.selected})} >
+            <GoCheck />
+        </span>
+        <div className="g-gallery-item-preview">
+        {
+            file.preview_url ?
+            <img src={file.preview_url} title={`${file.name} ${file.mime}`} alt="preview image"/>
+            :
+            <FilePlaceHolder mime={file.mime}/>
+        }
+        </div>
+        <span className="g-gallery-item-name">{name || file.name}</span>
+    </div>
+}
+
 // group all our display options for selection
 const fileListDisplayOptions = {
     'g-gallery': GGalleryItem,
@@ -299,8 +314,9 @@ export class FileList extends React.Component {
     }
 
     render() {
-        let {files, displayType, selectedFiles} = this.props;
-        if (files.length === 0) {
+        let {directories=[], files=[], displayType, selectedFiles} = this.props;
+
+        if ((files.length + directories.length) === 0) {
             return null;
         }
         let Component = fileListDisplayOptions[displayType];
@@ -309,19 +325,26 @@ export class FileList extends React.Component {
                                  files={files}
             />
         } else {
+
+            let renderedDirectories = directories.map((directory, index) => {
+                return <GGalleryDirectory {...directory} key={index} />
+            })
+
             let rendererFiles = files.map((file, index) => {
                 let props = {
                     file: file,
                     toggleSelect: this.handleFileSelectEvent.bind(this, file)
                     }
                     return <Component key={index} {...props} />
-                });
+            });
 
             return <FilesWrapper type={displayType}>
+                {renderedDirectories}
                 {rendererFiles}
             </FilesWrapper>
         }
 
     }
 }
+
 

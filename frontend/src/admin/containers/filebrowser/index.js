@@ -52,7 +52,6 @@ class FileBrowser extends React.Component {
             let breadcrumbs = <DirectoryListingBreadcrumbs
                                     dirs={
                                         parentDirectories.map((d) => {
-                                            console.log(d)
                                             return {
                                                 ...d,
                                                 link: buildFrontendURL(d.path)
@@ -61,14 +60,12 @@ class FileBrowser extends React.Component {
                                     }
                                     current_dir={directory.name} />
 
-            let dirListing = <DirectoryListing dirs={
-                    childrenDirectories.map((d) => {
-                        return {
-                            ...d,
-                            link: buildFrontendURL(d.path)
-                        }
-                    })}/>;
-
+            let directories = childrenDirectories.map((d) => {
+                return {
+                    ...d,
+                    navigate: () => {this.props.push(buildFrontendURL(d.path))}
+                }
+            })
             let isEmpty = (childrenDirectories.length + files.length + uploads.length) === 0;
 
             return <div className="filebrowser">
@@ -78,12 +75,11 @@ class FileBrowser extends React.Component {
                     <FilebrowserSettingsControl {...settings} switchDisplayType={switchDisplayStyle}/>
                 </header>
                 <main>
-                    { dirListing }
-
                     {
                         isEmpty ?
                         <h2 className="tc red">This directory is empty.</h2>
-                        : <FileList files={files}
+                        : <FileList directories={directories}
+                                    files={files}
                                     displayType={settings.selectedDisplayType}
                                     handleSelect={selectFiles}
                             />
@@ -184,12 +180,10 @@ export default connect(
         if (path.path) {
             apiURL = `${apiURL}${path.path}/`
         }
-        console.log(apiURL, path)
 
         return {
             uploadToURL: apiURL,
             loadCurrentDirectory: () => {
-                // console.log('API url built', apiURL, repository, path);
                 dispatch(requestDirectoryAction(path, apiURL))
             },
             switchDisplayStyle: (style) => dispatch(switchFilebrowserDisplayType(style)),

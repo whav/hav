@@ -42,7 +42,10 @@ const HavAdmin = ({store}) => {
                 <Switch>
                 {
                     routes.map(
-                        (rc, index) => <Route key={index} exact={true} path={rc.path} component={rc.main} />
+                        (rc, index) => {
+                            let {path, main, ...extra} = rc;
+                            return <Route key={index} exact={true} path={path} component={main} {...extra} />
+                        }
                     )
                 }
                 </Switch>

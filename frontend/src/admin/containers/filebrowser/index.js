@@ -45,7 +45,7 @@ class FileBrowser extends React.Component {
                 selectFiles,
                 buildFrontendURL,
                 path,
-                repository
+                allowUpload=false
             } = this.props;
 
             let uploads = this.props.uploads;
@@ -60,12 +60,14 @@ class FileBrowser extends React.Component {
                                     }
                                     current_dir={directory.name} />
 
+            // spice up the directories
             let directories = childrenDirectories.map((d) => {
                 return {
                     ...d,
                     navigate: () => {this.props.push(buildFrontendURL(d.path))}
                 }
             })
+
             let isEmpty = (childrenDirectories.length + files.length + uploads.length) === 0;
 
             return <div className="filebrowser">
@@ -91,10 +93,13 @@ class FileBrowser extends React.Component {
                 </main>
                 <footer>
                     <DirectoryControls>
-                        <UploadTrigger path={path}
-                                       repository={repository}
-                                       uploadTo={this.props.uploadToURL} />
-                        <span className="red">{selectFiles.length}</span>
+                        {
+                            allowUpload ?
+                            <UploadTrigger path={path}
+                                           uploadTo={this.props.uploadToURL} />
+                            : null
+                        }
+
                     </DirectoryControls>
                 </footer>
             </div>
@@ -114,7 +119,8 @@ FileBrowser.propTypes = {
     files: React.PropTypes.array,
     selectFiles: React.PropTypes.func.isRequired,
     switchDisplayStyle: React.PropTypes.func.isRequired,
-    settings: React.PropTypes.object
+    settings: React.PropTypes.object,
+    allowUpload: React.PropTypes.bool
 }
 
 
@@ -171,7 +177,8 @@ export default connect(
             settings,
             childrenDirectories,
             parentDirectories,
-            files
+            files,
+            allowUpload: directory.allowUpload || false
         }
     },
     (dispatch, props) => {
@@ -180,7 +187,6 @@ export default connect(
         if (path.path) {
             apiURL = `${apiURL}${path.path}/`
         }
-
         return {
             uploadToURL: apiURL,
             loadCurrentDirectory: () => {

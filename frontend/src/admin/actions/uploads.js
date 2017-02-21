@@ -9,14 +9,13 @@ export const UPLOAD_PROGRESS = 'UPLOAD_PROGRESS'
 import uploadFile from '../api/upload'
 
 export const upload_started = (path, file, uploadTo) => {
+    let default_args = [path, file.name];
+    console.log(default_args);
     return (dispatch) => {
         dispatch({
             type: UPLOAD_STARTED,
-            file: file.name,
-            path
+            ...default_args
         });
-
-        let default_args = [path, file.name];
         uploadFile(
             file,
             uploadTo,

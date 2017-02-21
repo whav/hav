@@ -17,9 +17,11 @@ const UploadTrigger = connect(
     undefined,
     (dispatch, ownProps) => ({
         uploadFiles: (accepted_files=[], rejected_files=[]) => {
-            let {path, repository, uploadTo} = ownProps;
-            accepted_files.forEach((f) => dispatch(upload_started(repository, path, f, uploadTo))),
-            rejected_files.forEach((f, path) => dispatch(upload_failed(repository, path, f, 'This file was rejected by the upload component.', 0)))
+            let {path, uploadTo} = ownProps;
+            path = getStateKeyForPath(path)
+            console.log(path, uploadTo);
+            accepted_files.forEach((f) => dispatch(upload_started(path, f, uploadTo))),
+            rejected_files.forEach((f, path) => dispatch(upload_failed(path, f, 'This file was rejected by the upload component.', 0)))
         }
     })
 )(UploadControl)

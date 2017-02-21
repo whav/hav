@@ -95,50 +95,57 @@ const directoriesByPath = (state={}, action) => {
 }
 
 const filesByPath = (state={}, action) => {
-    const fileDefaults = {
-        selected: false
-    };
+
+    let stateKey = undefined,
+        existingFiles = [];
+    if (action.path) {
+        stateKey = getStateKeyForPath(action.path)
+        existingFiles = state[stateKey] || []
+    }
+
     switch (action.type) {
         case RECEIVE_DIRECTORY_CONTENT:
-            const ownKey = getStateKeyForPath(action.path)
             let {
                 files
             } = action.payload;
             // patch in defaults
             // this also means that previously selected state is reset ..
             // we might want to fix that but it matches current file managers
+
+            let existingFilesByName = {};
+            existingFiles.forEach((f, i) => existingFilesByName[f.name] = f);
+
             files = files.map((f) => ({
-                ...fileDefaults,
+                ...{selected: false},
+                ...existingFilesByName[f.name] || {},
                 ...f
             }))
 
             return {
                 ...state,
-                [ownKey]: files
+                [stateKey]: files
             }
         case TOGGLE_FILES_SELECT:
-            const key = getStateKeyForPath(action.path)
             let {deselectOthers=true, spanSelection=false} = action.modifiers;
             let range = false;
-            let currentFiles = state[key];
 
             if (spanSelection) {
-                let selectedFiles = currentFiles.filter((f) => f.selected).sort((a, b) => a - b).reverse();
+                let selectedFiles = existingFiles.filter((f) => f.selected).sort((a, b) => a - b).reverse();
                 if (selectedFiles.length === 0) {
                     spanSelection = false;
                 } else {
                     let previouslySelectedFile = selectedFiles[0];
                     // grab the index of the previously selected file the file array
-                    let previouslySelectedIndex = currentFiles.indexOf(previouslySelectedFile);
+                    let previouslySelectedIndex = existingFiles.indexOf(previouslySelectedFile);
                     // and the index of the file that is now being selected
                     // we simply assume its being selected
-                    let selectingFileIndex = currentFiles.findIndex((f) => f.name === action.files[0])
+                    let selectingFileIndex = existingFiles.findIndex((f) => f.name === action.files[0])
                     range = [previouslySelectedIndex, selectingFileIndex]
                     range.sort((a,b) => a-b)
                 }
             }
 
-            let updatedFiles = currentFiles.map((f, index) => {
+            let updatedFiles = existingFiles.map((f, index) => {
 
                 if (spanSelection && range && (range[0] <= index) && (index <= range[1])) {
                     return {
@@ -160,16 +167,15 @@ const filesByPath = (state={}, action) => {
             })
             return {
                 ...state,
-                [key]: updatedFiles
+                [stateKey]: updatedFiles
             }
         case UPLOAD_COMPLETED:
             // just append the new file to the existing ones
-            let existingFiles = state[key]
             return {
                 ...state,
-                [key]: [
+                [stateKey]: [
                     ...existingFiles,
-                    action.response
+                    action.payload
                 ]
             }
         default:

@@ -9,6 +9,7 @@ import filesize from 'filesize'
 import GoFileDirectory from 'react-icons/go/file-directory'
 import GoFileMedia from 'react-icons/go/file-media'
 import GoCheck from 'react-icons/go/check'
+import GoHourglass from 'react-icons/go/hourglass'
 import FaFileImageO from 'react-icons/fa/file-image-o'
 import FaFileMovieO from 'react-icons/fa/file-movie-o'
 import FaFileAudioO from 'react-icons/fa/file-audio-o'
@@ -70,7 +71,8 @@ export class DirectoryListing extends React.Component {
                 dirs.map((dir, index) => {
                     return <Directory key={index} {...dir} />
                 })
-            }
+            }react-icons/lib/go/sync
+
         </div>
     }
 }
@@ -249,10 +251,11 @@ export class FallBackImageLoader extends React.Component {
         })
     }
     render() {
-        let {src, alt='image', title=''} = this.props;
+        let {src, alt='image', title='', fallbackImage=FaChainBroken} = this.props;
         let {hasError} = this.state;
         if (hasError) {
-            return <FaChainBroken />
+            let FallBackImage = fallbackImage;
+            return <FallBackImage />
         }
         return <img src={src}
                     onError={this.handleImageLoadError}
@@ -312,7 +315,7 @@ const GGalleryUpload = ({upload}) => {
         <div className="g-gallery-item-preview">
             {
                 upload.preview ?
-                <FallBackImageLoader src={upload.preview} />:
+                <FallBackImageLoader src={upload.preview} fallbackImage={GoHourglass} />:
                 null
             }
         </div>
@@ -320,6 +323,7 @@ const GGalleryUpload = ({upload}) => {
             <progress max={100} value={upload.progress}>
                             {upload.file}
             </progress>
+            <span>{upload.name}</span>
         </div>
     </div>;
 }

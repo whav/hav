@@ -43,10 +43,8 @@ const uploadFile = (file,
     request.addEventListener('abort', () => onFailure({'detail': 'Request aborted.'}, 0));
 
     request.addEventListener('load', (e) => {
-        console.log(request.response, request);
         let resp = request.response,
             status = request.status;
-        console.log(resp, status);
         if (request.status === 201) {
             onSuccess(resp, status)
         } else {

@@ -14,6 +14,7 @@ import {DirectoryControls, FilebrowserSettingsControl} from '../../ui/filebrowse
 import UploadTrigger from '../uploads'
 
 import {getDirectoryForPath, getFilesForPath, stripSlashes} from '../../reducers/browser'
+import {getUploadsForPath} from '../../reducers/uploads'
 
 class FileBrowser extends React.Component {
 
@@ -82,12 +83,10 @@ class FileBrowser extends React.Component {
                         <h2 className="tc red">This directory is empty.</h2>
                         : <FileList directories={directories}
                                     files={files}
+                                    uploads={uploads}
                                     displayType={settings.selectedDisplayType}
                                     handleSelect={selectFiles}
                             />
-                    }
-                    {
-                        uploads.map((f) => <SingleUpload key={f.name} file={f}/>)
                     }
 
                 </main>
@@ -131,6 +130,7 @@ export default connect(
         // the location of the root state is defined
         // in the root reducer
         const state = rootState.repositories;
+        const uploadState = rootState.uploads;
         const settings = state.settings;
         const path = props.match.params;
 
@@ -165,9 +165,10 @@ export default connect(
             childrenDirectories = directory.children.map((key) => getDirectoryForPath(key, state)),
             files = getFilesForPath(path, state);
 
-        // get the un-finished uploads
-        let _ = state.uploads || {},
-            directoryUploads = Object.values(_).filter((ul) => !ul.finished);
+        // get the un-finished uploads for directory
+        let directoryUploads = Object.values(
+            getUploadsForPath(props.match.params, uploadState)
+        ).filter((u) => !u.finished);
 
         return {
             ...mappedProps,

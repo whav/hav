@@ -3,15 +3,16 @@
  */
 import React from 'react'
 import {Link} from 'react-router-dom'
+import classNames from 'classnames'
+import filesize from 'filesize'
+
 import GoFileDirectory from 'react-icons/go/file-directory'
 import GoFileMedia from 'react-icons/go/file-media'
 import GoCheck from 'react-icons/go/check'
 import FaFileImageO from 'react-icons/fa/file-image-o'
 import FaFileMovieO from 'react-icons/fa/file-movie-o'
 import FaFileAudioO from 'react-icons/fa/file-audio-o'
-import FaFilePdfO from 'react-icons/fa/file-pdf-o'
-import classNames from 'classnames'
-import filesize from 'filesize'
+import FaChainBroken from 'react-icons/fa/chain-broken'
 
 const css = {
     // directory listing
@@ -224,6 +225,47 @@ class ImageGallery extends React.Component {
 
 }
 
+export class FallBackImageLoader extends React.Component {
+    constructor(props) {
+        super(props)
+        this.handleImageLoadError = this.handleImageLoadError.bind(this)
+        this.handleImageLoad = this.handleImageLoad.bind(this);
+        this.state = {
+            hasError: false,
+            hasLoaded: false
+        }
+    }
+    handleImageLoadError(e) {
+        console.error('Error Loading Image', e);
+        this.setState({
+            hasError: true
+        })
+    }
+
+    handleImageLoad(e) {
+        console.warn('Image loaded', e, e.target)
+        this.setState({
+            hasLoaded: true
+        })
+    }
+    render() {
+        let {src, alt='image', title=''} = this.props;
+        let {hasError} = this.state;
+        if (hasError) {
+            return <FaChainBroken />
+        }
+        return <img src={src}
+                    onError={this.handleImageLoadError}
+                    title={title}
+                    alt={alt} />
+
+    }
+}
+
+FallBackImageLoader.propTypes = {
+    src: React.PropTypes.string.isRequired
+}
+
 export class GGalleryDirectory extends React.Component {
     render() {
         let {name, selected=false, navigate} = this.props;
@@ -238,20 +280,48 @@ export class GGalleryDirectory extends React.Component {
 }
 
 const GGalleryItem =({file, toggleSelect, name=''}) => {
-    return <div className={classNames("g-gallery-item", {'selected': file.selected})} onClick={toggleSelect}>
+    return <div className={
+                    classNames(
+                        "g-gallery-item",
+                        "g-gallery-item-file",
+                        {'selected': file.selected}
+                    )
+                }
+                onClick={toggleSelect}>
         <span className={classNames("g-gallery-select", {'green': file.selected})} >
             <GoCheck />
         </span>
         <div className="g-gallery-item-preview">
         {
             file.preview_url ?
-            <img src={file.preview_url} title={`${file.name} ${file.mime}`} alt="preview image"/>
+            <FallBackImageLoader src={file.preview_url}
+                                 title={`${file.name} ${file.mime}`}
+                                 alt="preview image" />
             :
             <FilePlaceHolder mime={file.mime}/>
         }
         </div>
-        <span className="g-gallery-item-name">{name || file.name}</span>
+        <span className="g-gallery-item-name">
+            {name || file.name}
+        </span>
     </div>
+}
+
+const GGalleryUpload = ({upload}) => {
+    return <div className={classNames('g-gallery-item')}>
+        <div className="g-gallery-item-preview">
+            {
+                upload.preview ?
+                <FallBackImageLoader src={upload.preview} />:
+                null
+            }
+        </div>
+        <div className="g-gallery-item-name">
+            <progress max={100} value={upload.progress}>
+                            {upload.file}
+            </progress>
+        </div>
+    </div>;
 }
 
 // group all our display options for selection
@@ -314,7 +384,7 @@ export class FileList extends React.Component {
     }
 
     render() {
-        let {directories=[], files=[], displayType, selectedFiles} = this.props;
+        let {directories=[], files=[], uploads=[], displayType} = this.props;
 
         if ((files.length + directories.length) === 0) {
             return null;
@@ -338,9 +408,14 @@ export class FileList extends React.Component {
                     return <Component key={index} {...props} />
             });
 
+            let renderedUploads = Object.values(uploads).map((upload, index) => {
+                return <GGalleryUpload upload={upload} key={index}/>
+            })
+
             return <FilesWrapper type={displayType}>
                 {renderedDirectories}
                 {rendererFiles}
+                {renderedUploads}
             </FilesWrapper>
         }
 

@@ -9,7 +9,11 @@ export const UPLOAD_PROGRESS = 'UPLOAD_PROGRESS'
 import uploadFile from '../api/upload'
 
 export const upload_started = (path, file, uploadTo) => {
-    let default_args = [path, file.name];
+    let default_args = {
+        path,
+        file: file.name,
+        preview: file.preview
+    };
     console.log(default_args);
     return (dispatch) => {
         dispatch({
@@ -19,38 +23,35 @@ export const upload_started = (path, file, uploadTo) => {
         uploadFile(
             file,
             uploadTo,
-            (response, status) => dispatch(upload_completed(...default_args, response)),
-            (progress=0) => dispatch(upload_progress(...default_args, progress)),
-            (reason, status) => dispatch(upload_failed(...default_args, reason, status)),
+            (response, status) => dispatch(upload_completed(default_args, response)),
+            (progress=0) => dispatch(upload_progress(default_args, progress)),
+            (reason, status) => dispatch(upload_failed(default_args, reason, status)),
             false
         );
     }
 }
 
-export const upload_progress = (path, file, percent_complete) => {
+export const upload_progress = (routeArgs, percent_complete) => {
     return {
+        ...routeArgs,
         type: UPLOAD_PROGRESS,
-        file,
-        path,
         progress: percent_complete
     }
 }
 
-export const upload_failed = (path, file, reason, status) => {
+export const upload_failed = (routeArgs, reason, status) => {
     return {
+        ...routeArgs,
         type: UPLOAD_FAILED,
-        file,
-        path,
         reason,
         status
     }
 }
 
-export const upload_completed = (path, file, payload) => {
+export const upload_completed = (routeArgs, payload) => {
     return {
+        ...routeArgs,
         type: UPLOAD_COMPLETED,
-        file,
-        path,
         payload
     }
 }

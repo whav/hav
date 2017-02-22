@@ -8,16 +8,23 @@ import {
     UPLOAD_PROGRESS
 } from '../actions/uploads'
 
+import {getStateKeyForPath} from './browser'
+
+const getUploadsForPath = (path, state) => {
+    let key = getStateKeyForPath(path);
+    return state[key] || []
+}
 
 const uploadFile = (state={}, action) => {
-    let {file} = action;
+    let {file, preview} = action;
     switch (action.type) {
         case UPLOAD_STARTED:
             return {
                 name: file,
                 failed: false,
                 started: new Date(),
-                progress: 0
+                progress: 0,
+                preview: preview
             }
         case UPLOAD_PROGRESS:
             return {
@@ -40,7 +47,7 @@ const uploadFile = (state={}, action) => {
 }
 
 const uploads = (state={}, action) => {
-    let {file, path} = action;
+
     switch (action.type) {
         // redirect action to the actual
         // upload file instances
@@ -48,13 +55,14 @@ const uploads = (state={}, action) => {
         case UPLOAD_COMPLETED:
         case UPLOAD_FAILED:
         case UPLOAD_PROGRESS:
-            let currentPath = state[path] || {},
-                currentFile = currentPath[file] || {};
+            let key = getStateKeyForPath(action.path)
+            let currentPath = state[key] || {},
+                currentFile = currentPath[action.file] || {};
             return {
                 ...state,
-                [path]: {
+                [key]: {
                     ...currentPath,
-                    [file]: uploadFile(
+                    [action.file]: uploadFile(
                         currentFile,
                         action
                     )
@@ -66,3 +74,4 @@ const uploads = (state={}, action) => {
 }
 
 export default uploads
+export {getUploadsForPath}

@@ -15,6 +15,8 @@ import FaFileMovieO from 'react-icons/fa/file-movie-o'
 import FaFileAudioO from 'react-icons/fa/file-audio-o'
 import FaChainBroken from 'react-icons/fa/chain-broken'
 
+import { Breadcrumb, Button } from 'semantic-ui-react'
+
 const css = {
     // directory listing
     olDirectoryListing: 'list pl0',
@@ -37,30 +39,20 @@ require('./index.css')
 
 export class DirectoryListingBreadcrumbs extends React.Component {
     render() {
-        let {dirs} = this.props
-        return <div className='f6'>
-            <ol className="list pl0 di">
-                {dirs.map((d, index) => {
-                    return <li className="di" key={index}>
-                        <Link to={d.link} className="link">
-                            {
-                                index === 0 ?
-                                <span>
-                                    <GoFileDirectory />
-                                    <span className="pl1">Root</span>
-                                </span>:
-                                <span>
-                                    <span className="pl1 pr1">/</span>
-                                    <span>{d.name}</span>
-                                </span>
-                            }
-                        </Link>
-                    </li>
-                })}
-            </ol>
-        </div>
+        let {dirs} = this.props;
+        let crumbs = [];
+        dirs.forEach((d, index) => {
+            crumbs.push(<Breadcrumb.Section key={index}>
+                <Link to={d.link}>{d.name}</Link>
+            </Breadcrumb.Section>)
+            crumbs.push(<Breadcrumb.Divider key={(index + 1) * -1} />)
+        });
+        return <Breadcrumb>
+            {crumbs}
+        </Breadcrumb>
     }
 }
+
 
 export class DirectoryListing extends React.Component {
     render() {

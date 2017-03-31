@@ -8,7 +8,6 @@
 
 .filebrowser header {
     flex: 0 0 auto;
-    border-bottom: 1px solid grey;
 }
 
 .filebrowser main {
@@ -219,6 +218,9 @@
     color: inherit;
 }
 
+footer {
+    padding: 1em 0;
 
+}
 
 

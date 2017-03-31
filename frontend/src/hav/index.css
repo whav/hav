@@ -31,7 +31,7 @@ body {
   padding: 1em;
   font-size: 1.5em;
   text-align: right;
-  flex: 0 2 25%;
+  flex: 1 2 10em;
 
   display: flex;
   flex-direction: column;
@@ -55,6 +55,6 @@ body {
 
 .App-main {
   padding: 2em;
-  flex: 1;
+  flex-grow: 5;
 }
 

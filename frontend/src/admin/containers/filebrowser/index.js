@@ -6,11 +6,27 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import pathToRegexp from 'path-to-regexp'
 
-import {requestDirectoryAction, switchFilebrowserDisplayType, toggleSelect} from '../../actions/browser'
+import {
+    requestDirectoryAction,
+    switchFilebrowserDisplayType,
+    toggleSelect,
+    toggleSelectAll
+} from '../../actions/browser'
+
 import LoadingIndicator from '../../ui/loading'
-import {DirectoryListingBreadcrumbs, DirectoryListing, FileList, fileListDisplayValues} from '../../ui/filebrowser'
-import {SingleUpload} from '../../ui/filebrowser/uploads'
-import {DirectoryControls, FilebrowserSettingsControl} from '../../ui/filebrowser/controls'
+import {
+    DirectoryListingBreadcrumbs,
+    DirectoryListing,
+    FileList,
+    fileListDisplayValues
+} from '../../ui/filebrowser'
+
+import {
+    DirectoryControls,
+    FilebrowserSettingsControl,
+    SelectionControls,
+    SelectedFilesControls
+} from '../../ui/filebrowser/controls'
 import UploadTrigger from '../uploads'
 
 import {getDirectoryForPath, getFilesForPath, stripSlashes} from '../../reducers/browser'
@@ -70,11 +86,17 @@ class FileBrowser extends React.Component {
             })
 
             let isEmpty = (childrenDirectories.length + files.length + uploads.length) === 0;
+            let selectedFiles = files.filter((f) => f.selected)
 
             return <div className="filebrowser">
                 <header>
                     { breadcrumbs }
                     <h1>{directory.name}</h1>
+                    <SelectedFilesControls files={selectedFiles} />
+                    <SelectionControls selectAll={this.props.selectAll}
+                                       selectNone={this.props.selectNone}
+                                       invertSelection={this.props.invertSelection}
+                        />
                     <FilebrowserSettingsControl {...settings} switchDisplayType={switchDisplayStyle}/>
                 </header>
                 <main>
@@ -92,12 +114,13 @@ class FileBrowser extends React.Component {
                 </main>
                 <footer>
                     <DirectoryControls>
-                        {
+                        {[
                             allowUpload ?
                             <UploadTrigger path={path}
+                                           key="upload-trigger"
                                            uploadTo={this.props.uploadToURL} />
                             : null
-                        }
+                        ]}
 
                     </DirectoryControls>
                 </footer>
@@ -197,7 +220,10 @@ export default connect(
             selectFiles: (files, modifiers={}) => {
                 let filenames = files.map((f) => f.name);
                 dispatch(toggleSelect(path, filenames, modifiers))
-            }
+            },
+            selectAll: () => dispatch(toggleSelectAll(path, true)),
+            selectNone: () => dispatch(toggleSelectAll(path, false)),
+            invertSelection: () => dispatch(toggleSelectAll(path))
         }
     }
 )(FileBrowser)

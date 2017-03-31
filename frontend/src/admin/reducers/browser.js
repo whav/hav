@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import {RECEIVE_DIRECTORY_CONTENT, CHANGE_FILE_BROWSER_SETTINGS, SELECT_FILES, TOGGLE_FILES_SELECT} from '../actions/browser'
+import {RECEIVE_DIRECTORY_CONTENT, CHANGE_FILE_BROWSER_SETTINGS, TOGGLE_FILES_SELECT, TOGGLE_FILES_SELECT_ALL} from '../actions/browser'
 import {UPLOAD_COMPLETED} from '../actions/uploads'
 
 import {fileListDisplayValues} from '../ui/filebrowser/index'
@@ -168,6 +168,16 @@ const filesByPath = (state={}, action) => {
             return {
                 ...state,
                 [stateKey]: updatedFiles
+            }
+        case TOGGLE_FILES_SELECT_ALL:
+            // undefined means toggle, true/false for select deselect
+            let select = action.select ? true : (action.select === false ? false : undefined);
+            return {
+                ...state,
+                [stateKey]: existingFiles.map((f) => ({
+                    ...f,
+                    selected: select === undefined ? !f.selected : select
+                }))
             }
         case UPLOAD_COMPLETED:
             // just append the new file to the existing ones

@@ -36,6 +36,7 @@ module.exports = (opts) => {
             'whatwg-fetch',
             'react',
             'react-dom',
+            'semantic-ui-css/semantic.css',
         ],
     },
     output: {

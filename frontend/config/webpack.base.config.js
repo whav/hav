@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = (opts) => {
   const {PROJECT_ROOT, NODE_ENV} = opts;
@@ -17,7 +18,8 @@ module.exports = (opts) => {
             'hav',
             'havAdmin'
         ]
-    })
+    }),
+    new ExtractTextPlugin("[name]-[contenthash].css")
   ];
 
   return {
@@ -44,19 +46,18 @@ module.exports = (opts) => {
         filename: "[name]-[hash].js"
     },
     plugins,
-    resolve: {extensions: ['.js', '.json', '.css']},
+    resolve: {extensions: ['.js', '.json']},
     module: {
         rules: [
-            // keep this first!
-            // production/dev configs (might) split out the css
-            // and depend on this being the first rule
             {
                 test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader?importLoaders=1',
-                    'postcss-loader'
-                ]
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: [
+                        'css-loader?importLoaders=1',
+                        'postcss-loader'
+                    ]
+                }) 
             },
             {
                 test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,

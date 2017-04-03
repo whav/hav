@@ -1,14 +1,15 @@
 {% load wagtailcore_tags i18n %}
+{% pageurl root_page as root_url %}
 <ul>
     {% if root_page %}
-    <li>
-        <a href="{% pageurl root_page %}">
+    <li class="{% if calling_page.url == root_url %}active{% endif %}">
+        <a href="{{ root_url }}">
             Home
         </a>
     </li>
     {% endif %}
 {% for menuitem in menuitems %}
-    <li class="{% if calling_page.url == menuitem.url %} active{% endif %}">
+    <li class="{% if calling_page.url == menuitem.url %}active{% endif %}">
         <a href="{% pageurl menuitem %}">{{ menuitem.title }}</a>
     </li>
 {% endfor %}

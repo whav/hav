@@ -58,3 +58,6 @@ body {
   flex-grow: 5;
 }
 
+.App-menu li.active {
+  text-decoration: underline;
+}

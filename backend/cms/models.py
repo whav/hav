@@ -37,6 +37,8 @@ class CmsPage(Page):
     body = StreamField([
         ('heading', blocks.CharBlock(classname="full title")),
         ('paragraph', blocks.TextBlock()),
+        ('richtext', blocks.RichTextBlock()),
+        ('raw', blocks.RawHTMLBlock()),
         ('image', ImageItemBlock()),
         ('other_media', MediaItemBlock()),
         ('carousel', CarouselBlock())

@@ -63,3 +63,12 @@ body {
 .App-menu li.active {
   text-decoration: underline;
 }
+
+.App-menu li.subnav {
+  color: grey;
+  font-size: 1.4rem;
+}
+
+li.navbar ul {
+  border-right: 1px solid black;
+}

@@ -13,4 +13,19 @@
         <a href="{% pageurl menuitem %}">{{ menuitem.title }}</a>
     </li>
 {% endfor %}
+{% if collections|length %}
+    <li class="subnav">
+        <small><em>Collections</em></small>
+
+        <ul class="collections-menu">
+            {% for collection in collections %}
+                <li class="{% if calling_page.url == collection.url %}active{% endif %}">
+                    <a href="{% pageurl collection %}">
+                        {{ collection.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+{% endif %}
 </ul>

@@ -3,12 +3,8 @@ from whav.models import ImageCollection
 
 class WhavDBRouter(object):
 
-    whavModels = [
-        ImageCollection
-    ]
-
-    def allow_migrate(self, db, *args, **kwargs):
-        if db == 'whav':
+    def allow_migrate(self, db, app, **kwargs):
+        if app == 'whav':
             return False
         return None
 

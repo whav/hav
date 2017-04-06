@@ -13,10 +13,11 @@
 <div class="App">
     {% block main-menu %}
     <nav class="App-menu">
-        <nav class="nav-primary">
-            {% block nav-logo %}
+        {% block nav-logo %}
             <img src="{% static 'frontend_assets/logo.png' %}" alt="Hav Logo" class="App-logo"/>
-            {% endblock nav-logo %}
+        {% endblock nav-logo %}
+        <nav class="nav-primary">
+
             {% block primary-menu %}
             {% endblock %}
         </nav>

@@ -1,6 +1,3 @@
-from whav.models import ImageCollection
-
-
 class WhavDBRouter(object):
 
     def allow_migrate(self, db, app, **kwargs):

@@ -14,7 +14,7 @@
     </li>
 {% endfor %}
 {% if collections|length %}
-    <li class="subnav">
+    <li class="subnav {% if collections_active %}deeper{% endif %} ">
         <span class="separator">Collections</span>
         <ul class="collections-menu">
             {% for collection in collections %}

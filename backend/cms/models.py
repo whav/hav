@@ -33,9 +33,17 @@ class CarouselBlock(blocks.StreamBlock):
         template = 'cms/blocks/carousel.html'
 
 
+class HeadingBlock(blocks.CharBlock):
+    class Meta:
+        template = 'cms/blocks/heading.html'
+
 class CmsPage(Page):
     body = StreamField([
-        ('heading', blocks.CharBlock(classname="full title")),
+        ('heading', blocks.CharBlock(
+               classname="full title",
+                template='cms/blocks/heading.html'
+            )
+         ),
         ('paragraph', blocks.TextBlock()),
         ('richtext', blocks.RichTextBlock()),
         ('raw', blocks.RawHTMLBlock()),

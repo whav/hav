@@ -45,3 +45,4 @@ __pychache__
 activate
 env/
 
+hav/settings/secrets.py

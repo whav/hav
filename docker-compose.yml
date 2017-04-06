@@ -47,7 +47,7 @@ services:
     expose:
       - 8000
     environment:
-      - DEBUG
+      - DEBUG=true
       - HAV_PG_USER
       - HAV_PG_DB
       - HAV_PG_PW

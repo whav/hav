@@ -15,8 +15,7 @@
 {% endfor %}
 {% if collections|length %}
     <li class="subnav">
-        <small><em>Collections</em></small>
-
+        <span class="separator">Collections</span>
         <ul class="collections-menu">
             {% for collection in collections %}
                 <li class="{% if calling_page.url == collection.url %}active{% endif %}">

@@ -4,7 +4,8 @@ from whav.models import ImageCollection
 class WhavDBRouter(object):
 
     def allow_migrate(self, db, app, **kwargs):
-        if app == 'whav':
+        # print('migrate?', db, app)
+        if app == 'whav' or db == 'whav':
             return False
         return None
 

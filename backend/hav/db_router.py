@@ -1,7 +1,6 @@
 class WhavDBRouter(object):
 
     def allow_migrate(self, db, app, **kwargs):
-        # print('migrate?', db, app)
         if app == 'whav' or db == 'whav':
             return False
         return None

@@ -159,7 +159,7 @@ label.toggle {
 		padding-right: calc(5% - 2px) !important;
 	}
 	.nav-primary > ul > li.active, 
-	.nav-primary > ul > li.deeper, {
+	.nav-primary > ul > li.deeper {
 		border-right: 2px solid #636466 !important;
 		padding-right: calc(5% - 2px) !important;
 	}
@@ -176,11 +176,11 @@ label.toggle {
 	}
 	
 	.nav-secondary {
-  font-size: 1rem;
-	position: absolute;
-	text-align: right;
-	position: absolute;
-	bottom: 0;
+		font-size: 1rem;
+		position: absolute;
+		text-align: right;
+		position: absolute;
+		bottom: 0;
 	}
 
 }

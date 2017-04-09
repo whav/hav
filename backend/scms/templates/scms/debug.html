@@ -1,9 +1,24 @@
 {% extends './base.html' %}
 
 {% block page %}
-    <article class="main-content">
-        <pre>
-            {{ urlKwargs }}
-        </pre>
-    </article>
+<article class="main-content">
+
+<pre>
+{{ urlKwargs }}
+</pre>
+
+<hr />
+<table>
+    <tbody>
+    {% for root, dirs, files in content %}
+        <tr>
+            <td>{{ root }}</td>
+            <td>{{ dirs|join:'<br />' }}</td>
+            <td>{{ files|join:'<br />' }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</article>
 {% endblock %}

@@ -21,6 +21,6 @@ def debugView(request, **kwargs):
 
 def populate_menu(root=CONTENT_PATH):
     content = []
-    for root, dirs, files in os.walk(root):
-        content.append((root, dirs, files))
+    for dir, dirs, files in os.walk(root):
+        content.append((os.path.relpath(dir, start=root), dirs, files))
     return content

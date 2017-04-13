@@ -39,3 +39,7 @@ class CollectionView(TemplateView):
         return {
             'collection': self.kwargs.get('collection_name')
         }
+
+
+class LandingPage(TemplateView):
+    template_name = 'scms/start.html'

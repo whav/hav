@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^api/', include(api_urls, namespace='api')),
     url(r'^admin/', include(hav_admin_patterns, namespace='hav_admin')),
     url(r'^dbadmin/', django_admin.site.urls),
-    url(r'^c/', include('scms.urls')),
+    url(r'^c/', include('scms.urls', namespace='scms')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

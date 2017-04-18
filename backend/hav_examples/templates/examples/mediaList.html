@@ -1,0 +1,9 @@
+{% extends 'hav/index.html' %}
+
+{% block main %}
+<ul>
+    {% for x in object_list %}
+    <li>{{ x|pprint }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

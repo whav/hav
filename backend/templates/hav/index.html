@@ -20,13 +20,14 @@
 		<input class="toggle" id="toggle" type="checkbox">
         <nav class="nav-primary">
             {% block primary-menu %}
+            {% url 'scms:landing_page' as landing_page %}
             <ul>
-                <li>
-                    <a href="">
+                <li {% if landing_page == request.path %}class="active"{% endif %}>
+                    <a href="{{ landing_page }}">
                         Home
                     </a>
                 </li>
-                <li {% if 'scms' in request.resolver_match.namespaces %}class="deeper"{% endif %}>
+                <li {% if 'scms' in request.resolver_match.namespaces and landing_page != request.path %}class="deeper"{% endif %}>
                     <span class="separator">Collections</span>
                     {% include 'scms/menu.html' %}
                 </li>

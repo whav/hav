@@ -1,0 +1,9 @@
+{% if type == 'image' %}
+    {% include './collections/snippets/image.html' %}
+{% elif type == 'audio' %}
+    {% include './collections/snippets/audio.html' %}
+{% elif type == 'video' %}
+    {% include './collections/snippets/video.html' %}
+{% else %}
+    {% include './collections/snippets/unknown.html' %}
+{% endif %}

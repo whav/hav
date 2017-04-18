@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'incoming',
     'whav',
     'scms',
+    'hav_examples'
 ]
 
 MIDDLEWARE = [
@@ -180,5 +181,11 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(ROOT_DIR, 'dist/media')
+
+STORAGES = {
+    'examples': {
+        'path': os.path.join(ROOT_DIR, 'dist/examples/')
+    }
+}
 
 LOGIN_URL = 'admin:login'

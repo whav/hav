@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
 from model_utils.models import TimeStampedModel
 
@@ -11,6 +12,7 @@ try:
 except AttributeError:
     upload_folder = settings.MEDIA_ROOT
 
+incoming_storage = FileSystemStorage(location=upload_folder)
 
 class UploadedFile(TimeStampedModel):
 
@@ -21,7 +23,7 @@ class UploadedFile(TimeStampedModel):
     )
 
     file = models.FileField(
-        upload_to=upload_folder,
+        storage=incoming_storage,
         verbose_name='uploaded file',
     )
 

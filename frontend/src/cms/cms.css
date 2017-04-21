@@ -1,4 +1,6 @@
 @import "../hav/index.css";
+@import "./bg.css";
+/*@import "./carousel.css";*/
 
 .rich-text img {
     max-width: 100%;
@@ -46,31 +48,3 @@
     text-align: center;
 }
 
-.carousel {
-    width: 100%;
-    padding: 1em;
-}
-
-.carousel-control ul {
-    list-style-type: none;
-    text-align: center;
-}
-
-.carousel .carousel-item {
-    display: none;
-}
-
-.carousel .carousel-item.active {
-    display: block;
-}
-.carousel-control ul li {
-    display: inline;
-    padding: 0.5em;
-}
-.carousel-control ul li:after {
-    content: '\25cb';
-}
-
-.carousel-control ul li.active:after {
-    content: '\25cf';
-}

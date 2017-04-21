@@ -1,0 +1,18 @@
+{% extends 'hav/index.html' %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block extra-head %}
+    {% render_bundle 'cms' 'css' %}
+{% endblock %}
+
+{% block main %}
+    {{ block.super }}
+    {% block page %}{% endblock page %}
+{% endblock main %}
+
+{% block extra-body %}
+    {{ block.super }}
+    {% render_bundle 'cms' 'js' %}
+{% endblock %}
+

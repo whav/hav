@@ -1,9 +1,0 @@
-{% extends './media_with_caption.html' %}
-{% load wagtailimages_tags wagtailcore_tags %}
-{% block extra-classes %}imageWithCaption{% endblock %}
-{% block media %}
-    {% image value.image max-300x300 %}
-{% endblock media %}
-{% block caption %}
-    {% include_block value.caption %}
-{% endblock %}

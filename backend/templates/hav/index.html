@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static wagtailuserbar %}
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,8 +19,19 @@
 		<label class="toggle" for="toggle">&#9776; <span>Menu</span></label>
 		<input class="toggle" id="toggle" type="checkbox">
         <nav class="nav-primary">
-
             {% block primary-menu %}
+            {% url 'scms:landing_page' as landing_page %}
+            <ul>
+                <li {% if landing_page == request.path %}class="active"{% endif %}>
+                    <a href="{{ landing_page }}">
+                        Home
+                    </a>
+                </li>
+                <li {% if 'scms' in request.resolver_match.namespaces and landing_page != request.path %}class="deeper"{% endif %}>
+                    <span class="separator">Collections</span>
+                    {% include 'scms/menu.html' %}
+                </li>
+            </ul>
             {% endblock %}
         </nav>
         <nav class="nav-secondary">

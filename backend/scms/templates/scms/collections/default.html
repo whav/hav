@@ -1,0 +1,34 @@
+{% extends '../base.html' %}
+
+{% block page %}
+<article class="main-content">
+    <h1>
+    {% block collection-head %}
+    Collection <em>{{ collection }}</em>
+    {% endblock collection-head %}
+    </h1>
+
+    <div class="block block-primary">
+        {% block collection-body %}
+            Here be the
+        {% endblock collection-body %}
+    </div>
+    {% if examples %}
+    <h2>Example Content</h2>
+    {% for example in examples %}
+        <div class="block">
+        {% if example.type == 'image' %}
+            {% include './snippets/image.html' with asset=example only %}
+        {% elif example.type == 'audio' %}
+            {% include './snippets/audio.html' with asset=example only %}
+        {% elif example.type == 'video' %}
+            {% include './snippets/video.html' with asset=example only %}
+        {% else %}
+            {% include './snippets/unknown.html' with asset=example only %}
+        {% endif %}
+        </div>
+    {% endfor %}
+    {% endif %}
+</article>
+{% endblock %}
+

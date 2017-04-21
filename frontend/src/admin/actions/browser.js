@@ -9,7 +9,10 @@ export const CHANGE_FILE_BROWSER_SETTINGS = 'CHANGE_FILE_BROWSER_SETTINGS'
 export const TOGGLE_FILES_SELECT = 'TOGGLE_FILES_SELECT'
 export const TOGGLE_FILES_SELECT_ALL = 'TOGGLE_FILES_SELECT_ALL'
 
-import {requestDirectory} from '../api/browser'
+export const SAVING_FILE_SELECTION = 'SAVING_FILE_SELECTION'
+export const SAVED_FILE_SELECTION = 'SAVED_FILE_SELECTION'
+
+import {requestDirectory, saveFileSelection} from '../api/browser'
 
 
 export const toggleSelect = (path, files, modifiers) => {
@@ -42,6 +45,22 @@ export const requestDirectoryAction = (path, url) => {
                 path
             })
         })
+    }
+}
+
+
+export const saveFileSelectionForIngestion = (files) => {
+    return (dispatch) => {
+        dispatch({
+            type: SAVING_FILE_SELECTION
+        });
+        saveFileSelection(files).then((data) => {
+            dispatch({
+                type: SAVED_FILE_SELECTION,
+                payload: data
+            })
+        })
+
     }
 }
 

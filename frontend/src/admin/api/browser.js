@@ -8,3 +8,7 @@ export const requestDirectory = (url) => {
             (response) => response.json()
         )
 }
+
+export const saveFileSelection = (fileIDs) => {
+    return new Promise((resolve, reject) => { window.setTimeout(() => resolve(fileIDs)) }, 4000)
+}

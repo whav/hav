@@ -10,7 +10,8 @@ import {
     requestDirectoryAction,
     switchFilebrowserDisplayType,
     toggleSelect,
-    toggleSelectAll
+    toggleSelectAll,
+    saveFileSelectionForIngestion
 } from '../../actions/browser'
 
 import LoadingIndicator from '../../ui/loading'
@@ -27,9 +28,15 @@ import {
     SelectionControls,
     SelectedFilesControls
 } from '../../ui/filebrowser/controls'
+
 import UploadTrigger from '../uploads'
 
-import {getDirectoryForPath, getFilesForPath, stripSlashes} from '../../reducers/browser'
+import {
+    getDirectoryForPath, 
+    getFilesForPath, 
+    stripSlashes
+} from '../../reducers/browser'
+
 import {getUploadsForPath} from '../../reducers/uploads'
 
 class FileBrowser extends React.Component {
@@ -62,7 +69,8 @@ class FileBrowser extends React.Component {
                 selectFiles,
                 buildFrontendURL,
                 path,
-                allowUpload=false
+                allowUpload=false,
+                saveFileSelection
             } = this.props;
 
             let uploads = this.props.uploads;
@@ -98,7 +106,7 @@ class FileBrowser extends React.Component {
                                         selectNone={this.props.selectNone}
                                         invertSelection={this.props.invertSelection}
                             />
-                        <SelectedFilesControls files={selectedFiles} />
+                        <SelectedFilesControls files={selectedFiles} save={() => saveFileSelection(selectedFiles)} />
                         <FilebrowserSettingsControl {...settings} switchDisplayType={switchDisplayStyle}/>
                     </div>
                 </header>
@@ -145,7 +153,8 @@ FileBrowser.propTypes = {
     selectFiles: React.PropTypes.func.isRequired,
     switchDisplayStyle: React.PropTypes.func.isRequired,
     settings: React.PropTypes.object,
-    allowUpload: React.PropTypes.bool
+    allowUpload: React.PropTypes.bool,
+    saveFileSelection: React.PropTypes.func.isRequired
 }
 
 
@@ -226,7 +235,8 @@ export default connect(
             },
             selectAll: () => dispatch(toggleSelectAll(path, true)),
             selectNone: () => dispatch(toggleSelectAll(path, false)),
-            invertSelection: () => dispatch(toggleSelectAll(path))
+            invertSelection: () => dispatch(toggleSelectAll(path)),
+            saveFileSelection: (files) => dispatch(saveFileSelectionForIngestion(files))
         }
     }
 )(FileBrowser)

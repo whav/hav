@@ -44,7 +44,7 @@ DirectoryControls.propTypes = {
     children: React.PropTypes.array.isRequired
 }
 
-const SelectedFilesControls = ({files}) => {
+const SelectedFilesControls = ({files, save}) => {
     let length = files.length;
     if (!length) {
         return null;
@@ -58,6 +58,9 @@ const SelectedFilesControls = ({files}) => {
     return <ul>
         <li>
             {desc}
+        </li>
+        <li>
+            <a href='#' onClick={() => save()}>Ingest</a>
         </li>
     </ul>
 }
@@ -87,10 +90,10 @@ SelectionControls.propTypes = {
 
 const FilebrowserSettingsControl = ({selectedDisplayType, switchDisplayType, availableDisplayTypes}) => {
     return <ul>
-        <li onClick={() => switchDisplayType('g-gallery')} active={selectedDisplayType === 'g-gallery'}>
+        <li onClick={() => switchDisplayType('g-gallery')} className={classNames({active: selectedDisplayType === 'g-gallery'})}>
             <FaTable />
         </li>
-        <li onClick={() => switchDisplayType('table')} active={selectedDisplayType === 'table'}>
+        <li onClick={() => switchDisplayType('table')} className={classNames({active: selectedDisplayType === 'table'})}>
             <FaList />
         </li>
     </ul>

@@ -1,6 +1,14 @@
 import { combineReducers } from 'redux'
 
-import {RECEIVE_DIRECTORY_CONTENT, CHANGE_FILE_BROWSER_SETTINGS, TOGGLE_FILES_SELECT, TOGGLE_FILES_SELECT_ALL} from '../actions/browser'
+import {
+    RECEIVE_DIRECTORY_CONTENT, 
+    CHANGE_FILE_BROWSER_SETTINGS, 
+    TOGGLE_FILES_SELECT, 
+    TOGGLE_FILES_SELECT_ALL,
+    SAVED_FILE_SELECTION,
+    SAVING_FILE_SELECTION
+} from '../actions/browser'
+
 import {UPLOAD_COMPLETED} from '../actions/uploads'
 
 import {fileListDisplayValues} from '../ui/filebrowser/index'
@@ -212,12 +220,25 @@ const settings = (
     }
 }
 
+const selectedFiles = (
+    state={},
+    action
+) => {
+    switch (action.type) {
+        case SAVED_FILE_SELECTION:
+            console.warn('File selection saved...', action)
+            return state
+        default:
+            return state
+    }
+}
 
 
 const fileBrowsers = combineReducers({
     settings,
     directoriesByPath,
-    filesByPath
+    filesByPath,
+    selectedFiles
 })
 
 

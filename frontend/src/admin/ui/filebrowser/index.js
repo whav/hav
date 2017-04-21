@@ -225,7 +225,7 @@ export class FallBackImageLoader extends React.Component {
         }
     }
     handleImageLoadError(e) {
-        console.error('Error Loading Image', e);
+        // console.error('Error Loading Image', e);
         this.setState({
             hasError: true
         })

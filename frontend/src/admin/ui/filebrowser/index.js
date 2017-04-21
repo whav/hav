@@ -15,23 +15,21 @@ import FaFileMovieO from 'react-icons/fa/file-movie-o'
 import FaFileAudioO from 'react-icons/fa/file-audio-o'
 import FaChainBroken from 'react-icons/fa/chain-broken'
 
-import { Breadcrumb, Button } from 'semantic-ui-react'
-
 const css = {
     // directory listing
-    olDirectoryListing: 'list pl0',
-    liDirectoryListing: 'di',
-    dirListing: 'fb-directory-listing tc bb',
+    olDirectoryListing: '',
+    liDirectoryListing: '',
+    dirListing: 'fb-directory-listing',
     dirListingItem: 'fb-directory-listing-item',
     // table view
-    fileTable: 'dt w-100',
-    fileTableItem: 'dt-row pointer dim pb4',
-    fileTableItemSelected: 'bg-lightest-blue',
-    fileTableItemDetail: 'dtc v-mid pa2 bb fb-table-item-detail',
+    fileTable: '',
+    fileTableItem: '',
+    fileTableItemSelected: '',
+    fileTableItemDetail: 'fb-table-item-detail',
     // flexbox gallery
     fileGallery: 'fb-file-gallery',
-    fileGalleryItem: 'fb-file-gallery-item pa2 ba collapse',
-    fileGalleryItemSelected: 'bg-lightest-blue',
+    fileGalleryItem: 'fb-file-gallery-item',
+    fileGalleryItemSelected: '',
 
 }
 
@@ -42,14 +40,14 @@ export class DirectoryListingBreadcrumbs extends React.Component {
         let {dirs} = this.props;
         let crumbs = [];
         dirs.forEach((d, index) => {
-            crumbs.push(<Breadcrumb.Section key={index}>
+            crumbs.push(<li key={index}>
                 <Link to={d.link}>{d.name}</Link>
-            </Breadcrumb.Section>)
-            crumbs.push(<Breadcrumb.Divider key={(index + 1) * -1} />)
+            </li>)
+            crumbs.push(<span className="divider" key={(index + 1) * -1}> / </span>)
         });
-        return <Breadcrumb>
+        return <ul className="breadcrumbs">
             {crumbs}
-        </Breadcrumb>
+        </ul>
     }
 }
 
@@ -63,8 +61,7 @@ export class DirectoryListing extends React.Component {
                 dirs.map((dir, index) => {
                     return <Directory key={index} {...dir} />
                 })
-            }react-icons/lib/go/sync
-
+            }
         </div>
     }
 }
@@ -134,8 +131,6 @@ const FileGalleryItem = ({file, toggleSelect}) => {
         {file.name}
     </div>
 }
-
-
 
 class ImageGalleryItem extends React.Component {
     constructor(props) {

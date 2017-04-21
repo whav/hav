@@ -6,7 +6,7 @@ import LoadingIndicator from './ui/loading'
 
 const Welcome = () => {
     return <div>
-        <h1>Here be stuff</h1>
+        <h1>Look to the left, this will just keep loading.</h1>
         <LoadingIndicator rotate={true} text="Me be loading!"/>
     </div>
 }

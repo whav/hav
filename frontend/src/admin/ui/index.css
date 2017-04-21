@@ -1,7 +1,6 @@
 @import "dejavu-sans-condensed/css/dejavu-sans-condensed.css";
 @import "ptsans-npm-webfont/style.css";
 
-@import 'tachyons/css/tachyons.css';
 @import 'css-animations/css/css-animations.css';
 
 html, body, #root, .hav-admin-app {
@@ -15,24 +14,45 @@ html, body, #root, .hav-admin-app {
 }
 
 .hav-admin-content {
+    flex-grow: 1;
     overflow-y: scroll;
+    padding: 1em;
 }
 
-.hav-admin-menu {
+.hav-admin-main-menu {
+    height: 100%;
+    width: 20vw;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 
-.hav-admin-menu nav {
+.hav-admin-main-menu nav {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
+.hav-admin-main-menu > img {
+    display: block;
+    max-width: 80%;
+    margin: 0.5em 10%;
+    height: auto;
+}
+
+/* Breadcrumbs */
+.hav-admin-app ul.breadcrumbs {
+    list-style: none;
+}
+.hav-admin-app ul.breadcrumbs li {
+    display: inline;
+}
+
+/* Loading Indicator */
 .loading-indicator {
     text-align: center;
+    font-size: 3rem;
 }
 
 .loading-indicator-icon.rotating {

@@ -17,14 +17,8 @@ import {routes, mainNav} from './routes'
 require('./ui/index.css');
 
 const logo = require('../assets/logo.png')
-const css = {
-    logo: 'mw-100 pa2',
-    menu: 'w-20 pa2 bg-yellow black h-100 hav-admin-menu',
-    main: 'w-80 pa3 hav-admin-content',
-    app: 'hav-admin-app'
-}
 
-const App = ({children}) => <div className={css.app}>{children}</div>
+const App = ({children}) => <div className="hav-admin-app">{children}</div>
 const Navigation = ({...props}) => <Nav navItems={mainNav} {...props} />
 
 const HavAdmin = ({store}) => {
@@ -32,13 +26,13 @@ const HavAdmin = ({store}) => {
     <Provider store={store}>
         <Router basename="/admin">
         <App>
-            <div className={css.menu}>
-                <img src={logo} alt="hav logo" className={css.logo} />
+            <div className="hav-admin-main-menu">
+                <img src={logo} alt="hav logo" className="main-menu-logo" />
                 <nav>
                     <Route component={Navigation} />
                 </nav>
             </div>
-            <div className={css.main}>
+            <div className="hav-admin-content">
                 <Switch>
                 {
                     routes.map(

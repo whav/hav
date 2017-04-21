@@ -4,9 +4,18 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import classNames from 'classnames'
-import {Icon, Button, Menu} from 'semantic-ui-react'
 
 import GoCloudUpload from 'react-icons/go/cloud-upload'
+import MdSelectAll from  'react-icons/lib/md/select-all'
+import FaCheckSquareO from 'react-icons/lib/fa/check-square-o'
+import FaSquareO from 'react-icons/lib/fa/square-o'
+import FaTable from 'react-icons/lib/fa/table'
+import FaList from  'react-icons/lib/fa/list'
+
+const Icon = (props) => null;
+const Menu = ({children}) => <ul>{children}</ul>
+Menu.Item = ({children}) => <li>{children}</li>
+
 
 class UploadControl extends React.Component {
     constructor(props){
@@ -46,29 +55,27 @@ const SelectedFilesControls = ({files}) => {
     } else {
         desc = `${length} files selected`
     }
-    return <Menu color="blue"
-                 inverted
-                 floated="right">
-        <Menu.Item>
+    return <ul>
+        <li>
             {desc}
-        </Menu.Item>
-    </Menu>
+        </li>
+    </ul>
 }
 
 const SelectionControls = ({selectAll, selectNone, invertSelection}) => {
-    return <Menu floated="right">
-        <Menu.Item onClick={selectAll}>
-            <Icon className="check square" title="Check all" />
-        </Menu.Item>
-        <Menu.Item onClick={selectNone}>
-            <Icon className="square" title="Uncheck all"/>
-        </Menu.Item>
-        <Menu.Item onClick={invertSelection} title="Invert Selection">
-            <Icon className="check square" />
+    return <ul>
+        <li onClick={selectAll}>
+            <FaCheckSquareO title="Check all" />
+        </li>
+        <li onClick={selectNone}>
+            <FaSquareO title="Uncheck all"/>
+        </li>
+        <li onClick={invertSelection} title="Invert Selection">
+            <FaCheckSquareO />
             ⇄
-            <Icon className="square" />
-        </Menu.Item>
-    </Menu>
+            <FaSquareO />
+        </li>
+    </ul>
 }
 
 
@@ -79,14 +86,14 @@ SelectionControls.propTypes = {
 }
 
 const FilebrowserSettingsControl = ({selectedDisplayType, switchDisplayType, availableDisplayTypes}) => {
-    return <Menu floated='right'>
-        <Menu.Item onClick={() => switchDisplayType('g-gallery')} active={selectedDisplayType === 'g-gallery'}>
-            <Icon name="grid layout"/>
-        </Menu.Item>
-        <Menu.Item onClick={() => switchDisplayType('table')} active={selectedDisplayType === 'table'}>
-            <Icon name="list layout"/>
-        </Menu.Item>
-    </Menu>
+    return <ul>
+        <li onClick={() => switchDisplayType('g-gallery')} active={selectedDisplayType === 'g-gallery'}>
+            <FaTable />
+        </li>
+        <li onClick={() => switchDisplayType('table')} active={selectedDisplayType === 'table'}>
+            <FaList />
+        </li>
+    </ul>
 }
 
 export {

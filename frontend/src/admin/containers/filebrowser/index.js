@@ -77,11 +77,12 @@ class FileBrowser extends React.Component {
                                     }
                                     current_dir={directory.name} />
 
+
             // spice up the directories
             let directories = childrenDirectories.map((d) => {
                 return {
                     ...d,
-                    navigate: () => {this.props.push(buildFrontendURL(d.path))}
+                    navigate: () => {this.props.history.push(buildFrontendURL(d.path))}
                 }
             })
 

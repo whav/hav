@@ -49,7 +49,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
 
         if len(parts) > 0:
             suffix = '/' if relative_path.is_dir() else ''
-            location = os.path.join(*(parts + [suffix]))
+            location = os.path.join(*(list(parts) + [suffix]))
             location = quote(location)
 
         return location

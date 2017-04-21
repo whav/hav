@@ -93,12 +93,14 @@ class FileBrowser extends React.Component {
                 <header>
                     { breadcrumbs }
                     <h1>{directory.name}</h1>
-                    <SelectedFilesControls files={selectedFiles} />
-                    <SelectionControls selectAll={this.props.selectAll}
-                                       selectNone={this.props.selectNone}
-                                       invertSelection={this.props.invertSelection}
-                        />
-                    <FilebrowserSettingsControl {...settings} switchDisplayType={switchDisplayStyle}/>
+                    <div className="directory-controls">
+                        <SelectionControls selectAll={this.props.selectAll}
+                                        selectNone={this.props.selectNone}
+                                        invertSelection={this.props.invertSelection}
+                            />
+                        <SelectedFilesControls files={selectedFiles} />
+                        <FilebrowserSettingsControl {...settings} switchDisplayType={switchDisplayStyle}/>
+                    </div>
                 </header>
                 <main>
                     {

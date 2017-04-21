@@ -14,6 +14,7 @@ import Nav from './nav'
 import {routes, mainNav} from './routes'
 
 // css, images and stuff
+require('normalize.css/normalize.css');
 require('./ui/index.css');
 
 const logo = require('../assets/logo.png')

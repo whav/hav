@@ -14,7 +14,6 @@ export const upload_started = (path, file, uploadTo) => {
         file: file.name,
         preview: file.preview
     };
-    console.log(default_args);
     return (dispatch) => {
         dispatch({
             type: UPLOAD_STARTED,

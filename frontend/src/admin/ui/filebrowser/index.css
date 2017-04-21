@@ -224,4 +224,17 @@ footer {
 
 }
 
+.directory-controls {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+}
 
+.directory-controls ul {
+    list-style: none;
+    padding: 0;
+}
+
+.directory-controls li {
+    display: inline-block;
+}

@@ -43,7 +43,7 @@ export class DirectoryListingBreadcrumbs extends React.Component {
             crumbs.push(<li key={index}>
                 <Link to={d.link}>{d.name}</Link>
             </li>)
-            crumbs.push(<span className="divider" key={(index + 1) * -1}> / </span>)
+            crumbs.push(<li className="divider" key={(index + 1) * -1}> / </li>)
         });
         return <ul className="breadcrumbs">
             {crumbs}

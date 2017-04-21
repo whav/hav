@@ -67,9 +67,14 @@ html, body, #root, .hav-admin-app {
 /* Breadcrumbs */
 .hav-admin-app ul.breadcrumbs {
     list-style: none;
+    padding-left: 0;
 }
 .hav-admin-app ul.breadcrumbs li {
     display: inline;
+}
+
+.hav-admin-app ul.breadcrumbs li.divider:last-child {
+    display: none;
 }
 
 /* Loading Indicator */

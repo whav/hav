@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 /**
  * Created by sean on 01/02/17.
  */
@@ -31,9 +32,9 @@ LoadingIndicator.defaultProps = {
 }
 
 LoadingIndicator.propTypes = {
-    text:  React.PropTypes.string,
-    rotate: React.PropTypes.bool.isRequired,
-    size: React.PropTypes.oneOf(['default', 'large', 'x-large']),
+    text:  PropTypes.string,
+    rotate: PropTypes.bool.isRequired,
+    size: PropTypes.oneOf(['default', 'large', 'x-large']),
 
 }
 

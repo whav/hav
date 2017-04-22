@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 /**
  * Created by sean on 06/02/17.
  */
@@ -41,7 +42,7 @@ const DirectoryControls  = (props) => {
 }
 
 DirectoryControls.propTypes = {
-    children: React.PropTypes.array.isRequired
+    children: PropTypes.array.isRequired
 }
 
 const SelectedFilesControls = ({files, save}) => {
@@ -83,9 +84,9 @@ const SelectionControls = ({selectAll, selectNone, invertSelection}) => {
 
 
 SelectionControls.propTypes = {
-    selectAll: React.PropTypes.func.isRequired,
-    selectNone: React.PropTypes.func.isRequired,
-    invertSelection: React.PropTypes.func.isRequired
+    selectAll: PropTypes.func.isRequired,
+    selectNone: PropTypes.func.isRequired,
+    invertSelection: PropTypes.func.isRequired
 }
 
 const FilebrowserSettingsControl = ({selectedDisplayType, switchDisplayType, availableDisplayTypes}) => {

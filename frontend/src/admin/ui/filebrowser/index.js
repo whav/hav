@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 /**
  * Created by sean on 03/02/17.
  */
@@ -253,7 +254,7 @@ export class FallBackImageLoader extends React.Component {
 }
 
 FallBackImageLoader.propTypes = {
-    src: React.PropTypes.string.isRequired
+    src: PropTypes.string.isRequired
 }
 
 export class GGalleryDirectory extends React.Component {

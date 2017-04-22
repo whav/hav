@@ -1,7 +1,6 @@
-from django.utils import timezone
-
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListCreateAPIView
+from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from rest_framework.parsers import FileUploadParser
+from rest_framework.views import APIView, Response
 
 from .serializers import UploadSerializer, FolderSerializer
 from .permissions import IncomingBaseMixin
@@ -16,18 +15,19 @@ class RootFolderAPIView(IncomingBaseMixin, ListCreateAPIView):
         return UploadedFileFolder.get_root_nodes()
 
 
-class FolderAPIView(IncomingBaseMixin, RetrieveAPIView):
-
-    serializer_class = FolderSerializer
-    queryset = UploadedFileFolder.objects.all()
-
-
 class UploadedFileCreateView(IncomingBaseMixin, CreateAPIView):
     serializer_class = UploadSerializer
     parser_classes = (FileUploadParser,)
 
     def perform_create(self, serializer):
         serializer.save(uploader=self.request.user)
+
+
+class IngestView(IncomingBaseMixin, APIView):
+
+    def post(self, request, **kwargs):
+        import ipdb; ipdb.set_trace()
+        return Response({}, status=201)
 
 
 

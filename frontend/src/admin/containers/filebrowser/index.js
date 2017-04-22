@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 /**
  * Created by sean on 09/02/17.
  */
@@ -143,18 +144,18 @@ class FileBrowser extends React.Component {
 }
 
 FileBrowser.propTypes = {
-    loading: React.PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
     // useful stuff here ...
-    directory: React.PropTypes.object.isRequired,
-    loadCurrentDirectory: React.PropTypes.func.isRequired,
-    parentDirectories: React.PropTypes.array,
-    childrenDirectories: React.PropTypes.array,
-    files: React.PropTypes.array,
-    selectFiles: React.PropTypes.func.isRequired,
-    switchDisplayStyle: React.PropTypes.func.isRequired,
-    settings: React.PropTypes.object,
-    allowUpload: React.PropTypes.bool,
-    saveFileSelection: React.PropTypes.func.isRequired
+    directory: PropTypes.object.isRequired,
+    loadCurrentDirectory: PropTypes.func.isRequired,
+    parentDirectories: PropTypes.array,
+    childrenDirectories: PropTypes.array,
+    files: PropTypes.array,
+    selectFiles: PropTypes.func.isRequired,
+    switchDisplayStyle: PropTypes.func.isRequired,
+    settings: PropTypes.object,
+    allowUpload: PropTypes.bool,
+    saveFileSelection: PropTypes.func.isRequired
 }
 
 

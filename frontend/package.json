@@ -17,7 +17,7 @@
     "postcss-url": "^5.1.2",
     "ptsans-npm-webfont": "0.0.4",
     "react": "^15.5.4",
-    "react-dom": "^15.4.2",
+    "react-dom": "^15.5.4",
     "react-dropzone": "^3.9.2",
     "react-icons": "^2.2.3",
     "react-redux": "^5.0.2",

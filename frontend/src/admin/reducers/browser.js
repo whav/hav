@@ -228,6 +228,9 @@ const selectedFiles = (
         case SAVED_FILE_SELECTION:
             console.warn('File selection saved...', action)
             return state
+        case SAVING_FILE_SELECTION:
+            console.warn('Saving file selection...', action)
+            return state
         default:
             return state
     }

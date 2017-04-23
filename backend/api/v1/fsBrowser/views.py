@@ -20,6 +20,7 @@ from .serializers import FileSerializer, DirectorySerializer, BaseDirectorySeria
 class FileBrowserMixin(object):
 
     root = None
+    keys = []
 
     @property
     def root_path(self):
@@ -40,6 +41,14 @@ class FileBrowserMixin(object):
 
 class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 
+    @property
+    def context(self):
+        return {
+            'keys': self.keys,
+            'root': self.root_path,
+            'request': self.request
+        }
+
     def get(self, request, path=None, **kwargs):
         path = self.resolve_directory(path)
 
@@ -51,10 +60,8 @@ class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 
         serializer = DirectorySerializer(
             instance=path,
-            context={
-                'root': self.root_path,
-                'request': request
-            })
+            context=self.context
+        )
         return Response(serializer.data)
 
 
@@ -96,9 +103,6 @@ class FileBrowserFile(IncomingBaseMixin, FileBrowserMixin, APIView):
         self.save_file(file, path)
         serializer = FileSerializer(
             instance=path,
-            context={
-                'root': self.root_path,
-                'request': request
-            }
+            context=self.context
         )
         return Response(data=serializer.data, status=201)

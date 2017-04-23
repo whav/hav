@@ -13,9 +13,13 @@ class WHAVFileSerializer(serializers.Serializer):
     path = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
+    key = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
 
     size = serializers.SerializerMethodField()
+
+    def get_key(self, media):
+        return self.context['keys'] + [media.id]
 
     def get_name(self, media):
         path = self.get_path(media)
@@ -109,7 +113,10 @@ class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
     def get_files(self, ic):
         return WHAVFileSerializer(
             Media.objects.filter(imagecollection=ic).prefetch_related('basefile_set__localfile'),
-            many=True
+            many=True,
+            context={
+                'keys': self.context['keys']
+            }
         ).data
 
 

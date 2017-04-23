@@ -10,10 +10,12 @@ from .serializers import WHAVCollectionSerializer, RootWHAVCollectionSerializer
 class WHAVCollectionBrowser(IncomingBaseMixin, APIView):
 
     ic = None
+    keys = []
 
     def get_context(self):
         return {
-            'request': self.request
+            'request': self.request,
+            'keys': self.keys
         }
 
     def get_serializer_class(self):

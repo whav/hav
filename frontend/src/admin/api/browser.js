@@ -1,10 +1,10 @@
 /**
  * Created by sean on 09/02/17.
  */
-import {saveFilesForIngestion} from './urls'
+import {saveFilesForIngestion, browser} from './urls'
 import {getCSRFCookie} from '../../utils/xhr'
 
-export const requestDirectory = (url) => {
+export const requestDirectory = (url=browser) => {
         console.log('requesting directory', url);
         return fetch(url, {
             credentials: 'same-origin',
@@ -13,13 +13,16 @@ export const requestDirectory = (url) => {
         )
 }
 
-export const saveFileSelection = (fileIDs, url=saveFilesForIngestion) => {
-    console.log(fileIDs)
+export const saveFileSelection = (files, description='', url=saveFilesForIngestion) => {
+    let data = {
+        source_references: files.map((f) => f.key),
+        description
+    }
     return fetch(
         url,
         {
             method: 'POST',
-            body: JSON.stringify(fileIDs),
+            body: JSON.stringify(data),
             headers: new Headers({
                 'X-CSRFTOKEN': getCSRFCookie(),
                 'Accept': 'application/json',

@@ -73,6 +73,12 @@ class FileSerializer(FileBrowserBaseSerializer):
     path = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
+    key = serializers.SerializerMethodField()
+
+    def get_key(self, path):
+        parts = self.context.get('keys', [])
+        parts.append(path.name)
+        return parts
 
     def get_path(self, path):
         root = self.get_root()
@@ -127,10 +133,17 @@ class DirectorySerializer(BaseDirectorySerializer):
     def get_files(self, path):
         files = [f for f in path.iterdir() if not f.is_dir()]
         files.sort(key=lambda x: x.name)
+        print(self.context)
+        relative_to_root = path.relative_to(self.context['root']).as_posix()
+
+        context = {
+            'keys': self.context.get('keys', []) + [relative_to_root],
+            'root': self.context['root']
+        }
         return FileSerializer(
             files,
             many=True,
-            context=self.context
+            context=context
         ).data
 
     def get_allowUpload(self, path):

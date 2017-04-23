@@ -1,48 +1,27 @@
+from uuid import uuid4
 from django.db import models
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
+from django.contrib.postgres.fields import ArrayField, JSONField
 from model_utils.models import TimeStampedModel
 
 from treebeard.mp_tree import MP_Node
 
-# get the upload folder for incoming files
-try:
-    upload_folder = settings.HAV_UPLOAD_FOLDER
-except AttributeError:
-    upload_folder = settings.MEDIA_ROOT
-
-incoming_storage = FileSystemStorage(location=upload_folder)
-
-class UploadedFile(TimeStampedModel):
-
-    uploader = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        editable=False,
-        on_delete=models.CASCADE
-    )
-
-    file = models.FileField(
-        storage=incoming_storage,
-        verbose_name='uploaded file',
-    )
-
-    folder = models.ForeignKey(
-        'UploadedFileFolder',
-        null=True,
-        blank=False,
-        on_delete=models.CASCADE
-    )
+from .validators import validate_list_of_lists
 
 
-class UploadedFileFolder(TimeStampedModel, MP_Node):
-    node_order_by = ['name']
-    name = models.CharField(max_length=255, blank=True)
-    description = models.TextField(max_length=1000, blank=True)
+class FileIngestSelection(TimeStampedModel):
+
+    description = models.CharField(max_length=100, blank=True)
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         editable=False,
         null=True,
         on_delete=models.SET_NULL
+    )
+
+    source_references = JSONField(
+        default=list,
+        validators=[validate_list_of_lists]
     )

@@ -1,0 +1,7 @@
+*.pyc
+dist/
+*.egg-info/
+site/
+node_modules/
+wp/
+

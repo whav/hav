@@ -1,7 +1,8 @@
 let webpack = require("webpack");
 let baseConfig = require("./webpack.dev.config.js");
 
-module.exports = opts => {
+module.exports = (opts) => {
+  console.log(opts);
   let config = baseConfig(opts);
 
   let entries = {};

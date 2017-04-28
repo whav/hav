@@ -1,0 +1,54 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "hav",
+            "title": "Home"
+        },
+        {
+            "location": "/#hav",
+            "text": "",
+            "title": "hav"
+        },
+        {
+            "location": "/collections/bon/",
+            "text": "bon",
+            "title": "Bon"
+        },
+        {
+            "location": "/collections/bon/#bon",
+            "text": "",
+            "title": "bon"
+        },
+        {
+            "location": "/collections/dusri/",
+            "text": "Dumi - Rai",
+            "title": "Dusri"
+        },
+        {
+            "location": "/collections/dusri/#dumi-rai",
+            "text": "",
+            "title": "Dumi - Rai"
+        },
+        {
+            "location": "/collections/gaenszle/",
+            "text": "Gaenszle",
+            "title": "Gaenszle"
+        },
+        {
+            "location": "/collections/gaenszle/#gaenszle",
+            "text": "",
+            "title": "Gaenszle"
+        },
+        {
+            "location": "/collections/whav/",
+            "text": "The WHAV",
+            "title": "Whav"
+        },
+        {
+            "location": "/collections/whav/#the-whav",
+            "text": "",
+            "title": "The WHAV"
+        }
+    ]
+}

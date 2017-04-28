@@ -1,0 +1,5 @@
+site_name: Himalaya Archive Vienna
+docs_dir: content
+theme_dir: theme
+repo_url: https://hav.univie.ac.at
+site_dir: "../build/"

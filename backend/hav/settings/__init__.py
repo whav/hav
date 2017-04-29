@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'incoming',
     'whav',
-    'scms',
     'hav_examples'
 ]
 

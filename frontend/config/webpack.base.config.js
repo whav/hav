@@ -22,7 +22,6 @@ module.exports = (opts) => {
   return {
     context: PROJECT_ROOT,
     entry: {
-      cms: ["./src/cms/index"],
       hav: ["./src/hav/index"],
       havAdmin: ["./src/admin/index"],
       vendor: [

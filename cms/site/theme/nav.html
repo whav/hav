@@ -1,12 +1,10 @@
-<!--
-
--->
 {% if not nav_item.children %}
 <li {% if nav_item.active %}class="active"{% endif %}>
     <a href="{{ nav_item.url }}">{{ nav_item.title }}</a>
 </li>
 {% else %}
-  <li>
+    {# the inner for loop is just to detect if a child is active #}
+    <li class="{% for nav_item in nav_item.children %}{% if nav_item.active %}active {% endif %}{% endfor %}">
     {{ nav_item.title }}
     <ul>
         {% for nav_item in nav_item.children %}

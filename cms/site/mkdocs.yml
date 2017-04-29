@@ -3,3 +3,10 @@ docs_dir: content
 theme_dir: theme
 repo_url: https://hav.univie.ac.at
 site_dir: "../build/"
+pages:
+  - Home: 'index.md'
+  - 'Collections':
+      - 'Bon': 'collections/bon.md'
+      - 'Dumi Rai': 'collections/dumi-rai.md'
+      - 'Gaenszle': 'collections/gaenszle.md'
+      - 'WHAV': 'collections/whav.md'

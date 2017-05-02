@@ -1,3 +1,8 @@
 site_name: Himalaya Archive Vienna
 theme: readthedocs
 
+pages:
+  - Home: 'index.md'
+  - 'For Editors': 'editors/index.md'
+  - 'For Developers':
+      - 'CMS': 'developers/cms.md'

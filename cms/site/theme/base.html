@@ -44,13 +44,21 @@
     <div class="App-logo"></div>
 
     <nav class="nav-primary">
-      <ul>  
+      <ul>
       {% for nav_item in nav %}
         {% include "nav.html" %}
       {% endfor %}
       </ul>
     </nav>
+
+{#    {% raw %}#}
+{#    {% block secondary_nav %}#}
+{#    <em>{{ config|pprint }}</em>#}
+{#    {% endblock %}#}
+{#    {% endraw %}#}
+{#  #}
   </nav>
+
   {% endblock %}
 
   {% block content %}

@@ -3,6 +3,7 @@ docs_dir: content
 theme_dir: theme
 repo_url: https://hav.univie.ac.at
 site_dir: "../build/"
+
 pages:
   - Home: 'index.md'
   - 'Collections':

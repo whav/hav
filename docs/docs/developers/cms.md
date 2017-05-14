@@ -34,7 +34,7 @@ The static files of the HAV theme are located in ```cms/src```
 
 To develop the CSS and Javascript parts of the CMS you will need to install 
 some frontend tooling.
-If you have [yarn](https://yarnpkg.com/) installed a simple ```yarn install``
+If you have [yarn](https://yarnpkg.com/) installed a simple ```yarn install```
 inside that folder should do the trick.
 
 Once that command completes successfully you can start developing by running

@@ -3,7 +3,7 @@ var webpack = require("webpack");
 var autoprefixer = require("autoprefixer");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = opts => {
+module.exports = (opts) => {
   const { PROJECT_ROOT, NODE_ENV } = opts;
 
   let plugins = [
@@ -16,13 +16,12 @@ module.exports = opts => {
       name: "vendor",
       chunks: ["hav", "havAdmin"]
     }),
-    new ExtractTextPlugin("[name]-[contenthash].css")
+    new ExtractTextPlugin(opts.EXTRACT_CSS_NAME || "[name]-[contenthash].css")
   ];
 
   return {
     context: PROJECT_ROOT,
     entry: {
-      cms: ["./src/cms/index"],
       hav: ["./src/hav/index"],
       havAdmin: ["./src/admin/index"],
       vendor: [

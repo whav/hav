@@ -4,12 +4,16 @@
 import Welcome from './home'
 import FileBrowser from './containers/filebrowser'
 import {Uploads} from './containers/uploads'
+import HavExplorer from './containers/collections'
 
 import GoHome from 'react-icons/go/home'
 import GoFileDirectory from 'react-icons/go/file-directory'
 import GoFileSubmodule from 'react-icons/go/file-submodule'
 import GoCloudUpload from 'react-icons/go/cloud-upload'
+import FaArchive from 'react-icons/lib/fa/archive'
+
 import GoDatabase from 'react-icons/go/database'
+
 
 const routes = [
     {
@@ -23,6 +27,10 @@ const routes = [
     {
         path: '/uploads/',
         main: Uploads,
+    },
+    {
+        path: '/:repository(hav)/:path*/',
+        main: FileBrowser
     }
 ]
 
@@ -32,6 +40,12 @@ const mainNav = [
         icon: GoHome,
         menuExact: true,
         link: '/'
+    },
+    {
+        title: 'HAV',
+        link: '/hav/',
+        icon: FaArchive,
+        menuExact: false
     },
     {
         title: 'Sources',

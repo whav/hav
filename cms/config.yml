@@ -1,0 +1,16 @@
+backend:
+  name: github
+  repo: whav/hav # Path to your Github repository
+  branch: master # Branch to update
+
+media_folder: site/content/media
+public_folder: /media
+
+collections:
+  - name: "collections" # Used in routes, e.g. /admin/collections/blog
+    label: "Collection Page" # Used in the UI
+    folder: "site/content/collections" # The path to the folder where the documents are stored
+    create: true # Allow users to create new documents in this collection
+    slug: "{{slug}}" # Filename template i.e. YYYY-MM-DD-title.md
+    fields: # The fields for each document, usually in front matter
+      - {label: "Body", name: "body", widget: "markdown"}

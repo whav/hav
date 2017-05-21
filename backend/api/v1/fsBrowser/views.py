@@ -23,6 +23,14 @@ class FileBrowserMixin(object):
     keys = []
 
     @property
+    def context(self):
+        return {
+            'keys': self.keys,
+            'root': self.root_path,
+            'request': self.request
+        }
+
+    @property
     def root_path(self):
         return Path(self.root).resolve()
 
@@ -41,13 +49,7 @@ class FileBrowserMixin(object):
 
 class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 
-    @property
-    def context(self):
-        return {
-            'keys': self.keys,
-            'root': self.root_path,
-            'request': self.request
-        }
+
 
     def get(self, request, path=None, **kwargs):
         path = self.resolve_directory(path)

@@ -60,6 +60,10 @@ html, body, #root, .hav-admin-app {
     color: inherit;
 }
 
+.hav-admin-main-menu li svg {
+    margin-right: 0.5rem;
+}
+
 .hav-admin-main-menu a.active {
     text-decoration: underline;
 }

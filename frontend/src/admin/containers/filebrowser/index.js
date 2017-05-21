@@ -25,9 +25,7 @@ import {
 
 import {
     DirectoryControls,
-    FilebrowserSettingsControl,
-    SelectionControls,
-    SelectedFilesControls
+    FileBrowserMenu
 } from '../../ui/filebrowser/controls'
 
 import UploadTrigger from '../uploads'
@@ -39,6 +37,8 @@ import {
 } from '../../reducers/browser'
 
 import {getUploadsForPath} from '../../reducers/uploads'
+
+
 
 class FileBrowser extends React.Component {
 
@@ -57,6 +57,8 @@ class FileBrowser extends React.Component {
     }
 
     render() {
+        console.log(this.props)
+
         if (this.props.loading) {
             return <LoadingIndicator />;
         } else {
@@ -101,15 +103,15 @@ class FileBrowser extends React.Component {
             return <div className="filebrowser">
                 <header>
                     { breadcrumbs }
-                    <h1>{directory.name}</h1>
-                    <div className="directory-controls">
-                        <SelectionControls selectAll={this.props.selectAll}
-                                        selectNone={this.props.selectNone}
-                                        invertSelection={this.props.invertSelection}
-                            />
-                        <SelectedFilesControls files={selectedFiles} save={() => saveFileSelection(selectedFiles)} />
-                        <FilebrowserSettingsControl {...settings} switchDisplayType={switchDisplayStyle}/>
-                    </div>
+                    <FileBrowserMenu name={directory.name}
+                                    switchDisplayType={switchDisplayStyle}
+                                    selectedDisplayType={settings.selectedDisplayType}
+                                    selectAll={this.props.selectAll}
+                                    selectNone={this.props.selectNone}
+                                    invertSelection={this.props.invertSelection}
+                                    files={selectedFiles}
+                                    saveFileSelection={saveFileSelection}
+                    />
                 </header>
                 <main>
                     {
@@ -181,7 +183,7 @@ export default connect(
         }
 
         let directory = getDirectoryForPath(path, state)
-
+        console.warn(props);
         let mappedProps = {
             directory,
             path,

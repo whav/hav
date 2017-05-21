@@ -233,7 +233,6 @@ export class FallBackImageLoader extends React.Component {
     }
 
     handleImageLoad(e) {
-        console.warn('Image loaded', e, e.target)
         this.setState({
             hasLoaded: true
         })

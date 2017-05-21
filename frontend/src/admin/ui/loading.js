@@ -1,40 +1,34 @@
-import PropTypes from 'prop-types';
 /**
  * Created by sean on 01/02/17.
  */
 import React from 'react'
-import GoHistory from 'react-icons/go/history'
-import classNames from 'classnames'
 
-const sizesToClass = {
-    'default': 'f3',
-    'large': 'f2',
-    'x-large': 'f1'
-}
+import { Dimmer, Loader } from 'semantic-ui-react'
 
-export default class LoadingIndicator extends React.Component {
+class LoadingIndicator extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            active: false
+        }
+    }
+
+    componentDidMount() {
+        this.setState({
+            active: true
+        })
+    }
+    handleClick() {
+        this.setState({
+            active: false
+        })
+    }
     render() {
-        let {text, rotate, size} = this.props;
-
-        return <div className={classNames('loading-indicator', sizesToClass[size], {...this.props.className})}>
-            <div className={classNames('loading-indicator-icon', {rotating: rotate})}>
-                <GoHistory />
-            </div>
-            { text ? <p>{text}</p> : null }
-        </div>
+        return <Dimmer active={this.state.active} inverted onClick={()=>this.handleClick()}>
+            <Loader>Loading</Loader>
+        </Dimmer>
     }
 }
 
-LoadingIndicator.defaultProps = {
-    text: 'Loading ...',
-    size: 'default',
-    rotate: true
-}
-
-LoadingIndicator.propTypes = {
-    text:  PropTypes.string,
-    rotate: PropTypes.bool.isRequired,
-    size: PropTypes.oneOf(['default', 'large', 'x-large']),
-
-}
+export default LoadingIndicator;
 

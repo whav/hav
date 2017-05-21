@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'incoming',
     'whav',
-    'hav_examples'
+    'hav_examples',
+    'hav.sets',
 ]
 
 MIDDLEWARE = [

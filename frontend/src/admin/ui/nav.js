@@ -7,11 +7,11 @@ import classNames from 'classnames'
 
 
 const NavItem = (props) => {
-    let {link, title, icon, menuExact=true} = props;
-    let Icon = icon ? icon : null;
+    let {link, title, icon=null, menuExact=true} = props;
+    let Icon = icon;
 
     let inner = (<span>
-        <Icon />
+        {icon ? <Icon /> :null}
         {title}
     </span>);
 

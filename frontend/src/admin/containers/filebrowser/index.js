@@ -183,7 +183,7 @@ export default connect(
         }
 
         let directory = getDirectoryForPath(path, state)
-        console.warn(props);
+        
         let mappedProps = {
             directory,
             path,

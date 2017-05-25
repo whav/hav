@@ -14,7 +14,6 @@ import Nav from './nav'
 import {routes, mainNav} from './routes'
 
 // css, images and stuff
-require('semantic-ui-css/semantic.css');
 require('./ui/index.css');
 
 const logo = require('../assets/logo.png')
@@ -33,13 +32,13 @@ const HavAdmin = ({store}) => {
                     <Route component={Navigation} />
                 </nav>
             </div>
-            <div className="hav-admin-content" ref={(contentDiv) => { this.contentDiv = contentDiv; }}>
+            <div className="hav-admin-content">
                 <Switch>
                 {
                     routes.map(
                         (rc, index) => {
                             let {path, main, ...extra} = rc;
-                            return <Route key={index} exact={true} path={path} component={main} {...extra} contentDiv={this.contentDiv} />
+                            return <Route key={index} exact={true} path={path} component={main} {...extra} container={this.contentDiv} />
                         }
                     )
                 }

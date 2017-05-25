@@ -23,11 +23,15 @@ html, body, #root, .hav-admin-app {
     padding: 1em;
 }
 
+.hav-admin-content .loading-container {
+    height: 100vh;
+    width: 100%;
+}
+
 .hav-admin-main-menu {
     height: 100%;
     width: 20vw;
     background-color: #f8b20c;
-    /*padding-right: 2rem;*/
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -47,29 +51,6 @@ html, body, #root, .hav-admin-app {
     margin: 0.5em 10%;
     height: auto;
 }
-/*
-.hav-admin-main-menu ul {
-    font-size: 1.5rem;
-    text-align: left;
-    list-style: none;
-}
-
-.hav-admin-main-menu > ul ul {
-    text-align: right;
-}
-
-.hav-admin-main-menu a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.hav-admin-main-menu li svg {
-    margin-right: 0.5rem;
-}
-
-.hav-admin-main-menu a.active {
-    text-decoration: underline;
-}*/
 
 /* Breadcrumbs */
 .hav-admin-app ul.breadcrumbs {

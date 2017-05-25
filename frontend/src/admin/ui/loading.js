@@ -5,30 +5,43 @@ import React from 'react'
 
 import { Dimmer, Loader } from 'semantic-ui-react'
 
-class LoadingIndicator extends React.Component {
+const LoadingDiv = (props) =>  (
+    <div className='loading-container'>
+        {props.children}
+    </div>
+)
+
+
+const LoadingIndicator = ({active=true, text='Loading'}) => {
+    return <Loader active={active}>
+        {text}
+    </Loader>
+}
+
+
+
+class LoadingDimmer extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            active: false
+            active: true
         }
     }
 
-    componentDidMount() {
-        this.setState({
-            active: true
-        })
-    }
     handleClick() {
         this.setState({
             active: false
         })
     }
+
     render() {
-        return <Dimmer active={this.state.active} inverted onClick={()=>this.handleClick()}>
-            <Loader>Loading</Loader>
-        </Dimmer>
+        return <Dimmer.Dimmable as={LoadingDiv} dimmed={this.state.active}>
+                <Dimmer active={this.state.active} inverted onClick={()=>this.handleClick()}>
+                <LoadingIndicator />
+            </Dimmer>
+        </Dimmer.Dimmable>
     }
 }
 
 export default LoadingIndicator;
-
+export {LoadingDimmer, LoadingDiv};

@@ -28,6 +28,9 @@ module.exports = (opts) => {
         "whatwg-fetch",
         "react",
         "react-dom",
+      ],
+      semantic: [
+        './src/semantic/semantic.less'
       ]
     },
     output: {
@@ -61,6 +64,23 @@ module.exports = (opts) => {
         {
           test: /react-icons\/(.)*(.js)$/,
           loader: "babel-loader"
+        },
+        {
+            test: /\.less$/,
+            use: [
+              {
+                loader: "style-loader" // translates CSS into CommonJS
+              },
+              {
+                loader: "css-loader" // translates CSS into CommonJS
+              },
+              {
+                loader: "postcss-loader"
+              },
+              {
+                loader: "less-loader" // compiles Less to CSS
+              }
+            ]
         },
         // everything else
         {

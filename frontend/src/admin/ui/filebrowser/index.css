@@ -9,6 +9,11 @@
 
 .filebrowser header {
     flex: 0 0 auto;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: white;
+    
 }
 
 .filebrowser main {
@@ -137,7 +142,7 @@
 .g-gallery-item {
     flex: 1 1 15%;
     min-width: 10rem;
-
+    max-width: 20rem;
     /*needed for absolutely positioned selection marker*/
     position: relative;
     border: 1px dotted grey;
@@ -180,7 +185,8 @@
     object-fit: contain;
 }
 
-.g-gallery-item svg {
+.g-gallery-item > svg {
+    /* SVGs are used for directories or files without a preview */
     margin-top: 2rem;
 }
 

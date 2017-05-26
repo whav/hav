@@ -11,9 +11,14 @@ import {
     requestDirectoryAction,
     switchFilebrowserDisplayType,
     toggleSelect,
-    toggleSelectAll,
-    saveFileSelectionForIngestion
+    toggleSelectAll
 } from '../../actions/browser'
+
+import {
+    getIngestionQueues,
+    queueFilesForIngestion
+} from '../../actions/ingest';
+
 
 import LoadingIndicator from '../../ui/loading'
 import {
@@ -27,7 +32,7 @@ import {
     DirectoryControls,
     FileBrowserMenu
 } from '../../ui/filebrowser/controls'
-
+import { Divider } from 'semantic-ui-react'
 import UploadTrigger from '../uploads'
 
 import {
@@ -57,8 +62,6 @@ class FileBrowser extends React.Component {
     }
 
     render() {
-        console.log(this.props)
-
         if (this.props.loading) {
             return <LoadingIndicator />;
         } else {
@@ -112,6 +115,7 @@ class FileBrowser extends React.Component {
                                     files={selectedFiles}
                                     saveFileSelection={saveFileSelection}
                     />
+                    <Divider />
                 </header>
                 <main>
                     {
@@ -226,6 +230,11 @@ export default connect(
         if (path.path) {
             apiURL = `${apiURL}${path.path}/`
         }
+        console.log(queueFilesForIngestion);
+
+        const goToIngest = (files) => {
+            props.history.push('/ingest/', files)
+        }
         return {
             uploadToURL: apiURL,
             loadCurrentDirectory: () => {
@@ -239,7 +248,7 @@ export default connect(
             selectAll: () => dispatch(toggleSelectAll(path, true)),
             selectNone: () => dispatch(toggleSelectAll(path, false)),
             invertSelection: () => dispatch(toggleSelectAll(path)),
-            saveFileSelection: (files) => dispatch(saveFileSelectionForIngestion(files))
+            saveFileSelection: goToIngest
         }
     }
 )(FileBrowser)

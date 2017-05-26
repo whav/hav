@@ -14,7 +14,7 @@ import FaTable from 'react-icons/lib/fa/table'
 import FaList from  'react-icons/lib/fa/list'
 
 import { Button, Menu } from 'semantic-ui-react'
-
+import {ModalExample} from '../ingest'
 
 class UploadControl extends React.Component {
     constructor(props){
@@ -59,7 +59,7 @@ const SelectedFilesControls = ({files, save}) => {
       primary
       label={{ as: 'a', basic: true, content: desc }}
       labelPosition='left'
-      onClick={() => save()}
+      onClick={() => save(files)}
     />
 }
 
@@ -100,25 +100,45 @@ const FilebrowserViewControl = ({selectedDisplayType, switchDisplayType}) => {
     </Button.Group>
 }
 
-const FileBrowserMenu = (props) => {
-    return <Menu borderless secondary>
-        {props.name ? <Menu.Item header>{props.name}</Menu.Item> : null}
-        <Menu.Item>
-            <FilebrowserViewControl switchDisplayType={props.switchDisplayType} selectedDisplayType={props.selectedDisplayType}/>
-        </Menu.Item>
-        <Menu.Item>
-            <SelectionControls selectAll={props.selectAll}
-                            selectNone={props.selectNone}
-                            invertSelection={props.invertSelection}
-            />
-        </Menu.Item>
-        <Menu.Menu position='right'>
+class FileBrowserMenu extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            modal: false
+        }
+        this.openModal = this.openModal.bind(this)
+    }
+
+    openModal() {
+        {/*save={() => props.saveFileSelection(props.files)} */}
+        this.setState({modal: true})
+    }
+
+    render() {
+        let props = this.props;
+        return <Menu borderless secondary>
+            {props.name ? <Menu.Item header>{props.name}</Menu.Item> : null}
             <Menu.Item>
-                <SelectedFilesControls files={props.files} save={() => props.saveFileSelection(props.files)} />
+                <FilebrowserViewControl switchDisplayType={props.switchDisplayType} selectedDisplayType={props.selectedDisplayType}/>
             </Menu.Item>
-        </Menu.Menu>
-                                        
-    </Menu>
+            <Menu.Item>
+                <SelectionControls selectAll={props.selectAll}
+                                selectNone={props.selectNone}
+                                invertSelection={props.invertSelection}
+                />
+            </Menu.Item>
+            <Menu.Menu position='right'>
+                <Menu.Item>
+                    <SelectedFilesControls 
+                        files={props.files} 
+                        save={props.saveFileSelection}
+                        />
+                </Menu.Item>
+            </Menu.Menu>
+            { this.state.modal ? <ModalExample /> : null }
+        </Menu>
+    }
+
 }
 
 export {

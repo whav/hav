@@ -226,7 +226,6 @@ export class FallBackImageLoader extends React.Component {
         }
     }
     handleImageLoadError(e) {
-        // console.error('Error Loading Image', e);
         this.setState({
             hasError: true
         })
@@ -340,7 +339,7 @@ const FilesWrapper = ({type, ...props}) => {
     let cn = ''
     switch (type) {
         case 'table':
-            cn = css.fileTable;
+            cn = 'file-table';
             break;
         case 'gallery':
             cn = 'image-gallery'
@@ -392,6 +391,7 @@ export class FileList extends React.Component {
             return null;
         }
         let Component = fileListDisplayOptions[displayType];
+        console.log(displayType);
         if (displayType === 'gallery') {
             return <ImageGallery toggleSelect={this.handleFileSelectEvent}
                                  files={files}

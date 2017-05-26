@@ -5,6 +5,7 @@ import Welcome from './home'
 import FileBrowser from './containers/filebrowser'
 import {Uploads} from './containers/uploads'
 import HavExplorer from './containers/collections'
+import QueueSelection from './containers/ingest'
 
 import GoHome from 'react-icons/go/home'
 import GoFileDirectory from 'react-icons/go/file-directory'
@@ -27,6 +28,10 @@ const routes = [
     {
         path: '/uploads/',
         main: Uploads,
+    },
+    {
+        path: '/ingest/',
+        main: QueueSelection
     },
     {
         path: '/:repository(hav)/:path*/',

@@ -4,9 +4,7 @@ import {
     RECEIVE_DIRECTORY_CONTENT, 
     CHANGE_FILE_BROWSER_SETTINGS, 
     TOGGLE_FILES_SELECT, 
-    TOGGLE_FILES_SELECT_ALL,
-    SAVED_FILE_SELECTION,
-    SAVING_FILE_SELECTION
+    TOGGLE_FILES_SELECT_ALL
 } from '../actions/browser'
 
 import {UPLOAD_COMPLETED} from '../actions/uploads'
@@ -220,28 +218,11 @@ const settings = (
     }
 }
 
-const selectedFiles = (
-    state={},
-    action
-) => {
-    switch (action.type) {
-        case SAVED_FILE_SELECTION:
-            console.warn('File selection saved...', action)
-            return state
-        case SAVING_FILE_SELECTION:
-            console.warn('Saving file selection...', action)
-            return state
-        default:
-            return state
-    }
-}
-
 
 const fileBrowsers = combineReducers({
     settings,
     directoriesByPath,
-    filesByPath,
-    selectedFiles
+    filesByPath
 })
 
 

@@ -133,7 +133,6 @@ class DirectorySerializer(BaseDirectorySerializer):
     def get_files(self, path):
         files = [f for f in path.iterdir() if not f.is_dir()]
         files.sort(key=lambda x: x.name)
-        print(self.context)
         relative_to_root = path.relative_to(self.context['root']).as_posix()
 
         context = {

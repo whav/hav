@@ -76,9 +76,7 @@ class FileSerializer(FileBrowserBaseSerializer):
     key = serializers.SerializerMethodField()
 
     def get_key(self, path):
-        parts = self.context.get('keys', [])
-        parts.append(path.name)
-        return parts
+        return self.context.get('keys', []) + [path.name]
 
     def get_path(self, path):
         root = self.get_root()

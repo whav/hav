@@ -7,13 +7,14 @@ const basePath = path.resolve(
 )
 
 const semanticUiLibPath = path.resolve(basePath, 'node_modules/semantic-ui-less/')
+// we need a valid theme.config in node_modules/semantic-ui-less/
 
-// relocate default config
-fs.writeFileSync(
-  path.resolve(semanticUiLibPath, 'theme.config'),
-  "@import '../../src/semantic/theme.config';\n",
-  'utf8'
-);
+const themeConfig = path.resolve(semanticUiLibPath, 'theme.config')
+if (!fs.existsSync(themeConfig)) {
+  console.log(themeConfig)
+  fs.symlinkSync(path.resolve(__dirname, '../semantic/theme.config'), themeConfig)
+}
+
 
 // fix well known bug with default distribution
 fixFontPath(path.resolve(semanticUiLibPath, 'themes/default/globals/site.variables'));

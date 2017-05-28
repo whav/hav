@@ -44,7 +44,6 @@ import {
 import {getUploadsForPath} from '../../reducers/uploads'
 
 
-
 class FileBrowser extends React.Component {
 
     constructor(props) {

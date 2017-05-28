@@ -8,11 +8,6 @@ const basePath = path.resolve(
 
 const semanticUiLibPath = path.resolve(basePath, 'node_modules/semantic-ui-less/')
 
-console.log(
-    semanticUiLibPath,
-    path.resolve(semanticUiLibPath, 'theme.config')
-)
-
 // relocate default config
 fs.writeFileSync(
   path.resolve(semanticUiLibPath, 'theme.config'),

@@ -141,14 +141,15 @@
 
 .g-gallery-item {
     flex: 1 1 15%;
-    min-width: 10rem;
-    max-width: 20rem;
+    /*min-width: 10rem;
+    max-width: 20rem;*/
+    width: 10rem;
     /*needed for absolutely positioned selection marker*/
     position: relative;
     border: 1px dotted grey;
     border-collapse: collapse;
-    margin: 0.1rem;
-
+    margin: 0.4rem;
+    padding: 0.6rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -223,6 +224,7 @@
     text-overflow: ellipsis;
     color: grey;
     font-size: 1rem;
+    margin-top: 1rem;
 }
 
 .g-gallery-item-file {

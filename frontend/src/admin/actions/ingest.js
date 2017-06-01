@@ -4,6 +4,8 @@ export const SAVING_INGEST_QUEUE = 'SAVING_INGEST_QUEUE'
 export const SAVING_INGEST_QUEUE_FAILED = 'SAVING_INGEST_QUEUE_FAILED'
 export const SAVING_INGEST_QUEUE_SUCCESS = 'SAVING_INGEST_QUEUE_SUCCESS'
 
+export const SET_INGEST_TO = 'SET_INGEST_TO'
+
 export const FETCHING_INGEST_QUEUES = 'FETCHING_INGEST_QUEUES'
 export const FETCHING_INGEST_QUEUES_SUCCESS = 'FETCHING_INGEST_QUEUES_SUCCESS'
 
@@ -44,9 +46,15 @@ export const saveFileSelectionForIngestion = (files) => {
 }
 
 export const queueFilesForIngestion = (files) => {
-    console.warn('Ingestion...', files);
     return {
         type: 'FILES!!!',
         payload: files
+    }
+}
+
+export const ingestTo = (havPath) => {
+    return {
+        type: SET_INGEST_TO,
+        path: havPath
     }
 }

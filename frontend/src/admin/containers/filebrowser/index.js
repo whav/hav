@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 /**
  * Created by sean on 09/02/17.
  */
@@ -6,6 +5,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import pathToRegexp from 'path-to-regexp'
+import PropTypes from 'prop-types';
 
 import {
     requestDirectoryAction,
@@ -167,7 +167,6 @@ FileBrowser.propTypes = {
 export default connect(
 
     (rootState, props) => {
-
         // the location of the root state is defined
         // in the root reducer
         const state = rootState.repositories;
@@ -229,7 +228,6 @@ export default connect(
         if (path.path) {
             apiURL = `${apiURL}${path.path}/`
         }
-        console.log(queueFilesForIngestion);
 
         const goToIngest = (files) => {
             props.history.push('/ingest/', files)

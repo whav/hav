@@ -13,13 +13,14 @@ import {fileListDisplayValues} from '../ui/filebrowser/index'
 
 const stripSlashes = (path) => {
     if (path === undefined) { return ''; }
+    if (typeof path != 'string') { path = String(path)}
     // remove opening/trailing slashes
     while (path.startsWith('/')) { path = path.slice(1)}
     while (path.endsWith('/'))   { path = path.slice(0,-1)}
     return path
 }
 
-const emptyPaths = [undefined, '', '/']
+const emptyPaths = [undefined, '', '/', null]
 const getStateKeyForPath = (pathOrObj) => {
     switch (typeof pathOrObj) {
         case 'string':

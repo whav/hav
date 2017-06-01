@@ -8,6 +8,7 @@ from rest_framework import serializers
 
 from hav.thumbor import get_image_url
 
+
 class FileStatsSerializer(serializers.BaseSerializer):
 
     def to_representation(self, path):

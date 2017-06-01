@@ -14,7 +14,6 @@ import FaTable from 'react-icons/lib/fa/table'
 import FaList from  'react-icons/lib/fa/list'
 
 import { Button, Menu } from 'semantic-ui-react'
-import {ModalExample} from '../ingest'
 
 class UploadControl extends React.Component {
     constructor(props){
@@ -103,16 +102,8 @@ const FilebrowserViewControl = ({selectedDisplayType, switchDisplayType}) => {
 class FileBrowserMenu extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            modal: false
-        }
-        this.openModal = this.openModal.bind(this)
     }
 
-    openModal() {
-        {/*save={() => props.saveFileSelection(props.files)} */}
-        this.setState({modal: true})
-    }
 
     render() {
         let props = this.props;
@@ -135,7 +126,6 @@ class FileBrowserMenu extends React.Component {
                         />
                 </Menu.Item>
             </Menu.Menu>
-            { this.state.modal ? <ModalExample /> : null }
         </Menu>
     }
 

@@ -4,14 +4,13 @@
 import Welcome from './home'
 import FileBrowser from './containers/filebrowser'
 import {Uploads} from './containers/uploads'
-import HavExplorer from './containers/collections'
+import IngestionView from './containers/ingest'
 
 import GoHome from 'react-icons/go/home'
 import GoFileDirectory from 'react-icons/go/file-directory'
 import GoFileSubmodule from 'react-icons/go/file-submodule'
 import GoCloudUpload from 'react-icons/go/cloud-upload'
 import FaArchive from 'react-icons/lib/fa/archive'
-
 import GoDatabase from 'react-icons/go/database'
 
 
@@ -27,6 +26,10 @@ const routes = [
     {
         path: '/uploads/',
         main: Uploads,
+    },
+    {
+        path: '/ingest/',
+        main: IngestionView
     },
     {
         path: '/:repository(hav)/:path*/',

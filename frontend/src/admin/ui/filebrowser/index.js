@@ -226,14 +226,12 @@ export class FallBackImageLoader extends React.Component {
         }
     }
     handleImageLoadError(e) {
-        // console.error('Error Loading Image', e);
         this.setState({
             hasError: true
         })
     }
 
     handleImageLoad(e) {
-        console.warn('Image loaded', e, e.target)
         this.setState({
             hasLoaded: true
         })
@@ -257,45 +255,56 @@ FallBackImageLoader.propTypes = {
     src: PropTypes.string.isRequired
 }
 
-export class GGalleryDirectory extends React.Component {
-    render() {
-        let {name, selected=false, navigate} = this.props;
-        return <div className={classNames('g-gallery-item', 'g-gallery-directory', {selected: selected})}
-                    onClick={navigate} >
-                <div className="g-gallery-item-preview">
-                    <GoFileDirectory className="f1"/>
-                </div>
-                <span className="g-gallery-item-name">{name}</span>
-        </div>
-    }
-}
-
-const GGalleryItem =({file, toggleSelect, name=''}) => {
-    return <div className={
+const GGalleryItem = ({name, preview, directory=false, selected=false, onClick}) => {
+        return <div className={
                     classNames(
                         "g-gallery-item",
-                        "g-gallery-item-file",
-                        {'selected': file.selected}
+                        {
+                            "selected": selected,
+                            "g-gallery-item-file": !directory,
+                            "g-gallery-directory": directory
+                        }
                     )
                 }
-                onClick={toggleSelect}>
-        <span className={classNames("g-gallery-select", {'green': file.selected})} >
+                onClick={onClick}>
+        <span className={classNames("g-gallery-select", {'green': selected})} >
             <GoCheck />
         </span>
-        <div className="g-gallery-item-preview">
-        {
-            file.preview_url ?
-            <FallBackImageLoader src={file.preview_url}
-                                 title={`${file.name} ${file.mime}`}
-                                 alt="preview image" />
-            :
-            <FilePlaceHolder mime={file.mime}/>
-        }
+        {/*<div className='preview'>*/}
+            {preview}
+        {/*</div>*/}
+
+        <div className="g-gallery-item-name">
+            {name}
         </div>
-        <span className="g-gallery-item-name">
-            {name || file.name}
-        </span>
     </div>
+}
+
+export const GGalleryDirectory = ({name, navigate}) => {
+    return <GGalleryItem 
+        name={name}
+        onClick={navigate}
+        directory={true}
+        preview={<GoFileDirectory />}
+        selected={false}
+    />
+}
+
+export const GGalleryFile =({file, toggleSelect}) => {
+
+    let preview = file.preview_url ?
+        <FallBackImageLoader src={file.preview_url}
+                            title={`${file.name} ${file.mime}`}
+                            alt="preview image" />
+        :
+        <FilePlaceHolder mime={file.mime}/>;
+
+    return <GGalleryItem
+        onClick={toggleSelect}
+        name={file.name}
+        preview={preview}
+        selected={file.selected}
+    />
 }
 
 const GGalleryUpload = ({upload}) => {
@@ -318,7 +327,7 @@ const GGalleryUpload = ({upload}) => {
 
 // group all our display options for selection
 const fileListDisplayOptions = {
-    'g-gallery': GGalleryItem,
+    'g-gallery': GGalleryFile,
     'gallery': ImageGalleryItem,
     'tiles': FileGalleryItem,
     'table': FileTableItem,
@@ -330,7 +339,7 @@ const FilesWrapper = ({type, ...props}) => {
     let cn = ''
     switch (type) {
         case 'table':
-            cn = css.fileTable;
+            cn = 'file-table';
             break;
         case 'gallery':
             cn = 'image-gallery'
@@ -382,6 +391,7 @@ export class FileList extends React.Component {
             return null;
         }
         let Component = fileListDisplayOptions[displayType];
+        console.log(displayType);
         if (displayType === 'gallery') {
             return <ImageGallery toggleSelect={this.handleFileSelectEvent}
                                  files={files}

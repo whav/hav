@@ -8,6 +8,7 @@ from rest_framework import serializers
 
 from hav.thumbor import get_image_url
 
+
 class FileStatsSerializer(serializers.BaseSerializer):
 
     def to_representation(self, path):
@@ -76,9 +77,7 @@ class FileSerializer(FileBrowserBaseSerializer):
     key = serializers.SerializerMethodField()
 
     def get_key(self, path):
-        parts = self.context.get('keys', [])
-        parts.append(path.name)
-        return parts
+        return self.context.get('keys', []) + [path.name]
 
     def get_path(self, path):
         root = self.get_root()
@@ -133,7 +132,6 @@ class DirectorySerializer(BaseDirectorySerializer):
     def get_files(self, path):
         files = [f for f in path.iterdir() if not f.is_dir()]
         files.sort(key=lambda x: x.name)
-        print(self.context)
         relative_to_root = path.relative_to(self.context['root']).as_posix()
 
         context = {

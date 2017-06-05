@@ -13,10 +13,7 @@ import FaSquareO from 'react-icons/lib/fa/square-o'
 import FaTable from 'react-icons/lib/fa/table'
 import FaList from  'react-icons/lib/fa/list'
 
-const Icon = (props) => null;
-const Menu = ({children}) => <ul>{children}</ul>
-Menu.Item = ({children}) => <li>{children}</li>
-
+import { Button, Menu } from 'semantic-ui-react'
 
 class UploadControl extends React.Component {
     constructor(props){
@@ -52,34 +49,33 @@ const SelectedFilesControls = ({files, save}) => {
     }
     let desc;
     if (length === 1) {
-        desc = 'One file selected'
+        desc = '1 file'
     } else {
-        desc = `${length} files selected`
+        desc = `${length} files`
     }
-    return <ul>
-        <li>
-            {desc}
-        </li>
-        <li>
-            <a href='#' onClick={() => save()}>Ingest</a>
-        </li>
-    </ul>
+    return <Button
+      content='Ingest'
+      primary
+      label={{ as: 'a', basic: true, content: desc }}
+      labelPosition='left'
+      onClick={() => save(files)}
+    />
 }
 
 const SelectionControls = ({selectAll, selectNone, invertSelection}) => {
-    return <ul>
-        <li onClick={selectAll}>
+    return <Button.Group>
+        <Button onClick={selectAll} basic icon active={false}>
             <FaCheckSquareO title="Check all" />
-        </li>
-        <li onClick={selectNone}>
+        </Button>
+        <Button onClick={selectNone} active={false} icon basic>
             <FaSquareO title="Uncheck all"/>
-        </li>
-        <li onClick={invertSelection} title="Invert Selection">
+        </Button >
+        <Button onClick={invertSelection} icon title="Invert Selection" active={false} basic>
             <FaCheckSquareO />
             ⇄
             <FaSquareO />
-        </li>
-    </ul>
+        </Button>
+    </Button.Group>
 }
 
 
@@ -89,21 +85,55 @@ SelectionControls.propTypes = {
     invertSelection: PropTypes.func.isRequired
 }
 
-const FilebrowserSettingsControl = ({selectedDisplayType, switchDisplayType, availableDisplayTypes}) => {
-    return <ul>
-        <li onClick={() => switchDisplayType('g-gallery')} className={classNames({active: selectedDisplayType === 'g-gallery'})}>
+
+const FilebrowserViewControl = ({selectedDisplayType, switchDisplayType}) => {
+    return <Button.Group>
+        <Button basic onClick={() => switchDisplayType('g-gallery')} 
+                className={classNames({active: selectedDisplayType === 'g-gallery'})}>
             <FaTable />
-        </li>
-        <li onClick={() => switchDisplayType('table')} className={classNames({active: selectedDisplayType === 'table'})}>
+        </Button>
+        <Button basic onClick={() => switchDisplayType('table')} 
+                className={classNames({active: selectedDisplayType === 'table'})}>
             <FaList />
-        </li>
-    </ul>
+        </Button>
+    </Button.Group>
+}
+
+class FileBrowserMenu extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+
+    render() {
+        let props = this.props;
+        return <Menu borderless secondary>
+            {props.name ? <Menu.Item header>{props.name}</Menu.Item> : null}
+            <Menu.Item>
+                <FilebrowserViewControl switchDisplayType={props.switchDisplayType} selectedDisplayType={props.selectedDisplayType}/>
+            </Menu.Item>
+            <Menu.Item>
+                <SelectionControls selectAll={props.selectAll}
+                                selectNone={props.selectNone}
+                                invertSelection={props.invertSelection}
+                />
+            </Menu.Item>
+            <Menu.Menu position='right'>
+                <Menu.Item>
+                    <SelectedFilesControls 
+                        files={props.files} 
+                        save={props.saveFileSelection}
+                        />
+                </Menu.Item>
+            </Menu.Menu>
+        </Menu>
+    }
+
 }
 
 export {
     DirectoryControls,
-    FilebrowserSettingsControl,
+    FilebrowserViewControl,
     UploadControl,
-    SelectionControls,
-    SelectedFilesControls
+    FileBrowserMenu
 }

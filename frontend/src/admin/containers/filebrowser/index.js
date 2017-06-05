@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 /**
  * Created by sean on 09/02/17.
  */
@@ -6,14 +5,20 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import pathToRegexp from 'path-to-regexp'
+import PropTypes from 'prop-types';
 
 import {
     requestDirectoryAction,
     switchFilebrowserDisplayType,
     toggleSelect,
-    toggleSelectAll,
-    saveFileSelectionForIngestion
+    toggleSelectAll
 } from '../../actions/browser'
+
+import {
+    getIngestionQueues,
+    queueFilesForIngestion
+} from '../../actions/ingest';
+
 
 import LoadingIndicator from '../../ui/loading'
 import {
@@ -25,11 +30,9 @@ import {
 
 import {
     DirectoryControls,
-    FilebrowserSettingsControl,
-    SelectionControls,
-    SelectedFilesControls
+    FileBrowserMenu
 } from '../../ui/filebrowser/controls'
-
+import { Divider } from 'semantic-ui-react'
 import UploadTrigger from '../uploads'
 
 import {
@@ -39,6 +42,7 @@ import {
 } from '../../reducers/browser'
 
 import {getUploadsForPath} from '../../reducers/uploads'
+
 
 class FileBrowser extends React.Component {
 
@@ -101,15 +105,16 @@ class FileBrowser extends React.Component {
             return <div className="filebrowser">
                 <header>
                     { breadcrumbs }
-                    <h1>{directory.name}</h1>
-                    <div className="directory-controls">
-                        <SelectionControls selectAll={this.props.selectAll}
-                                        selectNone={this.props.selectNone}
-                                        invertSelection={this.props.invertSelection}
-                            />
-                        <SelectedFilesControls files={selectedFiles} save={() => saveFileSelection(selectedFiles)} />
-                        <FilebrowserSettingsControl {...settings} switchDisplayType={switchDisplayStyle}/>
-                    </div>
+                    <FileBrowserMenu name={directory.name}
+                                    switchDisplayType={switchDisplayStyle}
+                                    selectedDisplayType={settings.selectedDisplayType}
+                                    selectAll={this.props.selectAll}
+                                    selectNone={this.props.selectNone}
+                                    invertSelection={this.props.invertSelection}
+                                    files={selectedFiles}
+                                    saveFileSelection={saveFileSelection}
+                    />
+                    <Divider />
                 </header>
                 <main>
                     {
@@ -162,7 +167,6 @@ FileBrowser.propTypes = {
 export default connect(
 
     (rootState, props) => {
-
         // the location of the root state is defined
         // in the root reducer
         const state = rootState.repositories;
@@ -181,7 +185,7 @@ export default connect(
         }
 
         let directory = getDirectoryForPath(path, state)
-
+        
         let mappedProps = {
             directory,
             path,
@@ -224,6 +228,10 @@ export default connect(
         if (path.path) {
             apiURL = `${apiURL}${path.path}/`
         }
+
+        const goToIngest = (files) => {
+            props.history.push('/ingest/', files)
+        }
         return {
             uploadToURL: apiURL,
             loadCurrentDirectory: () => {
@@ -237,7 +245,7 @@ export default connect(
             selectAll: () => dispatch(toggleSelectAll(path, true)),
             selectNone: () => dispatch(toggleSelectAll(path, false)),
             invertSelection: () => dispatch(toggleSelectAll(path)),
-            saveFileSelection: (files) => dispatch(saveFileSelectionForIngestion(files))
+            saveFileSelection: goToIngest
         }
     }
 )(FileBrowser)

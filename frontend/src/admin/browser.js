@@ -71,11 +71,11 @@ export default class FileBrowser extends React.Component {
                         })
                     }
                 </main>
-                <footer>
+                {/*<footer>
                     <DirectoryControl>
                         <Uploader uploadTo={this.props.match.params.path} />
                     </DirectoryControl>
-                </footer>
+                </footer>*/}
             </div>
 
         }

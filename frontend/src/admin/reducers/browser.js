@@ -4,9 +4,7 @@ import {
     RECEIVE_DIRECTORY_CONTENT, 
     CHANGE_FILE_BROWSER_SETTINGS, 
     TOGGLE_FILES_SELECT, 
-    TOGGLE_FILES_SELECT_ALL,
-    SAVED_FILE_SELECTION,
-    SAVING_FILE_SELECTION
+    TOGGLE_FILES_SELECT_ALL
 } from '../actions/browser'
 
 import {UPLOAD_COMPLETED} from '../actions/uploads'
@@ -15,13 +13,14 @@ import {fileListDisplayValues} from '../ui/filebrowser/index'
 
 const stripSlashes = (path) => {
     if (path === undefined) { return ''; }
+    if (typeof path != 'string') { path = String(path)}
     // remove opening/trailing slashes
     while (path.startsWith('/')) { path = path.slice(1)}
     while (path.endsWith('/'))   { path = path.slice(0,-1)}
     return path
 }
 
-const emptyPaths = [undefined, '', '/']
+const emptyPaths = [undefined, '', '/', null]
 const getStateKeyForPath = (pathOrObj) => {
     switch (typeof pathOrObj) {
         case 'string':
@@ -220,28 +219,11 @@ const settings = (
     }
 }
 
-const selectedFiles = (
-    state={},
-    action
-) => {
-    switch (action.type) {
-        case SAVED_FILE_SELECTION:
-            console.warn('File selection saved...', action)
-            return state
-        case SAVING_FILE_SELECTION:
-            console.warn('Saving file selection...', action)
-            return state
-        default:
-            return state
-    }
-}
-
 
 const fileBrowsers = combineReducers({
     settings,
     directoriesByPath,
-    filesByPath,
-    selectedFiles
+    filesByPath
 })
 
 

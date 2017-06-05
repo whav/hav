@@ -4,11 +4,12 @@
 import { combineReducers } from 'redux';
 import uploads from './uploads'
 import repositories from './browser'
-
+import ingest from './ingest'
 
 const reducers = {
     uploads,
-    repositories
+    repositories,
+    ingest
 };
 
 export default combineReducers(reducers);

@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import FileBrowser, FileBrowserFile
+from .views import FileBrowser, FileBrowserFile, FileBrowserFileDetail
 
 
 def fs_urls(root_path, identifier):
@@ -10,8 +10,8 @@ def fs_urls(root_path, identifier):
         FileBrowser.as_view(root=root_path, keys=keys), name='filebrowser'
     ),
     url(
-        r'^(?P<path>.*/)?(?P<filename>(?:$|(.+?)(?:(\.[^.]*$)|$)))',
-        FileBrowserFile.as_view(root=root_path, keys=keys),
+        r'^(?P<path>((?:[^/]*/)*)(.*))?$',
+        FileBrowserFileDetail.as_view(root=root_path, keys=keys),
         name='filebrowser_file'
     ),
 ]

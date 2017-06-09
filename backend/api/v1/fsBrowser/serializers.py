@@ -52,7 +52,6 @@ class FileBrowserBaseSerializer(serializers.Serializer):
             suffix = '/' if relative_path.is_dir() else ''
             location = os.path.join(*(list(parts) + [suffix]))
             location = quote(location)
-
         return location
 
     def get_url_for_path(self, path):
@@ -74,7 +73,21 @@ class FileSerializer(FileBrowserBaseSerializer):
     path = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
-    key = serializers.SerializerMethodField()
+    file_url = serializers.SerializerMethodField()
+
+    def get_file_url(self, path):
+        request = self.context.get('request')
+        match = request.resolver_match
+        url_lookup = '%s:%s' % (':'.join(match.namespaces), 'filebrowser_file')
+        print('resolved', self.get_path(path))
+        return request.build_absolute_uri(
+            reverse(
+                url_lookup,
+                kwargs={
+                    'path': self.get_path(path),
+                }
+            )
+        )
 
     def get_key(self, path):
         return self.context.get('keys', []) + [path.name]
@@ -133,11 +146,12 @@ class DirectorySerializer(BaseDirectorySerializer):
         files = [f for f in path.iterdir() if not f.is_dir()]
         files.sort(key=lambda x: x.name)
         relative_to_root = path.relative_to(self.context['root']).as_posix()
-
         context = {
             'keys': self.context.get('keys', []) + [relative_to_root],
-            'root': self.context['root']
+            'root': self.context['root'],
+            'request': self.context['request']
         }
+
         return FileSerializer(
             files,
             many=True,

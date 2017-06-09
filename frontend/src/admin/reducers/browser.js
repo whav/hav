@@ -50,6 +50,16 @@ const getFilesForPath = (path, state) => {
 
 export {getStateKeyForPath, getDirectoryForPath, getFilesForPath, stripSlashes}
 
+const normalize_url = (url) => {
+    let key;
+    try {
+        key = new URL(url)
+    } catch (e) {
+        key = new URL(url, window.location.href)
+    }
+    return key
+}
+
 const directoriesByPath = (state={}, action) => {
 
     switch (action.type) {
@@ -57,6 +67,7 @@ const directoriesByPath = (state={}, action) => {
         case RECEIVE_DIRECTORY_CONTENT:
             let {path} = action;
             const ownKey = getStateKeyForPath(path);
+            console.log(normalize_url(action.url))
             let {
                 parentDirs,
                 childrenDirs,
@@ -218,6 +229,7 @@ const settings = (
             return state
     }
 }
+
 
 
 const fileBrowsers = combineReducers({

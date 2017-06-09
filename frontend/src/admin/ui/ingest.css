@@ -1,0 +1,21 @@
+.directory-selector {
+    display: flex;
+    flex-direction: row;
+}
+
+.directory-selector .directory svg {
+    font-size: 4rem;
+    display: block;
+}
+
+.directory-selector .directory span {
+    display: block;
+    text-align: center;
+}
+
+.directory-selector a {
+    color: inherit;
+}
+
+
+

@@ -5,7 +5,7 @@
 const apiVersion = 'v1'
 const prefix = `/api/${apiVersion}`
 
-export const file_upload = `${prefix}/`
+export const file_upload = `${prefix}/upload/`
 export const browser = file_upload
 export const saveFilesForIngestion = `${prefix}/ingest/`
 

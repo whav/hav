@@ -18,8 +18,7 @@ const uploadFile = (file,
                     uploadTo,
                     onSuccess=defaultAction,
                     onProgress=defaultAction,
-                    onFailure=defaultAction,
-                    setFilenameHeaders=false
+                    onFailure=defaultAction
     ) => {
 
     let url = `${uploadTo}${file.name}`
@@ -27,12 +26,10 @@ const uploadFile = (file,
     let request = new XMLHttpRequest();
     request.open('PUT', url, true);
     request.responseType = 'json';
-    if (setFilenameHeaders) {
-        request.setRequestHeader(
-            'Content-Disposition',
-            `attachment; filename=${file.name}`
-        )
-    }
+    request.setRequestHeader(
+        'Content-Disposition',
+        `attachment; filename=${file.name}`
+    )
 
     request.setRequestHeader("X-CSRFToken", csrftoken);
     request.withCredentials = true;

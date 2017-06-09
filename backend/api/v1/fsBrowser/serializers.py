@@ -73,13 +73,12 @@ class FileSerializer(FileBrowserBaseSerializer):
     path = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
-    file_url = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
 
-    def get_file_url(self, path):
+    def get_url(self, path):
         request = self.context.get('request')
         match = request.resolver_match
         url_lookup = '%s:%s' % (':'.join(match.namespaces), 'filebrowser_file')
-        print('resolved', self.get_path(path))
         return request.build_absolute_uri(
             reverse(
                 url_lookup,

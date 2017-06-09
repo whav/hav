@@ -76,6 +76,7 @@ class FileBrowserFileDetail(IncomingBaseMixin, FileBrowserMixin, APIView):
     def get(self, request, path=None, **kwargs):
         path = self.resolve_directory(path)
         try:
+            assert(path.is_file())
             assert(os.access(path, os.R_OK))
         except (FileNotFoundError, AssertionError):
             raise Http404()
@@ -86,7 +87,19 @@ class FileBrowserFileDetail(IncomingBaseMixin, FileBrowserMixin, APIView):
         )
         return Response(serializer.data)
 
-class FileBrowserFile(IncomingBaseMixin, FileBrowserMixin, APIView):
+    def put(self, request, path=None, **kwargs):
+        filename = self.resolve_directory(path).name
+        view = FileBrowserFileUpload.as_view(root=self.root)
+        return view(
+            request,
+            path=path[0:-len(filename)],
+            filename=filename,
+            **kwargs
+        )
+
+
+
+class FileBrowserFileUpload(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     parser_classes = [FileUploadParser]
 

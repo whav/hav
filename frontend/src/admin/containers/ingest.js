@@ -29,6 +29,7 @@ class Ingest extends React.Component {
                     directories={this.props.directories}
                     loading={this.props.loading}
                     navigate={this.props.navigate}
+                    parentDirs={this.props.parentDirs}
                 />
         </IngestView>
     }
@@ -52,11 +53,13 @@ export default connect(
             }
         }
 
+        let parentDirs = (directory.parents || []).map((d) => getDirectoryForPath(d, state.repositories))
         let childrenDirs = (directory.children || []).map((d) => getDirectoryForPath(d, state.repositories))
         return {
             ...props,
             loading: false,
-            directories: childrenDirs
+            directories: childrenDirs,
+            parentDirs: parentDirs
         }
     },
     (dispatch) => {

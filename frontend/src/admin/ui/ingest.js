@@ -1,6 +1,10 @@
 import React from 'react'
 import Error  from './errors'
 import LoadingIndicator from './loading'
+import { Breadcrumb } from 'semantic-ui-react'
+import GoFileDirectory from 'react-icons/go/file-directory'
+
+require('./ingest.css')
 
 const IngestErrorNofiles = (props) => {
     return <Error>
@@ -9,39 +13,50 @@ const IngestErrorNofiles = (props) => {
     </Error>
 }
 
+export const Directoy = (props) => {
+  return <div>
+    <GoFileDirectory />
+    <span>{props.name}</span>
+  </div>
+}
+
 export class DirectorySelector extends React.Component {
 
   render() {
-    let parentLinks = null;
-    let directory = this.props.currentDirectory;
-    if (directory.parents) {
-      parentLinks = directory.parents.map(
-        (d) => (<li key={d.path} >
-                <a href='#' onClick={(e) => { e.preventDefault(); this.props.navigate(d.path)}}>
+    let parentDirs = this.props.parentDirs || null;
+    if (parentDirs) {
+      let breadcrumbs = [];
+      let i = 0;
+      parentDirs.forEach(
+        (d) => {
+          breadcrumbs.push(
+            <Breadcrumb.Section link key={d.path} onClick={(e) => { e.preventDefault(); this.props.navigate(d.path)}}>
                   {d.name}
-                </a>
-          </li>)
-      )
-      parentLinks = <ul>{parentLinks}</ul>
+            </Breadcrumb.Section>
+          );
+          i++;
+          breadcrumbs.push(<Breadcrumb.Divider key={i}/>);
+      });
+      parentDirs = <Breadcrumb>{breadcrumbs}</Breadcrumb>
     } 
 
     return <div>
       <h1>Directories</h1>
-      {parentLinks}
+      {parentDirs}
       {
         this.props.loading ?
         <LoadingIndicator /> :
-        <ul>
+        <div className='directory-selector'>
           {
             this.props.directories.map(
-              (d) => <li key={d.path} >
+              (d) => <div className='directory' key={d.path} >
                 <a href='#' onClick={(e) => { e.preventDefault(); this.props.navigate(d.path)}}>
-                  {d.name}
+                  <Directoy name={d.name} />
                 </a>
-              </li>
+              </div>
             )
           }
-        </ul>
+        </div>
       }
 
       <hr />

@@ -67,15 +67,13 @@ const directoriesByPath = (state={}, action) => {
         case RECEIVE_DIRECTORY_CONTENT:
             let {path} = action;
             const ownKey = getStateKeyForPath(path);
-            console.log(normalize_url(action.url))
             let {
                 parentDirs,
                 childrenDirs,
                 ...own
             } = action.payload;
 
-            // we don't want the files here
-            delete own.files
+            own.files = own.files.map(f => f.url)
 
             let updatedDirs = {}
 
@@ -212,6 +210,26 @@ const filesByPath = (state={}, action) => {
 }
 
 
+const filesByUri = (state={}, action) => {
+    switch (action.type) {
+        case RECEIVE_DIRECTORY_CONTENT:
+            let {
+                files
+            } = action.payload;
+            let mapping = {}
+            files.forEach((f) => {
+                mapping[f.url] = f
+            })
+            return {
+                ...state,
+                ...mapping
+            }
+        default: 
+            return state
+    }
+}
+
+
 // this is being used to hold global filebrowser settings
 const settings = (
     state={
@@ -235,7 +253,8 @@ const settings = (
 const fileBrowsers = combineReducers({
     settings,
     directoriesByPath,
-    filesByPath
+    filesByPath,
+    filesByUri
 })
 
 

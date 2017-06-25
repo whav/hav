@@ -23,26 +23,35 @@ export const Directoy = (props) => {
 export class DirectorySelector extends React.Component {
 
   render() {
-    let parentDirs = this.props.parentDirs || null;
-    if (parentDirs) {
-      let breadcrumbs = [];
-      let i = 0;
-      parentDirs.forEach(
-        (d) => {
-          breadcrumbs.push(
-            <Breadcrumb.Section link key={d.path} onClick={(e) => { e.preventDefault(); this.props.navigate(d.path)}}>
-                  {d.name}
-            </Breadcrumb.Section>
-          );
-          i++;
-          breadcrumbs.push(<Breadcrumb.Divider key={i}/>);
-      });
-      parentDirs = <Breadcrumb>{breadcrumbs}</Breadcrumb>
-    } 
+    let { 
+      parentDirs =  [],
+      currentDirectory
+    } = this.props;
+
+    let breadcrumbs = [];
+    let i = 0;
+    parentDirs.forEach(
+      (d) => {
+        console.log(d)
+        breadcrumbs.push(
+          <Breadcrumb.Section link key={d.url} onClick={(e) => { e.preventDefault(); this.props.navigate(d.path)}}>
+                {d.name}
+          </Breadcrumb.Section>
+        );
+        i++;
+        breadcrumbs.push(<Breadcrumb.Divider key={i}/>);
+    });
+    // add current directory to breadcrumbs
+    breadcrumbs.push(
+        <Breadcrumb.Section key={'urxn'} >
+            {currentDirectory.name}
+        </Breadcrumb.Section>
+    )
+    parentDirs = <Breadcrumb>{breadcrumbs}</Breadcrumb>
 
     return <div>
-      <h1>Directories</h1>
       {parentDirs}
+      <hr />
       {
         this.props.loading ?
         <LoadingIndicator /> :
@@ -58,9 +67,6 @@ export class DirectorySelector extends React.Component {
           }
         </div>
       }
-
-      <hr />
-      <pre>{JSON.stringify(this.props, null, 2)}</pre>
     </div>
   }
 }
@@ -78,7 +84,7 @@ class IngestView extends React.Component {
       {
         files.length === 0 ?
         <IngestErrorNofiles /> :
-        <h2>Here be selection. {files.length} files selected </h2>
+        <h2>{files.length} files selected.</h2>
       } 
       {this.props.children}
     </div>

@@ -8,6 +8,8 @@ export const requestDirectory = (url=browser) => {
         return fetch(url, {
             credentials: 'same-origin',
         }).then(
-            (response) => response.json()
+            (response) => {
+                return response.json()
+            }
         )
 }

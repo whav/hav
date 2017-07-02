@@ -3,7 +3,9 @@ var webpack = require("webpack");
 var autoprefixer = require("autoprefixer");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = (opts) => {
+console.log(path.join(__dirname, "../src/semantic/theme.config"));
+
+module.exports = opts => {
   const { PROJECT_ROOT, NODE_ENV } = opts;
 
   let plugins = [
@@ -24,21 +26,23 @@ module.exports = (opts) => {
     entry: {
       hav: ["./src/hav/index"],
       havAdmin: ["./src/admin/index"],
-      vendor: [
-        "whatwg-fetch",
-        "react",
-        "react-dom",
-      ],
-      semantic: [
-        './src/semantic/semantic.less'
-      ]
+      vendor: ["whatwg-fetch", "react", "react-dom"],
+      semantic: ["semantic-ui-less/semantic.less"]
     },
     output: {
       path: path.resolve(PROJECT_ROOT, "./build/"),
       filename: "[name]-[hash].js"
     },
     plugins,
-    resolve: { extensions: [".js", ".json"] },
+    resolve: {
+      extensions: [".js", ".json"],
+      alias: {
+        "../../theme.config$": path.join(
+          __dirname,
+          "../src/semantic/theme.config"
+        )
+      }
+    },
     module: {
       rules: [
         {
@@ -66,21 +70,21 @@ module.exports = (opts) => {
           loader: "babel-loader"
         },
         {
-            test: /\.less$/,
-            use: [
-              {
-                loader: "style-loader" // translates CSS into CommonJS
-              },
-              {
-                loader: "css-loader" // translates CSS into CommonJS
-              },
-              {
-                loader: "postcss-loader"
-              },
-              {
-                loader: "less-loader" // compiles Less to CSS
-              }
-            ]
+          test: /\.less$/,
+          use: [
+            {
+              loader: "style-loader" // translates CSS into CommonJS
+            },
+            {
+              loader: "css-loader" // translates CSS into CommonJS
+            },
+            {
+              loader: "postcss-loader"
+            },
+            {
+              loader: "less-loader" // compiles Less to CSS
+            }
+          ]
         },
         // everything else
         {

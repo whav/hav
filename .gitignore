@@ -49,3 +49,5 @@ activate
 env/
 
 hav/settings/secrets.py
+
+.thumbor/

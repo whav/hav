@@ -32,13 +32,15 @@ export const requestDirectoryAction = (path, url) => {
     return (dispatch) => {
         dispatch({
             type: REQUEST_DIRECTORY,
-            path
+            path,
+            url
         });
         requestDirectory(url).then((data) => {
             dispatch({
                 type: RECEIVE_DIRECTORY_CONTENT,
                 payload: data,
-                path
+                path,
+                url
             })
         })
     }

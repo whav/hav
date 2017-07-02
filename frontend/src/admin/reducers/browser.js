@@ -50,6 +50,16 @@ const getFilesForPath = (path, state) => {
 
 export {getStateKeyForPath, getDirectoryForPath, getFilesForPath, stripSlashes}
 
+const normalize_url = (url) => {
+    let key;
+    try {
+        key = new URL(url)
+    } catch (e) {
+        key = new URL(url, window.location.href)
+    }
+    return key
+}
+
 const directoriesByPath = (state={}, action) => {
 
     switch (action.type) {
@@ -63,8 +73,7 @@ const directoriesByPath = (state={}, action) => {
                 ...own
             } = action.payload;
 
-            // we don't want the files here
-            delete own.files
+            own.files = own.files.map(f => f.url)
 
             let updatedDirs = {}
 
@@ -201,6 +210,26 @@ const filesByPath = (state={}, action) => {
 }
 
 
+const filesByUri = (state={}, action) => {
+    switch (action.type) {
+        case RECEIVE_DIRECTORY_CONTENT:
+            let {
+                files
+            } = action.payload;
+            let mapping = {}
+            files.forEach((f) => {
+                mapping[f.url] = f
+            })
+            return {
+                ...state,
+                ...mapping
+            }
+        default: 
+            return state
+    }
+}
+
+
 // this is being used to hold global filebrowser settings
 const settings = (
     state={
@@ -220,10 +249,12 @@ const settings = (
 }
 
 
+
 const fileBrowsers = combineReducers({
     settings,
     directoriesByPath,
-    filesByPath
+    filesByPath,
+    filesByUri
 })
 
 

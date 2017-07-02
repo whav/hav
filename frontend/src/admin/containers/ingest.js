@@ -38,7 +38,7 @@ export default connect(
   (state, ownProps) => {
     const ingestState = state.ingest;
     const filesToBeIngested = ownProps.location.state;
-    console.log(filesToBeIngested);
+
     let directory = getDirectoryForPath(
       { repository: "hav", path: ingestState.ingestTo },
       state.repositories

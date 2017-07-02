@@ -105,7 +105,7 @@ class IngestView extends React.Component {
         <div className="ingestion-view-bottom" style={{ textAlign: "right" }}>
           <Divider />
 
-          <Button onClick={() => console.log("ingest")} primary>
+          <Button onClick={() => this.props.ingest("urxn")} primary>
             Ingest {files.length > 1 ? `${files.length} files` : "one file"}
           </Button>
         </div>

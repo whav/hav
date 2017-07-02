@@ -21,7 +21,10 @@ class Ingest extends React.Component {
 
   render() {
     return (
-      <IngestView files={this.props.filesToBeIngested}>
+      <IngestView
+        files={this.props.filesToBeIngested}
+        ingest={() => this.props.ingest(this.props.directory.url)}
+      >
         <DirectorySelector
           currentDirectory={this.props.directory}
           directories={this.props.directories}
@@ -67,7 +70,7 @@ export default connect(
       parentDirs: parentDirs
     };
   },
-  dispatch => {
+  (dispatch, ownProps) => {
     return {
       loadDirectory: path => {
         let apiURL = `/api/v1/hav/`;
@@ -78,7 +81,9 @@ export default connect(
           requestDirectoryAction({ repository: "hav", path: path }, apiURL)
         );
       },
-      navigate: path => dispatch(ingestTo(path))
+      navigate: path => dispatch(ingestTo(path)),
+      ingest: path =>
+        console.log("Ingesting", ownProps.location.state, path, ownProps)
     };
   }
 )(Ingest);

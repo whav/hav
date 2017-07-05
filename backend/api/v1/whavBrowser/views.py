@@ -1,10 +1,11 @@
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from django.http import Http404
 
-from whav.models import ImageCollection
+from whav.models import ImageCollection, MediaOrdering
 from ..permissions import IncomingBaseMixin
-from .serializers import WHAVCollectionSerializer, RootWHAVCollectionSerializer
+from .serializers import WHAVCollectionSerializer, RootWHAVCollectionSerializer, WHAVFileSerializer
 
 
 class WHAVCollectionBrowser(IncomingBaseMixin, APIView):
@@ -41,6 +42,19 @@ class WHAVCollectionBrowser(IncomingBaseMixin, APIView):
         return Response(serializer.data)
 
 
+class WHAVMediaDetail(IncomingBaseMixin, RetrieveAPIView):
+
+    keys = []
+    queryset = MediaOrdering.objects.all()
+    lookup_url_kwarg = 'mediaordering_pk'
+    serializer_class = WHAVFileSerializer
+
+    def get_serializer_context(self):
+        ctx = super().get_serializer_context()
+        ctx.update({
+            'keys': self.keys
+        })
+        return ctx
 
 
 

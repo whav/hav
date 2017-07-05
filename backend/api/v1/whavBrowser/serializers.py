@@ -1,10 +1,10 @@
 import os
 from mimetypes import guess_type
 
-from django.core.urlresolvers import reverse
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 
-from whav.models import ImageCollection, Media
+from whav.models import ImageCollection, MediaOrdering
 from hav.thumbor import get_image_url
 
 
@@ -17,29 +17,50 @@ class WHAVFileSerializer(serializers.Serializer):
     preview_url = serializers.SerializerMethodField()
 
     size = serializers.SerializerMethodField()
+    detail_url = serializers.SerializerMethodField()
 
-    def get_key(self, media):
+    def get_key(self, mo):
+        media = mo.media
+        print(self.context)
         return self.context['keys'] + [media.id]
 
-    def get_name(self, media):
-        path = self.get_path(media)
+    def get_name(self, mo):
+        media = mo.media
+        path = self.get_path_for_media(media)
         return os.path.split(path)[1]
 
-    def get_size(self, media):
+    def get_size(self, mo):
+        media = mo.media
         return media.basefile.size
 
-    def get_path(self, media):
+    def get_path_for_media(self, media):
         return media.localfile.path
 
-    def get_mime(self, media):
-        return media.basefile.mime_type or guess_type(self.get_name(media))[0]
+    def get_path(self, mo):
+        media = mo.media
+        return self.get_path_for_media(media)
 
-    def get_preview_url(self, media):
+    def get_mime(self, mo):
+        media = mo.media
+        return media.basefile.mime_type or guess_type(self.get_name(mo))[0]
+
+    def get_preview_url(self, mo):
+        media = mo.media
         rel_path = media.webimage.original_image
         rel_path, ext = os.path.splitext(rel_path)
         rel_path = '%s_display_image%s' %(rel_path, ext)
         url = 'https://whav.aussereurop.univie.ac.at/display/%s' % rel_path
         return get_image_url(url)
+
+    def get_detail_url(self, mo):
+        request = self.context['request']
+        name = ':'.join(request.resolver_match.namespaces + ['whav_media'])
+        return request.build_absolute_uri(reverse(
+            name,
+            kwargs={'mediaordering_pk': mo.pk}
+        ))
+
+
 
 
 class BaseWHAVCollectionSerializer(serializers.Serializer):
@@ -112,11 +133,9 @@ class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
 
     def get_files(self, ic):
         return WHAVFileSerializer(
-            Media.objects.filter(imagecollection=ic).prefetch_related('basefile_set__localfile'),
+            MediaOrdering.objects.filter(collection=ic), #.select_related('media', 'media__basefile_set__localfile'),
             many=True,
-            context={
-                'keys': self.context['keys']
-            }
+            context=self.context
         ).data
 
 
@@ -139,3 +158,5 @@ class RootWHAVCollectionSerializer(BaseRootWHAVCollectionSerializer):
 
     def get_files(self, _):
         return []
+
+

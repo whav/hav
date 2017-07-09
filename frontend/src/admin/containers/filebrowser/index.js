@@ -20,10 +20,9 @@ import {
 } from "../../actions/ingest";
 
 import LoadingIndicator from "../../ui/loading";
-import {
+import FileList, {
   DirectoryListingBreadcrumbs,
   DirectoryListing,
-  FileList,
   fileListDisplayValues
 } from "../../ui/filebrowser";
 

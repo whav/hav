@@ -1,10 +1,10 @@
-import PropTypes from "prop-types";
 /**
  * Created by sean on 06/02/17.
  */
 import React from "react";
 import Dropzone from "react-dropzone";
 import classNames from "classnames";
+import PropTypes from "prop-types";
 
 import GoCloudUpload from "react-icons/go/cloud-upload";
 import MdSelectAll from "react-icons/lib/md/select-all";
@@ -154,6 +154,15 @@ class FileBrowserMenu extends React.Component {
               files={props.files}
               save={props.saveFileSelection}
             />
+          </Menu.Item>
+          <Menu.Item>
+            <a
+              onClick={e => {
+                this.props.addDirectory("urxn");
+              }}
+            >
+              Add Folder
+            </a>
           </Menu.Item>
         </Menu.Menu>
       </Menu>

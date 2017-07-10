@@ -34,6 +34,7 @@ export const toggleSelectAll = (path, select) => {
 
 export const requestDirectoryAction = (path, url) => {
   return dispatch => {
+    console.log("requesting..", path, url);
     dispatch({
       type: REQUEST_DIRECTORY,
       path,
@@ -60,7 +61,6 @@ export const switchFilebrowserDisplayType = displayType => {
 };
 
 export const createDirectoryAction = (name, path, url) => {
-  console.log(name, url);
   return dispatch => {
     dispatch({
       type: MKDIR,
@@ -68,12 +68,14 @@ export const createDirectoryAction = (name, path, url) => {
     });
     createDirectory(name, url)
       .then(data => {
-        console.log("success...", data);
         dispatch({
           type: MKDIR_SUCCESS
         });
+        // request the same directory again
+        dispatch(requestDirectoryAction(path, url));
       })
       .catch(err => {
+        console.error(err);
         dispatch({
           type: MKDIR_FAIL
         });

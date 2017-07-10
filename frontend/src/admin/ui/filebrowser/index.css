@@ -55,15 +55,12 @@
 
 .g-gallery {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 
 .g-gallery-item {
-  flex: 1 1 15%;
-  /*min-width: 10rem;
-    max-width: 20rem;*/
-  width: 10rem;
+  flex: 0 0 15%;
   /*needed for absolutely positioned selection marker*/
   position: relative;
   border: 1px dotted grey;

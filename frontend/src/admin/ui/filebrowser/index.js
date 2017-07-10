@@ -253,7 +253,7 @@ export default class FileList extends React.Component {
         file: file,
         toggleSelect: this.handleFileSelectEvent.bind(this, file)
       };
-      return <GGalleryItem key={index} {...props} />;
+      return <GGalleryFile key={index} {...props} />;
     });
 
     // let renderedUploads = Object.values(uploads).map((upload, index) => {

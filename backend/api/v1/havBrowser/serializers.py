@@ -4,17 +4,21 @@ from rest_framework import serializers
 from hav.sets.models import Node
 
 
-class BaseHAVNodeSerializer(serializers.Serializer):
+class BaseHAVNodeSerializer(serializers.ModelSerializer):
 
-    name = serializers.SerializerMethodField()
+    class Meta:
+        model = Node
+        fields = ['name', 'path', 'url', 'allowUpload', 'allowCreate']
+
+    # name = serializers.SerializerMethodField()
     path = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
     allowUpload = serializers.SerializerMethodField()
     allowCreate = serializers.SerializerMethodField()
 
-    def get_name(self, instance):
-        return instance.name
+    # def get_name(self, instance):
+    #     return instance.name
 
     def get_path(self, instance):
         return '%d' % instance.pk
@@ -43,9 +47,11 @@ class BaseHAVNodeSerializer(serializers.Serializer):
 
 class HAVNodeSerializer(BaseHAVNodeSerializer):
 
+    class Meta(BaseHAVNodeSerializer.Meta):
+        fields = BaseHAVNodeSerializer.Meta.fields + ['parentDirs', 'childrenDirs', 'files']
+
     parentDirs = serializers.SerializerMethodField()
     childrenDirs = serializers.SerializerMethodField()
-
     files = serializers.SerializerMethodField()
 
     def get_childrenDirs(self, instance):
@@ -63,8 +69,15 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
                 context=self.context
             ).data
 
+    def create(self, validated_data, parent):
+        print(validated_data)
+        node = parent.add_child(**validated_data)
+        return node
+
 
 class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):
+
+    name = serializers.SerializerMethodField()
 
     def get_name(self, _):
         return 'HAV'
@@ -85,6 +98,9 @@ class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):
 
 
 class RootHAVCollectionSerializer(BaseRootHAVNodeSerializer):
+
+    class Meta(BaseRootHAVNodeSerializer.Meta):
+        fields = BaseRootHAVNodeSerializer.Meta.fields + ['parentDirs', 'childrenDirs', 'files']
 
     parentDirs = serializers.SerializerMethodField()
     childrenDirs = serializers.SerializerMethodField()

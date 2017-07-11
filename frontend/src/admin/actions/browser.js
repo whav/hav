@@ -34,7 +34,6 @@ export const toggleSelectAll = (path, select) => {
 
 export const requestDirectoryAction = (path, url) => {
   return dispatch => {
-    console.log("requesting..", path, url);
     dispatch({
       type: REQUEST_DIRECTORY,
       path,

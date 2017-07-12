@@ -71,7 +71,8 @@ class FileBrowser extends React.Component {
         selectFiles,
         buildFrontendURL,
         path,
-        allowUpload = false,
+        allowUpload,
+        allowCreate,
         saveFileSelection,
         createDirectory
       } = this.props;
@@ -116,7 +117,7 @@ class FileBrowser extends React.Component {
               invertSelection={this.props.invertSelection}
               files={selectedFiles}
               saveFileSelection={saveFileSelection}
-              addDirectory={createDirectory}
+              addDirectory={allowCreate ? createDirectory : false}
             />
             <Divider />
           </header>

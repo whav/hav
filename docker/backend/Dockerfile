@@ -1,7 +1,9 @@
-FROM python:3.5
+FROM python:3.6.2
 ENV PYTHONUNBUFFERED 1
 VOLUME /code
+VOLUME /dist
 VOLUME /build
+VOLUME /media:../mounts/incoming/
 COPY /backend/requirements.txt /code/
 COPY /backend/requirements-dev.txt /code/
 WORKDIR /code

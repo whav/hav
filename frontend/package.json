@@ -41,7 +41,8 @@
     "build": "NODE_ENV=production npm run webpack",
     "build-dev": "NODE_ENV=development npm run webpack",
     "dev": "NODE_ENV=development npm run babel -- ./node_modules/.bin/webpack --progress --watch",
-    "hmr": "NODE_ENV=development BABEL_ENV=hmr npm run babel -- ./node_modules/.bin/webpack-dev-server --progress"
+    "hmr": "NODE_ENV=development BABEL_ENV=hmr npm run babel -- ./node_modules/.bin/webpack-dev-server --progress",
+    "docker": "NODE_ENV=development BABEL_ENV=docker npm run babel -- ./node_modules/.bin/webpack-dev-server --progress"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.0",

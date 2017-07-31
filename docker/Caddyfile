@@ -1,0 +1,7 @@
+:80 {
+    proxy /__wp__/ frontend:8000
+    proxy /sockjs-node/ frontend:8000
+
+    proxy / django:8000
+
+}

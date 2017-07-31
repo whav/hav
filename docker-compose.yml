@@ -2,18 +2,16 @@ version: '2'
 
 services:
 
-  nginx:
-    depends_on:
-      - "django"
-    build:
-      context: .
-      dockerfile: ./docker/nginx/Dockerfile
-    volumes:
-      - ./frontend/build:/build
-    ports:
-      - 8000:80
-    links:
-      - django:django
+#  nginx:
+#    depends_on:
+#      - "django"
+#    build:
+#      context: .
+#      dockerfile: ./docker/nginx/Dockerfile
+#    volumes:
+#      - ./frontend/build:/build
+#    ports:
+#      - 8000:80
 
   hav_db:
     image: postgres
@@ -66,7 +64,28 @@ services:
       - ./frontend/:/code
     command: yarn run docker
 
-#
-#volumes:
-#  - ./backend
-#  - ./dist/media
+  thumbor_incoming:
+    image: apsl/thumbor:latest
+    expose:
+      - 8000
+    volumes:
+      - /data
+      - ./dist/media:/data/loader
+    environment:
+      - LOADER=thumbor.loaders.file_loader_http_fallback
+      - STORAGE=thumbor.storages.file_storage
+      - AUTO_WEBP=True
+      - FILE_STORAGE_ROOT_PATH=/data/storage
+      - FILE_LOADER_ROOT_PATH=/data/loader
+      - SECURITY_KEY=MY_SECURE_KEY
+      - ALLOW_UNSAFE_URL=True
+
+  caddy:
+    image: abiosoft/caddy
+    ports:
+      - 8001:80
+    volumes:
+      - ./docker/Caddyfile:/etc/Caddyfile
+    depends_on:
+      - 'django'
+      - 'frontend'

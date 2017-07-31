@@ -14,7 +14,8 @@ module.exports = (opts) => {
     devServer: {
         headers: { "Access-Control-Allow-Origin": "*" },
         host: "0.0.0.0",
-        port: "8000"
+        port: "8000",
+        disableHostCheck: true
     }
   };
 };

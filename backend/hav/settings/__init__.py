@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_celery_monitor',
     'incoming',
     'whav',
     'hav_examples',
@@ -189,3 +190,10 @@ STORAGES = {
 }
 
 LOGIN_URL = 'admin:login'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+
+# use json format for everything
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

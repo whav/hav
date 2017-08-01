@@ -1,19 +1,6 @@
-version: '2'
+version: '3'
 
 services:
-
-  nginx:
-    depends_on:
-      - "django"
-    build:
-      context: .
-      dockerfile: ./docker/nginx/Dockerfile
-    volumes:
-      - ./frontend/build:/build
-    ports:
-      - 8000:80
-    links:
-      - django:django
 
   hav_db:
     image: postgres
@@ -23,15 +10,19 @@ services:
       - POSTGRES_DB=$HAV_PG_DB
     expose:
       - 5432
+    volumes:
+      - ./docker/mounts/db_dumps:/db_dumps:ro
 
   whav_db:
-    image: postgres
+    image: mdillon/postgis:9.4
     environment:
       - POSTGRES_PASSWORD=$WHAV_PG_PW
       - POSTGRES_USER=$WHAV_PG_USER
       - POSTGRES_DB=$WHAV_PG_DB
     expose:
       - 5432
+    volumes:
+      - ./docker/mounts/db_dumps:/db_dumps:ro
 
   django:
     depends_on:
@@ -43,7 +34,9 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend:/code
+      - ./dist:/dist
       - ./frontend/build:/build
+      - ./docker/mounts/incoming:/incoming
     expose:
       - 8000
     environment:
@@ -56,7 +49,49 @@ services:
       - WHAV_PG_PW
       - DJANGO_SETTINGS_MODULE
 
-#
-#volumes:
-#  - ./backend
-#  - ./dist/media
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
+    expose:
+      - 8000
+    volumes:
+      - ./frontend/:/code
+    command: yarn run docker
+
+  thumbor:
+    image: apsl/thumbor:latest
+    expose:
+      - 8000
+    volumes:
+      - /data
+      - ./docker/mounts/incoming:/data/loader
+    environment:
+      - LOADER=thumbor.loaders.file_loader_http_fallback
+      - STORAGE=thumbor.storages.file_storage
+      - AUTO_WEBP=True
+      - FILE_STORAGE_ROOT_PATH=/data/storage
+      - FILE_LOADER_ROOT_PATH=/data/loader
+      - SECURITY_KEY=MY_SECURE_KEY
+      - ALLOW_UNSAFE_URL=True
+
+  caddy:
+    build:
+      context: .
+      dockerfile: ./docker/caddy/Dockerfile
+    ports:
+      - 8000:80
+    volumes:
+      - ./docker/caddy/Caddyfile:/etc/Caddyfile
+
+  #  nginx:
+  #    depends_on:
+  #      - "django"
+  #    build:
+  #      context: .
+  #      dockerfile: ./docker/nginx/Dockerfile
+  #    volumes:
+  #      - ./frontend/build:/build
+  #    ports:
+  #      - 8000:80
+

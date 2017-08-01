@@ -1,10 +1,10 @@
-import PropTypes from "prop-types";
 /**
  * Created by sean on 06/02/17.
  */
 import React from "react";
 import Dropzone from "react-dropzone";
 import classNames from "classnames";
+import PropTypes from "prop-types";
 
 import GoCloudUpload from "react-icons/go/cloud-upload";
 import MdSelectAll from "react-icons/lib/md/select-all";
@@ -12,6 +12,7 @@ import FaCheckSquareO from "react-icons/lib/fa/check-square-o";
 import FaSquareO from "react-icons/lib/fa/square-o";
 import FaTable from "react-icons/lib/fa/table";
 import FaList from "react-icons/lib/fa/list";
+import FaPlusIcon from "react-icons/lib/fa/plus-circle";
 
 import { Button, Menu } from "semantic-ui-react";
 
@@ -127,6 +128,17 @@ const FilebrowserViewControl = ({ selectedDisplayType, switchDisplayType }) => {
 class FileBrowserMenu extends React.Component {
   constructor(props) {
     super(props);
+    this.createDirectory = this.createDirectory.bind(this);
+  }
+
+  createDirectory() {
+    let name = window.prompt(
+      "Please enter a name for the folder to be created",
+      ""
+    );
+    if (name) {
+      this.props.addDirectory(name);
+    }
   }
 
   render() {
@@ -155,6 +167,13 @@ class FileBrowserMenu extends React.Component {
               save={props.saveFileSelection}
             />
           </Menu.Item>
+          {props.addDirectory
+            ? <Menu.Item>
+                <Button basic icon onClick={this.createDirectory}>
+                  <FaPlusIcon /> Add Folder
+                </Button>
+              </Menu.Item>
+            : null}
         </Menu.Menu>
       </Menu>
     );

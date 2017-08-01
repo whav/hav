@@ -1,0 +1,16 @@
+:80 {
+    proxy /__wp__/ frontend:8000
+    proxy /__webpack_dev_server__/ frontend:8000
+    proxy /sockjs-node/ frontend:8000 {
+        websocket
+    }
+
+    proxy /thumbor/ thumbor:8000 {
+        without /thumbor
+    }
+
+    proxy / django:8000 {
+        transparent
+    }
+
+}

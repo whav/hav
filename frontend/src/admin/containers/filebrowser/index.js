@@ -11,7 +11,8 @@ import {
   requestDirectoryAction,
   switchFilebrowserDisplayType,
   toggleSelect,
-  toggleSelectAll
+  toggleSelectAll,
+  createDirectoryAction
 } from "../../actions/browser";
 
 import {
@@ -70,8 +71,10 @@ class FileBrowser extends React.Component {
         selectFiles,
         buildFrontendURL,
         path,
-        allowUpload = false,
-        saveFileSelection
+        allowUpload,
+        allowCreate,
+        saveFileSelection,
+        createDirectory
       } = this.props;
 
       let uploads = this.props.uploads;
@@ -114,6 +117,7 @@ class FileBrowser extends React.Component {
               invertSelection={this.props.invertSelection}
               files={selectedFiles}
               saveFileSelection={saveFileSelection}
+              addDirectory={allowCreate ? createDirectory : false}
             />
             <Divider />
           </header>
@@ -158,8 +162,9 @@ FileBrowser.propTypes = {
   selectFiles: PropTypes.func.isRequired,
   switchDisplayStyle: PropTypes.func.isRequired,
   settings: PropTypes.object,
+  saveFileSelection: PropTypes.func.isRequired,
   allowUpload: PropTypes.bool,
-  saveFileSelection: PropTypes.func.isRequired
+  allowCreate: PropTypes.bool
 };
 
 export default connect(
@@ -220,7 +225,8 @@ export default connect(
       childrenDirectories,
       parentDirectories,
       files,
-      allowUpload: directory.allowUpload || false
+      allowUpload: directory.allowUpload || false,
+      allowCreate: directory.allowCreate || false
     };
   },
   (dispatch, props) => {
@@ -247,7 +253,9 @@ export default connect(
       selectAll: () => dispatch(toggleSelectAll(path, true)),
       selectNone: () => dispatch(toggleSelectAll(path, false)),
       invertSelection: () => dispatch(toggleSelectAll(path)),
-      saveFileSelection: goToIngest
+      saveFileSelection: goToIngest,
+      createDirectory: name =>
+        dispatch(createDirectoryAction(name, path, apiURL))
     };
   }
 )(FileBrowser);

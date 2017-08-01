@@ -18,13 +18,14 @@ const OPTIONS = {
 };
 
 module.exports = (() => {
-  let hmr = process.env.BABEL_ENV || false;
+  let babel_env = process.env.BABEL_ENV;
   switch (process.env.NODE_ENV) {
-    case "production":
-      return require("./config/webpack.production.config.js");
     case "development":
-      if (hmr) {
+      if (babel_env === 'hmr') {
         return require("./config/webpack.dev.hmr.config.js");
+      }
+      if (babel_env === 'docker') {
+        return require("./config/webpack.docker.config");
       }
       return require("./config/webpack.dev.config.js");
     default:

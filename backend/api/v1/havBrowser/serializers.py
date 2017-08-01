@@ -4,16 +4,21 @@ from rest_framework import serializers
 from hav.sets.models import Node
 
 
-class BaseHAVNodeSerializer(serializers.Serializer):
+class BaseHAVNodeSerializer(serializers.ModelSerializer):
 
-    name = serializers.SerializerMethodField()
+    class Meta:
+        model = Node
+        fields = ['name', 'path', 'url', 'allowUpload', 'allowCreate']
+
+    # name = serializers.SerializerMethodField()
     path = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
     allowUpload = serializers.SerializerMethodField()
+    allowCreate = serializers.SerializerMethodField()
 
-    def get_name(self, instance):
-        return instance.name
+    # def get_name(self, instance):
+    #     return instance.name
 
     def get_path(self, instance):
         return '%d' % instance.pk
@@ -33,15 +38,20 @@ class BaseHAVNodeSerializer(serializers.Serializer):
     def get_allowUpload(self, instance):
         return False
 
+    def get_allowCreate(self, instance):
+        return True
+
     def get_files(self, instance):
         return []
 
 
 class HAVNodeSerializer(BaseHAVNodeSerializer):
 
+    class Meta(BaseHAVNodeSerializer.Meta):
+        fields = BaseHAVNodeSerializer.Meta.fields + ['parentDirs', 'childrenDirs', 'files']
+
     parentDirs = serializers.SerializerMethodField()
     childrenDirs = serializers.SerializerMethodField()
-
     files = serializers.SerializerMethodField()
 
     def get_childrenDirs(self, instance):
@@ -59,8 +69,15 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
                 context=self.context
             ).data
 
+    def create(self, validated_data, parent):
+        print(validated_data)
+        node = parent.add_child(**validated_data)
+        return node
+
 
 class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):
+
+    name = serializers.SerializerMethodField()
 
     def get_name(self, _):
         return 'HAV'
@@ -76,7 +93,14 @@ class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):
             reverse(url_lookup)
         )
 
+    def get_allowCreate(self, instance):
+        return False
+
+
 class RootHAVCollectionSerializer(BaseRootHAVNodeSerializer):
+
+    class Meta(BaseRootHAVNodeSerializer.Meta):
+        fields = BaseRootHAVNodeSerializer.Meta.fields + ['parentDirs', 'childrenDirs', 'files']
 
     parentDirs = serializers.SerializerMethodField()
     childrenDirs = serializers.SerializerMethodField()
@@ -95,3 +119,17 @@ class RootHAVCollectionSerializer(BaseRootHAVNodeSerializer):
     def get_files(self, _):
         return []
 
+
+class CreateHAVCollectionSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data, parent=None):
+        if not parent:
+            node = Node.add_root(**validated_data)
+        else:
+            assert(isinstance(parent, Node))
+            node = parent.add_child(**validated_data)
+        return node
+
+    class Meta:
+        model = Node
+        fields = ['name',]

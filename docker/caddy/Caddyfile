@@ -5,6 +5,10 @@
         websocket
     }
 
+    proxy /thumbor/ thumbor:8000 {
+        without /thumbor
+    }
+
     proxy / django:8000 {
         transparent
     }

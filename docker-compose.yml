@@ -10,15 +10,19 @@ services:
       - POSTGRES_DB=$HAV_PG_DB
     expose:
       - 5432
+    volumes:
+      - ./docker/mounts/db_dumps:/db_dumps:ro
 
   whav_db:
-    image: postgres
+    image: mdillon/postgis:9.4
     environment:
       - POSTGRES_PASSWORD=$WHAV_PG_PW
       - POSTGRES_USER=$WHAV_PG_USER
       - POSTGRES_DB=$WHAV_PG_DB
     expose:
       - 5432
+    volumes:
+      - ./docker/mounts/db_dumps:/db_dumps:ro
 
   django:
     depends_on:
@@ -32,6 +36,7 @@ services:
       - ./backend:/code
       - ./dist:/dist
       - ./frontend/build:/build
+      - ./docker/mounts/incoming:/incoming
     expose:
       - 8000
     environment:
@@ -54,13 +59,13 @@ services:
       - ./frontend/:/code
     command: yarn run docker
 
-  thumbor_incoming:
+  thumbor:
     image: apsl/thumbor:latest
     expose:
       - 8000
     volumes:
       - /data
-      - ./dist/media:/data/loader
+      - ./docker/mounts/incoming:/data/loader
     environment:
       - LOADER=thumbor.loaders.file_loader_http_fallback
       - STORAGE=thumbor.storages.file_storage

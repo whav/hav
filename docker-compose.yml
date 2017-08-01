@@ -1,17 +1,6 @@
-version: '2'
+version: '3'
 
 services:
-
-#  nginx:
-#    depends_on:
-#      - "django"
-#    build:
-#      context: .
-#      dockerfile: ./docker/nginx/Dockerfile
-#    volumes:
-#      - ./frontend/build:/build
-#    ports:
-#      - 8000:80
 
   hav_db:
     image: postgres
@@ -54,6 +43,7 @@ services:
       - WHAV_PG_DB
       - WHAV_PG_PW
       - DJANGO_SETTINGS_MODULE
+
   frontend:
     build:
       context: .
@@ -81,11 +71,22 @@ services:
       - ALLOW_UNSAFE_URL=True
 
   caddy:
-    image: abiosoft/caddy
+    build:
+      context: .
+      dockerfile: ./docker/caddy/Dockerfile
     ports:
-      - 8001:80
+      - 8000:80
     volumes:
-      - ./docker/Caddyfile:/etc/Caddyfile
-    depends_on:
-      - 'django'
-      - 'frontend'
+      - ./docker/caddy/Caddyfile:/etc/Caddyfile
+
+  #  nginx:
+  #    depends_on:
+  #      - "django"
+  #    build:
+  #      context: .
+  #      dockerfile: ./docker/nginx/Dockerfile
+  #    volumes:
+  #      - ./frontend/build:/build
+  #    ports:
+  #      - 8000:80
+

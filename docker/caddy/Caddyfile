@@ -7,15 +7,12 @@
         websocket
     }
 
-    proxy /flower/ flower:5555 {
-        transparent
-        websocket
-    }
-
+    # thumbor image server
     proxy /thumbor/ thumbor:8000 {
         without /thumbor
     }
 
+    # default django
     proxy / django:8000 {
         transparent
     }

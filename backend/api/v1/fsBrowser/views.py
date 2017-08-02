@@ -54,7 +54,7 @@ class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 
         try:
             assert(path.is_dir())
-            assert(os.access(path, os.R_OK))
+            assert(os.access(os.fspath(path), os.R_OK))
         except (FileNotFoundError, AssertionError):
             raise Http404()
 

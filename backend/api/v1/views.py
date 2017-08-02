@@ -1,20 +1,16 @@
-from rest_framework.generics import ListCreateAPIView
+from urllib.parse import urlparse
+from django.urls import resolve
 
-from .serializers import FileIngestionSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .permissions import IncomingBaseMixin
-from incoming.models import FileIngestSelection
-
-class IngestView(IncomingBaseMixin, ListCreateAPIView):
-
-    serializer_class = FileIngestionSerializer
-
-    def get_queryset(self):
-        return FileIngestSelection.objects.filter(created_by=self.request.user)
 
 
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+class PrepareIngestView(IncomingBaseMixin, APIView):
 
-
-
+    def post(self, request):
+        from hav.celery import debug_task
+        debug_task.delay(request.data)
+        print(request.data)
+        return Response(request.data)
 

@@ -46,12 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'channels',
+    'channels',
     'webpack_loader',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_celery_monitor',
-    'incoming',
     'whav',
     'hav_examples',
     'hav.sets',
@@ -197,3 +195,6 @@ CELERY_BROKER_URL = 'redis://localhost:6379/1'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+INCOMING_FILES_ROOT = MEDIA_ROOT

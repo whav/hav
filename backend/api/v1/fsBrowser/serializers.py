@@ -29,6 +29,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
     # stat = FileStatsSerializer(source='*')
     size = serializers.SerializerMethodField()
+    key = serializers.SerializerMethodField()
 
     def get_name(self, path):
         if path == self.get_root():
@@ -67,10 +68,15 @@ class FileBrowserBaseSerializer(serializers.Serializer):
             )
         )
 
+    def get_key(self, path):
+        keys = self.context.get('keys', [])
+        return os.path.normpath(os.path.join(*keys, self.get_path(path)))
+
 
 class FileSerializer(FileBrowserBaseSerializer):
 
     path = serializers.SerializerMethodField()
+    absolute_path = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -88,12 +94,12 @@ class FileSerializer(FileBrowserBaseSerializer):
             )
         )
 
-    def get_key(self, path):
-        return self.context.get('keys', []) + [path.name]
-
     def get_path(self, path):
         root = self.get_root()
         return path.relative_to(root).as_posix()
+
+    def get_absolute_path(self, path):
+        return path.as_posix()
 
     def get_mime(self, path):
         return guess_type(path.name)[0]

@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from django.conf import settings
 
-from .views import IngestView
+from .views import PrepareIngestView
 from .fsBrowser.urls import fs_urls
 from .whavBrowser.urls import whav_urls
 from .havBrowser.urls import hav_urls
@@ -20,8 +20,8 @@ def start(request):
 
 urlpatterns = [
     url('^$', start),
-    url(r'^ingest/$', IngestView.as_view(), name='ingest'),
-    url(r'^incoming/', include(fs_urls(settings.MEDIA_ROOT, 'media_browser'), namespace='fs_browser')),
+    url(r'^ingest/data/$', PrepareIngestView.as_view(), name='prepare_ingest'),
+    url(r'^incoming/', include(fs_urls(settings.INCOMING_FILES_ROOT, 'incoming'), namespace='fs_browser')),
     url(r'^whav/', include(whav_urls('whav'), namespace='whav_browser')),
     url(r'^hav/', include(hav_urls('hav'), namespace='hav_browser'))
 ]

@@ -84,14 +84,12 @@ services:
     volumes:
       - ./docker/caddy/Caddyfile:/etc/Caddyfile
 
-  #  nginx:
-  #    depends_on:
-  #      - "django"
-  #    build:
-  #      context: .
-  #      dockerfile: ./docker/nginx/Dockerfile
-  #    volumes:
-  #      - ./frontend/build:/build
-  #    ports:
-  #      - 8000:80
+  redis:
+    image: redis:alpine
+    volumes:
+      - ./docker/mounts/redis:/data
+
+  flower:
+    image: mher/flower
+    command: flower --broker=redis://redis:6379/1 --url_prefix=flower
 

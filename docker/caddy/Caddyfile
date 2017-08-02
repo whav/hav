@@ -1,7 +1,14 @@
 :80 {
+
+    # Node js server for development
     proxy /__wp__/ frontend:8000
     proxy /__webpack_dev_server__/ frontend:8000
     proxy /sockjs-node/ frontend:8000 {
+        websocket
+    }
+
+    proxy /flower/ flower:5555 {
+        transparent
         websocket
     }
 

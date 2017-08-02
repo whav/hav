@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404
 
-from hav.sets.models import Node
+from apps.sets.models import Node
 from ..permissions import IncomingBaseMixin
 from .serializers import HAVNodeSerializer, RootHAVCollectionSerializer, CreateHAVCollectionSerializer
 

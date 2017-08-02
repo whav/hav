@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import serializers
 
-from hav.sets.models import Node
+from apps.sets.models import Node
 
 
 class BaseHAVNodeSerializer(serializers.ModelSerializer):

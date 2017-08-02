@@ -1,13 +1,16 @@
 import os
 import stat
 from mimetypes import guess_type
-
+from urllib.parse import urlunparse
 from django.core.urlresolvers import reverse
 from django.utils.http import quote
 from rest_framework import serializers
 
 from hav.thumbor import get_image_url
 
+
+def is_hidden(fn):
+    return fn.startswith('.')
 
 class FileStatsSerializer(serializers.BaseSerializer):
 
@@ -29,7 +32,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
     # stat = FileStatsSerializer(source='*')
     size = serializers.SerializerMethodField()
-    key = serializers.SerializerMethodField()
+    guid = serializers.SerializerMethodField()
 
     def get_name(self, path):
         if path == self.get_root():
@@ -68,15 +71,20 @@ class FileBrowserBaseSerializer(serializers.Serializer):
             )
         )
 
-    def get_key(self, path):
-        keys = self.context.get('keys', [])
-        return os.path.normpath(os.path.join(*keys, self.get_path(path)))
-
+    def get_guid(self, path):
+        args = (
+            self.context['scheme'],
+            self.context['identifier'],
+            self.get_path(path),
+            None,
+            None,
+            None
+        )
+        return urlunparse(args)
 
 class FileSerializer(FileBrowserBaseSerializer):
 
     path = serializers.SerializerMethodField()
-    absolute_path = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -97,9 +105,6 @@ class FileSerializer(FileBrowserBaseSerializer):
     def get_path(self, path):
         root = self.get_root()
         return path.relative_to(root).as_posix()
-
-    def get_absolute_path(self, path):
-        return path.as_posix()
 
     def get_mime(self, path):
         return guess_type(path.name)[0]
@@ -148,19 +153,13 @@ class DirectorySerializer(BaseDirectorySerializer):
         ).data
 
     def get_files(self, path):
-        files = [f for f in path.iterdir() if not f.is_dir()]
-        files.sort(key=lambda x: x.name)
-        relative_to_root = path.relative_to(self.context['root']).as_posix()
-        context = {
-            'keys': self.context.get('keys', []) + [relative_to_root],
-            'root': self.context['root'],
-            'request': self.context['request']
-        }
-
+        files = [f for f in path.iterdir() if not f.is_dir() and not is_hidden(f.name)]
+        files.sort(key=lambda f: f.name)
+        print(self.context)
         return FileSerializer(
             files,
             many=True,
-            context=context
+            context=self.context
         ).data
 
     def get_allowUpload(self, path):

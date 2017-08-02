@@ -1,10 +1,10 @@
 import os
 from mimetypes import guess_type
-
+from urllib.parse import urlunparse
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from whav.models import ImageCollection, MediaOrdering
+from apps.whav.models import ImageCollection, MediaOrdering
 from hav.thumbor import get_image_url
 
 
@@ -13,16 +13,13 @@ class WHAVFileSerializer(serializers.Serializer):
     path = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
-    key = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
 
     size = serializers.SerializerMethodField()
     detail_url = serializers.SerializerMethodField()
 
-    def get_key(self, mo):
-        media = mo.media
-        print(self.context)
-        return self.context['keys'] + [media.id]
+    guid = serializers.SerializerMethodField()
+
 
     def get_name(self, mo):
         media = mo.media
@@ -60,6 +57,17 @@ class WHAVFileSerializer(serializers.Serializer):
             kwargs={'mediaordering_pk': mo.pk}
         ))
 
+    def get_guid(self, mo):
+        print(self.context)
+        args = (
+            self.context['scheme'],
+            self.context['identifier'],
+            str(mo.media.pk),
+            None,
+            None,
+            None
+        )
+        return urlunparse(args)
 
 
 

@@ -20,14 +20,16 @@ from .serializers import FileSerializer, DirectorySerializer, BaseDirectorySeria
 class FileBrowserMixin(object):
 
     root = None
-    keys = []
+    scheme = 'file'
+    identifier = None
 
     @property
     def context(self):
         return {
-            'keys': self.keys,
             'root': self.root_path,
-            'request': self.request
+            'request': self.request,
+            'scheme': self.scheme,
+            'identifier': self.identifier
         }
 
     @property

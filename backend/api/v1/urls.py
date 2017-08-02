@@ -21,7 +21,7 @@ def start(request):
 urlpatterns = [
     url('^$', start),
     url(r'^ingest/data/$', PrepareIngestView.as_view(), name='prepare_ingest'),
-    url(r'^incoming/', include(fs_urls(settings.INCOMING_FILES_ROOT, 'incoming'), namespace='fs_browser')),
+    url(r'^incoming/', include(fs_urls(root_path=settings.INCOMING_FILES_ROOT, identifier='incoming'), namespace='fs_browser')),
     url(r'^whav/', include(whav_urls('whav'), namespace='whav_browser')),
     url(r'^hav/', include(hav_urls('hav'), namespace='hav_browser'))
 ]

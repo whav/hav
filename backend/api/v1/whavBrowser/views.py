@@ -3,24 +3,31 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from django.http import Http404
 
-from whav.models import ImageCollection, MediaOrdering
+from apps.whav.models import ImageCollection, MediaOrdering
 from ..permissions import IncomingBaseMixin
 from .serializers import WHAVCollectionSerializer, RootWHAVCollectionSerializer, WHAVFileSerializer
 
 
-class WHAVCollectionBrowser(IncomingBaseMixin, APIView):
+class BaseWHAVBrowser(IncomingBaseMixin):
 
-    ic = None
-    keys = []
+    scheme = 'whav'
+    identifier = None
 
-    def get_context(self):
+    @property
+    def context(self):
         return {
             'request': self.request,
-            'keys': self.keys
+            'scheme': self.scheme,
+            'identifier': self.identifier
         }
 
+
+class WHAVCollectionBrowser(BaseWHAVBrowser, APIView):
+
+    image_collection = None
+
     def get_serializer_class(self):
-        if self.ic:
+        if self.image_collection:
             return WHAVCollectionSerializer
         else:
             return RootWHAVCollectionSerializer
@@ -28,33 +35,35 @@ class WHAVCollectionBrowser(IncomingBaseMixin, APIView):
     def get(self, request, collection_id=None):
 
         if collection_id:
+            self.identifier = collection_id
             try:
-                self.ic = ImageCollection.objects.get(pk=collection_id)
+                self.image_collection = ImageCollection.objects.get(pk=collection_id)
             except ImageCollection.DoesNotExist:
                 raise Http404()
 
         sc = self.get_serializer_class()
         serializer = sc(
             # any truthy object will do if there is no imagecollection
-            instance=self.ic or object(),
-            context=self.get_context()
+            instance=self.image_collection or object(),
+            context=self.context
         )
         return Response(serializer.data)
 
 
-class WHAVMediaDetail(IncomingBaseMixin, RetrieveAPIView):
+class WHAVMediaDetail(BaseWHAVBrowser, RetrieveAPIView):
 
-    keys = []
     queryset = MediaOrdering.objects.all()
     lookup_url_kwarg = 'mediaordering_pk'
     serializer_class = WHAVFileSerializer
 
     def get_serializer_context(self):
         ctx = super().get_serializer_context()
-        ctx.update({
-            'keys': self.keys
-        })
+        ctx.update(self.context)
         return ctx
+
+    def get(self,  *args, **kwargs):
+        self.identifier = kwargs.get(self.lookup_url_kwarg)
+        return super().get(*args, **kwargs)
 
 
 

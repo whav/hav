@@ -237,7 +237,7 @@ export default connect(
     }
 
     const goToIngest = files => {
-      props.history.push("/ingest/", files.map(f => f.url));
+      props.history.push("/ingest/step1/", files);
     };
     return {
       uploadToURL: apiURL,

@@ -4,8 +4,8 @@
 import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
 import { Uploads } from "./containers/uploads";
-import IngestionView from "./containers/ingest";
-
+import IngestionStep1 from "./containers/ingest_step1";
+import IngestionStep2 from "./containers/ingest_step2";
 import GoHome from "react-icons/go/home";
 import GoFileDirectory from "react-icons/go/file-directory";
 import GoFileSubmodule from "react-icons/go/file-submodule";
@@ -27,8 +27,12 @@ const routes = [
     main: Uploads
   },
   {
-    path: "/ingest/",
-    main: IngestionView
+    path: "/ingest/step1/",
+    main: IngestionStep1
+  },
+  {
+    path: "/ingest/step2/",
+    main: IngestionStep2
   },
   {
     path: "/:repository(hav)/:path*/",

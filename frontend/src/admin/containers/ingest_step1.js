@@ -63,11 +63,22 @@ export default connect(
       .map(d => getDirectoryForPath(d, state.repositories));
     let childrenDirs = (directory.children || [])
       .map(d => getDirectoryForPath(d, state.repositories));
+
+    console.log(directory);
+    // this will trigger the actual ingestion
+    const ingest = () => {
+      ownProps.history.push("/ingest/step2/", {
+        files: filesToBeIngested,
+        target: directory
+      });
+    };
+
     return {
       ...props,
       loading: false,
       directories: childrenDirs,
-      parentDirs: parentDirs
+      parentDirs: parentDirs,
+      ingest
     };
   },
   (dispatch, ownProps) => {
@@ -81,9 +92,7 @@ export default connect(
           requestDirectoryAction({ repository: "hav", path: path }, apiURL)
         );
       },
-      navigate: path => dispatch(ingestTo(path)),
-      ingest: path =>
-        console.log("Ingesting", ownProps.location.state, path, ownProps)
+      navigate: path => dispatch(ingestTo(path))
     };
   }
 )(Ingest);

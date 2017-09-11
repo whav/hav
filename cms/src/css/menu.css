@@ -4,7 +4,7 @@
 	display: block;
 	position: absolute;
 	top: 50px;
-	right: 0px;
+	right: 3px;
 	animation: fadein 1s;
 }
 .nav-primary *, .nav-secondary * {

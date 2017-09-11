@@ -8,6 +8,10 @@ from apps.whav.models import ImageCollection, MediaOrdering
 from hav.thumbor import get_image_url
 
 
+class IngestionSerializer(serializers.Serializer):
+    fs_location = serializers.SerializerMethodField()
+
+
 class WHAVFileSerializer(serializers.Serializer):
 
     path = serializers.SerializerMethodField()
@@ -54,11 +58,13 @@ class WHAVFileSerializer(serializers.Serializer):
         name = ':'.join(request.resolver_match.namespaces + ['whav_media'])
         return request.build_absolute_uri(reverse(
             name,
-            kwargs={'mediaordering_pk': mo.pk}
+            kwargs={
+                'collection_id': mo.collection_id,
+                'media_id': mo.media_id
+            }
         ))
 
     def get_guid(self, mo):
-        print(self.context)
         args = (
             self.context['scheme'],
             self.context['identifier'],
@@ -166,5 +172,4 @@ class RootWHAVCollectionSerializer(BaseRootWHAVCollectionSerializer):
 
     def get_files(self, _):
         return []
-
 

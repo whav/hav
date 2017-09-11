@@ -32,7 +32,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
     # stat = FileStatsSerializer(source='*')
     size = serializers.SerializerMethodField()
-    guid = serializers.SerializerMethodField()
+    file_path = serializers.SerializerMethodField()
 
     def get_name(self, path):
         if path == self.get_root():
@@ -81,6 +81,10 @@ class FileBrowserBaseSerializer(serializers.Serializer):
             None
         )
         return urlunparse(args)
+
+    def get_file_path(self, path):
+        return path.as_posix()
+
 
 class FileSerializer(FileBrowserBaseSerializer):
 

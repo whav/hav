@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "caniuse-db": "^1.0.30000744",
     "classnames": "^2.2.5",
     "css-animations": "^1.0.7",
     "dejavu-sans-condensed": "^1.0.0",
@@ -16,8 +17,8 @@
     "postcss-cssnext": "^2.9.0",
     "postcss-url": "^5.1.2",
     "ptsans-npm-webfont": "0.0.4",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-dropzone": "^3.9.2",
     "react-icons": "^2.2.3",
     "react-redux": "^5.0.2",

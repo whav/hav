@@ -2,7 +2,7 @@ import os
 import stat
 from mimetypes import guess_type
 from urllib.parse import urlunparse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.http import quote
 from rest_framework import serializers
 

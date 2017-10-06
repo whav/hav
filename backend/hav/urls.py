@@ -21,7 +21,7 @@ urlpatterns = [
         TemplateView.as_view(template_name='hav/teaser.html')
     ),
     # API urls
-    url(r'^api/', include(api_urls, namespace='api')),
-    url(r'^admin/', include(hav_admin_patterns, namespace='hav_admin')),
+    url(r'^api/', include(api_urls, namespace='api', app_name='api')),
+    url(r'^admin/', include(hav_admin_patterns, namespace='hav_admin', app_name='hav_admin')),
     url(r'^dbadmin/', django_admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

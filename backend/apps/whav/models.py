@@ -39,8 +39,8 @@ class Media(models.Model):
 
 
 class MediaOrdering(models.Model):
-    media = models.ForeignKey(Media)
-    collection = models.ForeignKey(ImageCollection)
+    media = models.ForeignKey(Media, on_delete=models.CASCADE)
+    collection = models.ForeignKey(ImageCollection, on_delete=models.CASCADE)
 
     date_added = models.DateField(auto_now_add=True)
     order = models.IntegerField(null=True, blank=True)
@@ -51,7 +51,7 @@ class MediaOrdering(models.Model):
 
 
 class Basefile(models.Model):
-    media = models.ForeignKey(Media)
+    media = models.ForeignKey(Media, on_delete=models.CASCADE)
     primary_storage = models.CharField(max_length=10)
     size = models.IntegerField(blank=True, null=True)
     archived = models.DateTimeField(blank=True, null=True)
@@ -63,7 +63,7 @@ class Basefile(models.Model):
 
 
 class Localfile(models.Model):
-    basefile = models.OneToOneField(Basefile)
+    basefile = models.OneToOneField(Basefile, on_delete=models.CASCADE)
     path = models.CharField(max_length=300, blank=True)
     deleted = models.BooleanField()
 
@@ -75,7 +75,7 @@ class Localfile(models.Model):
 class WebImage(models.Model):
 
     original_image = models.CharField(max_length=200)
-    media = models.OneToOneField(Media, null=True, related_name='webimage', blank=True)
+    media = models.OneToOneField(Media, null=True, related_name='webimage', blank=True, on_delete=models.CASCADE)
 
     class Meta:
         managed = False

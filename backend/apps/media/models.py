@@ -6,13 +6,27 @@ from django.contrib.postgres.fields import DateTimeRangeField
 from apps.sets.models import Node
 from apps.archive.models import ArchiveFile
 
+
 class MediaCreator(models.Model):
     first_name = models.CharField(max_length=100, blank=True)
-    last_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100)
+    display_name = models.CharField(max_length=200, blank=True)
 
+    def ___str__(self):
+
+        if self.display_name:
+            return self.display_name
+
+        return "{0}{1}".format(
+            self.last_name,
+            ", {0}".format(self.first_name) if self.first_name else ''
+        )
 
 class MediaCreatorRole(models.Model):
     role_name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.role_name
 
 
 class MediaToCreator(models.Model):

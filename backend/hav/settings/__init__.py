@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'apps.whav',
     'apps.sets',
     'apps.archive',
+    'apps.media'
 ]
 
 MIDDLEWARE = [

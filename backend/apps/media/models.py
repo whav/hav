@@ -12,7 +12,7 @@ class MediaCreator(models.Model):
     last_name = models.CharField(max_length=100)
     display_name = models.CharField(max_length=200, blank=True)
 
-    def ___str__(self):
+    def __str__(self):
 
         if self.display_name:
             return self.display_name
@@ -22,7 +22,9 @@ class MediaCreator(models.Model):
             ", {0}".format(self.first_name) if self.first_name else ''
         )
 
+
 class MediaCreatorRole(models.Model):
+
     role_name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
@@ -32,19 +34,30 @@ class MediaCreatorRole(models.Model):
 class MediaToCreator(models.Model):
     creator = models.ForeignKey(MediaCreator, on_delete=models.CASCADE)
     role = models.ForeignKey(MediaCreatorRole, on_delete=models.CASCADE)
+    media = models.ForeignKey('Media', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = [
+            ('creator', 'role', 'media')
+        ]
 
 
 class License(models.Model):
     name = models.CharField(max_length=100)
     short_name = models.CharField(max_length=10, unique=True)
 
+    def __str__(self):
+        return self.short_name
+
 
 class Media(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     archive_file = models.OneToOneField(ArchiveFile, on_delete=models.PROTECT)
-    creators = models.ManyToManyField(through=MediaToCreator, verbose_name='creators')
+    creators = models.ManyToManyField(MediaCreator, through=MediaToCreator, verbose_name='creators')
     creation_date = DateTimeRangeField()
     license = models.ForeignKey(License, null=True, on_delete=models.SET_NULL)
 
     set = models.ForeignKey(Node, on_delete=models.PROTECT)
+
+

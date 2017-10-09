@@ -1,12 +1,6 @@
 {
-  "presets": [
-    [
-      "es2015",
-      {"modules": false}
-    ],
-    "stage-3",
-    "react"
-  ],
+  "presets": ["react", "env"],
+  "plugins": ["transform-class-properties", "transform-object-rest-spread"],
   "env": {
     "hmr": {
       "plugins": ["react-hot-loader/babel"]

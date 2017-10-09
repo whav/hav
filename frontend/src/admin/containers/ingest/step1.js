@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import IngestView, { DirectorySelector } from "../ui/ingest";
-import FileBrowser from "./filebrowser/index";
-import { requestDirectoryAction } from "../actions/browser";
-import { ingestTo } from "../actions/ingest";
+import IngestView, { DirectorySelector } from "../../ui/ingest";
+import FileBrowser from "../filebrowser/index";
+import { requestDirectoryAction } from "../../actions/browser";
+import { ingestTo } from "../../actions/ingest";
 
-import { getDirectoryForPath } from "../reducers/browser";
+import { getDirectoryForPath } from "../../reducers/browser";
 
 class Ingest extends React.Component {
   constructor(props) {
@@ -59,10 +59,12 @@ export default connect(
       };
     }
 
-    let parentDirs = (directory.parents || [])
-      .map(d => getDirectoryForPath(d, state.repositories));
-    let childrenDirs = (directory.children || [])
-      .map(d => getDirectoryForPath(d, state.repositories));
+    let parentDirs = (directory.parents || []).map(d =>
+      getDirectoryForPath(d, state.repositories)
+    );
+    let childrenDirs = (directory.children || []).map(d =>
+      getDirectoryForPath(d, state.repositories)
+    );
 
     console.log(directory);
     // this will trigger the actual ingestion

@@ -4,8 +4,8 @@
 import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
 import { Uploads } from "./containers/uploads";
-import IngestionStep1 from "./containers/ingest_step1";
-import IngestionStep2 from "./containers/ingest_step2";
+import IngestionStep1 from "./containers/ingest/step1";
+import IngestionStep2 from "./containers/ingest/step2";
 import GoHome from "react-icons/go/home";
 import GoFileDirectory from "react-icons/go/file-directory";
 import GoFileSubmodule from "react-icons/go/file-submodule";

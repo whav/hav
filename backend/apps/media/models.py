@@ -33,7 +33,7 @@ class MediaCreatorRole(models.Model):
 
 class MediaToCreator(models.Model):
     creator = models.ForeignKey(MediaCreator, on_delete=models.CASCADE)
-    role = models.ForeignKey(MediaCreatorRole, on_delete=models.CASCADE)
+    role = models.ForeignKey(MediaCreatorRole, null=True, on_delete=models.SET_NULL)
     media = models.ForeignKey('Media', on_delete=models.CASCADE)
 
     class Meta:

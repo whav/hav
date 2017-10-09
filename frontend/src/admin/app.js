@@ -1,54 +1,53 @@
 /**
  * Created by sean on 02/02/17.
  */
-import React from 'react'
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch
-} from 'react-router-dom'
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 
-import Nav from './nav'
-import {routes, mainNav} from './routes'
+import Nav from "./nav";
+import { routes, mainNav } from "./routes";
 
 // css, images and stuff
-require('./ui/index.css');
+require("./ui/index.css");
 
-const logo = require('../assets/logo.png')
+const logo = require("../assets/logo.png");
 
-const App = ({children}) => <div className="hav-admin-app">{children}</div>
-const Navigation = ({...props}) => <Nav navItems={mainNav} {...props} />
+const App = ({ children }) => <div className="hav-admin-app">{children}</div>;
+const Navigation = ({ ...props }) => <Nav navItems={mainNav} {...props} />;
 
-const HavAdmin = ({store}) => {
-    return (
+const HavAdmin = ({ store }) => {
+  return (
     <Provider store={store}>
-        <Router basename="/admin">
+      <Router basename="/admin">
         <App>
-            <div className="hav-admin-main-menu">
-                <img src={logo} alt="hav logo" className="main-menu-logo" />
-                <nav>
-                    <Route component={Navigation} />
-                </nav>
-            </div>
-            <div className="hav-admin-content">
-                <Switch>
-                {
-                    routes.map(
-                        (rc, index) => {
-                            let {path, main, ...extra} = rc;
-                            return <Route key={index} exact={true} path={path} component={main} {...extra} container={this.contentDiv} />
-                        }
-                    )
-                }
-                </Switch>
-            </div>
+          <div className="hav-admin-main-menu" style={{ display: "none" }}>
+            <img src={logo} alt="hav logo" className="main-menu-logo" />
+            <nav>
+              <Route component={Navigation} />
+            </nav>
+          </div>
+          <div className="hav-admin-content">
+            <Switch>
+              {routes.map((rc, index) => {
+                let { path, main, ...extra } = rc;
+                return (
+                  <Route
+                    key={index}
+                    exact={true}
+                    path={path}
+                    component={main}
+                    {...extra}
+                  />
+                );
+              })}
+            </Switch>
+          </div>
         </App>
-        </Router>
-    </Provider>);
+      </Router>
+    </Provider>
+  );
 };
 
-export default HavAdmin
-
-
+export default HavAdmin;

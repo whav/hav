@@ -3,6 +3,17 @@ from rest_framework import serializers
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media
 
 
+class MediaCreatorRoleSerializer(serializers.ModelSerializer):
+
+    name = serializers.SerializerMethodField()
+
+    def get_name(self, mcr):
+        return str(mcr)
+
+    class Meta:
+        model = MediaCreatorRole
+        fields = ['id', 'name']
+
 class MediaCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaToCreator

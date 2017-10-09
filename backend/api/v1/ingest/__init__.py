@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from apps.media.models import MediaCreator, License
+from apps.media.models import MediaCreator, MediaCreatorRole, License
 from ..permissions import IncomingBaseMixin
-
+from .serializers import MediaCreatorRoleSerializer
 
 class PrepareIngestView(IncomingBaseMixin, APIView):
 
@@ -11,6 +11,7 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
 
         files = request.data.get('files', [])
         creators = [{'id': mc.pk, 'name': str(mc)} for mc in MediaCreator.objects.all()]
+        roles = MediaCreatorRoleSerializer(MediaCreatorRole.objects.all(), many=True).data
         licenses = [{'id': l.pk, 'name': str(l)} for l in License.objects.all()]
         return Response({
             'files': [{
@@ -19,7 +20,8 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
             } for f in files],
             'options': {
                 'creators': creators,
-                'licenses': licenses
+                'roles': roles,
+                'licenses': licenses,
             }
         })
 

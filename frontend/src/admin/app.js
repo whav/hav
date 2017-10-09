@@ -22,7 +22,7 @@ const HavAdmin = ({ store }) => {
     <Provider store={store}>
       <Router basename="/admin">
         <App>
-          <div className="hav-admin-main-menu" style={{ display: "none" }}>
+          <div className="hav-admin-main-menu">
             <img src={logo} alt="hav logo" className="main-menu-logo" />
             <nav>
               <Route component={Navigation} />

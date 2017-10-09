@@ -127,11 +127,28 @@ class IngestForm extends React.Component {
 }
 
 class BatchIngest extends React.Component {
+  state = {
+    template_data: {}
+  };
+
+  updateTemplateData = (_, name, value) => {
+    console.log(name, value);
+    this.setState(state => ({
+      template_data: { ...state.template_data, [name]: value }
+    }));
+  };
+
   render() {
     return (
       <Grid columns="equal" padded="horizontally">
+        {/* Template form */}
         <Grid.Row color="yellow" key={"template-form"}>
-          <IngestForm ingest_id={""} {...this.props} />
+          <IngestForm
+            ingest_id={"Template Form"}
+            {...this.props}
+            data={this.state.template_data}
+            onChange={this.updateTemplateData}
+          />
         </Grid.Row>
 
         {this.props.ingestionFiles.map((ingestionFile, index) => {

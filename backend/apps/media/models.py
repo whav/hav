@@ -51,7 +51,6 @@ class License(models.Model):
 
 
 class Media(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     archive_file = models.OneToOneField(ArchiveFile, on_delete=models.PROTECT)
     creators = models.ManyToManyField(MediaCreator, through=MediaToCreator, verbose_name='creators')

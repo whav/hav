@@ -1,10 +1,22 @@
 import React from "react";
-import { Grid, Segment, Dropdown, Form } from "semantic-ui-react";
+import {
+  Grid,
+  Segment,
+  Dropdown,
+  Form,
+  Button,
+  Container,
+  Divider,
+  Header
+} from "semantic-ui-react";
 import PropTypes from "prop-types";
+
+const BtnGroup = ({ children, ...props }) => (
+  <Button.Group {...props}>{children}</Button.Group>
+);
 
 class CreatorSelect extends React.Component {
   onChange = (_, data) => {
-    console.log(this.props);
     this.props.onChange(data.value);
   };
   render() {
@@ -26,6 +38,43 @@ class CreatorSelect extends React.Component {
     );
   }
 }
+
+const DateForm = ({ data, ...props }) => {
+  return [
+    <Form.Input
+      required
+      key="year"
+      placeholder="Year"
+      value={data.year || ""}
+      type="number"
+      name="year"
+      width={2}
+      onChange={props.onChange}
+    />,
+    <Form.Input
+      key="month"
+      placeholder="Month"
+      name="month"
+      type="number"
+      value={data.month || ""}
+      width={2}
+      min={1}
+      max={12}
+      onChange={props.onChange}
+    />,
+    <Form.Input
+      key="day"
+      placeholder="Day"
+      name="day"
+      type="number"
+      min={2}
+      max={31}
+      value={data.day || ""}
+      width={1}
+      onChange={props.onChange}
+    />
+  ];
+};
 
 class LicenseSelect extends React.Component {
   onChange = (_, data) => {
@@ -59,112 +108,105 @@ class IngestForm extends React.Component {
   };
 
   handleChange = (event, data) => {
-    this.props.onChange(this.props.ingest_id, event.target.name, data.value);
+    this.props.onChange(this.props.ingest_id, {
+      [event.target.name]: data.value
+    });
   };
 
   render() {
     const { licenses = [], creators = [], roles = [], data = {} } = this.props;
     let parts = this.props.ingest_id.split("/").reverse();
-    const inputProps = {
-      onChange: this.handleChange
-    };
     return [
-      <Grid.Column key="file">{parts[0]}</Grid.Column>,
-      <Grid.Column key="creators">
+      <Form.Field width={2} key="file">
+        {parts[0]}
+      </Form.Field>,
+      <Form.Field width={3} key="creators">
         <CreatorSelect
           creators={creators}
           roles={roles}
           value={data.creators}
           onChange={d =>
-            this.props.onChange(this.props.ingest_id, "creators", d)}
+            this.props.onChange(this.props.ingest_id, { creators: d })}
         />
-      </Grid.Column>,
-      <Grid.Column width={6} key="date">
-        <Form>
-          <Form.Group>
-            <Form.Input
-              placeholder="Year"
-              value={data.year || ""}
-              type="number"
-              name="year"
-              width={4}
-              {...inputProps}
-            />
-            <Form.Input
-              placeholder="Month"
-              name="month"
-              type="number"
-              value={data.month || ""}
-              width={4}
-              min={1}
-              max={12}
-              {...inputProps}
-            />
-            <Form.Input
-              placeholder="Day"
-              name="day"
-              type="number"
-              min={1}
-              max={31}
-              value={data.day || ""}
-              width={4}
-              {...inputProps}
-            />
-          </Form.Group>
-        </Form>
-      </Grid.Column>,
-      <Grid.Column key="license">
+      </Form.Field>,
+      <DateForm data={data} onChange={this.handleChange} />,
+      <Form.Field width={2} key="license">
         <LicenseSelect
           licenses={licenses}
           value={data.license}
           onChange={d =>
-            this.props.onChange(this.props.ingest_id, "license", d)}
+            this.props.onChange(this.props.ingest_id, { license: d })}
         />
-      </Grid.Column>,
-      <Grid.Column key="controls">{this.props.children}</Grid.Column>
+      </Form.Field>,
+      <Form.Field width={2} key="controls">
+        {this.props.children}
+      </Form.Field>
     ];
   }
 }
 
 class BatchIngest extends React.Component {
   state = {
-    template_data: {}
+    template_data: {
+      year: "",
+      month: "",
+      day: "",
+      creators: [],
+      license: ""
+    }
   };
 
-  updateTemplateData = (_, name, value) => {
-    console.log(name, value);
+  updateTemplateData = (_, data) => {
     this.setState(state => ({
-      template_data: { ...state.template_data, [name]: value }
+      template_data: { ...state.template_data, ...data }
     }));
+  };
+
+  applyToAll = () => {
+    const data = this.state.template_data;
+    this.props.ingestionFiles.forEach(ingestionFile =>
+      this.props.onChange(ingestionFile.id, data)
+    );
   };
 
   render() {
     return (
-      <Grid columns="equal" padded="horizontally">
-        {/* Template form */}
-        <Grid.Row color="yellow" key={"template-form"}>
-          <IngestForm
-            ingest_id={"Template Form"}
-            {...this.props}
-            data={this.state.template_data}
-            onChange={this.updateTemplateData}
-          />
-        </Grid.Row>
-
-        {this.props.ingestionFiles.map((ingestionFile, index) => {
-          let key = ingestionFile.id;
-          return (
-            <Grid.Row key={key}>
-              <IngestForm
-                data={ingestionFile.data}
-                {...this.props}
-                onChange={this.props.onChange}
-                ingest_id={key}
-              />
-            </Grid.Row>
-          );
-        })}
-      </Grid>
+      <Container fluid>
+        <Header as="h1" dividing>
+          Ingest
+        </Header>
+        <Form>
+          <Form.Group key="template-form">
+            <IngestForm
+              ingest_id={"Template Form"}
+              {...this.props}
+              data={this.state.template_data}
+              onChange={this.updateTemplateData}
+            >
+              <BtnGroup>
+                <Button primary compact size="mini" onClick={this.applyToAll}>
+                  Apply to all
+                </Button>
+                <Button secondary>Ha!</Button>
+              </BtnGroup>
+            </IngestForm>
+          </Form.Group>
+          <Divider />
+          {this.props.ingestionFiles.map((ingestionFile, index) => {
+            let key = ingestionFile.id;
+            return (
+              <Form.Group key={key}>
+                <IngestForm
+                  data={ingestionFile.data}
+                  {...this.props}
+                  onChange={this.props.onChange}
+                  ingest_id={key}
+                />
+              </Form.Group>
+            );
+          })}
+        </Form>
+      </Container>
     );
   }
 }

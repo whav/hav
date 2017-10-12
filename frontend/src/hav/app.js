@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import logo from '../assets/logo.png'
-import MainMenu from './menu'
+import React, { Component } from "react";
+import logo from "../assets/logo.png";
+import MainMenu from "./menu";
 
 // css imports
-import './index.css'
+import "./index.css";
 
 class App extends Component {
   render() {
@@ -14,13 +14,11 @@ class App extends Component {
           <MainMenu />
         </div>
         <div className="App-main">
-            <main>
-                {this.props.children}
-            </main>
+          <main>{this.props.children}</main>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default App
+export default App;

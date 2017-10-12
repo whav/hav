@@ -11,7 +11,7 @@ class Ingest extends React.Component {
     this.loadFormData();
   }
 
-  updateFormData = (key, name, value) => {
+  updateFormData = (key, formData) => {
     this.setState(state => {
       let idx = state.ingestion_data.findIndex(x => x.id === key);
       if (idx === -1) {
@@ -25,7 +25,7 @@ class Ingest extends React.Component {
           ...existing_data,
           data: {
             ...existing_data.data,
-            [name]: value
+            ...formData
           }
         },
         ...state.ingestion_data.slice(idx + 1)

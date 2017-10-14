@@ -20,7 +20,7 @@ body,
   flex-grow: 1;
   height: 100%;
   overflow-y: scroll;
-  padding: 0 1em;
+  padding: 1.5em 1em;
 }
 
 .hav-admin-content .loading-container {

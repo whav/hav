@@ -1,11 +1,10 @@
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
+from rest_framework import status
 from rest_framework.response import Response
 from datetime import date
 from apps.media.models import MediaCreator, MediaCreatorRole, License
 from ..permissions import IncomingBaseMixin
 from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, BatchMediaSerializer
-
 
 
 class PrepareIngestView(IncomingBaseMixin, APIView):
@@ -36,7 +35,16 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
         })
 
 
-class IngestView(IncomingBaseMixin, CreateAPIView):
+class IngestView(IncomingBaseMixin, APIView):
 
-    serializer_class = BatchMediaSerializer
+    def post(self, request):
+        print(request.data)
+        serializer = BatchMediaSerializer(data=request.data, context={'user': request.user})
+        serializer.is_valid(raise_exception=True)
+        media_entries = serializer.save()
+        return Response(media_entries, status=status.HTTP_201_CREATED)
+
+
+
+
 

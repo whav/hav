@@ -4,6 +4,8 @@ import logging
 
 from django.core.files import File
 from apps.archive.models import ArchiveFile
+from apps.media.models import Media
+
 from .hash import generate_hash
 
 logger = logging.getLogger('archive')
@@ -27,8 +29,8 @@ def _get_archive_file_name(filepath, uuid):
     return '{uuid}{ext}'.format(uuid=uuid, ext=ext)
 
 
-def archive_file(filepath, user):
-
+def archive_file(filepath, media_id, user):
+    media = Media.objects.get(pk=media_id)
     path = os.path.normpath(filepath)
 
     # do some basics checks
@@ -47,7 +49,6 @@ def archive_file(filepath, user):
     }
 
     filename = _get_archive_file_name(path, uid)
-    print(filename)
     af = ArchiveFile(**archive_fields)
 
     # check if everything looks good up to now
@@ -59,6 +60,8 @@ def archive_file(filepath, user):
         af.file.save(filename, File(f))
 
     af.save()
+
+    af.media_set.add(media)
 
     return af
 

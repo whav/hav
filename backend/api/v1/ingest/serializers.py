@@ -1,7 +1,10 @@
 from rest_framework import serializers
 
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
+from apps.media.utils.dtrange import range_from_partial_date
 from apps.sets.models import Node
+
+from psycopg2.extras import DateTimeTZRange
 
 class MediaLicenseSerializer(serializers.ModelSerializer):
 
@@ -33,14 +36,36 @@ class MediaCreatorSerializer(serializers.ModelSerializer):
 class CreateMediaSerializer(serializers.Serializer):
 
     year = serializers.IntegerField(min_value=1950, max_value=2050)
-    month = serializers.IntegerField(min_value=1, max_value=12)
-    day = serializers.IntegerField(min_value=1, max_value=31)
+    month = serializers.IntegerField(min_value=1, max_value=12, required=False)
+    day = serializers.IntegerField(min_value=1, max_value=31, required=False)
+    timestamp = serializers.DateTimeField(required=False)
 
     creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
     license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
 
-    def create(self, validated_data):
-        print(validated_data)
+    def validate(self, data):
+        year = data.get('year')
+        month = data.get('month')
+        day = data.get('day')
+        timestamp = data.get('timestamp')
+
+        if any([year, month, day]) and timestamp:
+            raise serializers.ValidationError('Can not use timestamp and any of year, month, day together.')
+
+        if any([year, month, day]):
+            start, end = range_from_partial_date(year, month, day)
+
+            if start > end:
+                raise serializers.ValidationError('Start can not be before end of timerange.')
+
+        return data
+
+
+class SimpleMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Media
+        fields = ['pk', 'creators', 'license', 'creation_date']
+
 
 
 class BatchMediaSerializer(serializers.Serializer):
@@ -52,5 +77,25 @@ class BatchMediaSerializer(serializers.Serializer):
     entries = CreateMediaSerializer(many=True)
 
     def create(self, validated_data):
-        return validated_data
-        # return {'success': True}
+        media_entries = []
+        target = validated_data.get('target')
+        user = self.context['user']
+
+        for entry_data in validated_data.get('entries', []):
+            dt_range = range_from_partial_date(entry_data.get('year'), entry_data.get('month'), entry_data.get('day'))
+            mo = Media.objects.create(
+                    creation_date=DateTimeTZRange(lower=dt_range[0], upper=dt_range[1]),
+                    license=entry_data.get('license'),
+                    set=target,
+                    created_by=user
+                )
+            # save m2m relations
+            for creator in entry_data['creators']:
+                MediaToCreator.objects.create(
+                    creator=creator,
+                    media=mo
+                )
+            media_entries.append(mo)
+
+        return SimpleMediaSerializer(media_entries, many=True).data
+

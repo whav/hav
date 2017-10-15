@@ -49,6 +49,18 @@ class License(models.Model):
         return self.short_name
 
 
+class MediaManager(models.Manager):
+
+    def create_media(self, creators=[], **kwargs):
+        media = self.create(**kwargs)
+        for c in creators:
+            MediaToCreator.objects.create(
+                creator=c,
+                media=media
+            )
+        return media
+
+
 class Media(models.Model):
 
     creators = models.ManyToManyField(MediaCreator, through=MediaToCreator, verbose_name='creators')
@@ -62,4 +74,6 @@ class Media(models.Model):
     modified_at = models.DateTimeField(auto_now=True, null=True)
     modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name='modified_media')
 
+    files = models.ManyToManyField(ArchiveFile)
 
+    objects = MediaManager()

@@ -33,7 +33,8 @@ class BatchTest(APITestCase):
                 'month': today.month,
                 'day': today.day,
                 'creators': [self.creator.pk],
-                'license': self.license.pk
+                'license': self.license.pk,
+                'ingestion_id': __file__
             })
         return entries
 
@@ -50,14 +51,13 @@ class BatchTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create(self):
-
         data = {
             'target': self.target.pk,
             'entries': self.generateMediaData(count=5)
         }
         self.client.force_login(self.user)
         response = self.client.post(self.url, data, format='json')
-        # print(response.status_code, response.data)
+        print(response.status_code, response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 

@@ -30,7 +30,6 @@ class Ingest extends React.Component {
         },
         ...state.ingestion_data.slice(idx + 1)
       ];
-      console.log(idx, data[idx].id, data[idx].data, data);
       return { ingestion_data: data };
     });
   };

@@ -1,3 +1,4 @@
+import os
 from rest_framework import serializers
 
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
@@ -35,6 +36,8 @@ class MediaCreatorSerializer(serializers.ModelSerializer):
 
 class CreateMediaSerializer(serializers.Serializer):
 
+    ingestion_id = serializers.CharField(max_length=500)
+
     year = serializers.IntegerField(min_value=1950, max_value=2050)
     month = serializers.IntegerField(min_value=1, max_value=12, required=False)
     day = serializers.IntegerField(min_value=1, max_value=31, required=False)
@@ -42,6 +45,20 @@ class CreateMediaSerializer(serializers.Serializer):
 
     creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
     license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
+
+    def validate_ingestion_id(self, value):
+        if not os.path.exists(value):
+            raise serializers.ValidationError('The file {} does not seem to exist.'.format(value))
+
+        if not os.path.isfile(value):
+            raise serializers.ValidationError('The path {} does not point to a file.'.format(value))
+
+        # stat = os.stat(value)
+        if not os.access(value, os.R_OK):
+            raise serializers.ValidationError('The file at {} is not readable.'.format(value))
+
+        return value
+
 
     def validate(self, data):
         year = data.get('year')

@@ -22,10 +22,11 @@ def range_from_partial_date(year, month=None, day=None):
         start = date(year, 1, 1)
         end = date(year, 12, 31)
 
-    return (
-        datetime.combine(start, time.min),
-        datetime.combine(end, time.max)
-    )
+    start = datetime.combine(start, time.min)
+    end = datetime.combine(end, time.max)
+
+    return start, end
+
 
 
 

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import DateTimeRangeField
+from django.conf import settings
 
 from apps.sets.models import Node
 from apps.archive.models import ArchiveFile
@@ -50,11 +51,15 @@ class License(models.Model):
 
 class Media(models.Model):
 
-    archive_file = models.OneToOneField(ArchiveFile, on_delete=models.PROTECT)
     creators = models.ManyToManyField(MediaCreator, through=MediaToCreator, verbose_name='creators')
     creation_date = DateTimeRangeField()
     license = models.ForeignKey(License, null=True, on_delete=models.SET_NULL)
 
     set = models.ForeignKey(Node, on_delete=models.PROTECT)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_media')
+    modified_at = models.DateTimeField(auto_now=True, null=True)
+    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name='modified_media')
 
 

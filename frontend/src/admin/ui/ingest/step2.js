@@ -67,7 +67,7 @@ const DateForm = ({ data, ...props }) => {
       placeholder="Day"
       name="day"
       type="number"
-      min={2}
+      min={1}
       max={31}
       value={data.day || ""}
       width={1}

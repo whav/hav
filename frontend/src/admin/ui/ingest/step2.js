@@ -189,7 +189,6 @@ class BatchIngest extends React.Component {
                 <Button primary compact size="mini" onClick={this.applyToAll}>
                   Apply to all
                 </Button>
-                <Button secondary>Ha!</Button>
               </BtnGroup>
             </IngestForm>
           </Form.Group>
@@ -210,7 +209,9 @@ class BatchIngest extends React.Component {
             );
           })}
           <Divider />
-          <button type="submit">Save</button>
+          <Button primary compact type="submit">
+            Save
+          </Button>
         </Form>
       </Container>
     );

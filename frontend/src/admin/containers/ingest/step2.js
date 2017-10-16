@@ -78,7 +78,6 @@ class Ingest extends React.Component {
       return <LoadingIndicator />;
     }
     const { options, ingestion_data } = this.state;
-    console.log(ingestion_data);
     return (
       <BatchIngest
         ingestionFiles={ingestion_data}

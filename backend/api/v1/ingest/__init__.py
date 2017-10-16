@@ -38,7 +38,6 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
 class IngestView(IncomingBaseMixin, APIView):
 
     def post(self, request):
-        print(request.data)
         serializer = BatchMediaSerializer(data=request.data, context={'user': request.user})
         serializer.is_valid(raise_exception=True)
         media_entries = serializer.save()

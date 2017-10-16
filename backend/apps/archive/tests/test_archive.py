@@ -1,6 +1,7 @@
+import os
+
 from django.test import TestCase
 from django.contrib.auth.models import User
-import os
 
 from ..operations import archive_file
 from .test_hash import file_hash, file_path
@@ -21,7 +22,7 @@ class ArchiveTest(TestCase):
             'urxn'
         )
         cls.media = utils.generate_test_media()
-        cls.af = archive_file(cls.test_file, cls.media.pk, cls.user)
+        cls.af = archive_file(cls.test_file, cls.media.pk, cls.user.pk)
 
     def test_archive_attributes(self):
         self.assertEqual(self.af.hash, file_hash)

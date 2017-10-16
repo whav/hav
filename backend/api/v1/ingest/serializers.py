@@ -4,6 +4,7 @@ from rest_framework import serializers
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from apps.media.utils.dtrange import range_from_partial_date
 from apps.sets.models import Node
+from apps.archive.tasks import archive
 
 from psycopg2.extras import DateTimeTZRange
 
@@ -53,7 +54,6 @@ class CreateMediaSerializer(serializers.Serializer):
         if not os.path.isfile(value):
             raise serializers.ValidationError('The path {} does not point to a file.'.format(value))
 
-        # stat = os.stat(value)
         if not os.access(value, os.R_OK):
             raise serializers.ValidationError('The file at {} is not readable.'.format(value))
 
@@ -113,6 +113,11 @@ class BatchMediaSerializer(serializers.Serializer):
                     media=mo
                 )
             media_entries.append(mo)
+
+        filenames = [e['ingestion_id'] for e in validated_data.get('entries', [])]
+
+        for filename, media in zip(filenames, media_entries):
+            archive.delay(filename, media.pk, user.pk)
 
         return SimpleMediaSerializer(media_entries, many=True).data
 

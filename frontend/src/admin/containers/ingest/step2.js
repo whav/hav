@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import LoadingIndicator from "../../ui/loading";
-import { fetchDataForIngestionForms } from "../../api/ingest";
+import { fetchDataForIngestionForms, ingest } from "../../api/ingest";
 import BatchIngest from "../../ui/ingest/step2.js";
+import pickBy from "lodash/pickBy";
 
 class Ingest extends React.Component {
   constructor(props) {
@@ -34,6 +35,24 @@ class Ingest extends React.Component {
     });
   };
 
+  saveData = () => {
+    this.setState({ loading: true });
+    console.warn("Attempting to save:");
+    console.warn(this.state.ingestion_data, this.props);
+    const data = {
+      target: parseInt(this.props.target.path, 10),
+      entries: this.state.ingestion_data.map(formData => ({
+        ingestion_id: formData.id,
+        // remove empty strings
+        ...pickBy(formData.data, x => x !== "")
+      }))
+    };
+    ingest(data).then(resp => {
+      console.log(resp);
+      this.setState({ loading: false });
+    });
+  };
+
   loadFormData = () => {
     fetchDataForIngestionForms(
       this.props.files.map(f => f.file_path),
@@ -59,11 +78,13 @@ class Ingest extends React.Component {
       return <LoadingIndicator />;
     }
     const { options, ingestion_data } = this.state;
+    console.log(ingestion_data);
     return (
       <BatchIngest
         ingestionFiles={ingestion_data}
         {...options}
         onChange={this.updateFormData}
+        onSave={this.saveData}
       />
     );
   }

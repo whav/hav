@@ -122,6 +122,7 @@ class IngestForm extends React.Component {
       </Form.Field>,
       <Form.Field width={3} key="creators">
         <CreatorSelect
+          required
           creators={creators}
           roles={roles}
           value={data.creators}
@@ -132,6 +133,7 @@ class IngestForm extends React.Component {
       <DateForm data={data} onChange={this.handleChange} />,
       <Form.Field width={2} key="license">
         <LicenseSelect
+          required
           licenses={licenses}
           value={data.license}
           onChange={d =>
@@ -150,7 +152,7 @@ class BatchIngest extends React.Component {
     template_data: {
       year: "",
       month: "",
-      day: "",
+      // day: "",
       creators: [],
       license: ""
     }
@@ -191,7 +193,9 @@ class BatchIngest extends React.Component {
               </BtnGroup>
             </IngestForm>
           </Form.Group>
-          <Divider />
+        </Form>
+        <Divider />
+        <Form onSubmit={this.props.onSave}>
           {this.props.ingestionFiles.map((ingestionFile, index) => {
             let key = ingestionFile.id;
             return (
@@ -205,6 +209,8 @@ class BatchIngest extends React.Component {
               </Form.Group>
             );
           })}
+          <Divider />
+          <button type="submit">Save</button>
         </Form>
       </Container>
     );

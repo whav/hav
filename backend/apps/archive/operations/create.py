@@ -2,9 +2,11 @@ import os
 import uuid
 import logging
 
+from django.contrib.auth.models import User
 from django.core.files import File
 from apps.archive.models import ArchiveFile
 from apps.media.models import Media
+
 
 from .hash import generate_hash
 
@@ -29,9 +31,11 @@ def _get_archive_file_name(filepath, uuid):
     return '{uuid}{ext}'.format(uuid=uuid, ext=ext)
 
 
-def archive_file(filepath, media_id, user):
+def archive_file(filepath, media_id, user_id):
     media = Media.objects.get(pk=media_id)
+    user = User.objects.get(pk=user_id)
     path = os.path.normpath(filepath)
+
 
     # do some basics checks
     _check_file_permissions(path)

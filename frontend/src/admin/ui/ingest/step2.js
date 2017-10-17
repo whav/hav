@@ -194,13 +194,14 @@ class BatchIngest extends React.Component {
           </Form.Group>
         </Form>
         <Divider />
-        <Form onSubmit={this.props.onSave}>
+        <Form onSubmit={this.props.onSave} error>
           {this.props.ingestionFiles.map((ingestionFile, index) => {
             let key = ingestionFile.id;
             return (
-              <Form.Group key={key}>
+              <Form.Group key={key} error>
                 <IngestForm
                   data={ingestionFile.data}
+                  errors={ingestionFile.errors}
                   {...this.props}
                   onChange={this.props.onChange}
                   ingest_id={key}

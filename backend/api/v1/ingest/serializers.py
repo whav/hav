@@ -5,6 +5,8 @@ from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCrea
 from apps.media.utils.dtrange import range_from_partial_date
 from apps.sets.models import Node
 from apps.archive.tasks import archive
+from apps.archive.operations.hash import generate_hash
+from apps.archive.models import ArchiveFile
 
 from psycopg2.extras import DateTimeTZRange
 
@@ -57,7 +59,15 @@ class CreateMediaSerializer(serializers.Serializer):
         if not os.access(value, os.R_OK):
             raise serializers.ValidationError('The file at {} is not readable.'.format(value))
 
-        return value
+        hash = generate_hash(value)
+        try:
+            af = ArchiveFile.objects.get(hash=hash)
+        except ArchiveFile.DoesNotExist:
+            return value
+        else:
+            raise serializers.ValidationError('''
+                The same file already exists in the archive. 
+                The associated media id is {}'''.format(af.media_set.get().pk))
 
 
     def validate(self, data):

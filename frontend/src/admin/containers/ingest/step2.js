@@ -1,14 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
 import LoadingIndicator from "../../ui/loading";
-import { fetchDataForIngestionForms, ingest } from "../../api/ingest";
+
 import BatchIngest from "../../ui/ingest/step2.js";
+
+import { fetchInitialData, saveIngestionData } from "../../actions/ingest";
+
 import pickBy from "lodash/pickBy";
 
 class Ingest extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { loading: true };
     this.loadFormData();
   }
 
@@ -54,30 +56,17 @@ class Ingest extends React.Component {
   };
 
   loadFormData = () => {
-    fetchDataForIngestionForms(
+    this.props.fetchInitialData(
       this.props.files.map(f => f.file_path),
       this.props.target.url
-    ).then(response => {
-      this.setState({
-        ingestion_data: response.files.map(f => {
-          return {
-            id: f.ingest_id,
-            data: {
-              ...f.initial_data
-            }
-          };
-        }),
-        options: response.options,
-        loading: false
-      });
-    });
+    );
   };
 
   render() {
-    if (this.state.loading) {
+    if (this.props.ingestion.loading) {
       return <LoadingIndicator />;
     }
-    const { options, ingestion_data } = this.state;
+    return <pre>{JSON.stringify(this.props, null, 2)}</pre>;
     return (
       <BatchIngest
         ingestionFiles={ingestion_data}
@@ -89,10 +78,18 @@ class Ingest extends React.Component {
   }
 }
 
-export default connect((state, ownProps) => {
-  const { target, files } = ownProps.location.state;
-  return {
-    target,
-    files
-  };
-})(Ingest);
+export default connect(
+  (state, ownProps) => {
+    const { target, files } = ownProps.location.state;
+    const ingestionData = state.ingest;
+    return {
+      target,
+      files,
+      ingestion: ingestionData
+    };
+  },
+  {
+    fetchInitialData,
+    saveIngestionData
+  }
+)(Ingest);

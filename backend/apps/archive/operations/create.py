@@ -67,7 +67,10 @@ def archive_file(filepath, media_id, user_id):
 
     af.media_set.add(media)
 
-    return af
+    return {
+        'success': True,
+        'archive': af.pk
+    }
 
 
 

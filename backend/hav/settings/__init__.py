@@ -191,6 +191,9 @@ STORAGES = {
 LOGIN_URL = 'admin:login'
 
 CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+# 10 days expiration for results
+CELERY_RESULT_EXPIRES = 3600 * 24 * 10
 
 # use json format for everything
 CELERY_ACCEPT_CONTENT = ['json']

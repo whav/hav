@@ -14,8 +14,17 @@ const ingestTo = (state = null, action) => {
   return state;
 };
 
-const loading = (state = false, action) => {
-  return action.type === LOADING_INGESTION_DATA;
+const loading = (state = true, action) => {
+  switch (action.type) {
+    case LOADING_INGESTION_DATA:
+      return true;
+    case RECEIVE_INITIAL_INGESTION_DATA:
+    case SAVE_INGESTION_DATA_ERROR:
+    case SAVE_INGESTION_DATA_ERROR:
+      return false;
+    default:
+      return state;
+  }
 };
 
 const entries = (state = [], action) => {
@@ -35,10 +44,14 @@ const entries = (state = [], action) => {
   }
 };
 
+const options = (state = {}, action) =>
+  action.type === RECEIVE_INITIAL_INGESTION_DATA ? action.data.options : state;
+
 const ingest = combineReducers({
   ingestTo,
   loading,
-  entries
+  entries,
+  options
 });
 
 export default ingest;

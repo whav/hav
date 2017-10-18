@@ -38,6 +38,8 @@ class Ingest extends React.Component {
   };
 
   saveData = () => {
+    console.warn("Attempting to save data...");
+    return;
     this.setState({ loading: true });
     console.warn("Attempting to save:");
     console.warn(this.state.ingestion_data, this.props);
@@ -66,11 +68,11 @@ class Ingest extends React.Component {
     if (this.props.ingestion.loading) {
       return <LoadingIndicator />;
     }
-    return <pre>{JSON.stringify(this.props, null, 2)}</pre>;
+    console.log(this.props.ingestion);
     return (
       <BatchIngest
-        ingestionFiles={ingestion_data}
-        {...options}
+        ingestionFiles={this.props.ingestion.entries}
+        {...this.props.ingestion.options}
         onChange={this.updateFormData}
         onSave={this.saveData}
       />

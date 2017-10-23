@@ -66,7 +66,6 @@ export default connect(
       getDirectoryForPath(d, state.repositories)
     );
 
-    console.log(directory);
     // this will trigger the actual ingestion
     const ingest = () => {
       ownProps.history.push("/ingest/step2/", {

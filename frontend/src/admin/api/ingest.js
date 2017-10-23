@@ -25,5 +25,10 @@ export const ingest = data => {
       "Content-Type": "application/json"
     }),
     credentials: "same-origin"
-  }).then(response => response.json());
+  }).then(response => {
+    return {
+      success: response.status === 201,
+      data: response.json()
+    };
+  });
 };

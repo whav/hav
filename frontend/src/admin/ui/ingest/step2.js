@@ -16,88 +16,77 @@ const BtnGroup = ({ children, ...props }) => (
 );
 
 class CreatorSelect extends React.Component {
-  onChange = (_, data) => {
-    this.props.onChange(data.value);
-  };
   render() {
-    const { creators, roles, value = [] } = this.props;
+    const { creators } = this.props;
     const options = creators.map(c => ({
       key: `creator-${c.id}`,
       text: c.name,
       value: c.id
     }));
     return (
-      <Dropdown
-        multiple={true}
-        placeholder="Creator(s)"
-        options={options}
-        value={value}
-        name="creators"
-        onChange={this.onChange}
-      />
+      <Form.Field>
+        <label>Creator(s)</label>
+        <Form.Dropdown options={options} {...this.props} />
+      </Form.Field>
     );
   }
 }
 
-const DateForm = ({ data, ...props }) => {
-  return [
-    <Form.Input
-      required
-      key="year"
-      placeholder="Year"
-      value={data.year || ""}
-      type="number"
-      name="year"
-      width={2}
-      onChange={props.onChange}
-    />,
-    <Form.Input
-      key="month"
-      placeholder="Month"
-      name="month"
-      type="number"
-      value={data.month || ""}
-      width={2}
-      min={1}
-      max={12}
-      onChange={props.onChange}
-    />,
-    <Form.Input
-      key="day"
-      placeholder="Day"
-      name="day"
-      type="number"
-      min={1}
-      max={31}
-      value={data.day || ""}
-      width={1}
-      onChange={props.onChange}
-    />
-  ];
-};
-
 class LicenseSelect extends React.Component {
-  onChange = (_, data) => {
-    this.props.onChange(data.value);
-  };
   render() {
-    const { licenses, value = null, onChange } = this.props;
+    const { licenses } = this.props;
     const options = licenses.map(l => ({
       value: l.id,
       text: l.name,
       key: l.id
     }));
     return (
-      <Dropdown
-        options={options}
-        value={value}
-        placeholder="License"
-        name="license"
-        onChange={this.onChange}
-      />
+      <Form.Field>
+        <label>License</label>
+        <Form.Dropdown options={options} {...this.props} />
+      </Form.Field>
     );
   }
 }
+
+const DateForm = ({ data, ...props }) => {
+  return (
+    <Form.Group inline>
+      <Form.Input
+        required
+        key="year"
+        placeholder="Year"
+        value={data.year || ""}
+        type="number"
+        name="year"
+        onChange={props.onChange}
+        label="Year"
+      />
+      <Form.Input
+        key="month"
+        placeholder="Month"
+        name="month"
+        type="number"
+        value={data.month || ""}
+        min={1}
+        max={12}
+        onChange={props.onChange}
+        label="Month"
+      />
+      <Form.Input
+        key="day"
+        placeholder="Day"
+        name="day"
+        type="number"
+        min={1}
+        max={31}
+        value={data.day || ""}
+        onChange={props.onChange}
+        label="Day"
+      />
+    </Form.Group>
+  );
+};
 
 class IngestForm extends React.Component {
   static propType = {
@@ -105,6 +94,15 @@ class IngestForm extends React.Component {
     creators: PropTypes.array.isRequired,
     roles: PropTypes.array.isRequired,
     onSelect: PropTypes.func.isRequired
+  };
+
+  handleRawChange = (key, event, data) => {
+    // this is necessary because the dropdown
+    // does not work properly
+    console.log(key, event, data);
+    this.props.onChange(this.props.ingest_id, {
+      [key]: data.value
+    });
   };
 
   handleChange = (event, data) => {
@@ -116,34 +114,45 @@ class IngestForm extends React.Component {
   render() {
     const { licenses = [], creators = [], roles = [], data = {} } = this.props;
     let parts = this.props.ingest_id.split("/").reverse();
-    return [
-      <Form.Field width={2} key="file">
-        {parts[0]}
-      </Form.Field>,
-      <Form.Field width={3} key="creators">
-        <CreatorSelect
-          required
-          creators={creators}
-          roles={roles}
-          value={data.creators}
-          onChange={d =>
-            this.props.onChange(this.props.ingest_id, { creators: d })}
-        />
-      </Form.Field>,
-      <DateForm data={data} onChange={this.handleChange} />,
-      <Form.Field width={2} key="license">
-        <LicenseSelect
-          required
-          licenses={licenses}
-          value={data.license}
-          onChange={d =>
-            this.props.onChange(this.props.ingest_id, { license: d })}
-        />
-      </Form.Field>,
-      <Form.Field width={2} key="controls">
-        {this.props.children}
-      </Form.Field>
-    ];
+    return (
+      <Grid.Row columns={3}>
+        <Grid.Column>
+          <Form.Field key="file">{parts[0]}</Form.Field>
+        </Grid.Column>
+        <Grid.Column>
+          <DateForm data={data} onChange={this.handleChange} />
+          <CreatorSelect
+            required
+            multiple
+            creators={creators}
+            value={data.creators || []}
+            name="creators"
+            onChange={this.handleRawChange.bind(this, "creators")}
+          />
+          <LicenseSelect
+            required
+            licenses={licenses}
+            value={data.license}
+            name="license"
+            onChange={this.handleRawChange.bind(this, "license")}
+          />
+        </Grid.Column>
+        <Grid.Column>
+          {this.props.children ? (
+            this.props.children
+          ) : (
+            <Form.Field
+              control="textarea"
+              label="Description"
+              value="urxn"
+              name="description"
+              rows="3"
+              onChange={this.handleChange}
+            />
+          )}
+        </Grid.Column>
+      </Grid.Row>
+    );
   }
 }
 
@@ -166,8 +175,9 @@ class BatchIngest extends React.Component {
 
   applyToAll = () => {
     const data = this.state.template_data;
+    console.log(data);
     this.props.ingestionFiles.forEach(ingestionFile =>
-      this.props.onChange(ingestionFile.id, data)
+      this.props.onChange(ingestionFile.ingestion_id, data)
     );
   };
 
@@ -178,7 +188,7 @@ class BatchIngest extends React.Component {
           Ingest
         </Header>
         <Form>
-          <Form.Group key="template-form">
+          <Grid inverted>
             <IngestForm
               ingest_id={"Template Form"}
               {...this.props}
@@ -191,30 +201,30 @@ class BatchIngest extends React.Component {
                 </Button>
               </BtnGroup>
             </IngestForm>
-          </Form.Group>
+          </Grid>
         </Form>
         <Divider />
-        <Form onSubmit={this.props.onSave} error>
-          {this.props.ingestionFiles.map((ingestionFile, index) => {
-            console.log(this.props);
-            let key = ingestionFile.ingestion_id;
-            return (
-              <Form.Group key={key}>
+        <Form>
+          <Grid divided="vertically">
+            {this.props.ingestionFiles.map((ingestionFile, index) => {
+              let key = ingestionFile.ingestion_id;
+              return (
                 <IngestForm
                   data={ingestionFile.data}
                   errors={ingestionFile.errors}
                   {...this.props}
                   onChange={this.props.onChange}
                   ingest_id={key}
+                  key={key}
                 />
-              </Form.Group>
-            );
-          })}
-          <Divider />
-          <Button primary compact type="submit">
-            Save
-          </Button>
+              );
+            })}
+          </Grid>
         </Form>
+        <Divider />
+        <Button primary compact type="submit">
+          Save
+        </Button>
       </Container>
     );
   }

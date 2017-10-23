@@ -4,7 +4,8 @@ import {
   LOADING_INGESTION_DATA,
   SAVE_INGESTION_DATA_ERROR,
   SAVE_INGESTION_DATA_SUCCESS,
-  RECEIVE_INITIAL_INGESTION_DATA
+  RECEIVE_INITIAL_INGESTION_DATA,
+  UPDATE_INGESTION_DATA
 } from "../actions/ingest";
 
 const ingestTo = (state = null, action) => {
@@ -28,6 +29,8 @@ const loading = (state = true, action) => {
 };
 
 const entries = (state = [], action) => {
+  console.log(state);
+
   switch (action.type) {
     case RECEIVE_INITIAL_INGESTION_DATA:
       return action.data.files.map(f => ({
@@ -39,6 +42,22 @@ const entries = (state = [], action) => {
     case SAVE_INGESTION_DATA_ERROR:
       console.warn("Ingestion errors", action);
       return state;
+    case UPDATE_INGESTION_DATA:
+      const { key, data } = action;
+      const index = state.findIndex(entry => key === entry.ingestion_id);
+      console.warn(key, index);
+      const ps = state[index];
+      return [
+        ...state.slice(0, index),
+        {
+          ...ps,
+          data: {
+            ...ps.data,
+            ...action.data
+          }
+        },
+        ...state.slice(index + 1)
+      ];
     default:
       return state;
   }

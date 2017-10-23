@@ -33,7 +33,7 @@ class Ingest extends React.Component {
     if (this.props.ingestion.loading) {
       return <LoadingIndicator />;
     }
-    console.log(this.props.ingestion.entries);
+    // console.log(this.props.ingestion.entries);
     return (
       <BatchIngest
         ingestionFiles={this.props.ingestion.entries}

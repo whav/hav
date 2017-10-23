@@ -29,8 +29,6 @@ const loading = (state = true, action) => {
 };
 
 const entries = (state = [], action) => {
-  console.log(state);
-
   switch (action.type) {
     case RECEIVE_INITIAL_INGESTION_DATA:
       return action.data.files.map(f => ({
@@ -45,7 +43,6 @@ const entries = (state = [], action) => {
     case UPDATE_INGESTION_DATA:
       const { key, data } = action;
       const index = state.findIndex(entry => key === entry.ingestion_id);
-      console.warn(key, index);
       const ps = state[index];
       return [
         ...state.slice(0, index),

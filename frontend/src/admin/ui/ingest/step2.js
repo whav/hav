@@ -99,7 +99,6 @@ class IngestForm extends React.Component {
   handleRawChange = (key, event, data) => {
     // this is necessary because the dropdown
     // does not work properly
-    console.log(key, event, data);
     this.props.onChange(this.props.ingest_id, {
       [key]: data.value
     });
@@ -144,7 +143,7 @@ class IngestForm extends React.Component {
             <Form.Field
               control="textarea"
               label="Description"
-              value="urxn"
+              value={data.description || ""}
               name="description"
               rows="3"
               onChange={this.handleChange}
@@ -175,7 +174,6 @@ class BatchIngest extends React.Component {
 
   applyToAll = () => {
     const data = this.state.template_data;
-    console.log(data);
     this.props.ingestionFiles.forEach(ingestionFile =>
       this.props.onChange(ingestionFile.ingestion_id, data)
     );
@@ -187,7 +185,7 @@ class BatchIngest extends React.Component {
         <Header as="h1" dividing>
           Ingest
         </Header>
-        <Form>
+        <Form size="tiny" noValidate>
           <Grid inverted>
             <IngestForm
               ingest_id={"Template Form"}
@@ -204,7 +202,7 @@ class BatchIngest extends React.Component {
           </Grid>
         </Form>
         <Divider />
-        <Form>
+        <Form size="tiny">
           <Grid divided="vertically">
             {this.props.ingestionFiles.map((ingestionFile, index) => {
               let key = ingestionFile.ingestion_id;

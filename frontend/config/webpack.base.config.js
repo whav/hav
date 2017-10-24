@@ -3,8 +3,6 @@ var webpack = require("webpack");
 var autoprefixer = require("autoprefixer");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-console.log(path.join(__dirname, "../src/semantic/theme.config"));
-
 module.exports = opts => {
   const { PROJECT_ROOT, NODE_ENV } = opts;
 
@@ -26,8 +24,7 @@ module.exports = opts => {
     entry: {
       hav: ["./src/hav/index"],
       havAdmin: ["./src/admin/index"],
-      vendor: ["whatwg-fetch", "react", "react-dom"],
-      semantic: ["semantic-ui-less/semantic.less"]
+      vendor: ["whatwg-fetch", "react", "react-dom"]
     },
     output: {
       path: path.resolve(PROJECT_ROOT, "./build/"),
@@ -35,13 +32,7 @@ module.exports = opts => {
     },
     plugins,
     resolve: {
-      extensions: [".js", ".json"],
-      alias: {
-        "../../theme.config$": path.join(
-          __dirname,
-          "../src/semantic/theme.config"
-        )
-      }
+      extensions: [".js", ".json"]
     },
     module: {
       rules: [
@@ -72,9 +63,6 @@ module.exports = opts => {
             {
               loader: "css-loader" // translates CSS into CommonJS
             },
-            // {
-            //   loader: "postcss-loader"
-            // },
             {
               loader: "sass-loader" // compiles sass to CSS
             }
@@ -85,23 +73,6 @@ module.exports = opts => {
         {
           test: /react-icons\/(.)*(.js)$/,
           loader: "babel-loader"
-        },
-        {
-          test: /\.less$/,
-          use: [
-            {
-              loader: "style-loader" // translates CSS into CommonJS
-            },
-            {
-              loader: "css-loader" // translates CSS into CommonJS
-            },
-            {
-              loader: "postcss-loader"
-            },
-            {
-              loader: "less-loader" // compiles Less to CSS
-            }
-          ]
         },
         // everything else
         {

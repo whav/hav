@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework',
     'rest_framework.authtoken',
+    'treebeard',
     'apps.whav',
     'apps.sets',
     'apps.archive',

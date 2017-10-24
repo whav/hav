@@ -11,7 +11,15 @@ import {
 } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
-import "./ingest.sass";
+const Field = props => {
+  const { onChange, name, value, label, errors, ...input_props } = props;
+  return (
+    <div className="field">
+      {label ? <label className="label">{label}</label> : null}
+      <div class="control">{props.children}</div>
+    </div>
+  );
+};
 
 const BtnGroup = ({ children, ...props }) => (
   <Button.Group {...props}>{children}</Button.Group>

@@ -16,31 +16,16 @@ import FaFileMovieO from "react-icons/fa/file-movie-o";
 import FaFileAudioO from "react-icons/fa/file-audio-o";
 import FaChainBroken from "react-icons/fa/chain-broken";
 
+import Breadcrumbs from "../components/breadcrumbs";
+
 require("./index.css");
 
 export class DirectoryListingBreadcrumbs extends React.Component {
   render() {
     let { dirs } = this.props;
     let crumbs = [];
-    dirs.forEach((d, index) => {
-      crumbs.push(
-        <li key={index}>
-          <Link to={d.link}>
-            {d.name}
-          </Link>
-        </li>
-      );
-      crumbs.push(
-        <li className="divider" key={(index + 1) * -1}>
-          {" "}/{" "}
-        </li>
-      );
-    });
-    return (
-      <ul className="breadcrumbs">
-        {crumbs}
-      </ul>
-    );
+    let items = dirs.map((d, index) => <Link to={d.link}>{d.name}</Link>);
+    return <Breadcrumbs items={items} />;
   }
 }
 
@@ -136,9 +121,7 @@ const GGalleryItem = ({
       {preview}
       {/*</div>*/}
 
-      <div className="g-gallery-item-name">
-        {name}
-      </div>
+      <div className="g-gallery-item-name">{name}</div>
     </div>
   );
 };
@@ -156,13 +139,15 @@ export const GGalleryDirectory = ({ name, navigate }) => {
 };
 
 export const GGalleryFile = ({ file, toggleSelect }) => {
-  let preview = file.preview_url
-    ? <FallBackImageLoader
-        src={file.preview_url}
-        title={`${file.name} ${file.mime}`}
-        alt="preview image"
-      />
-    : <FilePlaceHolder mime={file.mime} />;
+  let preview = file.preview_url ? (
+    <FallBackImageLoader
+      src={file.preview_url}
+      title={`${file.name} ${file.mime}`}
+      alt="preview image"
+    />
+  ) : (
+    <FilePlaceHolder mime={file.mime} />
+  );
 
   return (
     <GGalleryItem
@@ -178,20 +163,18 @@ const GGalleryUpload = ({ upload }) => {
   return (
     <div className={classNames("g-gallery-item")}>
       <div className="g-gallery-item-preview">
-        {upload.preview
-          ? <FallBackImageLoader
-              src={upload.preview}
-              fallbackImage={GoHourglass}
-            />
-          : null}
+        {upload.preview ? (
+          <FallBackImageLoader
+            src={upload.preview}
+            fallbackImage={GoHourglass}
+          />
+        ) : null}
       </div>
       <div className="g-gallery-item-name">
         <progress max={100} value={upload.progress}>
           {upload.file}
         </progress>
-        <span>
-          {upload.name}
-        </span>
+        <span>{upload.name}</span>
       </div>
     </div>
   );
@@ -261,7 +244,7 @@ export default class FileList extends React.Component {
     // });
 
     return (
-      <div className="g-gallery">
+      <div className="g-gallery columns is-multiline">
         {renderedDirectories}
         {rendererFiles}
         {/*{renderedUploads}*/}
@@ -269,3 +252,17 @@ export default class FileList extends React.Component {
     );
   }
 }
+
+export const FileBrowserInterface = ({
+  header = null,
+  main = null,
+  footer = null
+}) => {
+  return (
+    <section className="filebrowser">
+      {header ? <header>{header}</header> : null}
+      <main>{main}</main>
+      {footer ? <footer>{footer}</footer> : null}
+    </section>
+  );
+};

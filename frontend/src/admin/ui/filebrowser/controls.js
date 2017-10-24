@@ -14,7 +14,7 @@ import FaTable from "react-icons/lib/fa/table";
 import FaList from "react-icons/lib/fa/list";
 import FaPlusIcon from "react-icons/lib/fa/plus-circle";
 
-import { Button, Menu } from "semantic-ui-react";
+import Button from "../components/buttons";
 
 class UploadControl extends React.Component {
   constructor(props) {
@@ -33,25 +33,6 @@ class UploadControl extends React.Component {
   }
 }
 
-const DirectoryControls = props => {
-  return (
-    <Menu>
-      {props.children.map(
-        (child, index) =>
-          child
-            ? <Menu.Item key={index}>
-                {child}
-              </Menu.Item>
-            : null
-      )}
-    </Menu>
-  );
-};
-
-DirectoryControls.propTypes = {
-  children: PropTypes.array.isRequired
-};
-
 const SelectedFilesControls = ({ files, save }) => {
   let length = files.length;
   if (!length) {
@@ -64,37 +45,27 @@ const SelectedFilesControls = ({ files, save }) => {
     desc = `${length} files`;
   }
   return (
-    <Button
-      content="Ingest"
-      primary
-      label={{ as: "a", basic: true, content: desc }}
-      labelPosition="left"
-      onClick={() => save(files)}
-    />
+    <Button onClick={() => save(files)} className="is-primary">
+      Ingest
+    </Button>
   );
 };
 
 const SelectionControls = ({ selectAll, selectNone, invertSelection }) => {
   return (
-    <Button.Group>
-      <Button onClick={selectAll} basic icon active={false}>
+    <div>
+      <Button onClick={selectAll}>
         <FaCheckSquareO title="Check all" />
       </Button>
-      <Button onClick={selectNone} active={false} icon basic>
+      <Button onClick={selectNone}>
         <FaSquareO title="Uncheck all" />
       </Button>
-      <Button
-        onClick={invertSelection}
-        icon
-        title="Invert Selection"
-        active={false}
-        basic
-      >
+      <Button onClick={invertSelection} title="Invert Selection">
         <FaCheckSquareO />
         ⇄
         <FaSquareO />
       </Button>
-    </Button.Group>
+    </div>
   );
 };
 
@@ -106,7 +77,7 @@ SelectionControls.propTypes = {
 
 const FilebrowserViewControl = ({ selectedDisplayType, switchDisplayType }) => {
   return (
-    <Button.Group>
+    <div>
       <Button
         basic
         onClick={() => switchDisplayType("g-gallery")}
@@ -121,7 +92,7 @@ const FilebrowserViewControl = ({ selectedDisplayType, switchDisplayType }) => {
       >
         <FaList />
       </Button>
-    </Button.Group>
+    </div>
   );
 };
 
@@ -144,45 +115,31 @@ class FileBrowserMenu extends React.Component {
   render() {
     let props = this.props;
     return (
-      <Menu borderless secondary>
-        {props.name
-          ? <Menu.Item header>
-              {props.name}
-            </Menu.Item>
-          : null}
-        {/*<Menu.Item>
-                <FilebrowserViewControl switchDisplayType={props.switchDisplayType} selectedDisplayType={props.selectedDisplayType}/>
-            </Menu.Item>*/}
-        <Menu.Item>
-          <SelectionControls
-            selectAll={props.selectAll}
-            selectNone={props.selectNone}
-            invertSelection={props.invertSelection}
-          />
-        </Menu.Item>
-        <Menu.Menu position="right">
-          <Menu.Item>
+      <div>
+        {props.name ? <h1 className="title">{props.name}</h1> : null}
+        <div className="columns">
+          <div className="column">
+            <SelectionControls
+              selectAll={props.selectAll}
+              selectNone={props.selectNone}
+              invertSelection={props.invertSelection}
+            />
+          </div>
+          <div className="column">
             <SelectedFilesControls
               files={props.files}
               save={props.saveFileSelection}
             />
-          </Menu.Item>
-          {props.addDirectory
-            ? <Menu.Item>
-                <Button basic icon onClick={this.createDirectory}>
-                  <FaPlusIcon /> Add Folder
-                </Button>
-              </Menu.Item>
-            : null}
-        </Menu.Menu>
-      </Menu>
+            {props.addDirectory ? (
+              <Button key="create-directory" onClick={this.createDirectory}>
+                <FaPlusIcon /> Add Folder
+              </Button>
+            ) : null}
+          </div>
+        </div>
+      </div>
     );
   }
 }
 
-export {
-  DirectoryControls,
-  FilebrowserViewControl,
-  UploadControl,
-  FileBrowserMenu
-};
+export { FilebrowserViewControl, UploadControl, FileBrowserMenu };

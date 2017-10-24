@@ -24,14 +24,11 @@ import LoadingIndicator from "../../ui/loading";
 import FileList, {
   DirectoryListingBreadcrumbs,
   DirectoryListing,
-  fileListDisplayValues
+  fileListDisplayValues,
+  FileBrowserInterface
 } from "../../ui/filebrowser";
 
-import {
-  DirectoryControls,
-  FileBrowserMenu
-} from "../../ui/filebrowser/controls";
-import { Divider } from "semantic-ui-react";
+import { FileBrowserMenu } from "../../ui/filebrowser/controls";
 import UploadTrigger from "../uploads";
 
 import {
@@ -104,49 +101,34 @@ class FileBrowser extends React.Component {
         childrenDirectories.length + files.length + uploads.length === 0;
       let selectedFiles = files.filter(f => f.selected);
 
-      return (
-        <div className="filebrowser">
-          <header>
-            {breadcrumbs}
-            <FileBrowserMenu
-              name={directory.name}
-              switchDisplayType={switchDisplayStyle}
-              selectedDisplayType={settings.selectedDisplayType}
-              selectAll={this.props.selectAll}
-              selectNone={this.props.selectNone}
-              invertSelection={this.props.invertSelection}
-              files={selectedFiles}
-              saveFileSelection={saveFileSelection}
-              addDirectory={allowCreate ? createDirectory : false}
-            />
-            <Divider />
-          </header>
-          <main>
-            {isEmpty
-              ? <h2 className="tc red">This directory is empty.</h2>
-              : <FileList
-                  directories={directories}
-                  files={files}
-                  uploads={uploads}
-                  displayType={settings.selectedDisplayType}
-                  handleSelect={selectFiles}
-                />}
-          </main>
-          <footer>
-            <DirectoryControls>
-              {[
-                allowUpload
-                  ? <UploadTrigger
-                      path={path}
-                      key="upload-trigger"
-                      uploadTo={this.props.uploadToURL}
-                    />
-                  : null
-              ]}
-            </DirectoryControls>
-          </footer>
-        </div>
+      const header_items = [
+        breadcrumbs,
+        <FileBrowserMenu
+          name={directory.name}
+          switchDisplayType={switchDisplayStyle}
+          selectedDisplayType={settings.selectedDisplayType}
+          selectAll={this.props.selectAll}
+          selectNone={this.props.selectNone}
+          invertSelection={this.props.invertSelection}
+          files={selectedFiles}
+          saveFileSelection={saveFileSelection}
+          addDirectory={allowCreate ? createDirectory : false}
+        />
+      ];
+
+      const main = isEmpty ? (
+        <h2 className="tc red">This directory is empty.</h2>
+      ) : (
+        <FileList
+          directories={directories}
+          files={files}
+          uploads={uploads}
+          displayType={settings.selectedDisplayType}
+          handleSelect={selectFiles}
+        />
       );
+
+      return <FileBrowserInterface header={header_items} main={main} />;
     }
   }
 }

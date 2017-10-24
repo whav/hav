@@ -23,7 +23,7 @@ module.exports = opts => {
     context: PROJECT_ROOT,
     entry: {
       hav: ["./src/hav/index"],
-      havAdmin: ["./src/admin/index"],
+      havAdmin: ["./src/admin/ui/bulma.sass", "./src/admin/index"],
       vendor: ["whatwg-fetch", "react", "react-dom"]
     },
     output: {

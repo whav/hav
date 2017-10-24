@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import IngestView, { DirectorySelector } from "../../ui/ingest";
+import IngestView, { DirectorySelector } from "../../ui/ingest/step1";
 import FileBrowser from "../filebrowser/index";
 import { requestDirectoryAction } from "../../actions/browser";
 import { ingestTo } from "../../actions/ingest";
-
+import Loading from "../../ui/loading";
 import { getDirectoryForPath } from "../../reducers/browser";
 
 class Ingest extends React.Component {
@@ -20,18 +20,24 @@ class Ingest extends React.Component {
   }
 
   render() {
+    if (this.props.loading) {
+      return <Loading />;
+    }
     return (
       <IngestView
         files={this.props.filesToBeIngested}
         ingest={() => this.props.ingest(this.props.directory.url)}
+        parentDirs={this.props.parentDirs}
+        navigate={this.props.navigate}
       >
-        <DirectorySelector
+        {/* TODO: Replace this! */}
+        {/* <DirectorySelector
           currentDirectory={this.props.directory}
           directories={this.props.directories}
           loading={this.props.loading}
           navigate={this.props.navigate}
           parentDirs={this.props.parentDirs}
-        />
+        /> */}
       </IngestView>
     );
   }
@@ -40,12 +46,14 @@ class Ingest extends React.Component {
 export default connect(
   (state, ownProps) => {
     const ingestState = state.ingest;
+    // selected files are in location state
     const filesToBeIngested = ownProps.location.state;
 
     let directory = getDirectoryForPath(
       { repository: "hav", path: ingestState.ingestTo },
       state.repositories
     );
+
     let props = {
       filesToBeIngested,
       directory: directory || {},

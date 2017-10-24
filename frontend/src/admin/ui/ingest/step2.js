@@ -11,6 +11,8 @@ import {
 } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
+import "./ingest.sass";
+
 const BtnGroup = ({ children, ...props }) => (
   <Button.Group {...props}>{children}</Button.Group>
 );

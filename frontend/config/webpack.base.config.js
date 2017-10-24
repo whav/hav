@@ -63,6 +63,23 @@ module.exports = opts => {
             limit: 10000
           }
         },
+        {
+          test: /\.sass$/,
+          use: [
+            {
+              loader: "style-loader" // translates CSS into CommonJS
+            },
+            {
+              loader: "css-loader" // translates CSS into CommonJS
+            },
+            // {
+            //   loader: "postcss-loader"
+            // },
+            {
+              loader: "sass-loader" // compiles sass to CSS
+            }
+          ]
+        },
         // react-icons does not have an es5 build
         // so we need to pipe it through babel
         {

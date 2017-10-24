@@ -51,7 +51,7 @@ class LicenseSelect extends React.Component {
 
 const DateForm = ({ data, ...props }) => {
   return (
-    <Form.Group inline>
+    <Form.Group inline widths="equal">
       <Form.Input
         required
         key="year"

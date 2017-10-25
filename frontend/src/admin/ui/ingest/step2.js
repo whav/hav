@@ -4,11 +4,13 @@ import {
   Segment,
   Dropdown,
   Form,
-  Button,
   Container,
   Divider,
   Header
 } from "semantic-ui-react";
+
+import Button from "../components/buttons";
+
 import PropTypes from "prop-types";
 
 const Field = props => {
@@ -16,14 +18,10 @@ const Field = props => {
   return (
     <div className="field">
       {label ? <label className="label">{label}</label> : null}
-      <div class="control">{props.children}</div>
+      <div className="control">{props.children}</div>
     </div>
   );
 };
-
-const BtnGroup = ({ children, ...props }) => (
-  <Button.Group {...props}>{children}</Button.Group>
-);
 
 class CreatorSelect extends React.Component {
   render() {
@@ -33,11 +31,27 @@ class CreatorSelect extends React.Component {
       text: c.name,
       value: c.id
     }));
+
     return (
-      <Form.Field>
-        <label>Creator(s)</label>
-        <Form.Dropdown options={options} {...this.props} />
-      </Form.Field>
+      <div className="field">
+        <label className="label">Creators</label>
+        <div className="control">
+          <div className="select">
+            <select
+              name="creators"
+              value={this.props.value}
+              onChange={this.props.onChange}
+              multiple
+            >
+              {options.map(o => (
+                <option key={o.value} value={o.value}>
+                  {o.text}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
     );
   }
 }
@@ -51,50 +65,71 @@ class LicenseSelect extends React.Component {
       key: l.id
     }));
     return (
-      <Form.Field>
-        <label>License</label>
-        <Form.Dropdown options={options} {...this.props} />
-      </Form.Field>
+      <div className="field">
+        <label className="label">License</label>
+        <div className="control">
+          <div className="select">
+            <select
+              name="license"
+              value={this.props.value}
+              onChange={this.props.onChange}
+            >
+              {options.map(o => (
+                <option key={o.value} value={o.value}>
+                  {o.text}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
     );
   }
 }
 
 const DateForm = ({ data, ...props }) => {
   return (
-    <Form.Group inline widths="equal">
-      <Form.Input
-        required
-        key="year"
-        placeholder="Year"
-        value={data.year || ""}
-        type="number"
-        name="year"
-        onChange={props.onChange}
-        label="Year"
-      />
-      <Form.Input
-        key="month"
-        placeholder="Month"
-        name="month"
-        type="number"
-        value={data.month || ""}
-        min={1}
-        max={12}
-        onChange={props.onChange}
-        label="Month"
-      />
-      <Form.Input
-        key="day"
-        placeholder="Day"
-        name="day"
-        type="number"
-        min={1}
-        max={31}
-        value={data.day || ""}
-        onChange={props.onChange}
-        label="Day"
-      />
-    </Form.Group>
+    <div>
+      <label className="label">Date</label>
+
+      <div className="field is-grouped">
+        <p className="control">
+          <input
+            className="input"
+            required
+            value={data.year || ""}
+            type="number"
+            name="year"
+            placeholder="Year"
+            onChange={props.onChange}
+          />
+        </p>
+        <p className="control">
+          <input
+            placeholder="M"
+            className="input"
+            name="month"
+            type="number"
+            value={data.month || ""}
+            min={1}
+            max={12}
+            onChange={props.onChange}
+          />
+        </p>
+        <p className="control">
+          <input
+            className="input"
+            placeholder="D"
+            name="day"
+            type="number"
+            min={1}
+            max={31}
+            value={data.day || ""}
+            onChange={props.onChange}
+          />
+        </p>
+      </div>
+    </div>
   );
 };
 
@@ -106,17 +141,14 @@ class IngestForm extends React.Component {
     onSelect: PropTypes.func.isRequired
   };
 
-  handleRawChange = (key, event, data) => {
-    // this is necessary because the dropdown
-    // does not work properly
+  handleChange = event => {
+    let value = event.target.value;
+    const name = event.target.name;
+    if (event.target.multiple) {
+      value = Array.from(event.target.selectedOptions).map(opt => opt.value);
+    }
     this.props.onChange(this.props.ingest_id, {
-      [key]: data.value
-    });
-  };
-
-  handleChange = (event, data) => {
-    this.props.onChange(this.props.ingest_id, {
-      [event.target.name]: data.value
+      [name]: value
     });
   };
 
@@ -124,43 +156,39 @@ class IngestForm extends React.Component {
     const { licenses = [], creators = [], roles = [], data = {} } = this.props;
     let parts = this.props.ingest_id.split("/").reverse();
     return (
-      <Grid.Row columns={3}>
-        <Grid.Column>
-          <Form.Field key="file">{parts[0]}</Form.Field>
-        </Grid.Column>
-        <Grid.Column>
-          <DateForm data={data} onChange={this.handleChange} />
+      <div className="columns">
+        <div className="column">{parts[0]}</div>
+        <div className="column">
+          <LicenseSelect
+            required
+            licenses={licenses}
+            value={data.license}
+            name="license"
+            onChange={this.handleChange}
+          />
           <CreatorSelect
             required
             multiple
             creators={creators}
             value={data.creators || []}
             name="creators"
-            onChange={this.handleRawChange.bind(this, "creators")}
+            onChange={this.handleChange}
           />
-          <LicenseSelect
-            required
-            licenses={licenses}
-            value={data.license}
-            name="license"
-            onChange={this.handleRawChange.bind(this, "license")}
-          />
-        </Grid.Column>
-        <Grid.Column>
-          {this.props.children ? (
-            this.props.children
-          ) : (
-            <Form.Field
-              control="textarea"
-              label="Description"
+        </div>
+        <div className="column">
+          <DateForm data={data} onChange={this.handleChange} />
+          <Field label="Description">
+            <textarea
+              className="textarea"
               value={data.description || ""}
               name="description"
               rows="3"
               onChange={this.handleChange}
             />
-          )}
-        </Grid.Column>
-      </Grid.Row>
+          </Field>
+          {this.props.children}
+        </div>
+      </div>
     );
   }
 }
@@ -191,49 +219,37 @@ class BatchIngest extends React.Component {
 
   render() {
     return (
-      <Container fluid>
-        <Header as="h1" dividing>
-          Ingest
-        </Header>
-        <Form size="tiny" noValidate>
-          <Grid inverted>
-            <IngestForm
-              ingest_id={"Template Form"}
-              {...this.props}
-              data={this.state.template_data}
-              onChange={this.updateTemplateData}
-            >
-              <BtnGroup>
-                <Button primary compact size="mini" onClick={this.applyToAll}>
-                  Apply to all
-                </Button>
-              </BtnGroup>
-            </IngestForm>
-          </Grid>
-        </Form>
-        <Divider />
-        <Form size="tiny">
-          <Grid divided="vertically">
-            {this.props.ingestionFiles.map((ingestionFile, index) => {
-              let key = ingestionFile.ingestion_id;
-              return (
-                <IngestForm
-                  data={ingestionFile.data}
-                  errors={ingestionFile.errors}
-                  {...this.props}
-                  onChange={this.props.onChange}
-                  ingest_id={key}
-                  key={key}
-                />
-              );
-            })}
-          </Grid>
-        </Form>
-        <Divider />
-        <Button primary compact type="submit">
-          Save
-        </Button>
-      </Container>
+      <div>
+        <h1 className="title">Ingest</h1>
+        <hr />
+        <div className="ingest-template-form is-outlined">
+          <IngestForm
+            ingest_id={"Template Form"}
+            {...this.props}
+            data={this.state.template_data}
+            onChange={this.updateTemplateData}
+          >
+            <Button onClick={this.applyToAll}>Apply to all</Button>
+          </IngestForm>
+        </div>
+        <hr />
+
+        {this.props.ingestionFiles.map((ingestionFile, index) => {
+          let key = ingestionFile.ingestion_id;
+          return (
+            <div key={key}>
+              <IngestForm
+                data={ingestionFile.data}
+                errors={ingestionFile.errors}
+                {...this.props}
+                onChange={this.props.onChange}
+                ingest_id={key}
+              />
+              <hr />
+            </div>
+          );
+        })}
+      </div>
     );
   }
 }

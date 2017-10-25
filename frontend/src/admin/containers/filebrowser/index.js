@@ -21,6 +21,9 @@ import {
 } from "../../actions/ingest";
 
 import LoadingIndicator from "../../ui/loading";
+
+import Level from "../../ui/components/level";
+
 import FileList, {
   DirectoryListingBreadcrumbs,
   DirectoryListing,
@@ -102,17 +105,22 @@ class FileBrowser extends React.Component {
       let selectedFiles = files.filter(f => f.selected);
 
       const header_items = [
-        breadcrumbs,
-        <FileBrowserMenu
-          name={directory.name}
-          switchDisplayType={switchDisplayStyle}
-          selectedDisplayType={settings.selectedDisplayType}
-          selectAll={this.props.selectAll}
-          selectNone={this.props.selectNone}
-          invertSelection={this.props.invertSelection}
-          files={selectedFiles}
-          saveFileSelection={saveFileSelection}
-          addDirectory={allowCreate ? createDirectory : false}
+        <h1 className="title">{directory.name}</h1>,
+        <Level
+          key="fb-menu"
+          left={breadcrumbs}
+          right={
+            <FileBrowserMenu
+              switchDisplayType={switchDisplayStyle}
+              selectedDisplayType={settings.selectedDisplayType}
+              selectAll={this.props.selectAll}
+              selectNone={this.props.selectNone}
+              invertSelection={this.props.invertSelection}
+              files={selectedFiles}
+              saveFileSelection={saveFileSelection}
+              addDirectory={allowCreate ? createDirectory : false}
+            />
+          }
         />
       ];
 

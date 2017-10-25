@@ -144,26 +144,28 @@ class IngestForm extends React.Component {
   };
 
   render() {
-    const { licenses = [], creators = [], roles = [], data = {} } = this.props;
-    let parts = this.props.ingest_id.split("/").reverse();
+    const {
+      licenses = [],
+      creators = [],
+      roles = [],
+      data = {},
+      hide_fields = []
+    } = this.props;
     return (
       <div className="columns">
-        <div className="column">{parts[0]}</div>
-
         <div className="column">
           <DateForm data={data} onChange={this.handleChange} />
-          <Field label="Description">
-            <textarea
-              className="textarea"
-              value={data.description || ""}
-              name="description"
-              rows="3"
-              onChange={this.handleChange}
-            />
-          </Field>
-          {this.props.children}
-        </div>
-        <div className="column">
+          {hide_fields.includes("description") ? null : (
+            <Field label="Description">
+              <textarea
+                className="textarea"
+                value={data.description || ""}
+                name="description"
+                rows="3"
+                onChange={this.handleChange}
+              />
+            </Field>
+          )}
           <LicenseSelect
             required
             licenses={licenses}
@@ -171,6 +173,8 @@ class IngestForm extends React.Component {
             name="license"
             onChange={this.handleChange}
           />
+        </div>
+        <div className="column">
           <CreatorSelect
             required
             multiple
@@ -180,6 +184,7 @@ class IngestForm extends React.Component {
             onChange={this.handleChange}
           />
         </div>
+        <div className="column">{this.props.children}</div>
       </div>
     );
   }
@@ -196,6 +201,8 @@ class BatchIngest extends React.Component {
     }
   };
 
+  hide_template_fields = ["description"];
+
   updateTemplateData = (_, data) => {
     this.setState(state => ({
       template_data: { ...state.template_data, ...data }
@@ -203,7 +210,9 @@ class BatchIngest extends React.Component {
   };
 
   applyToAll = () => {
-    const data = this.state.template_data;
+    const data = { ...this.state.template_data };
+    this.hide_template_fields.forEach(fn => delete data[fn]);
+
     this.props.ingestionFiles.forEach(ingestionFile =>
       this.props.onChange(ingestionFile.ingestion_id, data)
     );
@@ -214,20 +223,26 @@ class BatchIngest extends React.Component {
       <div>
         <h1 className="title">Ingest</h1>
         <hr />
+        <h2 className="subtitle">Template From</h2>
         <div className="ingest-template-form is-outlined">
           <IngestForm
             ingest_id={"Template Form"}
             {...this.props}
             data={this.state.template_data}
             onChange={this.updateTemplateData}
+            hide_fields={this.hide_template_fields}
           >
-            <Button onClick={this.applyToAll}>Apply to all</Button>
+            <Button onClick={this.applyToAll} className="is-primary">
+              Apply to all
+            </Button>
           </IngestForm>
         </div>
         <hr />
 
         {this.props.ingestionFiles.map((ingestionFile, index) => {
           let key = ingestionFile.ingestion_id;
+          let filename = key.split("/").reverse()[0];
+
           return (
             <div key={key}>
               <IngestForm
@@ -236,7 +251,10 @@ class BatchIngest extends React.Component {
                 {...this.props}
                 onChange={this.props.onChange}
                 ingest_id={key}
-              />
+              >
+                <em>{filename}</em>
+              </IngestForm>
+
               <hr />
             </div>
           );

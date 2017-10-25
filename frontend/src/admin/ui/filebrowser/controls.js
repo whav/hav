@@ -116,27 +116,20 @@ class FileBrowserMenu extends React.Component {
     let props = this.props;
     return (
       <div>
-        {props.name ? <h1 className="title">{props.name}</h1> : null}
-        <div className="columns">
-          <div className="column">
-            <SelectionControls
-              selectAll={props.selectAll}
-              selectNone={props.selectNone}
-              invertSelection={props.invertSelection}
-            />
-          </div>
-          <div className="column">
-            <SelectedFilesControls
-              files={props.files}
-              save={props.saveFileSelection}
-            />
-            {props.addDirectory ? (
-              <Button key="create-directory" onClick={this.createDirectory}>
-                <FaPlusIcon /> Add Folder
-              </Button>
-            ) : null}
-          </div>
-        </div>
+        <SelectionControls
+          selectAll={props.selectAll}
+          selectNone={props.selectNone}
+          invertSelection={props.invertSelection}
+        />
+        <SelectedFilesControls
+          files={props.files}
+          save={props.saveFileSelection}
+        />
+        {props.addDirectory ? (
+          <Button key="create-directory" onClick={this.createDirectory}>
+            <FaPlusIcon /> Add Folder
+          </Button>
+        ) : null}
       </div>
     );
   }

@@ -3,8 +3,6 @@ var webpack = require("webpack");
 var autoprefixer = require("autoprefixer");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-console.log(path.join(__dirname, "../src/semantic/theme.config"));
-
 module.exports = opts => {
   const { PROJECT_ROOT, NODE_ENV } = opts;
 
@@ -25,9 +23,8 @@ module.exports = opts => {
     context: PROJECT_ROOT,
     entry: {
       hav: ["./src/hav/index"],
-      havAdmin: ["./src/admin/index"],
-      vendor: ["whatwg-fetch", "react", "react-dom"],
-      semantic: ["semantic-ui-less/semantic.less"]
+      havAdmin: ["./src/admin/ui/bulma.sass", "./src/admin/index"],
+      vendor: ["whatwg-fetch", "react", "react-dom"]
     },
     output: {
       path: path.resolve(PROJECT_ROOT, "./build/"),
@@ -35,13 +32,7 @@ module.exports = opts => {
     },
     plugins,
     resolve: {
-      extensions: [".js", ".json"],
-      alias: {
-        "../../theme.config$": path.join(
-          __dirname,
-          "../src/semantic/theme.config"
-        )
-      }
+      extensions: [".js", ".json"]
     },
     module: {
       rules: [
@@ -63,14 +54,8 @@ module.exports = opts => {
             limit: 10000
           }
         },
-        // react-icons does not have an es5 build
-        // so we need to pipe it through babel
         {
-          test: /react-icons\/(.)*(.js)$/,
-          loader: "babel-loader"
-        },
-        {
-          test: /\.less$/,
+          test: /\.sass$/,
           use: [
             {
               loader: "style-loader" // translates CSS into CommonJS
@@ -79,12 +64,15 @@ module.exports = opts => {
               loader: "css-loader" // translates CSS into CommonJS
             },
             {
-              loader: "postcss-loader"
-            },
-            {
-              loader: "less-loader" // compiles Less to CSS
+              loader: "sass-loader" // compiles sass to CSS
             }
           ]
+        },
+        // react-icons does not have an es5 build
+        // so we need to pipe it through babel
+        {
+          test: /react-icons\/(.)*(.js)$/,
+          loader: "babel-loader"
         },
         // everything else
         {

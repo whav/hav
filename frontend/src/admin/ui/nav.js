@@ -1,69 +1,73 @@
 /**
  * Created by sean on 08/02/17.
  */
-import React from 'react'
-import {NavLink} from 'react-router-dom'
-import classNames from 'classnames'
-import {Menu} from 'semantic-ui-react'
+import React from "react";
+import { NavLink as RRNavLink } from "react-router-dom";
+import classNames from "classnames";
 
-const MenuLink = (props) => {
-    return <Menu.Item as={NavLink} {...props} />
-}
+const NavLink = props => <RRNavLink activeClassName="is-active" {...props} />;
 
-const NonNavMenuItem = (props) => {
-    return <Menu.Item {...props} />
-}
+const NavItem = props => {
+  let { link, title, icon = null, menuExact = true } = props;
+  let Icon = icon;
 
-const NavItem = (props) => {
-    let {link, title, icon=null, menuExact=true} = props;
-    let Icon = icon;
+  let inner = (
+    <span>
+      {icon ? <Icon /> : null} {title}
+    </span>
+  );
 
-    let inner = (<span>
-        {icon ? <Icon /> : null}
-        {' '}
-        {title}
-    </span>);
+  if (link) {
+    return (
+      <NavLink to={link} exact={menuExact}>
+        {inner}
+      </NavLink>
+    );
+  } else {
+    return inner;
+  }
+};
 
-    if (link) {
-        return <MenuLink to={link} exact={menuExact}>
-            {inner}
-        </MenuLink>
-    } else {
-        return <NonNavMenuItem>
-            {inner}
-        </NonNavMenuItem>
-    }
-}
+const NavMenu = ({ items = [] }) => {
+  return (
+    <ul className="menu-list">
+      {items.map(c => (
+        <li key={c.title}>
+          <NavItem {...c} />
+        </li>
+      ))}
+    </ul>
+  );
+};
 
+const NavMenuWithLabel = ({ items = [], ...props }) => {
+  return [
+    <p key="menu-label" className="menu-label">
+      {props.title}
+    </p>,
+    <NavMenu key="menu-items" items={items} />
+  ];
+};
 
 class NavUI extends React.Component {
+  render() {
+    let { navItems } = this.props;
+    let items = [];
+    navItems.forEach((menuConfig, index) => {
+      const isLink = Boolean(menuConfig.href);
+      const subItems = menuConfig.sub || [];
+      const hasSubItems = subItems.length;
+      const key = menuConfig.title;
 
-    render() {
-        let {navItems} = this.props;
-        let items = [];
-        navItems.forEach((menuConfig, index) => {
-
-            items = [
-                ...items,
-                <NavItem {...menuConfig} key={items.length} />
-            ]
-            let subItems = menuConfig.sub || [];  
-            let hasSubMenu = subItems.length;
-            if (hasSubMenu) {
-                items = [
-                    ...items,
-                    <Menu.Menu key={items.length}>
-                        {subItems.map((i, index) => <NavItem key={index} {...i} />)}
-                    </Menu.Menu> 
-                ]
-            }
-        })
-
-        return <Menu secondary vertical>
-            {items}
-        </Menu>
-    }
+      const menu = hasSubItems ? (
+        <NavMenuWithLabel key={key} items={subItems} {...menuConfig} />
+      ) : (
+        <NavMenu key={key} items={[menuConfig]} />
+      );
+      items = [...items, menu];
+    });
+    return <div className="menu">{items}</div>;
+  }
 }
 
-
-export default NavUI
+export default NavUI;

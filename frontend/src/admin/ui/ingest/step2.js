@@ -1,13 +1,4 @@
 import React from "react";
-import {
-  Grid,
-  Segment,
-  Dropdown,
-  Form,
-  Container,
-  Divider,
-  Header
-} from "semantic-ui-react";
 
 import Button from "../components/buttons";
 
@@ -158,6 +149,20 @@ class IngestForm extends React.Component {
     return (
       <div className="columns">
         <div className="column">{parts[0]}</div>
+
+        <div className="column">
+          <DateForm data={data} onChange={this.handleChange} />
+          <Field label="Description">
+            <textarea
+              className="textarea"
+              value={data.description || ""}
+              name="description"
+              rows="3"
+              onChange={this.handleChange}
+            />
+          </Field>
+          {this.props.children}
+        </div>
         <div className="column">
           <LicenseSelect
             required
@@ -174,19 +179,6 @@ class IngestForm extends React.Component {
             name="creators"
             onChange={this.handleChange}
           />
-        </div>
-        <div className="column">
-          <DateForm data={data} onChange={this.handleChange} />
-          <Field label="Description">
-            <textarea
-              className="textarea"
-              value={data.description || ""}
-              name="description"
-              rows="3"
-              onChange={this.handleChange}
-            />
-          </Field>
-          {this.props.children}
         </div>
       </div>
     );

@@ -3,39 +3,29 @@
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  min-height: 100vh;
+  height: 100vh;
   user-select: none;
 }
 
-/* directory and file listing */
-.fb-directory-listing {
-  width: 100%;
+.filebrowser header {
+  flex-grow: 0;
+}
+
+.filebrowser main {
+  margin-top: 0.5rem;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+/*Gallery Style*/
+.g-gallery {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
 
-.fb-directory-listing .fb-directory-listing-item {
-  flex: 0 0 auto;
-  width: 10%;
-  word-break: break-all;
-}
-
-.folder-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 1em 0;
-}
-
-.folder-controls > * {
-  display: block;
-  /*flex-basis: 50%;*/
-}
-
-/*Gallery Style*/
-
 .g-gallery-item {
+  flex: 0 0 10%;
   /*needed for absolutely positioned selection marker*/
   position: relative;
   /* border: 1px dotted grey; */

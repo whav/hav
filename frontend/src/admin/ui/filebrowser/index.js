@@ -22,10 +22,13 @@ require("./index.css");
 
 export class DirectoryListingBreadcrumbs extends React.Component {
   render() {
-    let { dirs } = this.props;
-    let crumbs = [];
+    let { dirs, current_dir } = this.props;
     let items = dirs.map((d, index) => <Link to={d.link}>{d.name}</Link>);
-    return <Breadcrumbs items={items} />;
+    return (
+      <Breadcrumbs
+        items={items}
+      />
+    );
   }
 }
 
@@ -244,7 +247,7 @@ export default class FileList extends React.Component {
     // });
 
     return (
-      <div className="g-gallery columns is-multiline">
+      <div className="g-gallery">
         {renderedDirectories}
         {rendererFiles}
         {/*{renderedUploads}*/}

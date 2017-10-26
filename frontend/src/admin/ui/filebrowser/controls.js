@@ -14,7 +14,7 @@ import FaTable from "react-icons/lib/fa/table";
 import FaList from "react-icons/lib/fa/list";
 import FaPlusIcon from "react-icons/lib/fa/plus-circle";
 
-import Button from "../components/buttons";
+import Button, { ButtonGroup } from "../components/buttons";
 
 class UploadControl extends React.Component {
   constructor(props) {
@@ -49,30 +49,6 @@ const SelectedFilesControls = ({ files, save }) => {
       Ingest
     </Button>
   );
-};
-
-const SelectionControls = ({ selectAll, selectNone, invertSelection }) => {
-  return (
-    <div>
-      <Button onClick={selectAll}>
-        <FaCheckSquareO title="Check all" />
-      </Button>
-      <Button onClick={selectNone}>
-        <FaSquareO title="Uncheck all" />
-      </Button>
-      <Button onClick={invertSelection} title="Invert Selection">
-        <FaCheckSquareO />
-        ⇄
-        <FaSquareO />
-      </Button>
-    </div>
-  );
-};
-
-SelectionControls.propTypes = {
-  selectAll: PropTypes.func.isRequired,
-  selectNone: PropTypes.func.isRequired,
-  invertSelection: PropTypes.func.isRequired
 };
 
 const FilebrowserViewControl = ({ selectedDisplayType, switchDisplayType }) => {
@@ -113,26 +89,50 @@ class FileBrowserMenu extends React.Component {
   }
 
   render() {
-    let props = this.props;
-    return (
-      <div>
-        <SelectionControls
-          selectAll={props.selectAll}
-          selectNone={props.selectNone}
-          invertSelection={props.invertSelection}
-        />
-        <SelectedFilesControls
-          files={props.files}
-          save={props.saveFileSelection}
-        />
-        {props.addDirectory ? (
-          <Button key="create-directory" onClick={this.createDirectory}>
-            <FaPlusIcon /> Add Folder
-          </Button>
-        ) : null}
-      </div>
-    );
+    const {
+      selectAll,
+      selectNone,
+      invertSelection,
+      files,
+      saveFileSelection
+    } = this.props;
+
+    const controls = [
+      <Button key="selectall" onClick={selectAll}>
+        <FaCheckSquareO title="Check all" />
+      </Button>,
+      <Button key="unselectall" onClick={selectNone}>
+        <FaSquareO title="Uncheck all" />
+      </Button>,
+      <Button
+        key="invertselection"
+        onClick={invertSelection}
+        title="Invert Selection"
+      >
+        <FaCheckSquareO />
+        ⇄
+        <FaSquareO />
+      </Button>,
+      this.props.addDirectory ? (
+        <Button key="create-directory" onClick={this.createDirectory}>
+          <FaPlusIcon /> Add Folder
+        </Button>
+      ) : null,
+      <SelectedFilesControls
+        key="ingest"
+        files={files}
+        save={saveFileSelection}
+      />
+    ];
+    console.log(controls);
+    return <ButtonGroup>{controls}</ButtonGroup>;
   }
 }
+
+FileBrowserMenu.propTypes = {
+  selectAll: PropTypes.func.isRequired,
+  selectNone: PropTypes.func.isRequired,
+  invertSelection: PropTypes.func.isRequired
+};
 
 export { FilebrowserViewControl, UploadControl, FileBrowserMenu };

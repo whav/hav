@@ -105,7 +105,9 @@ class FileBrowser extends React.Component {
       let selectedFiles = files.filter(f => f.selected);
 
       const header_items = [
-        <h1 className="title">{directory.name}</h1>,
+        <h1 key="title" className="title">
+          {directory.name}
+        </h1>,
         <Level
           key="fb-menu"
           left={breadcrumbs}

@@ -5,4 +5,18 @@ const Button = ({ className = "", ...props }) => {
   return <button className={classnames(className, "button")} {...props} />;
 };
 
+const ButtonGroup = ({ children }) => {
+  console.log(children);
+  return (
+    <div className="field is-grouped">
+      {children.map((c, i) => (
+        <div key={i} className="control">
+          {c}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export default Button;
+export { ButtonGroup };

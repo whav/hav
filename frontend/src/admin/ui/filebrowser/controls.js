@@ -124,7 +124,6 @@ class FileBrowserMenu extends React.Component {
         save={saveFileSelection}
       />
     ];
-    console.log(controls);
     return <ButtonGroup>{controls}</ButtonGroup>;
   }
 }

@@ -24,11 +24,7 @@ export class DirectoryListingBreadcrumbs extends React.Component {
   render() {
     let { dirs, current_dir } = this.props;
     let items = dirs.map((d, index) => <Link to={d.link}>{d.name}</Link>);
-    return (
-      <Breadcrumbs
-        items={items}
-      />
-    );
+    return <Breadcrumbs items={items} />;
   }
 }
 
@@ -129,17 +125,25 @@ const GGalleryItem = ({
   );
 };
 
-export const GGalleryDirectory = ({ name, navigate }) => {
-  return (
-    <GGalleryItem
-      name={name}
-      onClick={navigate}
-      directory={true}
-      preview={<GoFileDirectory />}
-      selected={false}
-    />
-  );
-};
+class GGalleryDirectory extends React.Component {
+  navigateOrSelect = e => {
+    const { navigate, select } = this.props;
+    e.ctrlKey ? select(e) : navigate(e);
+  };
+
+  render() {
+    const { name, navigate, select, selected = false } = this.props;
+    return (
+      <GGalleryItem
+        name={name}
+        onClick={this.navigateOrSelect}
+        directory={true}
+        preview={<GoFileDirectory />}
+        selected={selected}
+      />
+    );
+  }
+}
 
 export const GGalleryFile = ({ file, toggleSelect }) => {
   let preview = file.preview_url ? (
@@ -214,7 +218,6 @@ export default class FileList extends React.Component {
       deselectOthers,
       spanSelection
     };
-
     this.props.handleSelect([file], modifiers);
   }
 
@@ -231,7 +234,13 @@ export default class FileList extends React.Component {
     }
 
     let renderedDirectories = directories.map((directory, index) => {
-      return <GGalleryDirectory {...directory} key={index} />;
+      return (
+        <GGalleryDirectory
+          {...directory}
+          select={this.handleFileSelectEvent.bind(this, directory)}
+          key={index}
+        />
+      );
     });
 
     let rendererFiles = files.map((file, index) => {

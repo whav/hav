@@ -20,7 +20,7 @@ class WHAVFileSerializer(serializers.Serializer):
     preview_url = serializers.SerializerMethodField()
 
     size = serializers.SerializerMethodField()
-    detail_url = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
 
     guid = serializers.SerializerMethodField()
 
@@ -53,7 +53,7 @@ class WHAVFileSerializer(serializers.Serializer):
         url = 'https://whav.aussereurop.univie.ac.at/display/%s' % rel_path
         return get_image_url(url)
 
-    def get_detail_url(self, mo):
+    def get_url(self, mo):
         request = self.context['request']
         name = ':'.join(request.resolver_match.namespaces + ['whav_media'])
         return request.build_absolute_uri(reverse(

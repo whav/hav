@@ -40,6 +40,8 @@ import {
   stripSlashes
 } from "../../reducers/browser";
 
+import { buildAPIUrl } from "../../api/browser";
+
 import { getUploadsForPath } from "../../reducers/uploads";
 
 class FileBrowser extends React.Component {
@@ -95,6 +97,7 @@ class FileBrowser extends React.Component {
         return {
           ...d,
           navigate: () => {
+            console.log(d, d.path);
             this.props.history.push(buildFrontendURL(d.path));
           }
         };
@@ -127,7 +130,7 @@ class FileBrowser extends React.Component {
       ];
 
       const main = isEmpty ? (
-        <h2 className="tc red">This directory is empty.</h2>
+        <h2>This directory is empty.</h2>
       ) : (
         <FileList
           directories={directories}
@@ -161,24 +164,23 @@ FileBrowser.propTypes = {
 
 export default connect(
   (rootState, props) => {
-    // the location of the root state is defined
-    // in the root reducer
     const state = rootState.repositories;
     const uploadState = rootState.uploads;
     const settings = state.settings;
     const path = props.match.params;
 
+    const key = buildAPIUrl(path.repository, path.path);
     // construct a helper function to build frontend urls
-    const reverseURL = pathToRegexp.compile(props.match.path);
+    const baseURL = pathToRegexp.compile(props.match.path)({
+      repository: path.repository
+    });
     const buildFrontendURL = p => {
       p = stripSlashes(p);
-      return reverseURL({
-        repository: path.repository,
-        path: p ? p : undefined
-      });
+      return p ? `${baseURL}${p}/` : baseURL;
     };
 
-    let directory = getDirectoryForPath(path, state);
+    // let directory = getDirectoryForPath(path, state);
+    let directory = state.filesByUri[key];
 
     let mappedProps = {
       directory,
@@ -187,6 +189,7 @@ export default connect(
     };
 
     if (directory === undefined || !directory.lastLoaded) {
+      // console.warn("Unable to find directory for key", key);
       return {
         ...mappedProps,
         loading: true,
@@ -194,19 +197,21 @@ export default connect(
       };
     }
 
-    // populate parent, children and files from state
-    let parentDirectories = directory.parents.map(key =>
-        getDirectoryForPath(key, state)
-      ),
-      childrenDirectories = directory.children.map(key =>
-        getDirectoryForPath(key, state)
-      ),
-      files = getFilesForPath(path, state);
+    const allChildren = (directory.content || []).map(c => state.filesByUri[c]);
+    const parentDirectories = (directory.parents || []).map(d => {
+      return state.filesByUri[d];
+    });
+
+    // populate children dirs and files from state
+    const childrenDirectories = allChildren.filter(c => c.isDirectory);
+    const files = allChildren.filter(c => c.isFile);
 
     // get the un-finished uploads for directory
     let directoryUploads = Object.values(
       getUploadsForPath(props.match.params, uploadState)
     ).filter(u => !u.finished);
+
+    // console.warn(directory, childrenDirectories);
 
     return {
       ...mappedProps,

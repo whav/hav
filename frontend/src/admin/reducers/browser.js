@@ -117,6 +117,13 @@ const directoriesByPath = (state = {}, action) => {
         .filter(k => k != action.path)
         .reduce((s, k) => ({ ...s, k: state[k] }), {});
       return new_state;
+    case TOGGLE_FILES_SELECT:
+      console.warn("selecting directory?", state, action);
+      if (action.path) {
+        let key = getStateKeyForPath(action.path);
+        console.warn(key, state[key]);
+      }
+      return state;
     default:
       return state;
   }
@@ -153,7 +160,6 @@ const filesByPath = (state = {}, action) => {
     case TOGGLE_FILES_SELECT:
       let { deselectOthers = true, spanSelection = false } = action.modifiers;
       let range = false;
-
       if (spanSelection) {
         let selectedFiles = existingFiles
           .filter(f => f.selected)
@@ -226,11 +232,59 @@ const filesByPath = (state = {}, action) => {
 const filesByUri = (state = {}, action) => {
   switch (action.type) {
     case RECEIVE_DIRECTORY_CONTENT:
-      let { files } = action.payload;
+      const attrs = {
+        isFile: false,
+        isDirectory: false
+      };
+      let { files, childrenDirs, parentDirs } = action.payload;
       let mapping = {};
       files.forEach(f => {
-        mapping[f.url] = f;
+        mapping[f.url] = {
+          ...attrs,
+          isFile: true,
+          ...f
+        };
       });
+
+      childrenDirs.forEach(directory => {
+        mapping[directory.url] = {
+          ...attrs,
+          isDirectory: true,
+          ...directory
+        };
+      });
+
+      // grab the keys, because this is the directory contents
+      const children_keys = Object.keys(mapping);
+
+      parentDirs.forEach(directory => {
+        mapping[directory.url] = {
+          ...attrs,
+          isDirectory: true,
+          ...directory
+        };
+      });
+
+      let ownData = {
+        ...action.payload
+      };
+
+      const ownKey = ownData.url;
+      const parents = ownData.parentDirs.map(d => d.url);
+
+      // remove duplicate information
+      delete ownData.childrenDirs;
+      delete ownData.files;
+      delete ownData.parentDirs;
+
+      mapping[action.payload.url] = {
+        ...ownData,
+        selected: [],
+        content: children_keys,
+        parents,
+        lastLoaded: new Date()
+      };
+
       return {
         ...state,
         ...mapping

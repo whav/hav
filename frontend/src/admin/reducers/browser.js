@@ -5,6 +5,7 @@ import {
   CHANGE_FILE_BROWSER_SETTINGS,
   TOGGLE_FILES_SELECT,
   TOGGLE_FILES_SELECT_ALL,
+  SELECT_ITEMS,
   MKDIR_SUCCESS
 } from "../actions/browser";
 
@@ -118,10 +119,8 @@ const directoriesByPath = (state = {}, action) => {
         .reduce((s, k) => ({ ...s, k: state[k] }), {});
       return new_state;
     case TOGGLE_FILES_SELECT:
-      console.warn("selecting directory?", state, action);
       if (action.path) {
         let key = getStateKeyForPath(action.path);
-        console.warn(key, state[key]);
       }
       return state;
     default:
@@ -289,6 +288,16 @@ const filesByUri = (state = {}, action) => {
         ...state,
         ...mapping
       };
+    case SELECT_ITEMS:
+      console.warn("SELECTING", action);
+      return {
+        ...state,
+        [action.container_id]: {
+          ...state[action.container_id],
+          selected: action.item_ids
+        }
+      };
+      return state;
     default:
       return state;
   }

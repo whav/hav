@@ -6,6 +6,7 @@ import { requestDirectoryAction } from "../../actions/browser";
 import { ingestTo } from "../../actions/ingest";
 import Loading from "../../ui/loading";
 import { getDirectoryForPath } from "../../reducers/browser";
+import { buildAPIUrl } from "../../api/browser";
 
 class Ingest extends React.Component {
   constructor(props) {
@@ -23,21 +24,22 @@ class Ingest extends React.Component {
     if (this.props.loading) {
       return <Loading />;
     }
+    console.warn(this.props);
     return (
       <IngestView
-        files={this.props.filesToBeIngested}
+        ingestionIds={this.props.ingestionIds}
         ingest={() => this.props.ingest(this.props.directory.url)}
         parentDirs={this.props.parentDirs}
         navigate={this.props.navigate}
       >
         {/* TODO: Replace this! */}
-        {/* <DirectorySelector
+        <DirectorySelector
           currentDirectory={this.props.directory}
           directories={this.props.directories}
           loading={this.props.loading}
           navigate={this.props.navigate}
           parentDirs={this.props.parentDirs}
-        /> */}
+        />
       </IngestView>
     );
   }
@@ -47,16 +49,13 @@ export default connect(
   (state, ownProps) => {
     const ingestState = state.ingest;
     // selected files are in location state
-    const filesToBeIngested = ownProps.location.state;
-
-    let directory = getDirectoryForPath(
-      { repository: "hav", path: ingestState.ingestTo },
-      state.repositories
-    );
-
+    const ingestionIds = ownProps.location.state;
+    const key = buildAPIUrl("hav", ingestState.ingestTo);
+    const directory = state.repositories.filesByUri[key];
+    console.log(key);
     let props = {
-      filesToBeIngested,
-      directory: directory || {},
+      ingestionIds,
+      directory: directory,
       path: ingestState.ingestTo
     };
 
@@ -70,6 +69,7 @@ export default connect(
     let parentDirs = (directory.parents || []).map(d =>
       getDirectoryForPath(d, state.repositories)
     );
+
     let childrenDirs = (directory.children || []).map(d =>
       getDirectoryForPath(d, state.repositories)
     );

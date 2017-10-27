@@ -33,19 +33,9 @@ class UploadControl extends React.Component {
   }
 }
 
-const SelectedFilesControls = ({ files, save }) => {
-  let length = files.length;
-  if (!length) {
-    return null;
-  }
-  let desc;
-  if (length === 1) {
-    desc = "1 file";
-  } else {
-    desc = `${length} files`;
-  }
+const SelectedFilesControls = ({ save }) => {
   return (
-    <Button onClick={() => save(files)} className="is-primary">
+    <Button onClick={save} className="is-primary">
       Ingest
     </Button>
   );
@@ -88,25 +78,33 @@ class FileBrowserMenu extends React.Component {
     }
   }
 
+  selectAll = () => {
+    this.props.handleSelect(Array.from(this.props.allItemIds));
+  };
+
+  invertSelection = () => {
+    const all = new Set(this.props.allItemIds);
+    const selected = new Set(this.props.selectedItemIds);
+    this.props.handleSelect(Array.from(all).filter(id => !selected.has(id)));
+  };
+
+  selectNone = () => {
+    this.props.handleSelect([]);
+  };
+
   render() {
-    const {
-      selectAll,
-      selectNone,
-      invertSelection,
-      files,
-      saveFileSelection
-    } = this.props;
+    const { saveFileSelection, selectedItemIds } = this.props;
 
     const controls = [
-      <Button key="selectall" onClick={selectAll}>
+      <Button key="selectall" onClick={this.selectAll}>
         <FaCheckSquareO title="Check all" />
       </Button>,
-      <Button key="unselectall" onClick={selectNone}>
+      <Button key="unselectall" onClick={this.selectNone}>
         <FaSquareO title="Uncheck all" />
       </Button>,
       <Button
         key="invertselection"
-        onClick={invertSelection}
+        onClick={this.invertSelection}
         title="Invert Selection"
       >
         <FaCheckSquareO />
@@ -118,20 +116,19 @@ class FileBrowserMenu extends React.Component {
           <FaPlusIcon /> Add Folder
         </Button>
       ) : null,
-      <SelectedFilesControls
-        key="ingest"
-        files={files}
-        save={saveFileSelection}
-      />
+      selectedItemIds.length > 0 ? (
+        <SelectedFilesControls key="ingest" save={saveFileSelection} />
+      ) : null
     ];
     return <ButtonGroup>{controls}</ButtonGroup>;
   }
 }
 
 FileBrowserMenu.propTypes = {
-  selectAll: PropTypes.func.isRequired,
-  selectNone: PropTypes.func.isRequired,
-  invertSelection: PropTypes.func.isRequired
+  selectedItemIds: PropTypes.array.isRequired,
+  allItemIds: PropTypes.array.isRequired,
+  handleSelect: PropTypes.func.isRequired,
+  saveFileSelection: PropTypes.func.isRequired
 };
 
 export { FilebrowserViewControl, UploadControl, FileBrowserMenu };

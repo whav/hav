@@ -12,7 +12,8 @@ import {
   switchFilebrowserDisplayType,
   toggleSelect,
   toggleSelectAll,
-  createDirectoryAction
+  createDirectoryAction,
+  selectItems
 } from "../../actions/browser";
 
 import {
@@ -76,7 +77,8 @@ class FileBrowser extends React.Component {
         allowUpload,
         allowCreate,
         saveFileSelection,
-        createDirectory
+        createDirectory,
+        selectItems
       } = this.props;
 
       let uploads = this.props.uploads;
@@ -97,7 +99,6 @@ class FileBrowser extends React.Component {
         return {
           ...d,
           navigate: () => {
-            console.log(d, d.path);
             this.props.history.push(buildFrontendURL(d.path));
           }
         };
@@ -105,7 +106,9 @@ class FileBrowser extends React.Component {
 
       let isEmpty =
         childrenDirectories.length + files.length + uploads.length === 0;
-      let selectedFiles = files.filter(f => f.selected);
+
+      // new
+      let selectedItemIds = new Set(directory.selected);
 
       const header_items = [
         <h1 key="title" className="title">
@@ -118,12 +121,11 @@ class FileBrowser extends React.Component {
             <FileBrowserMenu
               switchDisplayType={switchDisplayStyle}
               selectedDisplayType={settings.selectedDisplayType}
-              selectAll={this.props.selectAll}
-              selectNone={this.props.selectNone}
-              invertSelection={this.props.invertSelection}
-              files={selectedFiles}
-              saveFileSelection={saveFileSelection}
               addDirectory={allowCreate ? createDirectory : false}
+              selectedItemIds={Array.from(selectedItemIds)}
+              allItemIds={directory.content}
+              handleSelect={selectItems}
+              saveFileSelection={saveFileSelection}
             />
           }
         />
@@ -137,7 +139,8 @@ class FileBrowser extends React.Component {
           files={files}
           uploads={uploads}
           displayType={settings.selectedDisplayType}
-          handleSelect={selectFiles}
+          handleSelect={selectItems}
+          selectedItemIds={selectedItemIds}
         />
       );
 
@@ -149,15 +152,14 @@ class FileBrowser extends React.Component {
 FileBrowser.propTypes = {
   loading: PropTypes.bool.isRequired,
   // useful stuff here ...
+  files: PropTypes.array,
   directory: PropTypes.object.isRequired,
   loadCurrentDirectory: PropTypes.func.isRequired,
   parentDirectories: PropTypes.array,
   childrenDirectories: PropTypes.array,
-  files: PropTypes.array,
-  selectFiles: PropTypes.func.isRequired,
   switchDisplayStyle: PropTypes.func.isRequired,
   settings: PropTypes.object,
-  saveFileSelection: PropTypes.func.isRequired,
+  saveFileSelection: PropTypes.func,
   allowUpload: PropTypes.bool,
   allowCreate: PropTypes.bool
 };
@@ -211,8 +213,8 @@ export default connect(
       getUploadsForPath(props.match.params, uploadState)
     ).filter(u => !u.finished);
 
-    // console.warn(directory, childrenDirectories);
-
+    const saveFileSelection = () =>
+      props.history.push("/ingest/step1/", directory.selected);
     return {
       ...mappedProps,
       loading: false,
@@ -222,6 +224,7 @@ export default connect(
       childrenDirectories,
       parentDirectories,
       files,
+      saveFileSelection,
       allowUpload: directory.allowUpload || false,
       allowCreate: directory.allowCreate || false
     };
@@ -232,10 +235,8 @@ export default connect(
     if (path.path) {
       apiURL = `${apiURL}${path.path}/`;
     }
+    const key = buildAPIUrl(path.repository, path.path);
 
-    const goToIngest = files => {
-      props.history.push("/ingest/step1/", files);
-    };
     return {
       uploadToURL: apiURL,
       loadCurrentDirectory: () => {
@@ -243,16 +244,9 @@ export default connect(
       },
       switchDisplayStyle: style =>
         dispatch(switchFilebrowserDisplayType(style)),
-      selectFiles: (files, modifiers = {}) => {
-        let filenames = files.map(f => f.name);
-        dispatch(toggleSelect(path, filenames, modifiers));
-      },
-      selectAll: () => dispatch(toggleSelectAll(path, true)),
-      selectNone: () => dispatch(toggleSelectAll(path, false)),
-      invertSelection: () => dispatch(toggleSelectAll(path)),
-      saveFileSelection: goToIngest,
       createDirectory: name =>
-        dispatch(createDirectoryAction(name, path, apiURL))
+        dispatch(createDirectoryAction(name, path, apiURL)),
+      selectItems: (items = []) => dispatch(selectItems(key, items))
     };
   }
 )(FileBrowser);

@@ -59,7 +59,7 @@ class DirectorySelector extends React.Component {
     return (
       <div>
         {parentDirs}
-        <pre>{JSON.stringify(this.props.parentDirs, null, 2)}</pre>
+        <pre>{JSON.stringify(this.props, null, 2)}</pre>
         {this.props.loading ? (
           <LoadingIndicator />
         ) : (
@@ -90,7 +90,8 @@ class IngestView extends React.Component {
   }
 
   render() {
-    let files = this.props.files;
+    console.log(this.props);
+    let { ingestionIds } = this.props;
 
     const parentLinks = this.props.parentDirs.map(d => (
       <a href="#" onClick={e => this.props.navigate(d.path)}>
@@ -102,12 +103,12 @@ class IngestView extends React.Component {
       <h1 key={2}>Select a target folder</h1>
     ];
     const footer = (
-      <Button onClick={() => this.props.ingest("urxn")} className="is-primary">
-        Ingest {files.length > 1 ? `${files.length} files` : "one file"}
+      <Button onClick={() => this.props.ingest()} className="is-primary">
+        {`Ingest`}
       </Button>
     );
     const main = [
-      files.length === 0 ? <IngestErrorNofiles /> : null,
+      ingestionIds.length === 0 ? <IngestErrorNofiles /> : null,
       this.props.children
     ];
 

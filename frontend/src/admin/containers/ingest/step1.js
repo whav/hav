@@ -66,12 +66,12 @@ export default connect(
       };
     }
 
-    let parentDirs = (directory.parents || []).map(d =>
-      getDirectoryForPath(d, state.repositories)
+    let parentDirs = (directory.parents || []).map(
+      d => state.repositories.filesByUri[d]
     );
 
-    let childrenDirs = (directory.children || []).map(d =>
-      getDirectoryForPath(d, state.repositories)
+    let childrenDirs = (directory.content || []).map(
+      d => state.repositories.filesByUri[d]
     );
 
     // this will trigger the actual ingestion

@@ -13,9 +13,9 @@ import GoDatabase from "react-icons/go/database";
 // base components
 import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
+import HAVFileBrowser from "./containers/filebrowser/hav";
 import { Uploads } from "./containers/uploads";
-import IngestionStep1 from "./containers/ingest/step1";
-import IngestionStep2 from "./containers/ingest/step2";
+import Ingestion from "./containers/ingest/step2";
 
 const routes = [
   {
@@ -30,17 +30,17 @@ const routes = [
     path: "/uploads/",
     main: Uploads
   },
+  // {
+  //   path: "/ingest/step1/",
+  //   main: IngestionStep1
+  // },
   {
-    path: "/ingest/step1/",
-    main: IngestionStep1
-  },
-  {
-    path: "/ingest/step2/",
-    main: IngestionStep2
+    path: "/ingest/",
+    main: Ingestion
   },
   {
     path: "/:repository(hav)/:path*/",
-    main: FileBrowser
+    main: HAVFileBrowser
   }
 ];
 

@@ -1,5 +1,6 @@
 import { fetchDataForIngestionForms, ingest } from "../api/ingest";
-
+export const QUEUE_FOR_INGESTION = "QUEUE_FOR_INGESTION";
+export const CLEAR_INGESTION_QUEUE = "CLEAR_INGESTION_QUEUE";
 export const SET_INGEST_TO = "SET_INGEST_TO";
 
 export const LOADING_INGESTION_DATA = "LOADING_INGESTION_DATA";
@@ -8,6 +9,19 @@ export const UPDATE_INGESTION_DATA = "UPDATE_INGESTION_DATA";
 
 export const SAVE_INGESTION_DATA_SUCCESS = "SAVE_INGESTION_DATA_SUCCESS";
 export const SAVE_INGESTION_DATA_ERROR = "SAVE_INGESTION_DATA_ERROR";
+
+export const queueForIngestion = ingestionIds => {
+  return {
+    type: QUEUE_FOR_INGESTION,
+    ingestionIds
+  };
+};
+
+export const clearIngestionQueue = () => {
+  return {
+    type: CLEAR_INGESTION_QUEUE
+  };
+};
 
 export const ingestTo = havPath => {
   return {

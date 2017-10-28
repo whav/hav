@@ -10,11 +10,11 @@ import PropTypes from "prop-types";
 import {
   requestDirectoryAction,
   switchFilebrowserDisplayType,
-  toggleSelect,
-  toggleSelectAll,
   createDirectoryAction,
   selectItems
 } from "../../actions/browser";
+
+import { queueForIngestion } from "../../actions/ingest";
 
 import {
   getIngestionQueues,
@@ -35,13 +35,9 @@ import FileList, {
 import { FileBrowserMenu } from "../../ui/filebrowser/controls";
 import UploadTrigger from "../uploads";
 
-import {
-  getDirectoryForPath,
-  getFilesForPath,
-  stripSlashes
-} from "../../reducers/browser";
+import { getRepositoryDataFromState } from "../../reducers";
 
-import { buildAPIUrl } from "../../api/browser";
+import { buildAPIUrl, normalizePath } from "../../api/browser";
 
 import { getUploadsForPath } from "../../reducers/uploads";
 
@@ -107,7 +103,6 @@ class FileBrowser extends React.Component {
       let isEmpty =
         childrenDirectories.length + files.length + uploads.length === 0;
 
-      // new
       let selectedItemIds = new Set(directory.selected);
 
       const header_items = [
@@ -125,7 +120,8 @@ class FileBrowser extends React.Component {
               selectedItemIds={Array.from(selectedItemIds)}
               allItemIds={directory.content}
               handleSelect={selectItems}
-              saveFileSelection={saveFileSelection}
+              saveFileSelection={() =>
+                saveFileSelection(Array.from(selectedItemIds))}
             />
           }
         />
@@ -144,7 +140,15 @@ class FileBrowser extends React.Component {
         />
       );
 
-      return <FileBrowserInterface header={header_items} main={main} />;
+      const footer = this.props.footer || null;
+
+      return (
+        <FileBrowserInterface
+          header={header_items}
+          main={main}
+          footer={footer}
+        />
+      );
     }
   }
 }
@@ -171,18 +175,24 @@ export default connect(
     const settings = state.settings;
     const path = props.match.params;
 
-    const key = buildAPIUrl(path.repository, path.path);
     // construct a helper function to build frontend urls
     const baseURL = pathToRegexp.compile(props.match.path)({
       repository: path.repository
     });
+
     const buildFrontendURL = p => {
-      p = stripSlashes(p);
-      return p ? `${baseURL}${p}/` : baseURL;
+      p = p ? `${baseURL}${p}/` : baseURL;
+      return normalizePath(p);
     };
 
-    // let directory = getDirectoryForPath(path, state);
-    let directory = state.filesByUri[key];
+    // build a selector for this repository
+    const getDirectoryContent = getRepositoryDataFromState.bind(
+      this,
+      rootState,
+      path.repository
+    );
+
+    let directory = getDirectoryContent(path.path);
 
     let mappedProps = {
       directory,
@@ -191,7 +201,6 @@ export default connect(
     };
 
     if (directory === undefined || !directory.lastLoaded) {
-      // console.warn("Unable to find directory for key", key);
       return {
         ...mappedProps,
         loading: true,
@@ -199,9 +208,9 @@ export default connect(
       };
     }
 
-    const allChildren = (directory.content || []).map(c => state.filesByUri[c]);
+    const allChildren = (directory.content || []).map(c => state.browser[c]);
     const parentDirectories = (directory.parents || []).map(d => {
-      return state.filesByUri[d];
+      return state.browser[d];
     });
 
     // populate children dirs and files from state
@@ -213,8 +222,6 @@ export default connect(
       getUploadsForPath(props.match.params, uploadState)
     ).filter(u => !u.finished);
 
-    const saveFileSelection = () =>
-      props.history.push("/ingest/step1/", directory.selected);
     return {
       ...mappedProps,
       loading: false,
@@ -224,7 +231,6 @@ export default connect(
       childrenDirectories,
       parentDirectories,
       files,
-      saveFileSelection,
       allowUpload: directory.allowUpload || false,
       allowCreate: directory.allowCreate || false
     };
@@ -237,7 +243,13 @@ export default connect(
     }
     const key = buildAPIUrl(path.repository, path.path);
 
+    const saveFileSelection = ids => {
+      dispatch(queueForIngestion(ids));
+      props.history.push("/hav/");
+    };
+
     return {
+      saveFileSelection,
       uploadToURL: apiURL,
       loadCurrentDirectory: () => {
         dispatch(requestDirectoryAction(path, apiURL));

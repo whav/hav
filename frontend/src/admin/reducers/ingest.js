@@ -5,8 +5,21 @@ import {
   SAVE_INGESTION_DATA_ERROR,
   SAVE_INGESTION_DATA_SUCCESS,
   RECEIVE_INITIAL_INGESTION_DATA,
-  UPDATE_INGESTION_DATA
+  UPDATE_INGESTION_DATA,
+  QUEUE_FOR_INGESTION,
+  CLEAR_INGESTION_QUEUE
 } from "../actions/ingest";
+
+const queue = (state = [], action) => {
+  switch (action.type) {
+    case QUEUE_FOR_INGESTION:
+      return action.ingestionIds;
+    case CLEAR_INGESTION_QUEUE:
+      return [];
+    default:
+      return state;
+  }
+};
 
 const ingestTo = (state = null, action) => {
   if (action.type === SET_INGEST_TO) {
@@ -67,7 +80,8 @@ const ingest = combineReducers({
   ingestTo,
   loading,
   entries,
-  options
+  options,
+  queue
 });
 
 export default ingest;

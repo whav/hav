@@ -19,7 +19,16 @@ const IngestionFooter = ({ clearQueue, ingestionIds }) => {
       Ingest here
     </Button>
   );
-  return <Level left={clearButton} right={ingestHereBtn} />;
+  return (
+    <div>
+      <hr />
+      <Level
+        left={clearButton}
+        right={ingestHereBtn}
+        className="ingestion-footer"
+      />
+    </div>
+  );
 };
 
 export default IngestionFooter;

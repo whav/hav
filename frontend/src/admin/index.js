@@ -6,13 +6,19 @@ import ReactDOM from "react-dom";
 
 // AppContainer is a necessary wrapper component for HMR
 import { AppContainer } from "react-hot-loader";
-import store from "./store";
+import configureStore from "./store";
 import HavAdminApp from "./app";
+import { PersistGate } from "redux-persist/es/integration/react";
+import Loading from "./ui/loading";
+
+const { store, persistor } = configureStore();
 
 const render = Component => {
   ReactDOM.render(
     <AppContainer>
-      <Component store={store} />
+      <PersistGate persistor={persistor} loading={<Loading />}>
+        <Component store={store} />
+      </PersistGate>
     </AppContainer>,
     document.getElementById("root")
   );

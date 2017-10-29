@@ -5,11 +5,13 @@ import { clearIngestionQueue } from "../../actions/ingest";
 import FileBrowser from "./index";
 import IngestionFooter from "../../ui/ingest/footer";
 
-const HAVFileBrowser = ({ ingestionIds, clear, ...props }) => {
+const HAVFileBrowser = ({ ingestionIds, clearIngestionQueue, ...props }) => {
   const hasQueue = ingestionIds.length > 0;
-  console.warn(hasQueue);
   const footer = hasQueue ? (
-    <IngestionFooter clear={clear} ingestionIds={ingestionIds} />
+    <IngestionFooter
+      clearQueue={clearIngestionQueue}
+      ingestionIds={ingestionIds}
+    />
   ) : null;
   return <FileBrowser {...props} footer={footer} />;
 };
@@ -21,6 +23,6 @@ export default connect(
     };
   },
   {
-    clear: clearIngestionQueue
+    clearIngestionQueue
   }
 )(HAVFileBrowser);

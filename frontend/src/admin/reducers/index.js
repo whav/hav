@@ -7,6 +7,10 @@ import repositories from "./browser";
 import ingest from "./ingest";
 import { buildAPIUrl } from "../api/browser";
 
+import resolvers from "../containers/filebrowser/resolvers";
+
+const { resolveKey } = resolvers;
+
 const reducers = {
   uploads,
   repositories,
@@ -17,7 +21,7 @@ export default reducers;
 
 // export default combineReducers(reducers);
 
-export const getRepositoryDataFromState = (state, repository, path = "") => {
-  const key = buildAPIUrl(repository, path);
+export const getRepositoryDataFromState = (state, repository, path) => {
+  const key = resolveKey(repository, path);
   return state.repositories.browser[key];
 };

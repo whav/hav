@@ -23,35 +23,32 @@ class Ingest extends React.Component {
   };
 
   loadFormData = () => {
-    this.props.fetchInitialData(
-      this.props.files.map(f => f.file_path),
-      this.props.target.url
-    );
+    this.props.fetchInitialData(this.props.initialItems, this.props.target);
   };
 
   render() {
-    if (this.props.ingestion.loading) {
+    if (this.props.loading) {
       return <LoadingIndicator />;
     }
-    return (
-      <BatchIngest
-        ingestionFiles={this.props.ingestion.entries}
-        {...this.props.ingestion.options}
-        onChange={this.props.updateIngestionData}
-        onSave={this.saveData}
-      />
-    );
+    return <pre>{JSON.stringify(this.props, null, 2)}</pre>;
+    // (
+    //   <BatchIngest
+    //     ingestionFiles={this.props.ingestion.entries}
+    //     {...this.props.ingestion.options}
+    //     onChange={this.props.updateIngestionData}
+    //     onSave={this.saveData}
+    //   />
+    // );
   }
 }
 
 export default connect(
-  (state, ownProps) => {
-    const { target, files } = ownProps.location.state;
-    const ingestionData = state.ingest;
+  state => {
+    const { ingestTo, queue, loading } = state.ingest;
     return {
-      target,
-      files,
-      ingestion: ingestionData
+      target: ingestTo,
+      intitalItems: queue,
+      loading
     };
   },
   {

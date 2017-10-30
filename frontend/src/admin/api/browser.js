@@ -10,11 +10,9 @@ export const normalizePath = path => {
 
 export const buildAPIUrl = (repository, path = "") => {
   let p = `${repository}/`;
-  console.warn(p, path, repository);
   if (path) {
     p = normalizePath(`${p}${path}/`);
   }
-  console.log(p);
   return encodeURI(`${prefix}${p}`);
 };
 

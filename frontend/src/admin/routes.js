@@ -15,7 +15,7 @@ import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
 import HAVFileBrowser from "./containers/filebrowser/hav";
 import { Uploads } from "./containers/uploads";
-import Ingestion from "./containers/ingest/step2";
+import Ingestion from "./containers/ingest";
 
 const routes = [
   {

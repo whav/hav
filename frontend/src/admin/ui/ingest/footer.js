@@ -3,20 +3,20 @@ import React from "react";
 import Level from "../components/level";
 import Button from "../components/buttons";
 
-const IngestionFooter = ({ clearQueue, ingestionIds }) => {
+const IngestionFooter = ({
+  clearQueue,
+  ingest,
+  ingestionIds,
+  ingestTarget
+}) => {
   const clearButton = (
     <Button className="is-danger" onClick={clearQueue}>
       Clear Queue
     </Button>
   );
   const ingestHereBtn = (
-    <Button
-      className="is-primary"
-      onClick={() => {
-        console.log(ingestionIds);
-      }}
-    >
-      Ingest here
+    <Button className="is-primary" onClick={ingest}>
+      Ingest {ingestTarget ? `to ${ingestTarget.name}.` : `here`}
     </Button>
   );
   return (

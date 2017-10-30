@@ -1,7 +1,11 @@
+import uuid4 from "uuid/v4";
+
 import { fetchDataForIngestionForms, ingest } from "../api/ingest";
+
 export const QUEUE_FOR_INGESTION = "QUEUE_FOR_INGESTION";
 export const CLEAR_INGESTION_QUEUE = "CLEAR_INGESTION_QUEUE";
-export const SET_INGEST_TO = "SET_INGEST_TO";
+
+export const INGEST_TO = "SAVE_INGESTION_INTENT";
 
 export const LOADING_INGESTION_DATA = "LOADING_INGESTION_DATA";
 export const RECEIVE_INITIAL_INGESTION_DATA = "RECEIVE_INITIAL_INGEST_DATA";
@@ -23,10 +27,10 @@ export const clearIngestionQueue = () => {
   };
 };
 
-export const ingestTo = havPath => {
+export const saveIngestionIntent = ingestionTarget => {
   return {
-    type: SET_INGEST_TO,
-    path: havPath
+    type: INGEST_TO,
+    target: ingestionTarget
   };
 };
 

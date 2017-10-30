@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import {
-  SET_INGEST_TO,
+  INGEST_TO,
   LOADING_INGESTION_DATA,
   SAVE_INGESTION_DATA_ERROR,
   SAVE_INGESTION_DATA_SUCCESS,
@@ -22,10 +22,12 @@ const queue = (state = [], action) => {
 };
 
 const ingestTo = (state = null, action) => {
-  if (action.type === SET_INGEST_TO) {
-    return action.path;
+  switch (action.type) {
+    case INGEST_TO:
+      return action.target;
+    default:
+      return state;
   }
-  return state;
 };
 
 const loading = (state = true, action) => {
@@ -77,11 +79,11 @@ const options = (state = {}, action) =>
   action.type === RECEIVE_INITIAL_INGESTION_DATA ? action.data.options : state;
 
 const ingest = combineReducers({
-  ingestTo,
   loading,
   entries,
   options,
-  queue
+  queue,
+  ingestTo
 });
 
 export default ingest;

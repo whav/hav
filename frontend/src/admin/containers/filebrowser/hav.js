@@ -1,28 +1,50 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { clearIngestionQueue } from "../../actions/ingest";
+import { clearIngestionQueue, saveIngestionIntent } from "../../actions/ingest";
 import FileBrowser from "./index";
 import IngestionFooter from "../../ui/ingest/footer";
 
-const HAVFileBrowser = ({ ingestionIds, clearIngestionQueue, ...props }) => {
-  const hasQueue = ingestionIds.length > 0;
+import resolvers from "./resolvers";
+
+const HAVFileBrowser = ({
+  hasQueue,
+  ingestionIds,
+  ingest,
+  clearIngestionQueue,
+  ingestTarget,
+  ...props
+}) => {
   const footer = hasQueue ? (
     <IngestionFooter
       clearQueue={clearIngestionQueue}
       ingestionIds={ingestionIds}
+      ingestTarget={ingestTarget}
+      ingest={() => ingest(ingestionIds)}
     />
   ) : null;
   return <FileBrowser {...props} footer={footer} />;
 };
 
 export default connect(
-  state => {
+  (state, { match }) => {
+    const ingestToKey = resolvers.resolveKeyFromMatch(match);
+    const ingestTarget = state.repositories.browser[ingestToKey];
     return {
-      ingestionIds: state.ingest.queue
+      hasQueue: state.ingest.queue.length > 0,
+      ingestionIds: state.ingest.queue,
+      ingestTarget
     };
   },
-  {
-    clearIngestionQueue
+  (dispatch, { match, history }) => {
+    const ingestToKey = resolvers.resolveKeyFromMatch(match);
+
+    return {
+      clearIngestionQueue: () => dispatch(clearIngestionQueue()),
+      ingest: () => {
+        dispatch(saveIngestionIntent(ingestToKey));
+        history.push("/ingest/");
+      }
+    };
   }
 )(HAVFileBrowser);

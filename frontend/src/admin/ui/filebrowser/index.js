@@ -6,6 +6,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import filesize from "filesize";
+import uniq from "lodash/uniq";
 
 import GoFileDirectory from "react-icons/go/file-directory";
 import GoFileMedia from "react-icons/go/file-media";
@@ -24,11 +25,7 @@ export class DirectoryListingBreadcrumbs extends React.Component {
   render() {
     let { dirs, current_dir } = this.props;
     let items = dirs.map((d, index) => <Link to={d.link}>{d.name}</Link>);
-    return (
-      <Breadcrumbs
-        items={items}
-      />
-    );
+    return <Breadcrumbs items={items} />;
   }
 }
 
@@ -129,19 +126,27 @@ const GGalleryItem = ({
   );
 };
 
-export const GGalleryDirectory = ({ name, navigate }) => {
-  return (
-    <GGalleryItem
-      name={name}
-      onClick={navigate}
-      directory={true}
-      preview={<GoFileDirectory />}
-      selected={false}
-    />
-  );
-};
+class GGalleryDirectory extends React.Component {
+  navigateOrSelect = e => {
+    const { navigate, select } = this.props;
+    e.ctrlKey ? select(e) : navigate(e);
+  };
 
-export const GGalleryFile = ({ file, toggleSelect }) => {
+  render() {
+    const { name, navigate, select, selected = false } = this.props;
+    return (
+      <GGalleryItem
+        name={name}
+        onClick={this.navigateOrSelect}
+        directory={true}
+        preview={<GoFileDirectory />}
+        selected={selected}
+      />
+    );
+  }
+}
+
+export const GGalleryFile = ({ file, toggleSelect, ...props }) => {
   let preview = file.preview_url ? (
     <FallBackImageLoader
       src={file.preview_url}
@@ -157,7 +162,7 @@ export const GGalleryFile = ({ file, toggleSelect }) => {
       onClick={toggleSelect}
       name={file.name}
       preview={preview}
-      selected={file.selected}
+      {...props}
     />
   );
 };
@@ -199,23 +204,36 @@ export default class FileList extends React.Component {
 
   handleFileSelectEvent(file, event) {
     let { ctrlKey, shiftKey } = event;
-    let deselectOthers = true;
-    let spanSelection = false;
+    const key = file.url;
+    // start off with a single selected file
+    let selection = [key];
 
     if (ctrlKey || shiftKey) {
-      deselectOthers = false;
+      // ctrl + already selected => deselect
+      if (ctrlKey && this.props.selectedItemIds.has(key)) {
+        selection = Array.from(this.props.selectedItemIds).filter(
+          id => key !== id
+        );
+      } else {
+        // else add to selection
+        selection = [...this.props.selectedItemIds, ...selection];
+      }
     }
 
     if (shiftKey) {
-      spanSelection = true;
+      // span a selection
+      let start = this.allContentIds.indexOf(this.last_selected_id);
+      let end = this.allContentIds.indexOf(key);
+      let range = [start, end].sort((a, b) => a - b);
+      // console.log(`selecting from ${range[0]} to ${range[1]}.`);
+      selection = [
+        ...selection,
+        ...this.allContentIds.slice(range[0], range[1])
+      ];
     }
-
-    let modifiers = {
-      deselectOthers,
-      spanSelection
-    };
-
-    this.props.handleSelect([file], modifiers);
+    selection = uniq(selection);
+    this.last_selected_id = file.url;
+    this.props.handleSelect(selection);
   }
 
   render() {
@@ -223,21 +241,37 @@ export default class FileList extends React.Component {
       directories = [],
       files = [],
       uploads = [],
-      displayType
+      displayType,
+      selectedItemIds,
+      handleSelect
     } = this.props;
 
     if (files.length + directories.length === 0) {
       return null;
     }
 
+    // keep track of all ids in the same order in which they are displayed
+    this.allContentIds = [
+      ...directories.map(d => d.url),
+      ...files.map(f => f.url)
+    ];
+
     let renderedDirectories = directories.map((directory, index) => {
-      return <GGalleryDirectory {...directory} key={index} />;
+      return (
+        <GGalleryDirectory
+          {...directory}
+          select={this.handleFileSelectEvent.bind(this, directory)}
+          key={index}
+          selected={selectedItemIds.has(directory.url)}
+        />
+      );
     });
 
     let rendererFiles = files.map((file, index) => {
       let props = {
         file: file,
-        toggleSelect: this.handleFileSelectEvent.bind(this, file)
+        toggleSelect: this.handleFileSelectEvent.bind(this, file),
+        selected: selectedItemIds.has(file.url)
       };
       return <GGalleryFile key={index} {...props} />;
     });

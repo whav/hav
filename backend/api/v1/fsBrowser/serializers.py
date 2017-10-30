@@ -55,7 +55,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
         if len(parts) > 0:
             suffix = '/' if relative_path.is_dir() else ''
             location = os.path.join(*(list(parts) + [suffix]))
-            location = quote(location)
+            # location = quote(location)
         return location
 
     def get_url_for_path(self, path):

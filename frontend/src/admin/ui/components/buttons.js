@@ -6,7 +6,6 @@ const Button = ({ className = "", ...props }) => {
 };
 
 const ButtonGroup = ({ children }) => {
-  console.log(children);
   return (
     <div className="field is-grouped">
       {children.map((c, i) => (

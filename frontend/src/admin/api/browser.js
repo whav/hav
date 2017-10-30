@@ -1,10 +1,24 @@
 /**
  * Created by sean on 09/02/17.
  */
-import { saveFilesForIngestion, browser } from "./urls";
+import { saveFilesForIngestion, browser, prefix } from "./urls";
 import { getCSRFCookie } from "../../utils/xhr";
 
-export const requestDirectory = (url = browser) => {
+export const normalizePath = path => {
+  return path.replace(/\/\//g, `/`);
+};
+
+export const buildAPIUrl = (repository, path = "") => {
+  let p = `${repository}/`;
+  console.warn(p, path, repository);
+  if (path) {
+    p = normalizePath(`${p}${path}/`);
+  }
+  console.log(p);
+  return encodeURI(`${prefix}${p}`);
+};
+
+export const requestDirectory = url => {
   return fetch(url, {
     credentials: "same-origin"
   }).then(response => {
@@ -12,8 +26,7 @@ export const requestDirectory = (url = browser) => {
   });
 };
 
-export const createDirectory = (name, url = browser) => {
-  console.log("name?", name);
+export const createDirectory = (name, url) => {
   return fetch(url, {
     credentials: "same-origin",
     method: "POST",

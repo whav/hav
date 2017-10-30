@@ -3,11 +3,12 @@
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  height: 100vh;
+  min-height: 100%;
   user-select: none;
 }
 
 .filebrowser header {
+  /* position: fixed; */
   flex-grow: 0;
 }
 

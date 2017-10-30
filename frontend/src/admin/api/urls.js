@@ -3,9 +3,14 @@
  */
 
 const apiVersion = "v1";
-const prefix = `/api/${apiVersion}`;
+let apiPrefix = `/api/${apiVersion}/`;
 
-export const file_upload = `${prefix}/upload/`;
+if (window && URL && window.location) {
+  apiPrefix = new URL(apiPrefix, window.location.origin).href;
+}
+
+export const prefix = apiPrefix;
+export const file_upload = `${apiPrefix}upload/`;
 export const browser = file_upload;
-export const prepareIngestion = `${prefix}/ingest/data/`;
-export const ingest = `${prefix}/ingest/`;
+export const prepareIngestion = `${apiPrefix}ingest/data/`;
+export const ingest = `${apiPrefix}ingest/`;

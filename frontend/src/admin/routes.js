@@ -1,17 +1,21 @@
 /**
  * Created by sean on 01/02/17.
  */
-import Welcome from "./home";
-import FileBrowser from "./containers/filebrowser";
-import { Uploads } from "./containers/uploads";
-import IngestionStep1 from "./containers/ingest/step1";
-import IngestionStep2 from "./containers/ingest/step2";
+
+//  Icons
 import GoHome from "react-icons/go/home";
 import GoFileDirectory from "react-icons/go/file-directory";
 import GoFileSubmodule from "react-icons/go/file-submodule";
 import GoCloudUpload from "react-icons/go/cloud-upload";
 import FaArchive from "react-icons/lib/fa/archive";
 import GoDatabase from "react-icons/go/database";
+
+// base components
+import Welcome from "./home";
+import FileBrowser from "./containers/filebrowser";
+import HAVFileBrowser from "./containers/filebrowser/hav";
+import { Uploads } from "./containers/uploads";
+import Ingestion from "./containers/ingest/step2";
 
 const routes = [
   {
@@ -26,17 +30,17 @@ const routes = [
     path: "/uploads/",
     main: Uploads
   },
+  // {
+  //   path: "/ingest/step1/",
+  //   main: IngestionStep1
+  // },
   {
-    path: "/ingest/step1/",
-    main: IngestionStep1
-  },
-  {
-    path: "/ingest/step2/",
-    main: IngestionStep2
+    path: "/ingest/",
+    main: Ingestion
   },
   {
     path: "/:repository(hav)/:path*/",
-    main: FileBrowser
+    main: HAVFileBrowser
   }
 ];
 

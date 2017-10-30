@@ -10,10 +10,11 @@ import PropTypes from "prop-types";
 import {
   requestDirectoryAction,
   switchFilebrowserDisplayType,
-  toggleSelect,
-  toggleSelectAll,
-  createDirectoryAction
+  createDirectoryAction,
+  selectItems
 } from "../../actions/browser";
+
+import { queueForIngestion } from "../../actions/ingest";
 
 import {
   getIngestionQueues,
@@ -34,11 +35,9 @@ import FileList, {
 import { FileBrowserMenu } from "../../ui/filebrowser/controls";
 import UploadTrigger from "../uploads";
 
-import {
-  getDirectoryForPath,
-  getFilesForPath,
-  stripSlashes
-} from "../../reducers/browser";
+import { getRepositoryDataFromState } from "../../reducers";
+
+import { buildAPIUrl, normalizePath } from "../../api/browser";
 
 import { getUploadsForPath } from "../../reducers/uploads";
 
@@ -74,7 +73,8 @@ class FileBrowser extends React.Component {
         allowUpload,
         allowCreate,
         saveFileSelection,
-        createDirectory
+        createDirectory,
+        selectItems
       } = this.props;
 
       let uploads = this.props.uploads;
@@ -102,7 +102,8 @@ class FileBrowser extends React.Component {
 
       let isEmpty =
         childrenDirectories.length + files.length + uploads.length === 0;
-      let selectedFiles = files.filter(f => f.selected);
+
+      let selectedItemIds = new Set(directory.selected);
 
       const header_items = [
         <h1 key="title" className="title">
@@ -115,30 +116,39 @@ class FileBrowser extends React.Component {
             <FileBrowserMenu
               switchDisplayType={switchDisplayStyle}
               selectedDisplayType={settings.selectedDisplayType}
-              selectAll={this.props.selectAll}
-              selectNone={this.props.selectNone}
-              invertSelection={this.props.invertSelection}
-              files={selectedFiles}
-              saveFileSelection={saveFileSelection}
               addDirectory={allowCreate ? createDirectory : false}
+              selectedItemIds={Array.from(selectedItemIds)}
+              allItemIds={directory.content}
+              handleSelect={selectItems}
+              saveFileSelection={() =>
+                saveFileSelection(Array.from(selectedItemIds))}
             />
           }
         />
       ];
 
       const main = isEmpty ? (
-        <h2 className="tc red">This directory is empty.</h2>
+        <h2>This directory is empty.</h2>
       ) : (
         <FileList
           directories={directories}
           files={files}
           uploads={uploads}
           displayType={settings.selectedDisplayType}
-          handleSelect={selectFiles}
+          handleSelect={selectItems}
+          selectedItemIds={selectedItemIds}
         />
       );
 
-      return <FileBrowserInterface header={header_items} main={main} />;
+      const footer = this.props.footer || null;
+
+      return (
+        <FileBrowserInterface
+          header={header_items}
+          main={main}
+          footer={footer}
+        />
+      );
     }
   }
 }
@@ -146,39 +156,43 @@ class FileBrowser extends React.Component {
 FileBrowser.propTypes = {
   loading: PropTypes.bool.isRequired,
   // useful stuff here ...
+  files: PropTypes.array,
   directory: PropTypes.object.isRequired,
   loadCurrentDirectory: PropTypes.func.isRequired,
   parentDirectories: PropTypes.array,
   childrenDirectories: PropTypes.array,
-  files: PropTypes.array,
-  selectFiles: PropTypes.func.isRequired,
   switchDisplayStyle: PropTypes.func.isRequired,
   settings: PropTypes.object,
-  saveFileSelection: PropTypes.func.isRequired,
+  saveFileSelection: PropTypes.func,
   allowUpload: PropTypes.bool,
   allowCreate: PropTypes.bool
 };
 
 export default connect(
   (rootState, props) => {
-    // the location of the root state is defined
-    // in the root reducer
     const state = rootState.repositories;
     const uploadState = rootState.uploads;
     const settings = state.settings;
     const path = props.match.params;
 
     // construct a helper function to build frontend urls
-    const reverseURL = pathToRegexp.compile(props.match.path);
+    const baseURL = pathToRegexp.compile(props.match.path)({
+      repository: path.repository
+    });
+
     const buildFrontendURL = p => {
-      p = stripSlashes(p);
-      return reverseURL({
-        repository: path.repository,
-        path: p ? p : undefined
-      });
+      p = p ? `${baseURL}${p}/` : baseURL;
+      return normalizePath(p);
     };
 
-    let directory = getDirectoryForPath(path, state);
+    // build a selector for this repository
+    const getDirectoryContent = getRepositoryDataFromState.bind(
+      this,
+      rootState,
+      path.repository
+    );
+
+    let directory = getDirectoryContent(path.path);
 
     let mappedProps = {
       directory,
@@ -194,14 +208,14 @@ export default connect(
       };
     }
 
-    // populate parent, children and files from state
-    let parentDirectories = directory.parents.map(key =>
-        getDirectoryForPath(key, state)
-      ),
-      childrenDirectories = directory.children.map(key =>
-        getDirectoryForPath(key, state)
-      ),
-      files = getFilesForPath(path, state);
+    const allChildren = (directory.content || []).map(c => state.browser[c]);
+    const parentDirectories = (directory.parents || []).map(d => {
+      return state.browser[d];
+    });
+
+    // populate children dirs and files from state
+    const childrenDirectories = allChildren.filter(c => c.isDirectory);
+    const files = allChildren.filter(c => c.isFile);
 
     // get the un-finished uploads for directory
     let directoryUploads = Object.values(
@@ -227,27 +241,24 @@ export default connect(
     if (path.path) {
       apiURL = `${apiURL}${path.path}/`;
     }
+    const key = buildAPIUrl(path.repository, path.path);
 
-    const goToIngest = files => {
-      props.history.push("/ingest/step1/", files);
+    const saveFileSelection = ids => {
+      dispatch(queueForIngestion(ids));
+      props.history.push("/hav/");
     };
+
     return {
+      saveFileSelection,
       uploadToURL: apiURL,
       loadCurrentDirectory: () => {
         dispatch(requestDirectoryAction(path, apiURL));
       },
       switchDisplayStyle: style =>
         dispatch(switchFilebrowserDisplayType(style)),
-      selectFiles: (files, modifiers = {}) => {
-        let filenames = files.map(f => f.name);
-        dispatch(toggleSelect(path, filenames, modifiers));
-      },
-      selectAll: () => dispatch(toggleSelectAll(path, true)),
-      selectNone: () => dispatch(toggleSelectAll(path, false)),
-      invertSelection: () => dispatch(toggleSelectAll(path)),
-      saveFileSelection: goToIngest,
       createDirectory: name =>
-        dispatch(createDirectoryAction(name, path, apiURL))
+        dispatch(createDirectoryAction(name, path, apiURL)),
+      selectItems: (items = []) => dispatch(selectItems(key, items))
     };
   }
 )(FileBrowser);

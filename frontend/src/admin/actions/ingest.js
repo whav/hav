@@ -34,12 +34,12 @@ export const saveIngestionIntent = ingestionTarget => {
   };
 };
 
-export const fetchInitialData = (files, target) => {
+export const fetchInitialData = (items, target) => {
   return dispatch => {
     dispatch({
       type: LOADING_INGESTION_DATA
     });
-    fetchDataForIngestionForms(files, target).then(data =>
+    fetchDataForIngestionForms(items, target).then(data =>
       dispatch({
         type: RECEIVE_INITIAL_INGESTION_DATA,
         data

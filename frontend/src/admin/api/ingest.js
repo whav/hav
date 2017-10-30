@@ -1,8 +1,9 @@
 import { prepareIngestion, ingest as ingestionEndpoint } from "./urls";
 import { getCSRFCookie } from "../../utils/xhr";
 
-export const fetchDataForIngestionForms = (files, target) => {
-  const body = { files, target };
+export const fetchDataForIngestionForms = (items, target) => {
+  const body = { items, target };
+  console.log(body);
   return fetch(prepareIngestion, {
     method: "POST",
     body: JSON.stringify(body),

@@ -47,7 +47,7 @@ export default connect(
     const { ingestTo, queue, loading } = state.ingest;
     return {
       target: ingestTo,
-      intitalItems: queue,
+      initialItems: queue,
       loading
     };
   },

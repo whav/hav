@@ -96,6 +96,9 @@ class FileBrowserMenu extends React.Component {
     const { saveFileSelection, selectedItemIds } = this.props;
 
     const controls = [
+      selectedItemIds.length > 0 ? (
+        <SelectedFilesControls key="ingest" save={saveFileSelection} />
+      ) : null,
       <Button key="selectall" onClick={this.selectAll}>
         <FaCheckSquareO title="Check all" />
       </Button>,
@@ -115,9 +118,6 @@ class FileBrowserMenu extends React.Component {
         <Button key="create-directory" onClick={this.createDirectory}>
           <FaPlusIcon /> Add Folder
         </Button>
-      ) : null,
-      selectedItemIds.length > 0 ? (
-        <SelectedFilesControls key="ingest" save={saveFileSelection} />
       ) : null
     ];
     return <ButtonGroup>{controls}</ButtonGroup>;

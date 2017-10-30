@@ -3,7 +3,6 @@ import { getCSRFCookie } from "../../utils/xhr";
 
 export const fetchDataForIngestionForms = (items, target) => {
   const body = { items, target };
-  console.log(body);
   return fetch(prepareIngestion, {
     method: "POST",
     body: JSON.stringify(body),

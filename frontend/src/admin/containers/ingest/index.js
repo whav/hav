@@ -30,25 +30,26 @@ class Ingest extends React.Component {
     if (this.props.loading) {
       return <LoadingIndicator />;
     }
-    return <pre>{JSON.stringify(this.props, null, 2)}</pre>;
-    // (
-    //   <BatchIngest
-    //     ingestionFiles={this.props.ingestion.entries}
-    //     {...this.props.ingestion.options}
-    //     onChange={this.props.updateIngestionData}
-    //     onSave={this.saveData}
-    //   />
-    // );
+    return (
+      <BatchIngest
+        ingestionFiles={this.props.entries}
+        {...this.props.options}
+        onChange={this.props.updateIngestionData}
+        onSave={this.saveData}
+      />
+    );
   }
 }
 
 export default connect(
   state => {
-    const { ingestTo, queue, loading } = state.ingest;
+    const { ingestTo, queue, loading, options, entries } = state.ingest;
     return {
       target: ingestTo,
       initialItems: queue,
-      loading
+      loading,
+      options,
+      entries
     };
   },
   {

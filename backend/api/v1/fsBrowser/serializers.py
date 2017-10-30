@@ -159,7 +159,6 @@ class DirectorySerializer(BaseDirectorySerializer):
     def get_files(self, path):
         files = [f for f in path.iterdir() if not f.is_dir() and not is_hidden(f.name)]
         files.sort(key=lambda f: f.name)
-        print(self.context)
         return FileSerializer(
             files,
             many=True,

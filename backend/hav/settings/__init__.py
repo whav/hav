@@ -203,3 +203,14 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 
 INCOMING_FILES_ROOT = MEDIA_ROOT
+
+INGESTION_SOURCES = {
+    "whav": {
+        "engine": "sources.whav.WHAVSource",
+        "db": "whav"
+    },
+    "incoming": {
+        "engine": "sources.filesystem.FSSource",
+        "root": INCOMING_FILES_ROOT
+    }
+}

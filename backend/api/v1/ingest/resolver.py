@@ -1,9 +1,13 @@
 from urllib.parse import urlparse, unquote
 import os
+from pathlib import PurePath
 
 from django.urls import resolve
 
 from django.conf import settings
+
+
+
 
 
 def recurse(root):
@@ -21,6 +25,8 @@ def resolveIngestionUrl(url):
     path = urlparse(url).path
     match = resolve(path)
 
+    files = []
+
     if 'fs_browser' in match.namespaces:
         path = match.kwargs.get('path', '')
 
@@ -32,13 +38,15 @@ def resolveIngestionUrl(url):
         file_or_path = unquote(file_or_path)
 
         if os.path.isfile(file_or_path):
-            return [file_or_path]
+            files = [file_or_path]
 
         if os.path.isdir(file_or_path):
-            return recurse(file_or_path)
+            files = recurse(file_or_path)
 
-        return []
+    relfiles = [
+        PurePath(f).relative_to(settings.INCOMING_FILES_ROOT) for f in files
+    ]
 
-    else:
-        return []
+    import ipdb; ipdb.set_trace();
+    return relfiles
 

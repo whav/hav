@@ -4,6 +4,8 @@ import Button from "../components/buttons";
 
 import PropTypes from "prop-types";
 
+import classnames from "classnames";
+
 const Field = props => {
   const { onChange, name, value, label, errors, ...input_props } = props;
   return (
@@ -27,7 +29,7 @@ class CreatorSelect extends React.Component {
       <div className="field">
         <label className="label">Creators</label>
         <div className="control">
-          <div className="select">
+          <div className={classnames("select", "is-multiple")}>
             <select
               name="creators"
               value={this.props.value}

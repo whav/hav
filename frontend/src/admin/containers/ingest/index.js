@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import LoadingIndicator from "../../ui/loading";
 
-import BatchIngest from "../../ui/ingest/step2.js";
+import BatchIngest from "../../ui/ingest";
 
 import {
   fetchInitialData,

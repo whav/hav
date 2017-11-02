@@ -1,12 +1,18 @@
 import os
 import stat
+import base64
 from mimetypes import guess_type
 from urllib.parse import urlunparse
 from django.urls import reverse
-from django.utils.http import quote
 from rest_framework import serializers
 
 from hav.thumbor import get_image_url
+
+def encodePath(path):
+    return base64.urlsafe_b64encode(path.encode('utf-8'))
+
+def decodePath(encodedPath):
+    return base64.urlsafe_b64decode(encodedPath).decode('utf-8')
 
 
 def is_hidden(fn):
@@ -34,6 +40,8 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     size = serializers.SerializerMethodField()
     file_path = serializers.SerializerMethodField()
 
+    ingest_id = serializers.SerializerMethodField()
+
     def get_name(self, path):
         if path == self.get_root():
             return 'Root'
@@ -56,6 +64,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
             suffix = '/' if relative_path.is_dir() else ''
             location = os.path.join(*(list(parts) + [suffix]))
             # location = quote(location)
+
         return location
 
     def get_url_for_path(self, path):
@@ -84,6 +93,11 @@ class FileBrowserBaseSerializer(serializers.Serializer):
 
     def get_file_path(self, path):
         return path.as_posix()
+
+    def get_ingest_id(self, path):
+        relPath = path.relative_to(self.get_root())
+        posixPath = relPath.as_posix()
+        return encodePath(posixPath)
 
 
 class FileSerializer(FileBrowserBaseSerializer):

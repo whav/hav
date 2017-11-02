@@ -7,9 +7,6 @@ from django.urls import resolve
 from django.conf import settings
 
 
-
-
-
 def recurse(root):
 
     found = []
@@ -44,9 +41,10 @@ def resolveIngestionUrl(url):
             files = recurse(file_or_path)
 
     relfiles = [
-        PurePath(f).relative_to(settings.INCOMING_FILES_ROOT) for f in files
+        str(PurePath(f).relative_to(settings.INCOMING_FILES_ROOT)) for f in files
     ]
 
-    import ipdb; ipdb.set_trace();
+    relfiles.sort()
+
     return relfiles
 

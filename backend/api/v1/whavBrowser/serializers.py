@@ -8,10 +8,6 @@ from apps.whav.models import ImageCollection, MediaOrdering
 from hav.thumbor import get_image_url
 
 
-class IngestionSerializer(serializers.Serializer):
-    fs_location = serializers.SerializerMethodField()
-
-
 class WHAVFileSerializer(serializers.Serializer):
 
     path = serializers.SerializerMethodField()
@@ -23,6 +19,8 @@ class WHAVFileSerializer(serializers.Serializer):
     url = serializers.SerializerMethodField()
 
     guid = serializers.SerializerMethodField()
+
+    ingest_id = serializers.SerializerMethodField()
 
 
     def get_name(self, mo):
@@ -75,6 +73,8 @@ class WHAVFileSerializer(serializers.Serializer):
         )
         return urlunparse(args)
 
+    def get_ingest_id(self, mo):
+        return mo.pk
 
 
 class BaseWHAVCollectionSerializer(serializers.Serializer):

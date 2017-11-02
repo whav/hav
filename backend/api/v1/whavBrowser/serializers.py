@@ -1,9 +1,9 @@
 import os
 from mimetypes import guess_type
-from urllib.parse import urlunparse
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+from ..utils.ingest import buildIngestId
 from apps.whav.models import ImageCollection, MediaOrdering
 from hav.thumbor import get_image_url
 
@@ -62,19 +62,11 @@ class WHAVFileSerializer(serializers.Serializer):
             }
         ))
 
-    def get_guid(self, mo):
-        args = (
-            self.context['scheme'],
-            self.context['identifier'],
-            str(mo.media.pk),
-            None,
-            None,
-            None
-        )
-        return urlunparse(args)
-
     def get_ingest_id(self, mo):
-        return mo.pk
+        return buildIngestId(
+            self.context['identifier'],
+            '%d/%d' % (mo.collection_id, mo.media_id)
+        )
 
 
 class BaseWHAVCollectionSerializer(serializers.Serializer):
@@ -107,6 +99,8 @@ class BaseWHAVCollectionSerializer(serializers.Serializer):
         return False
 
 
+
+
 class BaseRootWHAVCollectionSerializer(BaseWHAVCollectionSerializer):
 
     def get_name(self, _):
@@ -130,6 +124,8 @@ class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
     childrenDirs = serializers.SerializerMethodField()
     files = serializers.SerializerMethodField()
 
+    ingest_id = serializers.SerializerMethodField()
+
     def get_childrenDirs(self, instance):
         return BaseWHAVCollectionSerializer(
             instance.get_children(),
@@ -147,11 +143,16 @@ class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
 
     def get_files(self, ic):
         return WHAVFileSerializer(
-            MediaOrdering.objects.filter(collection=ic), #.select_related('media', 'media__basefile_set__localfile'),
+            MediaOrdering.objects.filter(collection=ic),
             many=True,
             context=self.context
         ).data
 
+    def get_ingest_id(self, instance):
+        return buildIngestId(
+            self.context['identifier'],
+            '%d' % instance.pk
+        )
 
 
 class RootWHAVCollectionSerializer(BaseRootWHAVCollectionSerializer):

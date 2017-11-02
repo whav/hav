@@ -15,8 +15,8 @@ class HAVNodeBrowser(IncomingBaseMixin, APIView):
     @property
     def node(self):
 
-        if not self._node and self.kwargs.get('node_id'):
-            self._node = Node.objects.get(pk=self.kwargs['node_id'])
+        if not self._node and self.kwargs.get('pk'):
+            self._node = Node.objects.get(pk=self.kwargs['pk'])
         return self._node
 
 

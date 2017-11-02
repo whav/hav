@@ -24,15 +24,11 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
         roles = MediaCreatorRoleSerializer(MediaCreatorRole.objects.all(), many=True).data
         licenses = MediaLicenseSerializer(License.objects.all(), many=True).data
 
-        today = date.today()
-
         return Response({
             'files': [{
                 'ingest_id': f,
                 'initial_data': {
-                    'year': today.year,
-                    'month': today.month,
-                    'day': today.day
+                    'license': 1
                 }
             } for f in expanded],
             'options': {
@@ -46,8 +42,9 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
 class IngestView(IncomingBaseMixin, APIView):
 
     def post(self, request):
-        serializer = BatchMediaSerializer(data=request.data, context={'user': request.user})
+        serializer = BatchMediaSerializer(data=request.data, context={'user': request.user, 'request': request})
         serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data)
         media_entries = serializer.save()
         return Response(media_entries, status=status.HTTP_201_CREATED)
 

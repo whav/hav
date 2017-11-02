@@ -6,7 +6,7 @@ def hav_urls(identifier):
     return [
         url(r'^$', HAVNodeBrowser.as_view(keys=keys), name='hav_root'),
         url(
-            r'(?P<node_id>\d+)/$',
+            r'(?P<pk>\d+)/$',
             HAVNodeBrowser.as_view(keys=keys),
             name='hav_set'
         )

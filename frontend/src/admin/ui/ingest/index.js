@@ -2,7 +2,7 @@ import React from "react";
 
 import Button from "../components/buttons";
 import { LargeModal as Modal } from "../components/modal";
-import { KeyedErrorList } from "../components/errors";
+import { ErrorList } from "../components/errors";
 
 import PropTypes from "prop-types";
 
@@ -25,9 +25,18 @@ const Field = props => {
   );
 };
 
+const FieldErrors = ({ errors }) =>
+  errors
+    ? errors.map((e, i) => (
+        <p key={i} className="help is-danger">
+          {e}
+        </p>
+      ))
+    : null;
+
 class CreatorSelect extends React.Component {
   render() {
-    const { creators } = this.props;
+    const { creators, errors } = this.props;
     const options = creators.map(c => ({
       key: `creator-${c.id}`,
       text: c.name,
@@ -38,7 +47,11 @@ class CreatorSelect extends React.Component {
       <div className="field">
         <label className="label">Creators</label>
         <div className="control">
-          <div className={classnames("select", "is-multiple")}>
+          <div
+            className={classnames("select", "is-multiple", {
+              "is-danger": errors
+            })}
+          >
             <select
               name="creators"
               value={this.props.value}
@@ -53,6 +66,7 @@ class CreatorSelect extends React.Component {
             </select>
           </div>
         </div>
+        <FieldErrors errors={errors} />
       </div>
     );
   }
@@ -60,7 +74,7 @@ class CreatorSelect extends React.Component {
 
 class LicenseSelect extends React.Component {
   render() {
-    const { licenses } = this.props;
+    const { licenses, errors } = this.props;
     const options = licenses.map(l => ({
       value: l.id,
       text: l.name,
@@ -70,7 +84,7 @@ class LicenseSelect extends React.Component {
       <div className="field">
         <label className="label">License</label>
         <div className="control">
-          <div className="select">
+          <div className={classnames("select", { "is-danger": errors })}>
             <select
               name="license"
               value={this.props.value}
@@ -85,6 +99,7 @@ class LicenseSelect extends React.Component {
             </select>
           </div>
         </div>
+        <FieldErrors errors={errors} />
       </div>
     );
   }
@@ -108,6 +123,7 @@ const DateForm = ({ data, ...props }) => {
             onChange={props.onChange}
           />
         </p>
+        <FieldErrors errors={errors.year} />
         <p className="control">
           <input
             className={classnames("input", { "is-danger": errors.month })}
@@ -120,6 +136,8 @@ const DateForm = ({ data, ...props }) => {
             onChange={props.onChange}
           />
         </p>
+        <FieldErrors errors={errors.month} />
+
         <p className="control">
           <input
             className={classnames("input", { "is-danger": errors.day })}
@@ -132,6 +150,7 @@ const DateForm = ({ data, ...props }) => {
             onChange={props.onChange}
           />
         </p>
+        <FieldErrors errors={errors.day} />
       </div>
     </div>
   );
@@ -168,7 +187,8 @@ class IngestForm extends React.Component {
 
     return (
       <div className="columns is-desktop">
-        <div className="column">
+        <div className="column">{this.props.children}</div>
+        <div className="column is-two-thirds">
           <DateForm data={data} onChange={this.handleChange} errors={errors} />
           {hide_fields.includes("description") ? null : (
             <Field label="Description">
@@ -182,6 +202,7 @@ class IngestForm extends React.Component {
               />
             </Field>
           )}
+
           <LicenseSelect
             required
             licenses={licenses}
@@ -190,8 +211,7 @@ class IngestForm extends React.Component {
             onChange={this.handleChange}
             errors={errors.license}
           />
-        </div>
-        <div className="column">
+
           <CreatorSelect
             required
             multiple
@@ -202,7 +222,6 @@ class IngestForm extends React.Component {
             errors={errors.creators}
           />
         </div>
-        <div className="column">{this.props.children}</div>
       </div>
     );
   }
@@ -238,7 +257,6 @@ class BatchIngest extends React.Component {
   applyToAll = () => {
     const data = { ...this.state.template_data };
     this.hide_template_fields.forEach(fn => delete data[fn]);
-
     this.props.ingestionFiles.forEach(ingestionFile =>
       this.props.onChange(ingestionFile.ingestion_id, data)
     );
@@ -263,7 +281,13 @@ class BatchIngest extends React.Component {
                 onChange={this.updateTemplateData}
                 hide_fields={this.hide_template_fields}
               >
-                <Button onClick={this.applyToAll} className="is-primary">
+                <Button
+                  onClick={() => {
+                    this.applyToAll();
+                    this.toggleTemplateForm();
+                  }}
+                  className="is-primary"
+                >
                   Apply to all
                 </Button>
               </IngestForm>
@@ -274,12 +298,14 @@ class BatchIngest extends React.Component {
 
         {this.props.ingestionFiles.map((ingestionFile, index) => {
           let key = ingestionFile.ingestion_id;
-          let errors = ingestionFile.errors || false;
+          const errors = ingestionFile.errors || {};
+          let global_errors = errors.non_field_errors;
+
           let filename = key.split("/").reverse()[0];
-          console.log(errors);
+
           return (
             <div key={key}>
-              {errors ? <KeyedErrorList errors={errors} /> : null}
+              {global_errors ? <ErrorList errors={global_errors} /> : null}
               <IngestForm
                 data={ingestionFile.data}
                 errors={errors}

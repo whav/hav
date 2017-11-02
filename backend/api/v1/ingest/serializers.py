@@ -10,6 +10,7 @@ from apps.archive.models import ArchiveFile
 
 from psycopg2.extras import DateTimeTZRange
 
+
 class MediaLicenseSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -31,10 +32,17 @@ class MediaCreatorRoleSerializer(serializers.ModelSerializer):
         model = MediaCreatorRole
         fields = ['id', 'name']
 
+
 class MediaCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaToCreator
         fields = ['role', 'creator']
+
+
+class IncomingHyperlink(serializers.HyperlinkedRelatedField):
+
+    pass
+
 
 
 class CreateMediaSerializer(serializers.Serializer):
@@ -49,7 +57,7 @@ class CreateMediaSerializer(serializers.Serializer):
     creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
     license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
 
-    def validate_ingestion_id(self, value):
+    def validate_ingestion_identifier(self, value):
         if not os.path.exists(value):
             raise serializers.ValidationError('The file {} does not seem to exist.'.format(value))
 
@@ -69,12 +77,15 @@ class CreateMediaSerializer(serializers.Serializer):
                 The same file already exists in the archive. 
                 The associated media id is {}'''.format(af.media_set.get().pk))
 
-
-    def validate(self, data):
+    def validate_dates(self, data):
         year = data.get('year')
         month = data.get('month')
         day = data.get('day')
+
         timestamp = data.get('timestamp')
+
+        if day and not  month:
+            raise serializers.ValidationError('Cannot have a day without a month')
 
         if any([year, month, day]) and timestamp:
             raise serializers.ValidationError('Can not use timestamp and any of year, month, day together.')
@@ -85,6 +96,9 @@ class CreateMediaSerializer(serializers.Serializer):
             if start > end:
                 raise serializers.ValidationError('Start can not be before end of timerange.')
 
+    def validate(self, data):
+        # self.validate_ingestion_identifier(data.get('ingestion_id'))
+        self.validate_dates(data)
         return data
 
 
@@ -97,7 +111,8 @@ class SimpleMediaSerializer(serializers.ModelSerializer):
 
 class BatchMediaSerializer(serializers.Serializer):
 
-    target = serializers.PrimaryKeyRelatedField(
+    target = serializers.HyperlinkedRelatedField(
+        view_name='api:v1:hav_browser:hav_set',
         queryset=Node.objects.all()
     )
 

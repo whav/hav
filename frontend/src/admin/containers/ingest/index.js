@@ -19,11 +19,6 @@ class Ingest extends React.Component {
   }
 
   saveData = () => {
-    console.warn(
-      "Attempting to save data...",
-      this.props.target,
-      this.props.entries
-    );
     this.props.saveIngestionData(this.props.target, this.props.entries);
   };
 

@@ -2,10 +2,10 @@ import os
 import stat
 import base64
 from mimetypes import guess_type
-from urllib.parse import urlunparse
 from django.urls import reverse
 from rest_framework import serializers
 
+from ..utils.ingest import buildIngestId
 from hav.thumbor import get_image_url
 
 def encodePath(path):
@@ -13,7 +13,6 @@ def encodePath(path):
 
 def decodePath(encodedPath):
     return base64.urlsafe_b64decode(encodedPath).decode('utf-8')
-
 
 def is_hidden(fn):
     return fn.startswith('.')
@@ -80,16 +79,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
             )
         )
 
-    def get_guid(self, path):
-        args = (
-            self.context['scheme'],
-            self.context['identifier'],
-            self.get_path(path),
-            None,
-            None,
-            None
-        )
-        return urlunparse(args)
+
 
     def get_file_path(self, path):
         return path.as_posix()
@@ -97,7 +87,8 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     def get_ingest_id(self, path):
         relPath = path.relative_to(self.get_root())
         posixPath = relPath.as_posix()
-        return encodePath(posixPath)
+        encodedPath = encodePath(posixPath)
+        return buildIngestId(self.context['identifier'], encodedPath)
 
 
 class FileSerializer(FileBrowserBaseSerializer):

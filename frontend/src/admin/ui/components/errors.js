@@ -13,16 +13,26 @@ class Error extends React.Component {
   }
 }
 
-const KeyedErrorList = ({ errors }) => {
-  console.log(errors);
+const List = ({ items = [] }) => (
+  <ul>{items.map((m, i) => <li key={i}>{m}</li>)}</ul>
+);
+
+const ErrorList = ({ errors = [] }) => (
+  <Error>
+    <List items={errors} />
+  </Error>
+);
+
+const KeyedErrorList = ({ title, errors }) => {
   return (
     <Error>
+      {title ? <h3 className="subtitle is-3">{title}</h3> : null}
       {Object.keys(errors).map(k => {
         const msgs = errors[k];
         return (
           <div key={k}>
             <em>{k}</em>
-            <ul>{msgs.map((m, i) => <li key={i}>{m}</li>)}</ul>
+            <List errors={msgs} />
           </div>
         );
       })}
@@ -31,4 +41,4 @@ const KeyedErrorList = ({ errors }) => {
 };
 
 export default Error;
-export { KeyedErrorList };
+export { KeyedErrorList, ErrorList };

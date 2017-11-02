@@ -27,7 +27,7 @@ class BaseHAVNodeSerializer(serializers.ModelSerializer):
         request = self.context['request']
         match = request.resolver_match
         url_lookup = '%s:%s' % (':'.join(match.namespaces), 'hav_set')
-        url_kwargs = {'node_id': instance.pk}
+        url_kwargs = {'pk': instance.pk}
         return request.build_absolute_uri(
             reverse(
                 url_lookup,
@@ -70,7 +70,6 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
             ).data
 
     def create(self, validated_data, parent):
-        print(validated_data)
         node = parent.add_child(**validated_data)
         return node
 

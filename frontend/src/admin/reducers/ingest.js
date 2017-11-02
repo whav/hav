@@ -25,6 +25,10 @@ const ingestTo = (state = null, action) => {
   switch (action.type) {
     case INGEST_TO:
       return action.target;
+    case SAVE_INGESTION_DATA_ERROR:
+      const { entries, ...errors } = action.errors;
+      console.warn(errors);
+      return state;
     default:
       return state;
   }
@@ -53,8 +57,13 @@ const entries = (state = [], action) => {
         }
       }));
     case SAVE_INGESTION_DATA_ERROR:
-      console.warn("Ingestion errors", action);
-      return state;
+      const errors = action.errors["entries"];
+      return state.map((entry, index) => {
+        return {
+          ...entry,
+          errors: errors[index]
+        };
+      });
     case UPDATE_INGESTION_DATA:
       const { key, data } = action;
       const index = state.findIndex(entry => key === entry.ingestion_id);

@@ -13,4 +13,22 @@ class Error extends React.Component {
   }
 }
 
+const KeyedErrorList = ({ errors }) => {
+  console.log(errors);
+  return (
+    <Error>
+      {Object.keys(errors).map(k => {
+        const msgs = errors[k];
+        return (
+          <div key={k}>
+            <em>{k}</em>
+            <ul>{msgs.map((m, i) => <li key={i}>{m}</li>)}</ul>
+          </div>
+        );
+      })}
+    </Error>
+  );
+};
+
 export default Error;
+export { KeyedErrorList };

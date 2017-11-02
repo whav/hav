@@ -19,7 +19,12 @@ class Ingest extends React.Component {
   }
 
   saveData = () => {
-    console.warn("Attempting to save data...");
+    console.warn(
+      "Attempting to save data...",
+      this.props.target,
+      this.props.entries
+    );
+    this.props.saveIngestionData(this.props.target, this.props.entries);
   };
 
   loadFormData = () => {
@@ -35,7 +40,7 @@ class Ingest extends React.Component {
         ingestionFiles={this.props.entries}
         {...this.props.options}
         onChange={this.props.updateIngestionData}
-        onSave={this.saveData}
+        save={this.saveData}
       />
     );
   }
@@ -54,7 +59,7 @@ export default connect(
   },
   {
     fetchInitialData,
-    saveIngestionData,
-    updateIngestionData
+    updateIngestionData,
+    saveIngestionData
   }
 )(Ingest);

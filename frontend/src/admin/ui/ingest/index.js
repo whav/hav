@@ -1,6 +1,8 @@
 import React from "react";
 
 import Button from "../components/buttons";
+import { LargeModal as Modal } from "../components/modal";
+import { KeyedErrorList } from "../components/errors";
 
 import PropTypes from "prop-types";
 
@@ -12,6 +14,13 @@ const Field = props => {
     <div className="field">
       {label ? <label className="label">{label}</label> : null}
       <div className="control">{props.children}</div>
+      {errors
+        ? errors.map((e, i) => (
+            <p key={i} className="help is-danger">
+              {e}
+            </p>
+          ))
+        : null}
     </div>
   );
 };
@@ -67,6 +76,7 @@ class LicenseSelect extends React.Component {
               value={this.props.value}
               onChange={this.props.onChange}
             >
+              <option value={undefined} />
               {options.map(o => (
                 <option key={o.value} value={o.value}>
                   {o.text}
@@ -81,14 +91,15 @@ class LicenseSelect extends React.Component {
 }
 
 const DateForm = ({ data, ...props }) => {
+  const errors = props.errors || {};
   return (
-    <div>
+    <div className="field">
       <label className="label">Date</label>
 
       <div className="field is-grouped">
         <p className="control">
           <input
-            className="input"
+            className={classnames("input", { "is-danger": errors.year })}
             required
             value={data.year || ""}
             type="number"
@@ -99,8 +110,8 @@ const DateForm = ({ data, ...props }) => {
         </p>
         <p className="control">
           <input
+            className={classnames("input", { "is-danger": errors.month })}
             placeholder="M"
-            className="input"
             name="month"
             type="number"
             value={data.month || ""}
@@ -111,7 +122,7 @@ const DateForm = ({ data, ...props }) => {
         </p>
         <p className="control">
           <input
-            className="input"
+            className={classnames("input", { "is-danger": errors.day })}
             placeholder="D"
             name="day"
             type="number"
@@ -151,12 +162,14 @@ class IngestForm extends React.Component {
       creators = [],
       roles = [],
       data = {},
-      hide_fields = []
+      hide_fields = [],
+      errors = {}
     } = this.props;
+
     return (
-      <div className="columns">
+      <div className="columns is-desktop">
         <div className="column">
-          <DateForm data={data} onChange={this.handleChange} />
+          <DateForm data={data} onChange={this.handleChange} errors={errors} />
           {hide_fields.includes("description") ? null : (
             <Field label="Description">
               <textarea
@@ -165,6 +178,7 @@ class IngestForm extends React.Component {
                 name="description"
                 rows="3"
                 onChange={this.handleChange}
+                error={errors.description}
               />
             </Field>
           )}
@@ -174,6 +188,7 @@ class IngestForm extends React.Component {
             value={data.license}
             name="license"
             onChange={this.handleChange}
+            errors={errors.license}
           />
         </div>
         <div className="column">
@@ -184,6 +199,7 @@ class IngestForm extends React.Component {
             value={data.creators || []}
             name="creators"
             onChange={this.handleChange}
+            errors={errors.creators}
           />
         </div>
         <div className="column">{this.props.children}</div>
@@ -194,6 +210,7 @@ class IngestForm extends React.Component {
 
 class BatchIngest extends React.Component {
   state = {
+    isOpen: false,
     template_data: {
       year: "",
       month: "",
@@ -204,6 +221,13 @@ class BatchIngest extends React.Component {
   };
 
   hide_template_fields = ["description"];
+
+  static propTypes = {
+    save: PropTypes.func.isRequired
+  };
+
+  toggleTemplateForm = () =>
+    this.setState(state => ({ isOpen: !state.isOpen }));
 
   updateTemplateData = (_, data) => {
     this.setState(state => ({
@@ -224,32 +248,41 @@ class BatchIngest extends React.Component {
     return (
       <div>
         <h1 className="title">Ingest</h1>
-        <hr />
-        <h2 className="subtitle">Template From</h2>
-        <div className="ingest-template-form is-outlined">
-          <IngestForm
-            ingest_id={"Template Form"}
-            {...this.props}
-            data={this.state.template_data}
-            onChange={this.updateTemplateData}
-            hide_fields={this.hide_template_fields}
-          >
-            <Button onClick={this.applyToAll} className="is-primary">
-              Apply to all
-            </Button>
-          </IngestForm>
-        </div>
+
+        <button className="button is-primary" onClick={this.toggleTemplateForm}>
+          Open template form
+        </button>
+        <Modal open={this.state.isOpen} close={this.toggleTemplateForm}>
+          <div className="box container">
+            <h2 className="subtitle">Template From</h2>
+            <div className="ingest-template-form is-outlined">
+              <IngestForm
+                ingest_id={"Template Form"}
+                {...this.props}
+                data={this.state.template_data}
+                onChange={this.updateTemplateData}
+                hide_fields={this.hide_template_fields}
+              >
+                <Button onClick={this.applyToAll} className="is-primary">
+                  Apply to all
+                </Button>
+              </IngestForm>
+            </div>
+          </div>
+        </Modal>
         <hr />
 
         {this.props.ingestionFiles.map((ingestionFile, index) => {
           let key = ingestionFile.ingestion_id;
+          let errors = ingestionFile.errors || false;
           let filename = key.split("/").reverse()[0];
-
+          console.log(errors);
           return (
             <div key={key}>
+              {errors ? <KeyedErrorList errors={errors} /> : null}
               <IngestForm
                 data={ingestionFile.data}
-                errors={ingestionFile.errors}
+                errors={errors}
                 {...this.props}
                 onChange={this.props.onChange}
                 ingest_id={key}
@@ -261,6 +294,11 @@ class BatchIngest extends React.Component {
             </div>
           );
         })}
+        <div className="control">
+          <button className="button is-primary" onClick={this.props.save}>
+            Submit
+          </button>
+        </div>
       </div>
     );
   }

@@ -26,9 +26,12 @@ export const ingest = data => {
     }),
     credentials: "same-origin"
   }).then(response => {
-    return {
-      success: response.status === 201,
-      data: response.json()
-    };
+    if (response.ok) {
+      return response.json();
+    } else {
+      return response.json().then(err => {
+        return Promise.reject(err);
+      });
+    }
   });
 };

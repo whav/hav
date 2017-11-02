@@ -14,6 +14,12 @@ export const UPDATE_INGESTION_DATA = "UPDATE_INGESTION_DATA";
 export const SAVE_INGESTION_DATA_SUCCESS = "SAVE_INGESTION_DATA_SUCCESS";
 export const SAVE_INGESTION_DATA_ERROR = "SAVE_INGESTION_DATA_ERROR";
 
+const cleanData = data => {
+  let d = {};
+  Object.keys(data).forEach(key => (data[key] ? (d[key] = data[key]) : null));
+  return d;
+};
+
 export const queueForIngestion = ingestionIds => {
   return {
     type: QUEUE_FOR_INGESTION,
@@ -55,8 +61,12 @@ export const saveIngestionData = (target, entries) => {
     });
     const data = {
       target,
-      entries
+      entries: entries.map(e => ({
+        ingestion_id: e.ingestion_id,
+        ...cleanData(e.data)
+      }))
     };
+
     ingest(data)
       .then(data => {
         dispatch({

@@ -9,7 +9,7 @@ from ..utils.ingest import buildIngestId
 from hav.thumbor import get_image_url
 
 def encodePath(path):
-    return base64.urlsafe_b64encode(path.encode('utf-8'))
+    return base64.urlsafe_b64encode(path.encode('utf-8')).decode('utf-8')
 
 def decodePath(encodedPath):
     return base64.urlsafe_b64decode(encodedPath).decode('utf-8')
@@ -78,8 +78,6 @@ class FileBrowserBaseSerializer(serializers.Serializer):
                 }
             )
         )
-
-
 
     def get_file_path(self, path):
         return path.as_posix()

@@ -18,8 +18,6 @@ class WHAVFileSerializer(serializers.Serializer):
     size = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
-    guid = serializers.SerializerMethodField()
-
     ingest_id = serializers.SerializerMethodField()
 
 

@@ -22,8 +22,7 @@ module.exports = opts => {
       ...config.plugins,
       // production bundle stats file
       new BundleTracker({
-        path: output_path,
-        filename: "webpack-stats.json"
+        path: output_path
       }),
       // pass options to uglify
       new webpack.LoaderOptionsPlugin({

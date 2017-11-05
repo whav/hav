@@ -20,8 +20,7 @@ module.exports = opts => {
       ...config.plugins,
       // local bundle stats file
       new BundleTracker({
-        path: output_path,
-        filename: "webpack-stats-development.json"
+        path: output_path
       }),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.NamedModulesPlugin()

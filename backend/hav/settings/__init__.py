@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+from dotenv import load_dotenv
+
+
 # this path holds the settings folder
 PROJECT_DIR = os.path.normpath(
     os.path.dirname(
@@ -22,17 +25,22 @@ PROJECT_DIR = os.path.normpath(
         )
     )
 )
+
+
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
+DOTENV_FILE = os.path.join(ROOT_DIR, '.env')
+
+if os.path.isfile(DOTENV_FILE):
+    load_dotenv(DOTENV_FILE)
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&o7q0!r)!#3hx*ang^ey_-r&2j0(ev1(692+w_ft0435sy)fs7'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False)
 
 ALLOWED_HOSTS = []
 
@@ -95,16 +103,23 @@ WSGI_APPLICATION = 'hav.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'HOST': 'db',
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hav',
+        'HOST': os.environ.get('HAV_DB_HOST', 'localhost'),
+        'NAME': os.environ.get('HAV_DB_NAME', 'hav'),
+        'USER': os.environ.get('HAV_DB_USER'),
+        'PASSWORD': os.environ.get('HAV_DB_PW'),
     },
     'whav': {
-        # 'HOST': 'db',
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'whav'
+        'HOST': os.environ.get('WHAV_DB_HOST', 'localhost'),
+        'NAME': os.environ.get('WHAV_DB_NAME', 'whav'),
+        'USER': os.environ.get('WHAV_DB_USER'),
+        'PASSWORD': os.environ.get('WHAV_DB_PW'),
     }
 }
+
+
+
 
 DATABASE_ROUTERS = [
     'hav.db_router.WhavDBRouter'
@@ -150,7 +165,11 @@ REST_FRAMEWORK = {
 }
 
 WEBPACK_BUILD_PATH = os.path.normpath(
-    os.path.join(ROOT_DIR, 'frontend/dist/')
+    os.path.join(
+        ROOT_DIR,
+        'frontend/',
+        'build' if DEBUG else 'dist'
+    )
 )
 
 WEBPACK_ASSET_PATH = os.path.normpath(
@@ -191,8 +210,9 @@ STORAGES = {
 
 LOGIN_URL = 'admin:login'
 
-CELERY_BROKER_URL = 'redis://localhost:6379/1'
-CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/1')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', CELERY_BROKER_URL)
+
 # 10 days expiration for results
 CELERY_RESULT_EXPIRES = 3600 * 24 * 10
 
@@ -202,7 +222,14 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 
-INCOMING_FILES_ROOT = MEDIA_ROOT
+THUMBOR_SERVER = os.environ.get('THUMBOR_SERVER', '')
+THUMBOR_SECRET_KEY = os.environ.get('THUMBOR_SECRET_KEY', '')
+
+# These settings will change ....
+INCOMING_FILES_ROOT = os.environ.get('INCOMING_FILES_ROOT', MEDIA_ROOT)
+
+HAV_ARCHIVE_PATH = os.environ.get('HAV_ARCHIVE_PATH', os.path.join(ROOT_DIR, 'dist/archive'))
+
 
 INGESTION_SOURCES = {
     "whav": {

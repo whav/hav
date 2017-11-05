@@ -1,30 +1,22 @@
+from django.conf import settings
 from libthumbor import CryptoURL
 
 # defaults
-UNSAFE = False
+unsafe = settings.DEBUG
 
-try:
-    from hav.settings.secrets import THUMBOR_SECRET_KEY
-except ImportError:
-    THUMBOR_SECRET_KEY = 'my-secret-key'
-    UNSAFE = True
+secret_key = settings.THUMBOR_SECRET_KEY
+server = settings.THUMBOR_SERVER
 
-
-try:
-    from hav.settings.secrets import THUMBOR_SERVER
-except:
-    THUMBOR_SERVER = 'http://127.0.0.1:8888'
-
-THUMBOR_SERVER = THUMBOR_SERVER.strip('/')
+server = server.rstrip('/')
 
 defaults = {
-    'unsafe': UNSAFE,
+    'unsafe': unsafe,
     'smart': False,
     "height": 300,
     "fit_in": True
 }
 
-crypto = CryptoURL(THUMBOR_SECRET_KEY)
+crypto = CryptoURL(secret_key)
 
 
 def get_image_url(path, **kwargs):
@@ -32,4 +24,4 @@ def get_image_url(path, **kwargs):
         kwargs.setdefault(k, v)
 
     url = crypto.generate(image_url=path, **kwargs)
-    return '%s/%s' % (THUMBOR_SERVER, url)
+    return '%s/%s' % (server, url)

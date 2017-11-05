@@ -12,9 +12,6 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
-from dotenv import load_dotenv
-
-
 # this path holds the settings folder
 PROJECT_DIR = os.path.normpath(
     os.path.dirname(
@@ -29,11 +26,6 @@ PROJECT_DIR = os.path.normpath(
 
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 ROOT_DIR = os.path.dirname(BASE_DIR)
-
-DOTENV_FILE = os.path.join(ROOT_DIR, '.env')
-
-if os.path.isfile(DOTENV_FILE):
-    load_dotenv(DOTENV_FILE)
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -200,7 +192,7 @@ STATICFILES_DIRS = (
 )
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(ROOT_DIR, 'dist/media')
+MEDIA_ROOT = os.path.join(ROOT_DIR, os.environ.get('MEDIA_ROOT', 'dist/media'))
 
 STORAGES = {
     'examples': {
@@ -226,9 +218,9 @@ THUMBOR_SERVER = os.environ.get('THUMBOR_SERVER', '')
 THUMBOR_SECRET_KEY = os.environ.get('THUMBOR_SECRET_KEY', '')
 
 # These settings will change ....
-INCOMING_FILES_ROOT = os.environ.get('INCOMING_FILES_ROOT', MEDIA_ROOT)
+INCOMING_FILES_ROOT = os.path.join(ROOT_DIR, os.environ.get('INCOMING_FILES_ROOT', MEDIA_ROOT))
 
-HAV_ARCHIVE_PATH = os.environ.get('HAV_ARCHIVE_PATH', os.path.join(ROOT_DIR, 'dist/archive'))
+HAV_ARCHIVE_PATH = os.path.join(ROOT_DIR, os.environ.get('HAV_ARCHIVE_PATH', 'dist/archive'))
 
 
 INGESTION_SOURCES = {

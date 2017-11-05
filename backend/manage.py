@@ -2,7 +2,23 @@
 import os
 import sys
 
+from dotenv import load_dotenv
+
 if __name__ == "__main__":
+
+    # load dotenv
+    project_root = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '..'
+        )
+    )
+
+    dotenv_path = os.path.join(project_root, '.env')
+
+    if os.path.isfile(dotenv_path):
+        load_dotenv(dotenv_path)
+
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hav.settings")
     try:
         from django.core.management import execute_from_command_line

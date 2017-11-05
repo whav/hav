@@ -8,6 +8,7 @@ from apps.whav.models import ImageCollection, MediaOrdering
 from hav.thumbor import get_image_url
 
 
+
 class WHAVFileSerializer(serializers.Serializer):
 
     path = serializers.SerializerMethodField()
@@ -75,6 +76,8 @@ class BaseWHAVCollectionSerializer(serializers.Serializer):
 
     allowUpload = serializers.SerializerMethodField()
 
+    ingest_id = serializers.SerializerMethodField()
+
     def get_name(self, instance):
         return instance.name
 
@@ -96,10 +99,15 @@ class BaseWHAVCollectionSerializer(serializers.Serializer):
     def get_allowUpload(self, instance):
         return False
 
-
+    def get_ingest_id(self, instance):
+        return buildIngestId(
+            self.context['identifier'],
+            '%d' % instance.pk
+        )
 
 
 class BaseRootWHAVCollectionSerializer(BaseWHAVCollectionSerializer):
+
 
     def get_name(self, _):
         return 'WHAV'
@@ -115,14 +123,16 @@ class BaseRootWHAVCollectionSerializer(BaseWHAVCollectionSerializer):
             reverse(url_lookup)
         )
 
+    def get_ingest_id(self, _):
+        return None
+
+
 
 class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
 
     parentDirs = serializers.SerializerMethodField()
     childrenDirs = serializers.SerializerMethodField()
     files = serializers.SerializerMethodField()
-
-    ingest_id = serializers.SerializerMethodField()
 
     def get_childrenDirs(self, instance):
         return BaseWHAVCollectionSerializer(
@@ -146,11 +156,7 @@ class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
             context=self.context
         ).data
 
-    def get_ingest_id(self, instance):
-        return buildIngestId(
-            self.context['identifier'],
-            '%d' % instance.pk
-        )
+
 
 
 class RootWHAVCollectionSerializer(BaseRootWHAVCollectionSerializer):
@@ -171,4 +177,5 @@ class RootWHAVCollectionSerializer(BaseRootWHAVCollectionSerializer):
 
     def get_files(self, _):
         return []
+
 

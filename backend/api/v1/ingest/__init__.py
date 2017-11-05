@@ -44,7 +44,7 @@ class IngestView(IncomingBaseMixin, APIView):
     def post(self, request):
         serializer = BatchMediaSerializer(data=request.data, context={'user': request.user, 'request': request})
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data)
+        # print(serializer.validated_data)
         media_entries = serializer.save()
         return Response(media_entries, status=status.HTTP_201_CREATED)
 

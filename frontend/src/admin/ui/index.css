@@ -47,7 +47,7 @@ body,
 }
 
 .hav-admin-main-menu > img {
-  display: none;
+  /* display: none; */
   max-width: 80%;
   margin: 0.5em 10%;
   height: auto;

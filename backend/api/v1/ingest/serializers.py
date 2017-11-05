@@ -1,5 +1,6 @@
 import os
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from apps.media.utils.dtrange import range_from_partial_date
@@ -108,41 +109,77 @@ class SimpleMediaSerializer(serializers.ModelSerializer):
         fields = ['pk', 'creators', 'license', 'creation_date']
 
 
+class HAVTargetField(serializers.HyperlinkedRelatedField):
+    view_name = 'api:v1:hav_browser:hav_set'
+    queryset = Node.objects.all()
+
 
 class BatchMediaSerializer(serializers.Serializer):
 
-    target = serializers.HyperlinkedRelatedField(
-        view_name='api:v1:hav_browser:hav_set',
-        queryset=Node.objects.all()
-    )
+    target = HAVTargetField()
 
     entries = CreateMediaSerializer(many=True)
 
     def create(self, validated_data):
-        media_entries = []
-        target = validated_data.get('target')
+        target = validated_data['target']
         user = self.context['user']
 
-        for entry_data in validated_data.get('entries', []):
-            dt_range = range_from_partial_date(entry_data.get('year'), entry_data.get('month'), entry_data.get('day'))
-            mo = Media.objects.create(
+        raw_entry_data = self.data
+        raw_entries = raw_entry_data.pop('entries', [])
+
+        tasks = []
+
+        for media_data in raw_entries:
+            media_data.update(raw_entry_data)
+            media_data.update({
+                'user': user.pk,
+                'target': target.pk
+            })
+
+            # queue the task
+            task = archive.delay(media_data)
+            # collect task ids
+            tasks.append(task.id)
+
+        return tasks
+
+
+
+class IngestSerializer(CreateMediaSerializer):
+
+    target = serializers.PrimaryKeyRelatedField(queryset=Node.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    def create(self, vd):
+        # construct date time range
+        dt_range = range_from_partial_date(vd.get('year'), vd.get('month'), vd.get('day'))
+
+        # actually create the media object
+        media = Media.objects.create(
                     creation_date=DateTimeTZRange(lower=dt_range[0], upper=dt_range[1]),
-                    license=entry_data.get('license'),
-                    set=target,
-                    created_by=user
+                    license=vd.get('license'),
+                    set=vd.target,
+                    created_by=vd.user
                 )
-            # save m2m relations
-            for creator in entry_data['creators']:
-                MediaToCreator.objects.create(
-                    creator=creator,
-                    media=mo
-                )
-            media_entries.append(mo)
 
-        filenames = [e['ingestion_id'] for e in validated_data.get('entries', [])]
+        # save m2m
+        for creator in vd['creators']:
+            MediaToCreator.objects.create(
+                creator=creator,
+                media=media
+            )
 
-        for filename, media in zip(filenames, media_entries):
-            archive.delay(filename, media.pk, user.pk)
+        return SimpleMediaSerializer(media)
 
-        return SimpleMediaSerializer(media_entries, many=True).data
 
+
+
+class IngestSourcesSerializer(serializers.ListField):
+    child = serializers.CharField()
+
+
+class PrepareIngestSerializer(serializers.Serializer):
+
+    target = HAVTargetField()
+
+    assets = IngestSourcesSerializer()

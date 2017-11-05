@@ -313,7 +313,7 @@ class BatchIngest extends React.Component {
                 onChange={this.props.onChange}
                 ingest_id={key}
               >
-                <em>{filename}</em>
+                <em>{key}</em>
               </IngestForm>
 
               <hr />

@@ -50,6 +50,7 @@ const filesByUri = (state = {}, action) => {
 
       parentDirs.forEach(directory => {
         mapping[directory.url] = {
+          ...(state[directory.url] || {}),
           ...attrs,
           isDirectory: true,
           ...directory
@@ -63,14 +64,17 @@ const filesByUri = (state = {}, action) => {
       const ownKey = ownData.url;
       const parents = ownData.parentDirs.map(d => d.url);
 
+      const existingData = state[ownKey] || {};
+
       // remove duplicate information
       delete ownData.childrenDirs;
       delete ownData.files;
       delete ownData.parentDirs;
 
-      mapping[action.payload.url] = {
+      mapping[ownKey] = {
+        ...existingData,
         ...ownData,
-        selected: [],
+        selected: existingData.selected || [],
         content: children_keys,
         parents,
         lastLoaded: new Date()

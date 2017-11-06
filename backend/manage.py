@@ -2,22 +2,11 @@
 import os
 import sys
 
-from dotenv import load_dotenv
+from hav.env import load_env
 
 if __name__ == "__main__":
 
-    # load dotenv
-    project_root = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            '..'
-        )
-    )
-
-    dotenv_path = os.path.join(project_root, '.env')
-
-    if os.path.isfile(dotenv_path):
-        load_dotenv(dotenv_path)
+    load_env()
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hav.settings")
     try:

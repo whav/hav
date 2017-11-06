@@ -1,6 +1,9 @@
 from __future__ import absolute_import, unicode_literals
 import os
+from .env import load_env
 from celery import Celery
+
+load_env()
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'hav.settings')

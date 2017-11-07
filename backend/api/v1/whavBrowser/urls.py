@@ -12,7 +12,7 @@ def whav_urls(identifier):
             name='whav_collection'
         ),
         url(
-            r'^(?P<collection_id>\d+)/(?P<media_id>\d+)/$',
+            r'^media/(?P<mediaordering_id>\d+)/$',
             WHAVMediaDetail.as_view(identifier=identifier),
             name='whav_media'
         )

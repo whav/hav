@@ -1,5 +1,8 @@
-FROM node:alpine
+FROM node:carbon
 VOLUME /code
 VOLUME /dist
-RUN apk add yarn
 WORKDIR /code
+COPY /frontend/package.json /code/
+COPY /frontend/yarn.lock /code/
+RUN yarn install
+

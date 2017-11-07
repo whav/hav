@@ -1,6 +1,13 @@
 import os
-from rest_framework import serializers
+from urllib.parse import urlparse, unquote
+from pathlib import Path
+
+from django.urls import resolve
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import serializers
+from rest_framework.reverse import reverse
 
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from apps.media.utils.dtrange import range_from_partial_date
@@ -9,6 +16,7 @@ from apps.archive.tasks import archive
 from apps.archive.operations.hash import generate_hash
 from apps.archive.models import ArchiveFile
 
+from apps.whav.models import Media, ImageCollection, MediaOrdering
 from psycopg2.extras import DateTimeTZRange
 
 
@@ -40,10 +48,60 @@ class MediaCreatorSerializer(serializers.ModelSerializer):
         fields = ['role', 'creator']
 
 
-class IncomingHyperlink(serializers.HyperlinkedRelatedField):
+class IngestHyperlinkField(serializers.Field):
 
-    pass
+    default_error_messages = serializers.HyperlinkedRelatedField.default_error_messages
 
+    def get_url(self, obj, *args):
+
+        url_name = 'api:v1:whav_browser:${}'
+
+        if isinstance(obj, MediaOrdering):
+            return reverse(
+                url_name.format('whav_media'),
+                kwargs={
+                    'mediaordering_id': obj.pk
+                }
+            )
+        elif isinstance(obj, ImageCollection):
+            return reverse(
+                url_name.format('whav_collection'),
+                kwargs={
+                    'collection_id': obj.pk
+                }
+            )
+        elif isinstance(obj, Path):
+            url_name = 'api:v1:fs_browser:${}'
+            kwargs = {'path': str(obj)}
+            if obj.is_file():
+                return reverse(url_name.format('filebrowser_file'), kwargs=kwargs)
+            else:
+                return reverse(url_name.format('filebrowser'), kwargs=kwargs)
+
+        self.fail('no_match')
+
+    def get_object(self, view_name, view_args, view_kwargs):
+        # whav ingestion
+        if view_name == 'api:v1:whav_browser:whav_media':
+            return MediaOrdering.objects.get(pk=view_kwargs['mediaordering_id'])
+        elif view_name == 'api:v1:whav_browser:whav_collection':
+            return ImageCollection.objects.get(pk=view_kwargs['collection_id'])
+        # deal with filebrowsers
+        elif view_name in ['api:v1:fs_browser:filebrowser_file', 'api:v1:fs_browser:filebrowser']:
+            return Path(settings.INCOMING_FILES_ROOT).joinpath(view_kwargs['path'])
+
+        return self.fail['']
+
+    def to_internal_value(self, data):
+        path = urlparse(data).path
+        match = resolve(path)
+        try:
+            return self.get_object(match.view_name, match.args, match.kwargs)
+        except ObjectDoesNotExist:
+            self.fail('does_not_exist')
+
+    def to_representation(self, value):
+        return self.get_url(value)
 
 
 class CreateMediaSerializer(serializers.Serializer):
@@ -85,7 +143,7 @@ class CreateMediaSerializer(serializers.Serializer):
 
         timestamp = data.get('timestamp')
 
-        if day and not  month:
+        if day and not month:
             raise serializers.ValidationError('Cannot have a day without a month')
 
         if any([year, month, day]) and timestamp:
@@ -174,13 +232,15 @@ class IngestSerializer(CreateMediaSerializer):
 
 
 
-
-class IngestSourcesSerializer(serializers.ListField):
-    child = serializers.CharField()
+class IngestSourcesSerializer():
+    child = IngestHyperlinkField()
 
 
 class PrepareIngestSerializer(serializers.Serializer):
 
     target = HAVTargetField()
 
-    assets = IngestSourcesSerializer()
+    items = serializers.ListField(
+        child=IngestHyperlinkField()
+    )
+

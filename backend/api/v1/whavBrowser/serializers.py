@@ -21,7 +21,6 @@ class WHAVFileSerializer(serializers.Serializer):
 
     ingest_id = serializers.SerializerMethodField()
 
-
     def get_name(self, mo):
         media = mo.media
         path = self.get_path_for_media(media)
@@ -56,12 +55,12 @@ class WHAVFileSerializer(serializers.Serializer):
         return request.build_absolute_uri(reverse(
             name,
             kwargs={
-                'collection_id': mo.collection_id,
-                'media_id': mo.media_id
+                'mediaordering_id': mo.pk
             }
         ))
 
     def get_ingest_id(self, mo):
+        print(self.context)
         return buildIngestId(
             self.context['identifier'],
             '%d/%d' % (mo.collection_id, mo.media_id)

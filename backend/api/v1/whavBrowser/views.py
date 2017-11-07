@@ -53,15 +53,8 @@ class WHAVCollectionBrowser(BaseWHAVBrowser, APIView):
 class WHAVMediaDetail(BaseWHAVBrowser, RetrieveAPIView):
 
     queryset = MediaOrdering.objects.all()
+    lookup_url_kwarg = 'mediaordering_id'
     serializer_class = WHAVFileSerializer
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        return get_object_or_404(
-            queryset,
-            collection=self.kwargs.get('collection_id'),
-            media=self.kwargs.get('media_id')
-        )
 
     def get_serializer_context(self):
         ctx = super().get_serializer_context()
@@ -69,7 +62,6 @@ class WHAVMediaDetail(BaseWHAVBrowser, RetrieveAPIView):
         return ctx
 
     def get(self,  *args, **kwargs):
-        self.identifier = kwargs.get(self.lookup_url_kwarg)
         return super().get(*args, **kwargs)
 
 

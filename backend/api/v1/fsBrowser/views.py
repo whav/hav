@@ -51,7 +51,6 @@ class FileBrowserMixin(object):
 
 class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 
-
     def get(self, request, path=None, **kwargs):
         path = self.resolve_directory(path)
 

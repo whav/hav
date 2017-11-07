@@ -10,15 +10,11 @@ class BaseHAVNodeSerializer(serializers.ModelSerializer):
         model = Node
         fields = ['name', 'path', 'url', 'allowUpload', 'allowCreate']
 
-    # name = serializers.SerializerMethodField()
     path = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
     allowUpload = serializers.SerializerMethodField()
     allowCreate = serializers.SerializerMethodField()
-
-    # def get_name(self, instance):
-    #     return instance.name
 
     def get_path(self, instance):
         return '%d' % instance.pk

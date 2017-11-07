@@ -6,6 +6,7 @@ from django.urls import resolve
 
 from django.conf import settings
 
+from ..whavBrowser.views import WHAVMediaDetail, WHAVCollectionBrowser
 
 def recurse_folder(root):
 
@@ -28,7 +29,7 @@ def resolveIngestionUrl(url):
 
     files = []
 
-    if 'fs_browser' in match.namespaces:
+    if match.namespaces[-1] == 'fs_browser':
         path = match.kwargs.get('path', '')
 
         file_or_path = os.path.join(
@@ -43,6 +44,11 @@ def resolveIngestionUrl(url):
 
         if os.path.isdir(file_or_path):
             files = recurse_folder(file_or_path)
+    #
+    # elif match.namespaces[-1] == 'whav_browser':
+    #     if match.url_name == 'whav_media':
+    #
+
 
     # whav
     # ['api', 'v1', 'whav_browser']

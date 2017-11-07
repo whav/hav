@@ -30,6 +30,7 @@ services:
     depends_on:
       - "hav_db"
       - "whav_db"
+      - "frontend"
     build:
       context: .
       dockerfile: ./docker/backend/Dockerfile
@@ -52,17 +53,16 @@ services:
     volumes:
       - ./docker/caddy/Caddyfile:/etc/Caddyfile
 
-#
-#  frontend:
-#    build:
-#      context: .
-#      dockerfile: ./docker/frontend/Dockerfile
-#    expose:
-#      - 8000
-#    volumes:
-#      - ./frontend/:/code
-#    command: yarn run docker
-#
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
+    expose:
+      - 8000
+    volumes:
+      - ./frontend/:/code
+    command: yarn run docker
+
   thumbor:
     image: apsl/thumbor:latest
     expose:

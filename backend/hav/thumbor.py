@@ -1,16 +1,13 @@
 from django.conf import settings
 from libthumbor import CryptoURL
 
-# defaults
-unsafe = settings.DEBUG
-
 secret_key = settings.THUMBOR_SECRET_KEY
 server = settings.THUMBOR_SERVER
 
 server = server.rstrip('/')
 
 defaults = {
-    'unsafe': unsafe,
+    'unsafe': False,
     'smart': False,
     "height": 300,
     "fit_in": True
@@ -24,4 +21,5 @@ def get_image_url(path, **kwargs):
         kwargs.setdefault(k, v)
 
     url = crypto.generate(image_url=path, **kwargs)
-    return '%s/%s' % (server, url)
+    print(url)
+    return '%s/%s' % (server, url.lstrip('/'))

@@ -4,10 +4,11 @@ services:
 
   hav_db:
     image: postgres
+    hostname: ${HAV_DB_HOST}
     environment:
-      - POSTGRES_PASSWORD=$HAV_PG_PW
-      - POSTGRES_USER=$HAV_PG_USER
-      - POSTGRES_DB=$HAV_PG_DB
+      - POSTGRES_PASSWORD=${HAV_DB_PW}
+      - POSTGRES_USER=${HAV_DB_USER}
+      - POSTGRES_DB=${HAV_DB_NAME}
     expose:
       - 5432
     volumes:
@@ -15,10 +16,11 @@ services:
 
   whav_db:
     image: mdillon/postgis:9.4
+    hostname: ${HAV_DB_HOST}
     environment:
-      - POSTGRES_PASSWORD=$WHAV_PG_PW
-      - POSTGRES_USER=$WHAV_PG_USER
-      - POSTGRES_DB=$WHAV_PG_DB
+      - POSTGRES_PASSWORD=${WHAV_DB_PW}
+      - POSTGRES_USER=${WHAV_DB_USER}
+      - POSTGRES_DB=${WHAV_DB_NAME}
     expose:
       - 5432
     volumes:
@@ -31,49 +33,15 @@ services:
     build:
       context: .
       dockerfile: ./docker/backend/Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python backend/manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./backend:/code
+      - ./:/code
       - ./dist:/dist
       - ./frontend/build:/build
       - ./docker/mounts/incoming:/incoming
     expose:
       - 8000
-    environment:
-      - DEBUG=true
-      - HAV_PG_USER
-      - HAV_PG_DB
-      - HAV_PG_PW
-      - WHAV_PG_USER
-      - WHAV_PG_DB
-      - WHAV_PG_PW
-      - DJANGO_SETTINGS_MODULE
 
-  frontend:
-    build:
-      context: .
-      dockerfile: ./docker/frontend/Dockerfile
-    expose:
-      - 8000
-    volumes:
-      - ./frontend/:/code
-    command: yarn run docker
-
-  thumbor:
-    image: apsl/thumbor:latest
-    expose:
-      - 8000
-    volumes:
-      - /data
-      - ./docker/mounts/incoming:/data/loader
-    environment:
-      - LOADER=thumbor.loaders.file_loader_http_fallback
-      - STORAGE=thumbor.storages.file_storage
-      - AUTO_WEBP=True
-      - FILE_STORAGE_ROOT_PATH=/data/storage
-      - FILE_LOADER_ROOT_PATH=/data/loader
-      - SECURITY_KEY=MY_SECURE_KEY
-      - ALLOW_UNSAFE_URL=True
 
   caddy:
     build:
@@ -83,6 +51,33 @@ services:
       - 8000:80
     volumes:
       - ./docker/caddy/Caddyfile:/etc/Caddyfile
+
+#
+#  frontend:
+#    build:
+#      context: .
+#      dockerfile: ./docker/frontend/Dockerfile
+#    expose:
+#      - 8000
+#    volumes:
+#      - ./frontend/:/code
+#    command: yarn run docker
+#
+  thumbor:
+    image: apsl/thumbor:latest
+    expose:
+      - 8000
+    volumes:
+      - /data
+      - ./dist/media:/data/loader
+    environment:
+      - LOADER=thumbor.loaders.file_loader_http_fallback
+      - STORAGE=thumbor.storages.file_storage
+      - AUTO_WEBP=True
+      - FILE_STORAGE_ROOT_PATH=/data/storage
+      - FILE_LOADER_ROOT_PATH=/data/loader
+      - SECURITY_KEY=${THUMBOR_SECRET_KEY}
+      - ALLOW_UNSAFE_URL=False
 
   redis:
     image: redis:alpine

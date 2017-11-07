@@ -7,7 +7,7 @@ from django.urls import resolve
 from django.conf import settings
 
 
-def recurse(root):
+def recurse_folder(root):
 
     found = []
     for root, dirs, files in os.walk(root):
@@ -15,6 +15,10 @@ def recurse(root):
             found.append(os.path.join(root, file))
 
     return found
+
+
+def recurse_whav(collection):
+    return []
 
 
 def resolveIngestionUrl(url):
@@ -38,7 +42,14 @@ def resolveIngestionUrl(url):
             files = [file_or_path]
 
         if os.path.isdir(file_or_path):
-            files = recurse(file_or_path)
+            files = recurse_folder(file_or_path)
+
+    # whav
+    # ['api', 'v1', 'whav_browser']
+    # ResolverMatch(func=api.v1.whavBrowser.views.WHAVMediaDetail, args=(),
+    #               kwargs={'collection_id': '6864', 'media_id': '115269'}, url_name=whav_media,
+    #               app_names=['api', 'api', 'api'], namespaces=['api', 'v1', 'whav_browser']
+
 
     relfiles = [
         str(PurePath(f).relative_to(settings.INCOMING_FILES_ROOT)) for f in files

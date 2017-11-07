@@ -98,6 +98,7 @@ class CreateMediaSerializer(serializers.Serializer):
                 raise serializers.ValidationError('Start can not be before end of timerange.')
 
     def validate(self, data):
+        print(data)
         # self.validate_ingestion_identifier(data.get('ingestion_id'))
         self.validate_dates(data)
         return data

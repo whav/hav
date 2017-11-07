@@ -20,6 +20,7 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
             paths = resolveIngestionUrl(item)
             expanded.extend(paths)
 
+        # collect all options
         creators = [{'id': mc.pk, 'name': str(mc)} for mc in MediaCreator.objects.all()]
         roles = MediaCreatorRoleSerializer(MediaCreatorRole.objects.all(), many=True).data
         licenses = MediaLicenseSerializer(License.objects.all(), many=True).data
@@ -28,7 +29,9 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
             'files': [{
                 'ingest_id': f,
                 'initial_data': {
-                    'license': 1
+                    'license': 1,
+                    'year': 2007,
+                    'creators': [1]
                 }
             } for f in expanded],
             'options': {

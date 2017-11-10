@@ -71,9 +71,15 @@ class IngestHyperlinkField(serializers.Field):
                 }
             )
         elif isinstance(obj, Path):
-            url_name = 'api:v1:fs_browser:${}'
-            kwargs = {'path': str(obj)}
-            if obj.is_file():
+            path = Path(unquote(str(obj)))
+            is_file = path.is_file()
+
+            url_name = 'api:v1:fs_browser:{}'
+            if path.is_absolute():
+                path = obj.relative_to(settings.INCOMING_FILES_ROOT)
+            
+            kwargs = {'path': str(path)}
+            if is_file:
                 return reverse(url_name.format('filebrowser_file'), kwargs=kwargs)
             else:
                 return reverse(url_name.format('filebrowser'), kwargs=kwargs)
@@ -105,6 +111,31 @@ class IngestHyperlinkField(serializers.Field):
 
     def to_representation(self, value):
         return self.get_url(value)
+
+
+class FinalIngestHyperlinkField(IngestHyperlinkField):
+
+    def get_url(self, obj):
+        if isinstance(obj, ImageCollection):
+            self.fail('no_match')
+
+        if isinstance(obj, Path) and obj.is_dir():
+            self.fail('no_match')
+
+        return super().get_url(obj)
+
+    def get_object(self, *args, **kwargs):
+        obj = super().get_object(*args, **kwargs)
+        if isinstance(obj, ImageCollection):
+            self.fail('does_not_exist')
+
+        if isinstance(obj, Path) and obj.is_dir():
+            self.fail('does_not_exist')
+
+        return obj
+
+
+
 
 
 class CreateMediaSerializer(serializers.Serializer):
@@ -234,9 +265,11 @@ class IngestSerializer(CreateMediaSerializer):
         return SimpleMediaSerializer(media)
 
 
+class IngestionItemSerializer(serializers.Serializer):
 
-class IngestSourcesSerializer():
-    child = IngestHyperlinkField()
+    path = serializers.ListField(serializers.CharField(max_length=200))
+
+    item = FinalIngestHyperlinkField()
 
 
 class PrepareIngestSerializer(serializers.Serializer):

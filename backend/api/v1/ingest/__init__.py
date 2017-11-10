@@ -3,22 +3,19 @@ from rest_framework import status
 from rest_framework.response import Response
 from datetime import date
 from apps.media.models import MediaCreator, MediaCreatorRole, License
-from itertools import chain
 
 from ..permissions import IncomingBaseMixin
 from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, BatchMediaSerializer, PrepareIngestSerializer
 
-from .resolver import resolveIngestionUrl
+from .resolver import resolveIngestionItems
 
 class PrepareIngestView(IncomingBaseMixin, APIView):
 
     def post(self, request):
         serializer = PrepareIngestSerializer(data=request.data)
-        items = list(set(request.data.get('items', [])))
-        expanded = []
-        for item in items:
-            paths = resolveIngestionUrl(item)
-            expanded.extend(paths)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            items = resolveIngestionItems(data['items'])
 
         # collect all options
         creators = [{'id': mc.pk, 'name': str(mc)} for mc in MediaCreator.objects.all()]
@@ -33,7 +30,8 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
                     'year': 2007,
                     'creators': [1]
                 }
-            } for f in expanded],
+            } for f in []],
+            'items': items,
             'options': {
                 'creators': creators,
                 'roles': roles,

@@ -80,17 +80,20 @@ class IngestHyperlinkField(serializers.Field):
 
         self.fail('no_match')
 
+
     def get_object(self, view_name, view_args, view_kwargs):
+
         # whav ingestion
         if view_name == 'api:v1:whav_browser:whav_media':
             return MediaOrdering.objects.get(pk=view_kwargs['mediaordering_id'])
         elif view_name == 'api:v1:whav_browser:whav_collection':
             return ImageCollection.objects.get(pk=view_kwargs['collection_id'])
+
         # deal with filebrowsers
         elif view_name in ['api:v1:fs_browser:filebrowser_file', 'api:v1:fs_browser:filebrowser']:
             return Path(settings.INCOMING_FILES_ROOT).joinpath(view_kwargs['path'])
 
-        return self.fail['']
+        return self.fail('no_match')
 
     def to_internal_value(self, data):
         path = urlparse(data).path

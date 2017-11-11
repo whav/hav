@@ -55,20 +55,25 @@ class IngestHyperlinkField(serializers.Field):
     def get_url(self, obj, *args):
 
         url_name = 'api:v1:whav_browser:${}'
-
+        reverse_kwargs = {
+            'request': self.context['request']
+        }
         if isinstance(obj, MediaOrdering):
             return reverse(
                 url_name.format('whav_media'),
                 kwargs={
                     'mediaordering_id': obj.pk
-                }
+                },
+                **reverse_kwargs
             )
         elif isinstance(obj, ImageCollection):
             return reverse(
                 url_name.format('whav_collection'),
                 kwargs={
                     'collection_id': obj.pk
-                }
+                },
+                **reverse_kwargs
+
             )
         elif isinstance(obj, Path):
             path = Path(unquote(str(obj)))
@@ -77,12 +82,20 @@ class IngestHyperlinkField(serializers.Field):
             url_name = 'api:v1:fs_browser:{}'
             if path.is_absolute():
                 path = obj.relative_to(settings.INCOMING_FILES_ROOT)
-            
+
             kwargs = {'path': str(path)}
             if is_file:
-                return reverse(url_name.format('filebrowser_file'), kwargs=kwargs)
+                return reverse(
+                    url_name.format('filebrowser_file'),
+                    kwargs=kwargs,
+                    **reverse_kwargs
+                )
             else:
-                return reverse(url_name.format('filebrowser'), kwargs=kwargs)
+                return reverse(
+                    url_name.format('filebrowser'),
+                    kwargs=kwargs
+                    ** reverse_kwargs
+               )
 
         self.fail('no_match')
 
@@ -190,7 +203,7 @@ class CreateMediaSerializer(serializers.Serializer):
                 raise serializers.ValidationError('Start can not be before end of timerange.')
 
     def validate(self, data):
-        print(data)
+        # print(data)
         # self.validate_ingestion_identifier(data.get('ingestion_id'))
         self.validate_dates(data)
         return data
@@ -279,4 +292,5 @@ class PrepareIngestSerializer(serializers.Serializer):
     items = serializers.ListField(
         child=IngestHyperlinkField()
     )
+
 

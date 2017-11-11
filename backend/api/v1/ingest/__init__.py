@@ -1,25 +1,35 @@
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from datetime import date
+
 from apps.media.models import MediaCreator, MediaCreatorRole, License
 
 from ..permissions import IncomingBaseMixin
 from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, BatchMediaSerializer, PrepareIngestSerializer, IngestionItemSerializer
-
 from .resolver import resolveIngestionItems
 
 
 class PrepareIngestView(IncomingBaseMixin, APIView):
 
     def post(self, request):
-        serializer = PrepareIngestSerializer(data=request.data)
 
-        if serializer.is_valid():
-            data = serializer.validated_data
-            ingestion_items = resolveIngestionItems(data['items'])
-            ingestion_serializers = map(lambda i: IngestionItemSerializer(instance={'path': i[0], 'item': i[1]}), ingestion_items)
-            ingestion_data = map(lambda i: i.data, ingestion_serializers)
+        serializer_context = {
+            'request': request,
+            'user': request.user
+        }
+        serializer = PrepareIngestSerializer(data=request.data, context=serializer_context)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=404)
+
+        data = serializer.validated_data
+        ingestion_items = resolveIngestionItems(data['items'])
+
+        ingestion_serializers = map(
+            lambda i: IngestionItemSerializer(instance={'path': i[0], 'item': i[1]}, context=serializer_context),
+            ingestion_items
+        )
+        ingestion_data = map(lambda i: i.data, ingestion_serializers)
 
 
         # collect all options
@@ -36,7 +46,7 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
                     'creators': [1]
                 }
             } for f in []],
-            'items': map(lambda i: i.data, ingestion_serializers),
+            'items': ingestion_data,
             'options': {
                 'creators': creators,
                 'roles': roles,

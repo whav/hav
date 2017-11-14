@@ -84,6 +84,7 @@ class IngestHyperlinkField(serializers.Field):
                 path = obj.relative_to(settings.INCOMING_FILES_ROOT)
 
             kwargs = {'path': str(path)}
+
             if is_file:
                 return reverse(
                     url_name.format('filebrowser_file'),
@@ -93,8 +94,8 @@ class IngestHyperlinkField(serializers.Field):
             else:
                 return reverse(
                     url_name.format('filebrowser'),
-                    kwargs=kwargs
-                    ** reverse_kwargs
+                    kwargs=kwargs,
+                    **reverse_kwargs
                )
 
         self.fail('no_match')
@@ -127,7 +128,10 @@ class IngestHyperlinkField(serializers.Field):
 
 
 class FinalIngestHyperlinkField(IngestHyperlinkField):
-
+    '''
+    Same as IngestHyperlinkField, but limits valid selections to
+    whav media entries and real files
+    '''
     def get_url(self, obj):
         if isinstance(obj, ImageCollection):
             self.fail('no_match')

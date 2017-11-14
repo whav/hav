@@ -50,10 +50,11 @@ const loading = (state = true, action) => {
 const entries = (state = [], action) => {
   switch (action.type) {
     case RECEIVE_INITIAL_INGESTION_DATA:
-      return action.data.files.map(f => ({
-        ingestion_id: f.ingest_id,
+      return action.data.items.map(item => ({
+        ingestion_id: item.item,
+        path: item.path || [],
         data: {
-          ...f.initial_data
+          ...(item.initial_data || {})
         }
       }));
     case SAVE_INGESTION_DATA_ERROR:

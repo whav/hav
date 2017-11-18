@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import environ
+import raven
 
 project_root = environ.Path(__file__) - 4
 django_root = environ.Path(__file__) - 3
@@ -18,7 +19,8 @@ django_root = environ.Path(__file__) - 3
 # set up the environment
 env = environ.Env(
     DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, [])
+    ALLOWED_HOSTS=(list, []),
+    SENTRY_DSN=(str, '')
 )
 
 # read the .env file
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'treebeard',
+    'raven.contrib.django.raven_compat',
     'apps.whav',
     'apps.sets',
     'apps.archive',
@@ -180,6 +183,12 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
+RAVEN_CONFIG = {
+    'dsn': env('SENTRY_DSN'),
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(project_root()),
+}
 
 THUMBOR_SERVER = env('THUMBOR_SERVER', default='')
 THUMBOR_SECRET_KEY = env('THUMBOR_SECRET_KEY', default='')

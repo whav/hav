@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -53,6 +54,11 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
                 'licenses': licenses,
             }
         })
+
+
+class IngestQueueView(IncomingBaseMixin, ListCreateAPIView):
+
+    pass
 
 
 class IngestView(IncomingBaseMixin, APIView):

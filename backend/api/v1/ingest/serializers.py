@@ -15,6 +15,7 @@ from apps.sets.models import Node
 from apps.archive.tasks import archive
 from apps.archive.operations.hash import generate_hash
 from apps.archive.models import ArchiveFile
+from apps.ingest.models import IngestQueue
 
 from apps.whav.models import Media, ImageCollection, MediaOrdering
 from psycopg2.extras import DateTimeTZRange
@@ -298,3 +299,15 @@ class PrepareIngestSerializer(serializers.Serializer):
     )
 
 
+class IngestQueueSerializer(serializers.ModelSerializer):
+
+    selection = serializers.ListField(child=IngestHyperlinkField())
+    target = HAVTargetField()
+
+    class Meta:
+        model = IngestQueue
+        fields = [
+            'id',
+            'target',
+            'selection'
+        ]

@@ -11,33 +11,20 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import environ
 
-# this path holds the settings folder
-PROJECT_DIR = os.path.normpath(
-    os.path.dirname(
-        os.path.dirname(
-            os.path.abspath(
-                __file__
-            )
-        )
-    )
-)
+project_root = environ.Path(__file__) - 4
+django_root = environ.Path(__file__) - 3
 
+env = environ.Env(DEBUG=(bool, False),)
 
-BASE_DIR = os.path.dirname(PROJECT_DIR)
-ROOT_DIR = os.path.dirname(BASE_DIR)
+environ.Env.read_env(project_root('.env'))
 
+DEBUG = env('DEBUG', False)
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False)
+SECRET_KEY = env("SECRET_KEY")
 
 ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,7 +41,8 @@ INSTALLED_APPS = [
     'apps.whav',
     'apps.sets',
     'apps.archive',
-    'apps.media'
+    'apps.media',
+    'apps.ingest'
 ]
 
 MIDDLEWARE = [
@@ -73,7 +61,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
+            django_root('templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -90,24 +78,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'hav.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('HAV_DB_HOST', 'localhost'),
-        'NAME': os.environ.get('HAV_DB_NAME', 'hav'),
-        'USER': os.environ.get('HAV_DB_USER'),
-        'PASSWORD': os.environ.get('HAV_DB_PW'),
-    },
-    'whav': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('WHAV_DB_HOST', 'localhost'),
-        'NAME': os.environ.get('WHAV_DB_NAME', 'whav'),
-        'USER': os.environ.get('WHAV_DB_USER'),
-        'PASSWORD': os.environ.get('WHAV_DB_PW'),
-    }
+    'default': env.db(default='postgresql:///hav'),
+    'whav': env.db(var='WHAV_DATABASE_URL', default='postgresql:///whav')
 }
 
 
@@ -156,26 +129,15 @@ REST_FRAMEWORK = {
     )
 }
 
-WEBPACK_BUILD_PATH = os.path.normpath(
-    os.path.join(
-        ROOT_DIR,
-        'frontend/',
-        'build' if DEBUG else 'dist'
-    )
-)
+WEBPACK_BUILD_PATH = project_root('frontend/build/')
 
-WEBPACK_ASSET_PATH = os.path.normpath(
-    os.path.join(ROOT_DIR, 'frontend/src/assets/')
-)
+WEBPACK_ASSET_PATH = project_root('frontend/src/assets/')
 
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
         'BUNDLE_DIR_NAME': '/',
-        'STATS_FILE': os.path.join(
-            WEBPACK_BUILD_PATH,
-            'webpack-stats.json'
-        ),
+        'STATS_FILE': project_root('frontend/build/webpack-stats.json'),
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
         'IGNORE': ['.+\.hot-update.js', '.+\.map']
@@ -192,18 +154,19 @@ STATICFILES_DIRS = (
 )
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(ROOT_DIR, os.environ.get('MEDIA_ROOT', 'dist/media'))
+
+MEDIA_ROOT = env('MEDIA_ROOT', default=project_root('dist/media/'))
 
 STORAGES = {
     'examples': {
-        'path': os.path.join(ROOT_DIR, 'dist/examples/')
+        'path': project_root('dist/examples/')
     }
 }
 
 LOGIN_URL = 'admin:login'
 
-CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/1')
-CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', CELERY_BROKER_URL)
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/1')
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default=CELERY_BROKER_URL)
 
 # 10 days expiration for results
 CELERY_RESULT_EXPIRES = 3600 * 24 * 10
@@ -214,13 +177,13 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 
-THUMBOR_SERVER = os.environ.get('THUMBOR_SERVER', '')
-THUMBOR_SECRET_KEY = os.environ.get('THUMBOR_SECRET_KEY', '')
+THUMBOR_SERVER = env('THUMBOR_SERVER', default='')
+THUMBOR_SECRET_KEY = env('THUMBOR_SECRET_KEY', default='')
 
 # These settings will change ....
-INCOMING_FILES_ROOT = os.path.join(ROOT_DIR, os.environ.get('INCOMING_FILES_ROOT', MEDIA_ROOT))
+INCOMING_FILES_ROOT = env('INCOMING_FILES_ROOT', default=MEDIA_ROOT)
 
-HAV_ARCHIVE_PATH = os.path.join(ROOT_DIR, os.environ.get('HAV_ARCHIVE_PATH', 'dist/archive'))
+HAV_ARCHIVE_PATH = env('HAV_ARCHIVE_PATH', default=project_root('dist/archive'))
 
 
 INGESTION_SOURCES = {

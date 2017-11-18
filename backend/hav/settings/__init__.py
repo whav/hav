@@ -10,21 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import os
 import environ
 
 project_root = environ.Path(__file__) - 4
 django_root = environ.Path(__file__) - 3
 
-env = environ.Env(DEBUG=(bool, False),)
+# set up the environment
+env = environ.Env(
+    DEBUG=(bool, False),
+    ALLOWED_HOSTS=(list, [])
+)
 
+# read the .env file
 environ.Env.read_env(project_root('.env'))
+
 
 DEBUG = env('DEBUG', False)
 
 SECRET_KEY = env("SECRET_KEY")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,8 +46,7 @@ INSTALLED_APPS = [
     'apps.whav',
     'apps.sets',
     'apps.archive',
-    'apps.media',
-    'apps.ingest'
+    'apps.media'
 ]
 
 MIDDLEWARE = [

@@ -10,21 +10,28 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import os
 import environ
+import raven
 
 project_root = environ.Path(__file__) - 4
 django_root = environ.Path(__file__) - 3
 
-env = environ.Env(DEBUG=(bool, False),)
+# set up the environment
+env = environ.Env(
+    DEBUG=(bool, False),
+    ALLOWED_HOSTS=(list, []),
+    SENTRY_DSN=(str, '')
+)
 
+# read the .env file
 environ.Env.read_env(project_root('.env'))
+
 
 DEBUG = env('DEBUG', False)
 
 SECRET_KEY = env("SECRET_KEY")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,11 +45,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'treebeard',
+    'raven.contrib.django.raven_compat',
     'apps.whav',
     'apps.sets',
     'apps.archive',
-    'apps.media',
-    'apps.ingest'
+    'apps.media'
 ]
 
 MIDDLEWARE = [
@@ -176,6 +183,12 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
+RAVEN_CONFIG = {
+    'dsn': env('SENTRY_DSN'),
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(project_root()),
+}
 
 THUMBOR_SERVER = env('THUMBOR_SERVER', default='')
 THUMBOR_SECRET_KEY = env('THUMBOR_SECRET_KEY', default='')

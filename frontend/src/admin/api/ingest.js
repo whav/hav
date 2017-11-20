@@ -2,7 +2,8 @@ import { prepareIngestion, ingest as ingestionEndpoint } from "./urls";
 import { getCSRFCookie } from "../../utils/xhr";
 
 export const fetchDataForIngestionForms = (items, target) => {
-  const body = { items, target };
+  const body = { selection: items, target };
+  console.log(items, target);
   return fetch(prepareIngestion, {
     method: "POST",
     body: JSON.stringify(body),

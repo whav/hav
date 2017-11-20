@@ -12,5 +12,5 @@ if (window && URL && window.location) {
 export const prefix = apiPrefix;
 export const file_upload = `${apiPrefix}upload/`;
 export const browser = file_upload;
-export const prepareIngestion = `${apiPrefix}ingest/data/`;
+export const prepareIngestion = `${apiPrefix}ingestq/`;
 export const ingest = `${apiPrefix}ingest/`;

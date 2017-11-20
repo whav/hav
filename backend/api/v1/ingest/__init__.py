@@ -4,9 +4,9 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from apps.media.models import MediaCreator, MediaCreatorRole, License
-
+from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin
-from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, BatchMediaSerializer, PrepareIngestSerializer, IngestionItemSerializer
+from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, BatchMediaSerializer, PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer
 from .resolver import resolveIngestionItems
 
 
@@ -58,8 +58,8 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
 
 class IngestQueueView(IncomingBaseMixin, ListCreateAPIView):
 
-    pass
-
+    serializer_class = IngestQueueSerializer
+    queryset = IngestQueue.objects.all()
 
 class IngestView(IncomingBaseMixin, APIView):
 

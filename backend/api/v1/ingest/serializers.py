@@ -55,7 +55,7 @@ class IngestHyperlinkField(serializers.Field):
 
     def get_url(self, obj, *args):
 
-        url_name = 'api:v1:whav_browser:${}'
+        url_name = 'api:v1:whav_browser:{}'
         reverse_kwargs = {
             'request': self.context['request']
         }
@@ -81,6 +81,7 @@ class IngestHyperlinkField(serializers.Field):
             is_file = path.is_file()
 
             url_name = 'api:v1:fs_browser:{}'
+
             if path.is_absolute():
                 path = obj.relative_to(settings.INCOMING_FILES_ROOT)
 
@@ -98,12 +99,11 @@ class IngestHyperlinkField(serializers.Field):
                     kwargs=kwargs,
                     **reverse_kwargs
                )
-
+        print('get url fall through', obj, type(obj))
         self.fail('no_match')
 
 
     def get_object(self, view_name, view_args, view_kwargs):
-
         # whav ingestion
         if view_name == 'api:v1:whav_browser:whav_media':
             return MediaOrdering.objects.get(pk=view_kwargs['mediaordering_id'])
@@ -113,7 +113,7 @@ class IngestHyperlinkField(serializers.Field):
         # deal with filebrowsers
         elif view_name in ['api:v1:fs_browser:filebrowser_file', 'api:v1:fs_browser:filebrowser']:
             return Path(settings.INCOMING_FILES_ROOT).joinpath(view_kwargs['path'])
-
+        print('get object fall through')
         return self.fail('no_match')
 
     def to_internal_value(self, data):
@@ -125,8 +125,14 @@ class IngestHyperlinkField(serializers.Field):
             self.fail('does_not_exist')
 
     def to_representation(self, value):
+        print('getting representation', value)
         return self.get_url(value)
 
+
+class StoredIngestHyperlinkField(IngestHyperlinkField):
+    def to_internal_value(self, data):
+        super().to_internal_value(data)
+        return data
 
 class FinalIngestHyperlinkField(IngestHyperlinkField):
     '''
@@ -301,13 +307,16 @@ class PrepareIngestSerializer(serializers.Serializer):
 
 class IngestQueueSerializer(serializers.ModelSerializer):
 
-    selection = serializers.ListField(child=IngestHyperlinkField())
+    selection = serializers.ListField(child=StoredIngestHyperlinkField())
     target = HAVTargetField()
+
+    def create(self, validated_data):
+        return IngestQueue.objects.create(**validated_data, created_by=self.context['request'].user)
 
     class Meta:
         model = IngestQueue
         fields = [
-            'id',
+            'uuid',
             'target',
             'selection'
         ]

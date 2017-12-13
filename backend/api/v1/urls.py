@@ -25,7 +25,16 @@ urlpatterns = [
     url(r'^ingest/data/$', PrepareIngestView.as_view(), name='prepare_ingest'),
     url(r'^ingest/$', IngestView.as_view(), name='ingest'),
     url(r'^ingestq/', IngestQueueView.as_view(), name='ingest_queue'),
-    url(r'^incoming/', include(fs_urls(root_path=settings.INCOMING_FILES_ROOT, identifier='incoming'), namespace='fs_browser', app_name=app_name)),
-    url(r'^whav/', include(whav_urls('whav'), namespace='whav_browser', app_name=app_name)),
-    url(r'^hav/', include(hav_urls('hav'), namespace='hav_browser', app_name=app_name))
+    url(r'^incoming/', include(
+        (fs_urls(root_path=settings.INCOMING_FILES_ROOT, identifier='incoming'), app_name),
+        namespace='fs_browser'
+    )),
+    url(r'^whav/', include(
+        (whav_urls('whav'), app_name),
+        namespace='whav_browser')
+    ),
+    url(r'^hav/', include(
+        (hav_urls('hav'), app_name),
+        namespace='hav_browser')
+    )
 ]

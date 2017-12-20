@@ -99,7 +99,7 @@ class IngestHyperlinkField(serializers.Field):
                     kwargs=kwargs,
                     **reverse_kwargs
                )
-        print('get url fall through', obj, type(obj))
+
         self.fail('no_match')
 
 
@@ -113,11 +113,10 @@ class IngestHyperlinkField(serializers.Field):
         # deal with filebrowsers
         elif view_name in ['api:v1:fs_browser:filebrowser_file', 'api:v1:fs_browser:filebrowser']:
             return Path(settings.INCOMING_FILES_ROOT).joinpath(view_kwargs['path'])
-        print('get object fall through')
         return self.fail('no_match')
 
-    def to_internal_value(self, data):
-        path = urlparse(data).path
+    def to_internal_value(self, url):
+        path = urlparse(url).path
         match = resolve(path)
         try:
             return self.get_object(match.view_name, match.args, match.kwargs)
@@ -125,14 +124,14 @@ class IngestHyperlinkField(serializers.Field):
             self.fail('does_not_exist')
 
     def to_representation(self, value):
-        print('getting representation', value)
+        print('to repr', value, type(value))
         return self.get_url(value)
 
 
 class StoredIngestHyperlinkField(IngestHyperlinkField):
     def to_internal_value(self, data):
-        super().to_internal_value(data)
-        return data
+        iv = super().to_internal_value(data)
+        return iv
 
 class FinalIngestHyperlinkField(IngestHyperlinkField):
     '''

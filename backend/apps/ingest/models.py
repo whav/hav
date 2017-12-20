@@ -22,3 +22,10 @@ class IngestQueue(models.Model):
     ingested = models.DateTimeField(null=True, default=None)
 
     data = JSONField(default=dict)
+
+    def __str__(self):
+        return str(self.pk)
+
+    @property
+    def selection_length(self):
+        return len(self.selection)

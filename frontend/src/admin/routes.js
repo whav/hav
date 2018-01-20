@@ -16,6 +16,7 @@ import FileBrowser from "./containers/filebrowser";
 import HAVFileBrowser from "./containers/filebrowser/hav";
 import { Uploads } from "./containers/uploads";
 import Ingestion from "./containers/ingest";
+import IngestionQueue from "./containers/ingest/queue";
 
 const routes = [
   {
@@ -37,6 +38,10 @@ const routes = [
   {
     path: "/ingest/",
     main: Ingestion
+  },
+  {
+    path: "/ingest/:uuid/",
+    main: IngestionQueue
   },
   {
     path: "/:repository(hav)/:path*/",

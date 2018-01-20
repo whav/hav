@@ -2,10 +2,10 @@
  * Created by sean on 02/02/17.
  */
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
+import createBrowserHistory from "history/createBrowserHistory";
 
 import { Provider } from "react-redux";
-
 import Nav from "./nav";
 import { routes, mainNav } from "./routes";
 
@@ -17,10 +17,14 @@ const logo = require("../assets/logo.png");
 const App = ({ children }) => <div className="hav-admin-app">{children}</div>;
 const Navigation = ({ ...props }) => <Nav navItems={mainNav} {...props} />;
 
+const history = createBrowserHistory({
+  basename: "/admin"
+});
+
 const HavAdmin = ({ store }) => {
   return (
     <Provider store={store}>
-      <Router basename="/admin">
+      <Router history={history}>
         <App>
           <div className="hav-admin-main-menu">
             <img src={logo} alt="hav logo" className="main-menu-logo" />
@@ -51,3 +55,5 @@ const HavAdmin = ({ store }) => {
 };
 
 export default HavAdmin;
+
+export { history };

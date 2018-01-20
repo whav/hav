@@ -1,5 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
 import LoadingIndicator from "../../ui/loading";
 
 import BatchIngest from "../../ui/ingest";
@@ -15,11 +17,10 @@ import pickBy from "lodash/pickBy";
 class Ingest extends React.Component {
   constructor(props) {
     super(props);
-    this.loadFormData();
   }
 
   saveData = () => {
-    this.props.saveIngestionData(this.props.target, this.props.entries);
+    this.props.saveIngestionData(this.props.target, this.props.initialItems);
   };
 
   loadFormData = () => {
@@ -27,17 +28,33 @@ class Ingest extends React.Component {
   };
 
   render() {
-    if (this.props.loading) {
-      return <LoadingIndicator />;
-    }
+    console.warn(this.props);
+    const props = this.props;
+    // if (this.props.loading) {
     return (
-      <BatchIngest
-        ingestionFiles={this.props.entries}
-        {...this.props.options}
-        onChange={this.props.updateIngestionData}
-        save={this.saveData}
-      />
+      <div>
+        <pre>
+          {JSON.stringify(
+            {
+              target: props.target,
+              entries: this.props.initialItems
+            },
+            null,
+            2
+          )}
+        </pre>
+        <button onClick={() => this.saveData()}>Save</button>
+      </div>
     );
+    // }
+    // return (
+    //   <BatchIngest
+    //     ingestionFiles={this.props.entries}
+    //     {...this.props.options}
+    //     onChange={this.props.updateIngestionData}
+    //     save={this.saveData}
+    //   />
+    // );
   }
 }
 
@@ -52,9 +69,7 @@ export default connect(
       entries
     };
   },
-  {
-    fetchInitialData,
-    updateIngestionData,
-    saveIngestionData
+  dispatch => {
+    return bindActionCreators({ saveIngestionData }, dispatch);
   }
 )(Ingest);

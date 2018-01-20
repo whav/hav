@@ -133,6 +133,7 @@ class StoredIngestHyperlinkField(IngestHyperlinkField):
         iv = super().to_internal_value(data)
         return iv
 
+
 class FinalIngestHyperlinkField(IngestHyperlinkField):
     '''
     Same as IngestHyperlinkField, but limits valid selections to
@@ -156,9 +157,6 @@ class FinalIngestHyperlinkField(IngestHyperlinkField):
             self.fail('does_not_exist')
 
         return obj
-
-
-
 
 
 class CreateMediaSerializer(serializers.Serializer):

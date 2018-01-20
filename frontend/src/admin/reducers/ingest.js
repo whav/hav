@@ -40,7 +40,6 @@ const loading = (state = true, action) => {
       return true;
     case RECEIVE_INITIAL_INGESTION_DATA:
     case SAVE_INGESTION_DATA_ERROR:
-    case SAVE_INGESTION_DATA_ERROR:
       return false;
     default:
       return state;

@@ -1,4 +1,5 @@
 import uuid4 from "uuid/v4";
+import { history } from "../app";
 
 import { fetchDataForIngestionForms, ingest } from "../api/ingest";
 
@@ -61,18 +62,17 @@ export const saveIngestionData = (target, entries) => {
     });
     const data = {
       target,
-      entries: entries.map(e => ({
-        ingestion_id: e.ingestion_id,
-        ...cleanData(e.data)
-      }))
+      selection: entries
     };
 
     ingest(data)
       .then(data => {
+        console.warn(data);
         dispatch({
           type: SAVE_INGESTION_DATA_SUCCESS,
           data
         });
+        history.push(`/ingest/${data.uuid}/`);
       })
       .catch(errors => {
         dispatch({

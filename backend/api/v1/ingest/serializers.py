@@ -124,7 +124,6 @@ class IngestHyperlinkField(serializers.Field):
             self.fail('does_not_exist')
 
     def to_representation(self, value):
-        print('to repr', value, type(value))
         return self.get_url(value)
 
 

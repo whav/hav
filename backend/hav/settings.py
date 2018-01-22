@@ -18,8 +18,6 @@ from django.utils.log import DEFAULT_LOGGING
 project_root = environ.Path(__file__) - 3
 django_root = environ.Path(__file__) - 2
 
-
-
 # set up the environment
 env = environ.Env(
     DEBUG=(bool, False),
@@ -92,10 +90,23 @@ WSGI_APPLICATION = 'hav.wsgi.application'
 
 
 DATABASES = {
-    'default': env.db(default='postgresql:///hav'),
-    'whav': env.db(var='WHAV_DATABASE_URL', default='postgresql:///whav')
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': env('HAV_DB_HOST', default=''),
+        'PORT': env('HAV_DB_PORT', default=''),
+        'NAME': env('HAV_DB_NAME', default='hav'),
+        'USER': env('HAV_DB_USER', default=''),
+        'PASSWORD': env('HAV_DB_PW', default=''),
+    },
+    'whav': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': env('WHAV_DB_HOST', default=''),
+        'PORT': env('WHAV_DB_PORT', default=''),
+        'NAME': env('WHAV_DB_NAME', default='whav'),
+        'USER': env('WHAV_DB_USER', default=''),
+        'PASSWORD': env('HAV_DB_PW', default=''),
+    },
 }
-
 
 
 
@@ -197,7 +208,6 @@ RAVEN_CONFIG = {
 }
 
 
-
 # Disable Django's logging setup
 LOGGING_CONFIG = None
 
@@ -258,6 +268,7 @@ THUMBOR_SECRET_KEY = env('THUMBOR_SECRET_KEY', default='')
 INCOMING_FILES_ROOT = env('INCOMING_FILES_ROOT', default=MEDIA_ROOT)
 
 HAV_ARCHIVE_PATH = env('HAV_ARCHIVE_PATH', default=project_root('dist/archive'))
+
 
 
 INGESTION_SOURCES = {

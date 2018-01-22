@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
 
@@ -16,7 +16,7 @@ services:
 
   whav_db:
     image: mdillon/postgis:9.4
-    hostname: ${HAV_DB_HOST}
+    hostname: ${WHAV_DB_HOST}
     environment:
       - POSTGRES_PASSWORD=${WHAV_DB_PW}
       - POSTGRES_USER=${WHAV_DB_USER}
@@ -31,10 +31,10 @@ services:
       - "hav_db"
       - "whav_db"
       - "frontend"
-    build:
-      context: .
-      dockerfile: ./docker/backend/Dockerfile
-    command: python backend/manage.py runserver 0.0.0.0:8000
+    extends:
+      file: ./docker-compose/django.yml
+      service: django
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./:/code
       - ./dist:/dist
@@ -43,6 +43,19 @@ services:
     expose:
       - 8000
 
+
+  celery:
+    extends:
+      file: ./docker-compose/django.yml
+      service: django
+    command: celery -A hav worker -l info
+    volumes:
+      - ./:/code
+      - ./dist:/dist
+      - ./frontend/build:/build
+      - ./docker/mounts/incoming:/incoming
+    expose:
+      - 8000
 
   caddy:
     build:

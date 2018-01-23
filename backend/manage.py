@@ -2,11 +2,9 @@
 import os
 import sys
 
-from hav.env import load_env
 
 if __name__ == "__main__":
 
-    load_env()
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hav.settings")
     try:

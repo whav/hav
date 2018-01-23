@@ -61,13 +61,13 @@ class IngestQueueView(IncomingBaseMixin, ListCreateAPIView):
     serializer_class = IngestQueueSerializer
     queryset = IngestQueue.objects.all()
 
-class IngestView(IncomingBaseMixin, APIView):
-
-    def post(self, request):
-        serializer = BatchMediaSerializer(data=request.data, context={'user': request.user, 'request': request})
-        serializer.is_valid(raise_exception=True)
-        media_entries = serializer.save()
-        return Response(media_entries, status=status.HTTP_201_CREATED)
+# class IngestView(IncomingBaseMixin, APIView):
+#
+#     def post(self, request):
+#         serializer = BatchMediaSerializer(data=request.data, context={'user': request.user, 'request': request})
+#         serializer.is_valid(raise_exception=True)
+#         media_entries = serializer.save()
+#         return Response(media_entries, status=status.HTTP_201_CREATED)
 
 
 

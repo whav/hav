@@ -7,7 +7,10 @@ import {
   RECEIVE_INITIAL_INGESTION_DATA,
   UPDATE_INGESTION_DATA,
   QUEUE_FOR_INGESTION,
-  CLEAR_INGESTION_QUEUE
+  CLEAR_INGESTION_QUEUE,
+  INGESTION_QUEUE_LOADED,
+  INGESTION_QUEUES_LOADED,
+  LOADING_SUCCESS
 } from "../actions/ingest";
 
 const queue = (state = [], action) => {
@@ -27,7 +30,6 @@ const ingestTo = (state = null, action) => {
       return action.target;
     case SAVE_INGESTION_DATA_ERROR:
       const { entries, ...errors } = action.errors;
-      console.warn(errors);
       return state;
     default:
       return state;
@@ -40,6 +42,7 @@ const loading = (state = true, action) => {
       return true;
     case RECEIVE_INITIAL_INGESTION_DATA:
     case SAVE_INGESTION_DATA_ERROR:
+    case LOADING_SUCCESS:
       return false;
     default:
       return state;
@@ -87,12 +90,34 @@ const entries = (state = [], action) => {
 const options = (state = {}, action) =>
   action.type === RECEIVE_INITIAL_INGESTION_DATA ? action.data.options : state;
 
+const ingestionQueues = (state = {}, action) => {
+  switch (action.type) {
+    case INGESTION_QUEUE_LOADED:
+      return {
+        ...state,
+        [action.payload.uuid]: {
+          ...action.payload,
+          loaded: new Date()
+        }
+      };
+    case INGESTION_QUEUES_LOADED:
+      let queues = {};
+      action.payload.forEach(queue => {
+        queues[queue.uuid] = queue;
+      });
+      return queues;
+    default:
+      return state;
+  }
+};
+
 const ingest = combineReducers({
   loading,
   entries,
   options,
   queue,
-  ingestTo
+  ingestTo,
+  ingestionQueues
 });
 
 export default ingest;

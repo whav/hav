@@ -1,7 +1,12 @@
 import uuid4 from "uuid/v4";
 import { history } from "../app";
 
-import { fetchDataForIngestionForms, ingest } from "../api/ingest";
+import {
+  fetchDataForIngestionForms,
+  ingest,
+  loadIngestQueueData,
+  fetchAllIngestionQueues
+} from "../api/ingest";
 
 export const QUEUE_FOR_INGESTION = "QUEUE_FOR_INGESTION";
 export const CLEAR_INGESTION_QUEUE = "CLEAR_INGESTION_QUEUE";
@@ -14,6 +19,13 @@ export const UPDATE_INGESTION_DATA = "UPDATE_INGESTION_DATA";
 
 export const SAVE_INGESTION_DATA_SUCCESS = "SAVE_INGESTION_DATA_SUCCESS";
 export const SAVE_INGESTION_DATA_ERROR = "SAVE_INGESTION_DATA_ERROR";
+
+// single ingestion queues
+export const INGESTION_QUEUE_LOADED = "INGESTION_QUEUE_LOADED";
+// all Ingestion queues
+export const INGESTION_QUEUES_LOADED = "INGESTION_QUEUES_LOADED";
+
+export const LOADING_SUCCESS = "LOADING_SUCCESS";
 
 const cleanData = data => {
   let d = {};
@@ -46,12 +58,15 @@ export const fetchInitialData = (items, target) => {
     dispatch({
       type: LOADING_INGESTION_DATA
     });
-    fetchDataForIngestionForms(items, target).then(data =>
+    fetchDataForIngestionForms(items, target).then(data => {
       dispatch({
         type: RECEIVE_INITIAL_INGESTION_DATA,
         data
-      })
-    );
+      });
+      dispatch({
+        type: LOADING_SUCCESS
+      });
+    });
   };
 };
 
@@ -88,5 +103,40 @@ export const updateIngestionData = (ingestion_id, data) => {
     type: UPDATE_INGESTION_DATA,
     key: ingestion_id,
     data
+  };
+};
+
+export const fetchIngestionQueue = uuid => {
+  return dispatch => {
+    // set loading state
+    dispatch({
+      type: LOADING_INGESTION_DATA
+    });
+    loadIngestQueueData(uuid).then(data => {
+      dispatch({
+        type: INGESTION_QUEUE_LOADED,
+        payload: data
+      });
+      dispatch({
+        type: LOADING_SUCCESS
+      });
+    });
+  };
+};
+
+export const loadAllIngestionQueues = () => {
+  return dispatch => {
+    dispatch({
+      type: LOADING_INGESTION_DATA
+    });
+    fetchAllIngestionQueues().then(data => {
+      dispatch({
+        type: INGESTION_QUEUES_LOADED,
+        payload: data
+      });
+      dispatch({
+        type: LOADING_SUCCESS
+      });
+    });
   };
 };

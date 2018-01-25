@@ -1,7 +1,7 @@
 import os
 
 from django.contrib.auth.models import User
-
+from pathlib import Path
 from rest_framework import serializers
 
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
@@ -15,7 +15,11 @@ from apps.ingest.models import IngestQueue
 from apps.whav.models import Media
 from psycopg2.extras import DateTimeTZRange
 
-from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, StoredIngestHyperlinkField
+from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, resolveUrlToObject
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class MediaLicenseSerializer(serializers.ModelSerializer):
@@ -186,12 +190,40 @@ class PrepareIngestSerializer(serializers.Serializer):
     )
 
 
+class SimpleIngestQueueSerializer(serializers.ModelSerializer):
+    target = HAVTargetField()
+    item_count = serializers.SerializerMethodField()
+
+    def get_item_count(self, obj):
+        return len(obj.selection)
+
+    class Meta:
+        model = IngestQueue
+        fields = [
+            'uuid',
+            'target',
+            'item_count',
+            'created_at'
+        ]
+
+
 class IngestQueueSerializer(serializers.ModelSerializer):
 
-    selection = serializers.ListField(child=StoredIngestHyperlinkField())
     target = HAVTargetField()
+    selection = serializers.ListField(child=IngestHyperlinkField())
+
+    filtered_selection = serializers.SerializerMethodField()
+
+    def get_filtered_selection(self, obj):
+        filtered = []
+        for source in obj.selection:
+            target = resolveUrlToObject(source)
+            if isinstance(target, Path) and target.is_file():
+                filtered.append(source)
+        return filtered
 
     def create(self, validated_data):
+        logger.debug('creating queue: %s', validated_data)
         return IngestQueue.objects.create(**validated_data, created_by=self.context['request'].user)
 
     class Meta:
@@ -199,5 +231,7 @@ class IngestQueueSerializer(serializers.ModelSerializer):
         fields = [
             'uuid',
             'target',
-            'selection'
+            'selection',
+            'filtered_selection',
+            'created_at'
         ]

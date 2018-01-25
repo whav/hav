@@ -11,6 +11,10 @@ from rest_framework.reverse import reverse
 from apps.whav.models import ImageCollection, MediaOrdering
 from apps.sets.models import Node
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class IngestHyperlinkField(serializers.Field):
 
     default_error_messages = serializers.HyperlinkedRelatedField.default_error_messages
@@ -81,18 +85,16 @@ class IngestHyperlinkField(serializers.Field):
         path = urlparse(url).path
         match = resolve(path)
         try:
-            return self.get_object(match.view_name, match.args, match.kwargs)
+            obj = self.get_object(match.view_name, match.args, match.kwargs)
+            logger.debug('Resolved url %s to file/db-entry %s', url, obj)
         except ObjectDoesNotExist:
             self.fail('does_not_exist')
 
+        return url
+
     def to_representation(self, value):
-        return self.get_url(value)
+        return value
 
-
-class StoredIngestHyperlinkField(IngestHyperlinkField):
-    def to_internal_value(self, data):
-        iv = super().to_internal_value(data)
-        return iv
 
 
 class FinalIngestHyperlinkField(IngestHyperlinkField):
@@ -124,3 +126,10 @@ class HAVTargetField(serializers.HyperlinkedRelatedField):
     view_name = 'api:v1:hav_browser:hav_set'
     queryset = Node.objects.all()
 
+
+ingestField = IngestHyperlinkField()
+
+def resolveUrlToObject(url):
+    path = urlparse(url).path
+    match = resolve(path)
+    return ingestField.get_object(match.view_name, match.args, match.kwargs)

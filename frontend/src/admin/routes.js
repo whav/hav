@@ -9,14 +9,15 @@ import GoFileSubmodule from "react-icons/go/file-submodule";
 import GoCloudUpload from "react-icons/go/cloud-upload";
 import FaArchive from "react-icons/lib/fa/archive";
 import GoDatabase from "react-icons/go/database";
-
+import GoPackage from "react-icons/go/package";
 // base components
 import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
 import HAVFileBrowser from "./containers/filebrowser/hav";
 import { Uploads } from "./containers/uploads";
-import Ingestion from "./containers/ingest";
+import IngestionQueueList from "./containers/ingest/queues";
 import IngestionQueue from "./containers/ingest/queue";
+import SaveIngestionQueue from "./containers/ingest/index";
 
 const routes = [
   {
@@ -37,7 +38,11 @@ const routes = [
   // },
   {
     path: "/ingest/",
-    main: Ingestion
+    main: IngestionQueueList
+  },
+  {
+    path: "/ingest/create/",
+    main: SaveIngestionQueue
   },
   {
     path: "/ingest/:uuid/",
@@ -60,6 +65,12 @@ const mainNav = [
     title: "HAV",
     link: "/hav/",
     icon: FaArchive,
+    menuExact: false
+  },
+  {
+    title: "Ingest",
+    link: "/ingest/",
+    icon: GoPackage,
     menuExact: false
   },
   {

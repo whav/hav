@@ -1,9 +1,13 @@
-import { prepareIngestion, ingest as ingestionEndpoint } from "./urls";
+import {
+  prepareIngestion,
+  ingest as ingestionEndpoint,
+  ingestQueueDetail
+} from "./urls";
 import { getCSRFCookie } from "../../utils/xhr";
 
 export const fetchDataForIngestionForms = (items, target) => {
   const body = { selection: items, target };
-  console.log(items, target);
+  console.warn(items, target);
   return fetch(prepareIngestion, {
     method: "POST",
     body: JSON.stringify(body),
@@ -26,6 +30,47 @@ export const ingest = data => {
       "Content-Type": "application/json"
     }),
     credentials: "same-origin"
+  }).then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      return response.json().then(err => {
+        return Promise.reject(err);
+      });
+    }
+  });
+};
+
+export const loadIngestQueueData = uuid => {
+  const url = ingestQueueDetail(uuid);
+  return fetch(url, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: new Headers({
+      "X-CSRFTOKEN": getCSRFCookie(),
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    })
+  }).then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      return response.json().then(err => {
+        return Promise.reject(err);
+      });
+    }
+  });
+};
+
+export const fetchAllIngestionQueues = () => {
+  return fetch(ingestionEndpoint, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: new Headers({
+      "X-CSRFTOKEN": getCSRFCookie(),
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    })
   }).then(response => {
     if (response.ok) {
       return response.json();

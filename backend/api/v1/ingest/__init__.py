@@ -1,12 +1,12 @@
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView
-from rest_framework import status
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 
 from apps.media.models import MediaCreator, MediaCreatorRole, License
 from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin
-from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, BatchMediaSerializer, PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer
+from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, BatchMediaSerializer, \
+    PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, SimpleIngestQueueSerializer
 from .resolver import resolveIngestionItems
 
 
@@ -58,8 +58,13 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
 
 class IngestQueueView(IncomingBaseMixin, ListCreateAPIView):
 
-    serializer_class = IngestQueueSerializer
-    queryset = IngestQueue.objects.all()
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return IngestQueueSerializer
+        return SimpleIngestQueueSerializer
+
+    def get_queryset(self):
+        return IngestQueue.objects.filter(created_by=self.request.user)
 
 # class IngestView(IncomingBaseMixin, APIView):
 #
@@ -68,6 +73,17 @@ class IngestQueueView(IncomingBaseMixin, ListCreateAPIView):
 #         serializer.is_valid(raise_exception=True)
 #         media_entries = serializer.save()
 #         return Response(media_entries, status=status.HTTP_201_CREATED)
+
+
+class IngestQueueDetailView(IncomingBaseMixin, RetrieveAPIView):
+
+    serializer_class = IngestQueueSerializer
+    lookup_field = 'uuid'
+    lookup_url_kwarg = 'pk'
+
+    def get_queryset(self):
+        return IngestQueue.objects.filter(created_by=self.request.user)
+
 
 
 

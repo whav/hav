@@ -43,7 +43,7 @@ export default connect(
       clearIngestionQueue: () => dispatch(clearIngestionQueue()),
       ingest: () => {
         dispatch(saveIngestionIntent(ingestToKey));
-        history.push("/ingest/");
+        history.push("/ingest/create/");
       }
     };
   }

@@ -5,7 +5,8 @@ import {
   fetchDataForIngestionForms,
   ingest,
   loadIngestQueueData,
-  fetchAllIngestionQueues
+  fetchAllIngestionQueues,
+  fetchIngestOptions
 } from "../api/ingest";
 
 export const QUEUE_FOR_INGESTION = "QUEUE_FOR_INGESTION";
@@ -26,6 +27,7 @@ export const INGESTION_QUEUE_LOADED = "INGESTION_QUEUE_LOADED";
 export const INGESTION_QUEUES_LOADED = "INGESTION_QUEUES_LOADED";
 
 export const LOADING_SUCCESS = "LOADING_SUCCESS";
+export const RECEIVE_INGEST_OPTIONS = "RECEIVE_INGEST_OPTIONS";
 
 const cleanData = data => {
   let d = {};
@@ -103,6 +105,17 @@ export const updateIngestionData = (ingestion_id, data) => {
     type: UPDATE_INGESTION_DATA,
     key: ingestion_id,
     data
+  };
+};
+
+export const loadIngestOptions = () => {
+  return dispatch => {
+    fetchIngestOptions().then(data => {
+      dispatch({
+        type: RECEIVE_INGEST_OPTIONS,
+        data: data
+      });
+    });
   };
 };
 

@@ -10,7 +10,8 @@ import {
   CLEAR_INGESTION_QUEUE,
   INGESTION_QUEUE_LOADED,
   INGESTION_QUEUES_LOADED,
-  LOADING_SUCCESS
+  LOADING_SUCCESS,
+  RECEIVE_INGEST_OPTIONS
 } from "../actions/ingest";
 
 const queue = (state = [], action) => {
@@ -87,8 +88,16 @@ const entries = (state = [], action) => {
   }
 };
 
-const options = (state = {}, action) =>
-  action.type === RECEIVE_INITIAL_INGESTION_DATA ? action.data.options : state;
+const options = (state = {}, action) => {
+  switch (action.type) {
+    case RECEIVE_INITIAL_INGESTION_DATA:
+      return action.data.options;
+    case RECEIVE_INGEST_OPTIONS:
+      return action.data;
+    default:
+      return state;
+  }
+};
 
 const ingestionQueues = (state = {}, action) => {
   switch (action.type) {

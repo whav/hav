@@ -15,3 +15,4 @@ export const browser = file_upload;
 export const prepareIngestion = `${apiPrefix}ingestq/`;
 export const ingest = `${apiPrefix}ingest/`;
 export const ingestQueueDetail = uuid => `${apiPrefix}ingest/${uuid}/`;
+export const ingestOptions = `${apiPrefix}ingest/options/`;

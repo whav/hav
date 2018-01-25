@@ -56,6 +56,14 @@ class PrepareIngestView(IncomingBaseMixin, APIView):
         })
 
 
+class IngestOptionsView(IncomingBaseMixin, APIView):
+    def get(self, request):
+        return Response({
+            "creators": [{'id': mc.pk, 'name': str(mc)} for mc in MediaCreator.objects.all()],
+            "roles": MediaCreatorRoleSerializer(MediaCreatorRole.objects.all(), many=True).data,
+            "licenses": MediaLicenseSerializer(License.objects.all(), many=True).data
+        })
+
 class IngestQueueView(IncomingBaseMixin, ListCreateAPIView):
 
     def get_serializer_class(self):

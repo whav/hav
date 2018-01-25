@@ -1,7 +1,8 @@
 import {
   prepareIngestion,
   ingest as ingestionEndpoint,
-  ingestQueueDetail
+  ingestQueueDetail,
+  ingestOptions
 } from "./urls";
 import { getCSRFCookie } from "../../utils/xhr";
 
@@ -60,6 +61,18 @@ export const loadIngestQueueData = uuid => {
       });
     }
   });
+};
+
+export const fetchIngestOptions = () => {
+  return fetch(ingestOptions, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: new Headers({
+      "X-CSRFTOKEN": getCSRFCookie(),
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    })
+  }).then(response => response.json());
 };
 
 export const fetchAllIngestionQueues = () => {

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import LoadingIndicator from "../../ui/loading";
 
 import { fetchIngestionQueue, loadIngestOptions } from "../../actions/ingest";
-import IngestForm from "../../ui/ingest/form";
+import IngestForm, { TemplateForm } from "../../ui/ingest/form";
 
 import PreviewImage from "../filebrowser/preview";
 
@@ -12,19 +12,40 @@ class IngestQueue extends React.Component {
     super(props);
     props.loadIngestData();
     this.state = {
-      formData: {}
+      formData: {},
+      templateData: {}
     };
   }
 
-  onChange = (source, data) => {
-    console.log("Something changed..", source, data);
+  applyTemplate = () => {
+    console.log("applying template data...");
+    const data = this.state.templateData;
+    console.log(data);
+
+    this.props.queue.filtered_selection.forEach(k => {
+      console.log(k, { ...this.state.formData[k], ...data });
+      this.onChange(k, { ...this.state.formData[k], ...data });
+    });
+  };
+
+  onTemplateChange = data => {
     this.setState(state => {
       return {
-        ...this.state,
+        templateData: {
+          ...state.templateData,
+          ...data
+        }
+      };
+    });
+  };
+
+  onChange = (source, data) => {
+    this.setState(state => {
+      return {
         formData: {
-          ...this.state.formData,
+          ...state.formData,
           [source]: {
-            ...this.state.formData[source],
+            ...state.formData[source],
             ...data
           }
         }
@@ -34,16 +55,23 @@ class IngestQueue extends React.Component {
 
   render() {
     const { queue, loading, options } = this.props;
-    const { formData } = this.state;
+    const { formData, templateData } = this.state;
 
     if (loading) {
       return <LoadingIndicator />;
     } else {
       const count = queue.filtered_selection.length;
-      let formData = this.state.formData;
       return (
         <div>
           <h1>Ingesting {count === 1 ? "one file" : `${count} files`}</h1>
+          <div className="box">
+            <TemplateForm
+              {...options}
+              data={templateData}
+              apply={this.applyTemplate}
+              onChange={this.onTemplateChange}
+            />
+          </div>
           <hr />
           {queue.filtered_selection.map((source, index) => (
             <IngestForm
@@ -68,7 +96,6 @@ class IngestQueue extends React.Component {
 export default connect(
   (state, ownProps) => {
     const queue_data = state.ingest.ingestionQueues[ownProps.match.params.uuid];
-    console.warn(queue_data);
     return {
       queue: queue_data,
       options: state.ingest.options,

@@ -156,12 +156,72 @@ const DateForm = ({ data, ...props }) => {
   );
 };
 
-class IngestForm extends React.Component {
-  static propType = {
-    licenses: PropTypes.array.isRequired,
-    creators: PropTypes.array.isRequired,
-    roles: PropTypes.array.isRequired,
+const formPropTypes = {
+  licenses: PropTypes.array.isRequired,
+  creators: PropTypes.array.isRequired,
+  roles: PropTypes.array.isRequired
+};
+
+class TemplateForm extends React.Component {
+  static propTypes = {
+    ...formPropTypes,
     onChange: PropTypes.func.isRequired,
+    apply: PropTypes.func.isRequired
+  };
+
+  handleChange = event => {
+    let value = event.target.value;
+    const name = event.target.name;
+    if (event.target.multiple) {
+      value = Array.from(event.target.selectedOptions).map(opt => opt.value);
+    }
+    this.props.onChange({ [name]: value });
+  };
+
+  render() {
+    const { licenses = [], creators = [], roles = [], data = {} } = this.props;
+
+    return (
+      <form
+        noValidate
+        onSubmit={e => {
+          e.preventDefault();
+          this.props.apply();
+        }}
+      >
+        <div className="columns">
+          <div className="column">
+            <DateForm data={data} onChange={this.handleChange} />
+          </div>
+          <div className="column">
+            <LicenseSelect
+              licenses={licenses}
+              value={data.license}
+              name="license"
+              onChange={this.handleChange}
+            />
+          </div>
+          <div className="column">
+            <CreatorSelect
+              multiple
+              creators={creators}
+              value={data.creators || []}
+              name="creators"
+              onChange={this.handleChange}
+            />
+          </div>
+          <div className="column">
+            <button type="submit">Apply</button>
+          </div>
+        </div>
+      </form>
+    );
+  }
+}
+
+class IngestForm extends React.Component {
+  static propTypes = {
+    ...formPropTypes,
     source: PropTypes.string.isRequired
   };
 
@@ -229,3 +289,4 @@ class IngestForm extends React.Component {
 }
 
 export default IngestForm;
+export { TemplateForm };

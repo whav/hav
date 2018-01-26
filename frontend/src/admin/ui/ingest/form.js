@@ -161,7 +161,8 @@ class IngestForm extends React.Component {
     licenses: PropTypes.array.isRequired,
     creators: PropTypes.array.isRequired,
     roles: PropTypes.array.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    source: PropTypes.string.isRequired
   };
 
   handleChange = event => {
@@ -170,7 +171,7 @@ class IngestForm extends React.Component {
     if (event.target.multiple) {
       value = Array.from(event.target.selectedOptions).map(opt => opt.value);
     }
-    this.props.onChange(this.props.ingest_id, {
+    this.props.onChange(this.props.source, {
       [name]: value
     });
   };

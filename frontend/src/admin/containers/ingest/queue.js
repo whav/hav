@@ -68,10 +68,11 @@ class IngestQueue extends React.Component {
 export default connect(
   (state, ownProps) => {
     const queue_data = state.ingest.ingestionQueues[ownProps.match.params.uuid];
+    console.warn(queue_data);
     return {
       queue: queue_data,
       options: state.ingest.options,
-      loading: queue_data ? false : state.ingest.loading
+      loading: queue_data && queue_data.filtered_selection ? false : true
     };
   },
   (dispatch, ownProps) => {

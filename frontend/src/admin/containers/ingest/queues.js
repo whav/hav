@@ -5,7 +5,7 @@ import Error from "../../ui/components/errors";
 import Debug from "../../ui/debug";
 
 import { loadAllIngestionQueues } from "../../actions/ingest";
-import { Link } from "react-router-dom";
+import IngestionQueueListing from "../../ui/ingest/queues";
 
 class IngestQueueList extends React.Component {
   constructor(props) {
@@ -24,16 +24,8 @@ class IngestQueueList extends React.Component {
 
     return (
       <div>
-        <ul>
-          {queues.map(q => {
-            return (
-              <li key={q.uuid}>
-                <Link to={`/ingest/${q.uuid}/`}>{q.uuid}</Link>
-              </li>
-            );
-          })}
-        </ul>
-        <Debug {...this.props} />
+        <IngestionQueueListing queues={queues} />
+        {/* <Debug {...this.props} /> */}
       </div>
     );
   }

@@ -2,7 +2,7 @@ import {
   RECEIVE_DIRECTORY_CONTENT,
   CHANGE_FILE_BROWSER_SETTINGS,
   SELECT_ITEMS,
-  MKDIR_SUCCESS
+  RECEIVE_FILE_INFO
 } from "../actions/browser";
 
 import { UPLOAD_COMPLETED } from "../actions/uploads";
@@ -93,6 +93,16 @@ const filesByUri = (state = {}, action) => {
         }
       };
       return state;
+    case RECEIVE_FILE_INFO:
+      const data = action.payload;
+      return {
+        ...state,
+        [data.url]: {
+          isFile: true,
+          isDirectory: false,
+          ...data
+        }
+      };
     default:
       return state;
   }

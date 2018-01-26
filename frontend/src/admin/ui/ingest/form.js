@@ -161,7 +161,7 @@ class IngestForm extends React.Component {
     licenses: PropTypes.array.isRequired,
     creators: PropTypes.array.isRequired,
     roles: PropTypes.array.isRequired,
-    onSelect: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired
   };
 
   handleChange = event => {
@@ -186,10 +186,22 @@ class IngestForm extends React.Component {
     } = this.props;
 
     return (
-      <div className="columns is-desktop">
-        <div className="column is-one-quarter">{this.props.children}</div>
-        <div className="column">
+      <div className="columns box is-outlined is-desktop">
+        <div className="column">{this.props.children}</div>
+        <div className="column is-two-thirds">
           <DateForm data={data} onChange={this.handleChange} errors={errors} />
+          {hide_fields.includes("description") ? null : (
+            <Field label="Description">
+              <textarea
+                className="textarea"
+                value={data.description || ""}
+                name="description"
+                rows="3"
+                onChange={this.handleChange}
+                error={errors.description}
+              />
+            </Field>
+          )}
 
           <LicenseSelect
             required
@@ -209,127 +221,10 @@ class IngestForm extends React.Component {
             onChange={this.handleChange}
             errors={errors.creators}
           />
-
-          {hide_fields.includes("description") ? null : (
-            <Field label="Description">
-              <textarea
-                className="textarea"
-                value={data.description || ""}
-                name="description"
-                rows="3"
-                onChange={this.handleChange}
-                error={errors.description}
-              />
-            </Field>
-          )}
         </div>
       </div>
     );
   }
 }
 
-class BatchIngest extends React.Component {
-  state = {
-    isOpen: false,
-    template_data: {
-      year: "",
-      month: "",
-      // day: "",
-      creators: [],
-      license: ""
-    }
-  };
-
-  hide_template_fields = ["description"];
-
-  static propTypes = {
-    save: PropTypes.func.isRequired
-  };
-
-  toggleTemplateForm = () =>
-    this.setState(state => ({ isOpen: !state.isOpen }));
-
-  updateTemplateData = (_, data) => {
-    this.setState(state => ({
-      template_data: { ...state.template_data, ...data }
-    }));
-  };
-
-  applyToAll = () => {
-    const data = { ...this.state.template_data };
-    this.hide_template_fields.forEach(fn => delete data[fn]);
-    this.props.ingestionFiles.forEach(ingestionFile =>
-      this.props.onChange(ingestionFile.ingestion_id, data)
-    );
-  };
-
-  render() {
-    return (
-      <div>
-        <h1 className="title">Ingest</h1>
-
-        <button className="button is-primary" onClick={this.toggleTemplateForm}>
-          Open template form
-        </button>
-        <Modal open={this.state.isOpen} close={this.toggleTemplateForm}>
-          <div className="box container">
-            <h2 className="subtitle">Template From</h2>
-            <div className="ingest-template-form is-outlined">
-              <IngestForm
-                ingest_id={"Template Form"}
-                {...this.props}
-                data={this.state.template_data}
-                onChange={this.updateTemplateData}
-                hide_fields={this.hide_template_fields}
-              >
-                <Button
-                  onClick={() => {
-                    this.applyToAll();
-                    this.toggleTemplateForm();
-                  }}
-                  className="is-primary"
-                >
-                  Apply to all
-                </Button>
-              </IngestForm>
-            </div>
-          </div>
-        </Modal>
-        <hr />
-
-        {this.props.ingestionFiles.map((ingestionFile, index) => {
-          let key = ingestionFile.ingestion_id;
-          const errors = ingestionFile.errors || {};
-          let global_errors = errors.non_field_errors;
-
-          let filename = key.split("/").reverse()[0];
-
-          return (
-            <div key={key}>
-              {global_errors ? <ErrorList errors={global_errors} /> : null}
-              <IngestForm
-                data={ingestionFile.data}
-                errors={errors}
-                {...this.props}
-                onChange={this.props.onChange}
-                ingest_id={key}
-              >
-                <em>{key}</em>
-              </IngestForm>
-
-              <hr />
-            </div>
-          );
-        })}
-        <div className="control">
-          <button className="button is-primary" onClick={this.props.save}>
-            Submit
-          </button>
-        </div>
-      </div>
-    );
-  }
-}
-
-export default BatchIngest;
-export { IngestForm };
+export default IngestForm;

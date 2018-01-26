@@ -99,7 +99,7 @@ class FileSerializer(FileBrowserBaseSerializer):
     def get_url(self, path):
         request = self.context.get('request')
         match = request.resolver_match
-        url_lookup = '%s:%s' % (':'.join(match.namespaces), 'filebrowser_file')
+        url_lookup = '%s:%s' % (':'.join(match.namespaces), 'filebrowser')
         return request.build_absolute_uri(
             reverse(
                 url_lookup,

@@ -54,16 +54,22 @@ class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
     def get(self, request, path=None, **kwargs):
         path = self.resolve_directory(path)
 
-        try:
-            assert(path.is_dir())
-            assert(os.access(str(path), os.R_OK))
-        except (FileNotFoundError, AssertionError):
-            raise Http404()
+        if path.is_file():
+            serializer = FileSerializer(
+                instance=path,
+                context=self.context
+            )
+        elif path.is_dir():
+            serializer = DirectorySerializer(
+                instance=path,
+                context=self.context
+            )
+        else:
+            raise Http404('File or directory not found.')
 
-        serializer = DirectorySerializer(
-            instance=path,
-            context=self.context
-        )
+        if not os.access(str(path), os.R_OK):
+            raise Http404('Incorrect permissions.')
+
         return Response(serializer.data)
 
 
@@ -76,6 +82,7 @@ class FileOperationException(APIException):
 class FileBrowserFileDetail(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     def get(self, request, path=None, **kwargs):
+        print(self.__class__, path)
         path = self.resolve_directory(path)
         try:
             assert(path.is_file())

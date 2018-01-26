@@ -4,6 +4,7 @@
 
 export const REQUEST_DIRECTORY = "REQUEST_DIRECTORY";
 export const RECEIVE_DIRECTORY_CONTENT = "RECEIVE_DIRECTORY_CONTENT";
+export const RECEIVE_FILE_INFO = "RECEIVE_FILE_INFO";
 export const CHANGE_FILE_BROWSER_SETTINGS = "CHANGE_FILE_BROWSER_SETTINGS";
 
 export const SELECT_ITEMS = "SELECT_ITEMS";
@@ -27,6 +28,17 @@ export const requestDirectoryAction = (path, url) => {
         payload: data,
         path,
         url
+      });
+    });
+  };
+};
+
+export const requestFile = url => {
+  return dispatch => {
+    requestDirectory(url).then(data => {
+      dispatch({
+        type: RECEIVE_FILE_INFO,
+        payload: data
       });
     });
   };

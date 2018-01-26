@@ -72,7 +72,7 @@ class IngestQueueView(IncomingBaseMixin, ListCreateAPIView):
         return SimpleIngestQueueSerializer
 
     def get_queryset(self):
-        return IngestQueue.objects.filter(created_by=self.request.user)
+        return IngestQueue.objects.filter(created_by=self.request.user).order_by('-created_at')
 
 # class IngestView(IncomingBaseMixin, APIView):
 #

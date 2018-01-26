@@ -3,7 +3,6 @@ from mimetypes import guess_type
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from ..utils.ingest import buildIngestId
 from apps.whav.models import ImageCollection, MediaOrdering
 from hav.thumbor import get_image_url
 
@@ -18,8 +17,6 @@ class WHAVFileSerializer(serializers.Serializer):
 
     size = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
-
-    ingest_id = serializers.SerializerMethodField()
 
     def get_name(self, mo):
         media = mo.media
@@ -59,13 +56,6 @@ class WHAVFileSerializer(serializers.Serializer):
             }
         ))
 
-    def get_ingest_id(self, mo):
-        print(self.context)
-        return buildIngestId(
-            self.context['identifier'],
-            '%d/%d' % (mo.collection_id, mo.media_id)
-        )
-
 
 class BaseWHAVCollectionSerializer(serializers.Serializer):
 
@@ -75,7 +65,6 @@ class BaseWHAVCollectionSerializer(serializers.Serializer):
 
     allowUpload = serializers.SerializerMethodField()
 
-    ingest_id = serializers.SerializerMethodField()
 
     def get_name(self, instance):
         return instance.name
@@ -98,12 +87,6 @@ class BaseWHAVCollectionSerializer(serializers.Serializer):
     def get_allowUpload(self, instance):
         return False
 
-    def get_ingest_id(self, instance):
-        return buildIngestId(
-            self.context['identifier'],
-            '%d' % instance.pk
-        )
-
 
 class BaseRootWHAVCollectionSerializer(BaseWHAVCollectionSerializer):
 
@@ -122,8 +105,6 @@ class BaseRootWHAVCollectionSerializer(BaseWHAVCollectionSerializer):
             reverse(url_lookup)
         )
 
-    def get_ingest_id(self, _):
-        return None
 
 
 

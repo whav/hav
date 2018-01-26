@@ -37,9 +37,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
     # stat = FileStatsSerializer(source='*')
     size = serializers.SerializerMethodField()
-    file_path = serializers.SerializerMethodField()
 
-    ingest_id = serializers.SerializerMethodField()
 
     def get_name(self, path):
         if path == self.get_root():
@@ -78,15 +76,6 @@ class FileBrowserBaseSerializer(serializers.Serializer):
                 }
             )
         )
-
-    def get_file_path(self, path):
-        return path.as_posix()
-
-    def get_ingest_id(self, path):
-        relPath = path.relative_to(self.get_root())
-        posixPath = relPath.as_posix()
-        encodedPath = encodePath(posixPath)
-        return buildIngestId(self.context['identifier'], encodedPath)
 
 
 class FileSerializer(FileBrowserBaseSerializer):

@@ -6,6 +6,7 @@ import { fetchIngestionQueue, loadIngestOptions } from "../../actions/ingest";
 import IngestForm, { TemplateForm } from "../../ui/ingest/form";
 
 import PreviewImage from "../filebrowser/preview";
+import { ingest } from "../../api/ingest";
 
 class IngestQueue extends React.Component {
   constructor(props) {
@@ -18,12 +19,9 @@ class IngestQueue extends React.Component {
   }
 
   applyTemplate = () => {
-    console.log("applying template data...");
     const data = this.state.templateData;
-    console.log(data);
 
     this.props.queue.filtered_selection.forEach(k => {
-      console.log(k, { ...this.state.formData[k], ...data });
       this.onChange(k, { ...this.state.formData[k], ...data });
     });
   };
@@ -53,6 +51,10 @@ class IngestQueue extends React.Component {
     });
   };
 
+  ingestItem = (ingestId, data) => {
+    console.warn("submitting", ingestId, data);
+  };
+
   render() {
     const { queue, loading, options } = this.props;
     const { formData, templateData } = this.state;
@@ -64,29 +66,37 @@ class IngestQueue extends React.Component {
       return (
         <div>
           <h1>Ingesting {count === 1 ? "one file" : `${count} files`}</h1>
-          <div className="box">
+          <hr />
+          {/* template form if mor than one ingest file */}
+          {count > 1 ? (
             <TemplateForm
               {...options}
               data={templateData}
               apply={this.applyTemplate}
               onChange={this.onTemplateChange}
             />
-          </div>
-          <hr />
-          {queue.filtered_selection.map((source, index) => (
-            <IngestForm
-              key={source}
-              source={source}
-              {...options}
-              onChange={this.onChange}
-              data={formData[source] || {}}
-            >
-              <span>Asset #{index + 1}</span>
-              <p>
-                <PreviewImage source={source} />
-              </p>
-            </IngestForm>
-          ))}
+          ) : null}
+
+          {queue.filtered_selection.map((source, index) => {
+            return (
+              <IngestForm
+                key={source}
+                source={source}
+                {...options}
+                onChange={this.onChange}
+                data={formData[source] || {}}
+                onSubmit={() => (
+                  console.log(formData),
+                  this.ingestItem(source, formData[source] || {})
+                )}
+              >
+                <span>Asset #{index + 1}</span>
+                <p>
+                  <PreviewImage source={source} />
+                </p>
+              </IngestForm>
+            );
+          })}
         </div>
       );
     }

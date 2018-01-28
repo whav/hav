@@ -1,47 +1,6 @@
-.directory-selector {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+form.ingest-template-form {
+  background-color: rgba(128, 128, 128, 0.178);
 }
-
-.directory-selector .directory {
-  margin: 1rem;
-}
-
-.directory-selector .directory svg {
-  font-size: 4rem;
-  display: block;
-}
-
-.directory-selector .directory span {
-  display: block;
-  text-align: center;
-}
-
-.directory-selector a {
-  color: inherit;
-}
-
-.ingestion-view {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.ingestion-view-top,
-.ingestion-view-bottom {
-  flex-grow: 0;
-}
-
-.ingestion-view-top {
-  padding-top: 1rem;
-}
-
-.ingestion-view-bottom {
-  padding-bottom: 1rem;
-}
-
-.ingestion-view-center {
-  flex-grow: 1;
-  overflow-y: auto;
+form.ingest-form {
+  margin-top: 1rem;
 }

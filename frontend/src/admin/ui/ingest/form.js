@@ -8,12 +8,19 @@ import PropTypes from "prop-types";
 
 import classnames from "classnames";
 
+import Select from "react-select";
+import "react-select/dist/react-select.css";
+
+import "./ingest.css";
+
 const Field = props => {
-  const { onChange, name, value, label, errors, ...input_props } = props;
+  const { label = "", errors, expanded = false } = props;
   return (
     <div className="field">
-      {label ? <label className="label">{label}</label> : null}
-      <div className="control">{props.children}</div>
+      <label className="label">{label}</label>
+      <div className={classnames("control", { "is-expanded": expanded })}>
+        {props.children}
+      </div>
       {errors
         ? errors.map((e, i) => (
             <p key={i} className="help is-danger">
@@ -35,39 +42,35 @@ const FieldErrors = ({ errors }) =>
     : null;
 
 class CreatorSelect extends React.Component {
+  onChange = e => {
+    let dummyEvent = {
+      target: {
+        name: "creators",
+        multiple: true,
+        selectedOptions: e
+      }
+    };
+
+    this.props.onChange(dummyEvent);
+  };
+
   render() {
-    const { creators, errors } = this.props;
+    const { creators, errors, value } = this.props;
     const options = creators.map(c => ({
-      key: `creator-${c.id}`,
-      text: c.name,
+      label: c.name,
       value: c.id
     }));
-
+    const selectedOptions = options.filter(o => value.indexOf(o.value) > -1);
     return (
-      <div className="field">
-        <label className="label">Creators</label>
-        <div className="control">
-          <div
-            className={classnames("select", "is-multiple", {
-              "is-danger": errors
-            })}
-          >
-            <select
-              name="creators"
-              value={this.props.value}
-              onChange={this.props.onChange}
-              multiple
-            >
-              {options.map(o => (
-                <option key={o.value} value={o.value}>
-                  {o.text}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <FieldErrors errors={errors} />
-      </div>
+      <Field label="Creators">
+        <Select
+          name="creators"
+          value={selectedOptions}
+          onChange={this.onChange}
+          options={options}
+          multi={true}
+        />
+      </Field>
     );
   }
 }
@@ -81,26 +84,26 @@ class LicenseSelect extends React.Component {
       key: l.id
     }));
     return (
-      <div className="field">
-        <label className="label">License</label>
-        <div className="control">
-          <div className={classnames("select", { "is-danger": errors })}>
-            <select
-              name="license"
-              value={this.props.value}
-              onChange={this.props.onChange}
-            >
-              <option value={undefined} />
-              {options.map(o => (
-                <option key={o.value} value={o.value}>
-                  {o.text}
-                </option>
-              ))}
-            </select>
-          </div>
+      <Field label="License" expanded>
+        <div
+          className={classnames("select", "is-fullwidth", {
+            "is-danger": errors
+          })}
+        >
+          <select
+            name="license"
+            value={this.props.value || ""}
+            onChange={this.props.onChange}
+            placeholder="Select..."
+          >
+            {options.map(o => (
+              <option key={o.value} value={o.value}>
+                {o.text}
+              </option>
+            ))}
+          </select>
         </div>
-        <FieldErrors errors={errors} />
-      </div>
+      </Field>
     );
   }
 }
@@ -108,51 +111,16 @@ class LicenseSelect extends React.Component {
 const DateForm = ({ data, ...props }) => {
   const errors = props.errors || {};
   return (
-    <div className="field">
-      <label className="label">Date</label>
-
-      <div className="field is-grouped">
-        <p className="control">
-          <input
-            className={classnames("input", { "is-danger": errors.year })}
-            required
-            value={data.year || ""}
-            type="number"
-            name="year"
-            placeholder="Year"
-            onChange={props.onChange}
-          />
-        </p>
-        <FieldErrors errors={errors.year} />
-        <p className="control">
-          <input
-            className={classnames("input", { "is-danger": errors.month })}
-            placeholder="M"
-            name="month"
-            type="number"
-            value={data.month || ""}
-            min={1}
-            max={12}
-            onChange={props.onChange}
-          />
-        </p>
-        <FieldErrors errors={errors.month} />
-
-        <p className="control">
-          <input
-            className={classnames("input", { "is-danger": errors.day })}
-            placeholder="D"
-            name="day"
-            type="number"
-            min={1}
-            max={31}
-            value={data.day || ""}
-            onChange={props.onChange}
-          />
-        </p>
-        <FieldErrors errors={errors.day} />
-      </div>
-    </div>
+    <Field label="Date">
+      <input
+        type="text"
+        name="date"
+        className="input"
+        placeholder="YYYY-MM-DD"
+        value={data.date || ""}
+        onChange={props.onChange}
+      />
+    </Field>
   );
 };
 
@@ -188,11 +156,14 @@ class TemplateForm extends React.Component {
           e.preventDefault();
           this.props.apply();
         }}
+        className="box ingest-template-form"
       >
+        <em>Template Form</em>
         <div className="columns">
           <div className="column">
             <DateForm data={data} onChange={this.handleChange} />
           </div>
+
           <div className="column">
             <LicenseSelect
               licenses={licenses}
@@ -201,6 +172,7 @@ class TemplateForm extends React.Component {
               onChange={this.handleChange}
             />
           </div>
+
           <div className="column">
             <CreatorSelect
               multiple
@@ -210,8 +182,13 @@ class TemplateForm extends React.Component {
               onChange={this.handleChange}
             />
           </div>
+
           <div className="column">
-            <button type="submit">Apply</button>
+            <Field>
+              <button className="button is-link" type="submit">
+                Apply
+              </button>
+            </Field>
           </div>
         </div>
       </form>
@@ -236,6 +213,11 @@ class IngestForm extends React.Component {
     });
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+    this.props.onSubmit();
+  };
+
   render() {
     const {
       licenses = [],
@@ -247,42 +229,55 @@ class IngestForm extends React.Component {
     } = this.props;
 
     return (
-      <div className="columns box is-outlined is-desktop">
-        <div className="column">{this.props.children}</div>
-        <div className="column is-two-thirds">
-          <DateForm data={data} onChange={this.handleChange} errors={errors} />
-          {hide_fields.includes("description") ? null : (
-            <Field label="Description">
-              <textarea
-                className="textarea"
-                value={data.description || ""}
-                name="description"
-                rows="3"
-                onChange={this.handleChange}
-                error={errors.description}
-              />
-            </Field>
-          )}
-
-          <LicenseSelect
-            required
-            licenses={licenses}
-            value={data.license}
-            name="license"
-            onChange={this.handleChange}
-            errors={errors.license}
-          />
-
-          <CreatorSelect
-            required
-            multiple
-            creators={creators}
-            value={data.creators || []}
-            name="creators"
-            onChange={this.handleChange}
-            errors={errors.creators}
-          />
-        </div>
+      <div className="box is-outlined">
+        <form className="ingest-form" onSubmit={this.onSubmit}>
+          <div className="columns is-desktop">
+            <div className="column">{this.props.children}</div>
+            <div className="column is-two-thirds">
+              <div className="columns">
+                <div className="column">
+                  <DateForm
+                    data={data}
+                    onChange={this.handleChange}
+                    errors={errors}
+                  />
+                </div>
+                <div className="column">
+                  <LicenseSelect
+                    required
+                    licenses={licenses}
+                    value={data.license}
+                    name="license"
+                    onChange={this.handleChange}
+                    errors={errors.license}
+                  />
+                </div>
+              </div>
+              <div className="columns">
+                <div className="column is-half">
+                  <CreatorSelect
+                    required
+                    multiple
+                    creators={creators}
+                    value={data.creators || []}
+                    name="creators"
+                    onChange={this.handleChange}
+                    errors={errors.creators}
+                  />
+                </div>
+              </div>
+              <div>
+                <div className="field is-grouped is-grouped-right">
+                  <p className="control">
+                    <button className="button is-link" type="submit">
+                      Ingest
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
     );
   }

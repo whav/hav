@@ -75,7 +75,7 @@ export const fetchAllIngestionQueues = () => {
 };
 
 export const queueForIngestion = (queue_id, data) => {
-  fetch(ingestFileEndpoint(queue_id), {
+  return fetch(ingestFileEndpoint(queue_id), {
     method: "POST",
     body: JSON.stringify(data),
     headers: new Headers({

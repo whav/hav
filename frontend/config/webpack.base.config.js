@@ -24,7 +24,7 @@ module.exports = opts => {
     entry: {
       hav: ["./src/hav/index"],
       havAdmin: ["./src/admin/ui/bulma.sass", "./src/admin/index"],
-      vendor: ["whatwg-fetch", "react", "react-dom"]
+      vendor: ["whatwg-fetch", "react", "react-dom", "babel-polyfill"]
     },
     output: {
       path: path.resolve(PROJECT_ROOT, "./build/"),

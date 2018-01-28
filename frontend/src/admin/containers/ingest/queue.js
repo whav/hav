@@ -51,9 +51,12 @@ class IngestQueue extends React.Component {
     });
   };
 
-  ingestItem = (ingestId, data) => {
-    console.warn("submitting", ingestId, data);
-    queueForIngestion(this.props.queue.uuid, data);
+  ingestItem = async (ingestId, data) => {
+    let response = await queueForIngestion(this.props.queue.uuid, {
+      source: ingestId,
+      ...data
+    });
+    console.log(response);
   };
 
   render() {

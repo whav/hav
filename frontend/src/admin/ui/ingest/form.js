@@ -96,6 +96,7 @@ class LicenseSelect extends React.Component {
             onChange={this.props.onChange}
             placeholder="Select..."
           >
+            <option value="" />
             {options.map(o => (
               <option key={o.value} value={o.value}>
                 {o.text}
@@ -165,20 +166,20 @@ class TemplateForm extends React.Component {
           </div>
 
           <div className="column">
-            <LicenseSelect
-              licenses={licenses}
-              value={data.license}
-              name="license"
-              onChange={this.handleChange}
-            />
-          </div>
-
-          <div className="column">
             <CreatorSelect
               multiple
               creators={creators}
               value={data.creators || []}
               name="creators"
+              onChange={this.handleChange}
+            />
+          </div>
+
+          <div className="column">
+            <LicenseSelect
+              licenses={licenses}
+              value={data.license}
+              name="license"
               onChange={this.handleChange}
             />
           </div>
@@ -243,18 +244,6 @@ class IngestForm extends React.Component {
                   />
                 </div>
                 <div className="column">
-                  <LicenseSelect
-                    required
-                    licenses={licenses}
-                    value={data.license}
-                    name="license"
-                    onChange={this.handleChange}
-                    errors={errors.license}
-                  />
-                </div>
-              </div>
-              <div className="columns">
-                <div className="column is-half">
                   <CreatorSelect
                     required
                     multiple
@@ -265,6 +254,19 @@ class IngestForm extends React.Component {
                     errors={errors.creators}
                   />
                 </div>
+              </div>
+              <div className="columns">
+                <div className="column">
+                  <LicenseSelect
+                    required
+                    licenses={licenses}
+                    value={data.license}
+                    name="license"
+                    onChange={this.handleChange}
+                    errors={errors.license}
+                  />
+                </div>
+                <div className="column" />
               </div>
               <div>
                 <div className="field is-grouped is-grouped-right">

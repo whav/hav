@@ -109,6 +109,8 @@ class CreateMediaSerializer(serializers.Serializer):
         return data
 
 
+
+
 class SimpleMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
@@ -188,6 +190,18 @@ class PrepareIngestSerializer(serializers.Serializer):
     items = serializers.ListField(
         child=IngestHyperlinkField()
     )
+
+
+class IngestSerializer(serializers.Serializer):
+
+    source = IngestHyperlinkField()
+    date = serializers.CharField()
+    creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
+    license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
+
+    def create(self, validated_data):
+        print(validated_data)
+        return {'sucess': True}
 
 
 class SimpleIngestQueueSerializer(serializers.ModelSerializer):

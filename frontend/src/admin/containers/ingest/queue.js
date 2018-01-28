@@ -6,7 +6,7 @@ import { fetchIngestionQueue, loadIngestOptions } from "../../actions/ingest";
 import IngestForm, { TemplateForm } from "../../ui/ingest/form";
 
 import PreviewImage from "../filebrowser/preview";
-import { ingest } from "../../api/ingest";
+import { queueForIngestion } from "../../api/ingest";
 
 class IngestQueue extends React.Component {
   constructor(props) {
@@ -53,6 +53,7 @@ class IngestQueue extends React.Component {
 
   ingestItem = (ingestId, data) => {
     console.warn("submitting", ingestId, data);
+    queueForIngestion(this.props.queue.uuid, data);
   };
 
   render() {

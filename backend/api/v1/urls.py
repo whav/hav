@@ -1,7 +1,6 @@
 from django.conf.urls import url, include
 from django.conf import settings
 
-from .ingest import PrepareIngestView, IngestQueueView
 from .fsBrowser.urls import fs_urls
 from .whavBrowser.urls import whav_urls
 from .havBrowser.urls import hav_urls

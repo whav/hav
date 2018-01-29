@@ -14,7 +14,8 @@ class IngestQueue extends React.Component {
     props.loadIngestData();
     this.state = {
       formData: {},
-      templateData: {}
+      templateData: {},
+      errors: {}
     };
   }
 
@@ -37,6 +38,15 @@ class IngestQueue extends React.Component {
     });
   };
 
+  onError = (source, errors) => {
+    this.setState({
+      errors: {
+        ...this.state.errors,
+        [source]: errors
+      }
+    });
+  };
+
   onChange = (source, data) => {
     this.setState(state => {
       return {
@@ -51,17 +61,19 @@ class IngestQueue extends React.Component {
     });
   };
 
-  ingestItem = async (ingestId, data) => {
-    let response = await queueForIngestion(this.props.queue.uuid, {
+  ingestItem = (ingestId, data) => {
+    let response = queueForIngestion(this.props.queue.uuid, {
       source: ingestId,
       ...data
     });
-    console.log(response);
+    response
+      .then(data => console.log("success...", data))
+      .catch(err => this.onError(ingestId, err));
   };
 
   render() {
     const { queue, loading, options } = this.props;
-    const { formData, templateData } = this.state;
+    const { formData, templateData, errors } = this.state;
 
     if (loading) {
       return <LoadingIndicator />;
@@ -89,6 +101,7 @@ class IngestQueue extends React.Component {
                 {...options}
                 onChange={this.onChange}
                 data={formData[source] || {}}
+                errors={errors[source] || {}}
                 onSubmit={() => (
                   console.log(formData),
                   this.ingestItem(source, formData[source] || {})

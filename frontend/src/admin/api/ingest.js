@@ -84,5 +84,9 @@ export const queueForIngestion = (queue_id, data) => {
       "Content-Type": "application/json"
     }),
     credentials: "same-origin"
-  }).then(response => response.json());
+  }).then(response => {
+    return response
+      .json()
+      .then(json => (response.ok ? json : Promise.reject(json)));
+  });
 };

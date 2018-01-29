@@ -149,7 +149,6 @@ class TemplateForm extends React.Component {
 
   render() {
     const { licenses = [], creators = [], roles = [], data = {} } = this.props;
-
     return (
       <form
         noValidate
@@ -240,7 +239,7 @@ class IngestForm extends React.Component {
                   <DateForm
                     data={data}
                     onChange={this.handleChange}
-                    errors={errors}
+                    errors={errors.date}
                   />
                 </div>
                 <div className="column">

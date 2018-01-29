@@ -3,7 +3,7 @@ import { history } from "../app";
 
 import {
   fetchDataForIngestionForms,
-  ingest,
+  saveIngestionQueue,
   loadIngestQueueData,
   fetchAllIngestionQueues,
   fetchIngestOptions
@@ -82,7 +82,7 @@ export const saveIngestionData = (target, entries) => {
       selection: entries
     };
 
-    ingest(data)
+    saveIngestionQueue(data)
       .then(data => {
         console.warn(data);
         dispatch({

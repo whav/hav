@@ -86,7 +86,7 @@ class IngestHyperlinkField(serializers.Field):
 
     def to_internal_value(self, url):
         try:
-            self.get_object(url)
+            obj = self.get_object(url)
             logger.debug('Resolved url %s to file/db-entry %s', url, obj)
         except ObjectDoesNotExist:
             self.fail('does_not_exist')
@@ -132,10 +132,6 @@ class InternalIngestHyperlinkField(FinalIngestHyperlinkField):
             self.fail('does_not_exist')
 
 
-
-
-
-
 class HAVTargetField(serializers.HyperlinkedRelatedField):
     view_name = 'api:v1:hav_browser:hav_set'
     queryset = Node.objects.all()
@@ -144,6 +140,4 @@ class HAVTargetField(serializers.HyperlinkedRelatedField):
 ingestField = IngestHyperlinkField()
 
 def resolveUrlToObject(url):
-    path = urlparse(url).path
-    match = resolve(path)
-    return ingestField.get_object(match.view_name, match.args, match.kwargs)
+    return ingestField.get_object(url)

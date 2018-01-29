@@ -54,6 +54,27 @@ export const fetchIngestOptions = () => {
   }).then(response => response.json());
 };
 
+export const saveIngestionQueue = data => {
+  return fetch(ingestionEndpoint, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: new Headers({
+      "X-CSRFTOKEN": getCSRFCookie(),
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }),
+    credentials: "same-origin"
+  }).then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      return response.json().then(err => {
+        return Promise.reject(err);
+      });
+    }
+  });
+};
+
 export const fetchAllIngestionQueues = () => {
   return fetch(ingestionEndpoint, {
     method: "GET",

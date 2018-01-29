@@ -15,7 +15,8 @@ from apps.ingest.models import IngestQueue
 from apps.whav.models import Media
 from psycopg2.extras import DateTimeTZRange
 
-from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, resolveUrlToObject
+from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
+    InternalIngestHyperlinkField, resolveUrlToObject
 
 import logging
 
@@ -194,13 +195,13 @@ class PrepareIngestSerializer(serializers.Serializer):
 
 class IngestSerializer(serializers.Serializer):
 
-    source = IngestHyperlinkField()
+    source = InternalIngestHyperlinkField()
     date = serializers.CharField()
     creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
     license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
 
     def create(self, validated_data):
-        print(validated_data)
+        print('saving...', validated_data)
         return {'sucess': True}
 
 

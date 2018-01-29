@@ -69,23 +69,24 @@ class IngestHyperlinkField(serializers.Field):
         self.fail('no_match')
 
 
-    def get_object(self, view_name, view_args, view_kwargs):
+    def get_object(self, url):
+        path = urlparse(url).path
+        match = resolve(path)
+
         # whav ingestion
-        if view_name == 'api:v1:whav_browser:whav_media':
-            return MediaOrdering.objects.get(pk=view_kwargs['mediaordering_id'])
-        elif view_name == 'api:v1:whav_browser:whav_collection':
-            return ImageCollection.objects.get(pk=view_kwargs['collection_id'])
+        if match.view_name == 'api:v1:whav_browser:whav_media':
+            return MediaOrdering.objects.get(pk=match.kwargs['mediaordering_id'])
+        elif match.view_name == 'api:v1:whav_browser:whav_collection':
+            return ImageCollection.objects.get(pk=match.kwargs['collection_id'])
 
         # deal with filebrowsers
-        elif view_name in ['api:v1:fs_browser:filebrowser_file', 'api:v1:fs_browser:filebrowser']:
-            return Path(settings.INCOMING_FILES_ROOT).joinpath(view_kwargs['path'])
+        elif match.view_name in ['api:v1:fs_browser:filebrowser_file', 'api:v1:fs_browser:filebrowser']:
+            return Path(settings.INCOMING_FILES_ROOT).joinpath(match.kwargs['path'])
         return self.fail('no_match')
 
     def to_internal_value(self, url):
-        path = urlparse(url).path
-        match = resolve(path)
         try:
-            obj = self.get_object(match.view_name, match.args, match.kwargs)
+            self.get_object(url)
             logger.debug('Resolved url %s to file/db-entry %s', url, obj)
         except ObjectDoesNotExist:
             self.fail('does_not_exist')
@@ -120,6 +121,19 @@ class FinalIngestHyperlinkField(IngestHyperlinkField):
             self.fail('does_not_exist')
 
         return obj
+
+
+class InternalIngestHyperlinkField(FinalIngestHyperlinkField):
+
+    def to_internal_value(self, url):
+        try:
+            return self.get_object(url)
+        except ObjectDoesNotExist:
+            self.fail('does_not_exist')
+
+
+
+
 
 
 class HAVTargetField(serializers.HyperlinkedRelatedField):

@@ -5,9 +5,9 @@ from django.shortcuts import get_object_or_404
 from apps.media.models import MediaCreator, MediaCreatorRole, License
 from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin
-from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, BatchMediaSerializer, \
-    PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, SimpleIngestQueueSerializer, \
-    IngestSerializer
+from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, \
+    PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, \
+    SimpleIngestQueueSerializer, IngestSerializer
 
 from .resolver import resolveIngestionItems
 
@@ -39,15 +39,22 @@ class IngestQueueDetailView(IncomingBaseMixin, RetrieveAPIView):
     lookup_url_kwarg = 'pk'
 
     def get_queryset(self):
-        return IngestQueue.objects.filter(created_by=self.request.user)
+        return IngestQueue.objects.filter(created_by=self.request.user, target__isnull=False)
 
 
 class IngestQueueIngestionView(IncomingBaseMixin, APIView):
     def post(self, request, pk):
-        queue = get_object_or_404(IngestQueue, pk=pk, created_by=request.user)
-        serializer = IngestSerializer(data=request.data)
-
+        queue = get_object_or_404(IngestQueue, pk=pk, created_by=request.user, target__isnull=False)
+        context = {
+            'user': request.user,
+            'target': queue.target
+        }
+        serializer = IngestSerializer(
+            data=request.data,
+            context=context
+        )
         serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response({'success': True})
 
 

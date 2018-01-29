@@ -83,7 +83,7 @@ class IngestQueue extends React.Component {
         <div>
           <h1>Ingesting {count === 1 ? "one file" : `${count} files`}</h1>
           <hr />
-          {/* template form if mor than one ingest file */}
+          {/* template form if more than one ingest file */}
           {count > 1 ? (
             <TemplateForm
               {...options}

@@ -14,7 +14,7 @@ import "react-select/dist/react-select.css";
 import "./ingest.css";
 
 const Field = props => {
-  const { label = "", errors, expanded = false } = props;
+  const { label = "", errors = [], expanded = false } = props;
   return (
     <div className="field">
       <label className="label">{label}</label>
@@ -62,9 +62,10 @@ class CreatorSelect extends React.Component {
     }));
     const selectedOptions = options.filter(o => value.indexOf(o.value) > -1);
     return (
-      <Field label="Creators">
+      <Field label="Creators" errors={errors}>
         <Select
           name="creators"
+          className={classnames({ "is-danger": errors })}
           value={selectedOptions}
           onChange={this.onChange}
           options={options}
@@ -84,7 +85,7 @@ class LicenseSelect extends React.Component {
       key: l.id
     }));
     return (
-      <Field label="License" expanded>
+      <Field label="License" expanded errors={errors}>
         <div
           className={classnames("select", "is-fullwidth", {
             "is-danger": errors
@@ -109,14 +110,13 @@ class LicenseSelect extends React.Component {
   }
 }
 
-const DateForm = ({ data, ...props }) => {
-  const errors = props.errors || {};
+const DateForm = ({ data, errors, ...props }) => {
   return (
-    <Field label="Date">
+    <Field label="Date" errors={errors}>
       <input
         type="text"
         name="date"
-        className="input"
+        className={classnames("input", { "is-danger": errors })}
         placeholder="YYYY-MM-DD"
         value={data.date || ""}
         onChange={props.onChange}
@@ -227,7 +227,7 @@ class IngestForm extends React.Component {
       hide_fields = [],
       errors = {}
     } = this.props;
-
+    console.warn(errors);
     return (
       <div className="box is-outlined">
         <form className="ingest-form" onSubmit={this.onSubmit}>

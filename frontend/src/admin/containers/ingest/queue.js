@@ -5,7 +5,8 @@ import LoadingIndicator from "../../ui/loading";
 import { fetchIngestionQueue, loadIngestOptions } from "../../actions/ingest";
 import IngestForm, { TemplateForm } from "../../ui/ingest/form";
 
-import PreviewImage from "../filebrowser/preview";
+import PreviewImage from "../filebrowser/image_preview";
+import PreviewFolder from "../filebrowser/folder_preview";
 import { queueForIngestion } from "../../api/ingest";
 
 class IngestQueue extends React.Component {
@@ -82,6 +83,10 @@ class IngestQueue extends React.Component {
       return (
         <div>
           <h1>Ingesting {count === 1 ? "one file" : `${count} files`}</h1>
+          <p>
+            <em>Target</em>
+            <PreviewFolder source={queue.target} />
+          </p>
           <hr />
           {/* template form if more than one ingest file */}
           {count > 1 ? (
@@ -92,7 +97,6 @@ class IngestQueue extends React.Component {
               onChange={this.onTemplateChange}
             />
           ) : null}
-
           {queue.filtered_selection.map((source, index) => {
             return (
               <IngestForm
@@ -102,10 +106,11 @@ class IngestQueue extends React.Component {
                 onChange={this.onChange}
                 data={formData[source] || {}}
                 errors={errors[source] || {}}
-                onSubmit={() => (
-                  console.log(formData),
+                onSubmit={() =>
+                  // console.log(formData),
                   this.ingestItem(source, formData[source] || {})
-                )}
+                }
+                onError={this.onError}
               >
                 <span>Asset #{index + 1}</span>
                 <p>

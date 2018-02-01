@@ -77,3 +77,5 @@ class Media(models.Model):
     files = models.ManyToManyField(ArchiveFile)
 
     objects = MediaManager()
+
+

@@ -121,7 +121,8 @@ class FileBrowser extends React.Component {
               allItemIds={directory.content}
               handleSelect={selectItems}
               saveFileSelection={() =>
-                saveFileSelection(Array.from(selectedItemIds))}
+                saveFileSelection(Array.from(selectedItemIds))
+              }
             />
           }
         />
@@ -252,7 +253,7 @@ export default connect(
       saveFileSelection,
       uploadToURL: apiURL,
       loadCurrentDirectory: () => {
-        dispatch(requestDirectoryAction(path, apiURL));
+        dispatch(requestDirectoryAction(apiURL));
       },
       switchDisplayStyle: style =>
         dispatch(switchFilebrowserDisplayType(style)),

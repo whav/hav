@@ -7,7 +7,7 @@ from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin
 from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, \
     PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, \
-    SimpleIngestQueueSerializer, IngestSerializer
+    SimpleIngestQueueSerializer, IngestSerializer, SimpleMediaSerializer
 
 from .resolver import resolveIngestionItems
 
@@ -43,6 +43,7 @@ class IngestQueueDetailView(IncomingBaseMixin, RetrieveAPIView):
 
 
 class IngestQueueIngestionView(IncomingBaseMixin, APIView):
+
     def post(self, request, pk):
         queue = get_object_or_404(IngestQueue, pk=pk, created_by=request.user, target__isnull=False)
         context = {
@@ -54,8 +55,8 @@ class IngestQueueIngestionView(IncomingBaseMixin, APIView):
             context=context
         )
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'success': True})
+        media = serializer.save()
+        return Response(data=SimpleMediaSerializer(instance=media).data, status=201)
 
 
 

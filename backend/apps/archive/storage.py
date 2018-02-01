@@ -12,5 +12,4 @@ class ArchiveStorage(FileSystemStorage):
         super().__init__(**kwargs)
 
     def generate_filename(self, filename):
-        print("Archiver", filename)
         return super().generate_filename(filename)

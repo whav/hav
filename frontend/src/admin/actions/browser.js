@@ -15,18 +15,16 @@ export const MKDIR_FAIL = "MKDIR_FAIL";
 
 import { requestDirectory, createDirectory } from "../api/browser";
 
-export const requestDirectoryAction = (path, url) => {
+export const requestDirectoryAction = url => {
   return dispatch => {
     dispatch({
       type: REQUEST_DIRECTORY,
-      path,
       url
     });
     requestDirectory(url).then(data => {
       dispatch({
         type: RECEIVE_DIRECTORY_CONTENT,
         payload: data,
-        path,
         url
       });
     });

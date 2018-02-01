@@ -7,10 +7,9 @@ from django.core.files import File
 from apps.archive.models import ArchiveFile
 from apps.media.models import Media
 
-
 from .hash import generate_hash
 
-logger = logging.getLogger('archive')
+logger = logging.getLogger(__name__)
 
 
 def _check_file_permissions(filepath):
@@ -25,17 +24,18 @@ def _get_file_size(filepath):
     statinfo = os.stat(filepath)
     return statinfo.st_size
 
+
 def _get_archive_file_name(filepath, uuid):
     _, filename = os.path.split(filepath)
     _, ext = os.path.splitext(filename)
     return '{uuid}{ext}'.format(uuid=uuid, ext=ext)
 
 
+
 def archive_file(filepath, media_id, user_id):
     media = Media.objects.get(pk=media_id)
     user = User.objects.get(pk=user_id)
     path = os.path.normpath(filepath)
-
 
     # do some basics checks
     _check_file_permissions(path)
@@ -46,7 +46,7 @@ def archive_file(filepath, media_id, user_id):
     # some basic stats
     archive_fields = {
      'hash': generate_hash(path),
-     'size':_get_file_size(path),
+     'size': _get_file_size(path),
      'original_filename': os.path.split(path)[1],
      'archived_by': user,
      'id': uid,

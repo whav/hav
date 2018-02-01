@@ -7,12 +7,12 @@ from rest_framework import serializers
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from apps.media.utils.dtrange import range_from_partial_date
 from apps.sets.models import Node
-from apps.archive.tasks import archive
 from apps.archive.operations.hash import generate_hash
 from apps.archive.models import ArchiveFile
+from apps.archive.tasks import archive
+from apps.archive.operations.hash import generate_hash
 from apps.ingest.models import IngestQueue
 
-from apps.whav.models import Media
 from psycopg2.extras import DateTimeTZRange
 
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
@@ -118,65 +118,6 @@ class SimpleMediaSerializer(serializers.ModelSerializer):
         fields = ['pk', 'creators', 'license', 'creation_date']
 
 
-
-class BatchMediaSerializer(serializers.Serializer):
-
-    target = HAVTargetField()
-
-    entries = CreateMediaSerializer(many=True)
-
-    def create(self, validated_data):
-        target = validated_data['target']
-        user = self.context['user']
-
-        raw_entry_data = self.data
-        raw_entries = raw_entry_data.pop('entries', [])
-
-        tasks = []
-
-        for media_data in raw_entries:
-            media_data.update(raw_entry_data)
-            media_data.update({
-                'user': user.pk,
-                'target': target.pk
-            })
-
-            # queue the task
-            task = archive.delay(media_data)
-            # collect task ids
-            tasks.append(task.id)
-
-        return tasks
-
-
-
-class IngestSerializer(CreateMediaSerializer):
-
-    target = serializers.PrimaryKeyRelatedField(queryset=Node.objects.all())
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-
-    def create(self, vd):
-        # construct date time range
-        dt_range = range_from_partial_date(vd.get('year'), vd.get('month'), vd.get('day'))
-
-        # actually create the media object
-        media = Media.objects.create(
-                    creation_date=DateTimeTZRange(lower=dt_range[0], upper=dt_range[1]),
-                    license=vd.get('license'),
-                    set=vd.target,
-                    created_by=vd.user
-                )
-
-        # save m2m
-        for creator in vd['creators']:
-            MediaToCreator.objects.create(
-                creator=creator,
-                media=media
-            )
-
-        return SimpleMediaSerializer(media)
-
-
 class IngestionItemSerializer(serializers.Serializer):
 
     path = serializers.ListField(serializers.CharField(max_length=200))
@@ -196,13 +137,48 @@ class PrepareIngestSerializer(serializers.Serializer):
 class IngestSerializer(serializers.Serializer):
 
     source = InternalIngestHyperlinkField()
-    date = serializers.CharField()
+    start = serializers.DateTimeField()
+    end = serializers.DateTimeField()
     creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
     license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
 
+    def validate_source(self, value):
+        hash = generate_hash(value)
+        try:
+            ArchiveFile.objects.get(hash=hash)
+            raise serializers.ValidationError("A file with the hash %s is already archived." % hash)
+        except ArchiveFile.DoesNotExist:
+            return value
+
+    def validate(self, data):
+        if data['start'] > data['end']:
+            raise serializers.ValidationError("Start time mus be before end time")
+        return data
+
+
     def create(self, validated_data):
-        print('saving...', validated_data)
-        return {'sucess': True}
+        user = self.context['user']
+        target = self.context['target']
+        dt_range = DateTimeTZRange(lower=validated_data['start'], upper=validated_data['end'])
+
+        # actually create the media object
+        media = Media.objects.create(
+            creation_date=dt_range,
+            license=validated_data.get('license'),
+            set=target,
+            created_by=user
+        )
+
+        # save m2m
+        for creator in validated_data['creators']:
+            MediaToCreator.objects.create(
+                creator=creator,
+                media=media
+            )
+        # trigger the archiving task
+        archive.delay(str(validated_data['source']), media.pk, user.pk)
+
+        return media
 
 
 class SimpleIngestQueueSerializer(serializers.ModelSerializer):

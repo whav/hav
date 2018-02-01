@@ -10,7 +10,7 @@ import classnames from "classnames";
 
 import Select from "react-select";
 import "react-select/dist/react-select.css";
-
+import parseDate from "./daterange";
 import "./ingest.css";
 
 const Field = props => {
@@ -40,6 +40,15 @@ const FieldErrors = ({ errors }) =>
         </p>
       ))
     : null;
+
+const GlobalErrors = ({ errors = [] }) => {
+  return errors.length ? (
+    <div className="notification is-danger is-size-7">
+      <h3>Error</h3>
+      <ul>{errors.map((msg, index) => <li key={index}>{msg}</li>)}</ul>
+    </div>
+  ) : null;
+};
 
 class CreatorSelect extends React.Component {
   onChange = e => {
@@ -110,7 +119,7 @@ class LicenseSelect extends React.Component {
   }
 }
 
-const DateForm = ({ data, errors, ...props }) => {
+const DateForm = ({ data, errors, children, ...props }) => {
   return (
     <Field label="Date" errors={errors}>
       <input
@@ -119,8 +128,10 @@ const DateForm = ({ data, errors, ...props }) => {
         className={classnames("input", { "is-danger": errors })}
         placeholder="YYYY-MM-DD"
         value={data.date || ""}
+        autoComplete="off"
         onChange={props.onChange}
       />
+      {children || null}
     </Field>
   );
 };
@@ -213,6 +224,24 @@ class IngestForm extends React.Component {
     });
   };
 
+  handleDateChange = value => {
+    let start, end;
+    try {
+      [start, end] = parseDate(value);
+      // clear any error
+      this.props.onError(this.props.source, { date: null });
+    } catch (e) {
+      this.props.onError(this.props.source, {
+        date: ["invalid date/time"]
+      });
+    }
+    this.props.onChange(this.props.source, {
+      date: value,
+      start,
+      end
+    });
+  };
+
   onSubmit = e => {
     e.preventDefault();
     this.props.onSubmit();
@@ -227,20 +256,36 @@ class IngestForm extends React.Component {
       hide_fields = [],
       errors = {}
     } = this.props;
-    console.warn(errors);
+
+    let globalErrors = { ...errors };
+    ["date", "creators", "license"].forEach(k => delete globalErrors[k]);
+    const error_msgs = Object.entries(globalErrors).reduce(
+      (collected_errors, [key, error_msgs]) => {
+        return [...collected_errors, ...error_msgs];
+      },
+      []
+    );
+
     return (
       <div className="box is-outlined">
         <form className="ingest-form" onSubmit={this.onSubmit}>
           <div className="columns is-desktop">
             <div className="column">{this.props.children}</div>
             <div className="column is-two-thirds">
+              <GlobalErrors errors={error_msgs} />
               <div className="columns">
                 <div className="column">
                   <DateForm
                     data={data}
-                    onChange={this.handleChange}
+                    onChange={e => this.handleDateChange(e.target.value)}
                     errors={errors.date}
-                  />
+                  >
+                    {data.start && data.end ? (
+                      <p className="help">
+                        {data.start.toISO()} - {data.end.toISO()}
+                      </p>
+                    ) : null}
+                  </DateForm>
                 </div>
                 <div className="column">
                   <CreatorSelect

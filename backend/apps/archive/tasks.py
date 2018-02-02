@@ -6,6 +6,7 @@ from .operations.create import archive_file
 
 @app.task
 def archive(filepath, media_id, user_id):
+    print(filepath, media_id, user_id)
     return archive_file(filepath, media_id, user_id)
 
 

@@ -1,5 +1,7 @@
 import os
 
+from django.db import transaction
+
 from django.contrib.auth.models import User
 from pathlib import Path
 from rest_framework import serializers
@@ -175,8 +177,18 @@ class IngestSerializer(serializers.Serializer):
                 creator=creator,
                 media=media
             )
-        # trigger the archiving task
-        archive.delay(str(validated_data['source']), media.pk, user.pk)
+
+        def archive_file():
+            logger.info(
+                "Triggering archiving for file %s, media: %d, user: %d",
+                str(validated_data['source']),
+                media.pk,
+                user.pk
+            )
+            archive.delay(str(validated_data['source']), media.pk, user.pk)
+
+        # this instructs django to execute the function after any commit
+        transaction.on_commit(archive_file)
 
         return media
 

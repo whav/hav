@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_celery_monitor',
+    'django_celery_results',
     'treebeard',
     'raven.contrib.django.raven_compat',
     'apps.whav',

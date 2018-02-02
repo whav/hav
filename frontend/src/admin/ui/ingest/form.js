@@ -10,7 +10,7 @@ import classnames from "classnames";
 
 import Select from "react-select";
 import "react-select/dist/react-select.css";
-import parseDate from "./daterange";
+// import parseDate from "../../utils/daterange";
 import "./ingest.css";
 
 const Field = props => {
@@ -225,20 +225,18 @@ class IngestForm extends React.Component {
   };
 
   handleDateChange = value => {
-    let start, end;
-    try {
-      [start, end] = parseDate(value);
-      // clear any error
-      this.props.onError(this.props.source, { date: null });
-    } catch (e) {
-      this.props.onError(this.props.source, {
-        date: ["invalid date/time"]
-      });
-    }
+    // let start, end;
+    // try {
+    //   [start, end] = parseDate(value);
+    //   // clear any error
+    //   this.props.onError(this.props.source, { date: null });
+    // } catch (e) {
+    //   this.props.onError(this.props.source, {
+    //     date: ["invalid date/time"]
+    //   });
+    // }
     this.props.onChange(this.props.source, {
-      date: value,
-      start,
-      end
+      date: value
     });
   };
 
@@ -280,11 +278,11 @@ class IngestForm extends React.Component {
                     onChange={e => this.handleDateChange(e.target.value)}
                     errors={errors.date}
                   >
-                    {data.start && data.end ? (
+                    {/* {data.start && data.end ? (
                       <p className="help">
                         {data.start.toISO()} - {data.end.toISO()}
                       </p>
-                    ) : null}
+                    ) : null} */}
                   </DateForm>
                 </div>
                 <div className="column">

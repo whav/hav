@@ -1,7 +1,7 @@
 import uuid
 
 from django.db import models
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField, JSONField, HStoreField
 from django.conf import settings
 
 from apps.sets.models import Node
@@ -14,6 +14,8 @@ class IngestQueue(models.Model):
 
     selection = ArrayField(models.URLField(), default=list)
     expanded_selection = ArrayField(models.URLField(), default=list)
+
+    ingested_items = HStoreField(default=dict)
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

@@ -207,8 +207,14 @@ class IngestQueueSerializer(serializers.ModelSerializer):
 
     def get_filtered_selection(self, obj):
         filtered = []
+        ingested_items = set(obj.ingested_items.keys())
         for source in obj.selection:
+            # skip ingested items
+            if source in ingested_items:
+                continue
+
             target = resolveUrlToObject(source)
+
             if isinstance(target, Path) and target.is_file():
                 filtered.append(source)
         return filtered

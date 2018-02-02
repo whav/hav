@@ -55,7 +55,15 @@ class IngestQueueIngestionView(IncomingBaseMixin, APIView):
             context=context
         )
         serializer.is_valid(raise_exception=True)
+
         media = serializer.save()
+
+        qref = IngestQueue.objects.select_for_update().get(pk=queue.pk)
+        qref.ingested_items.update({
+            serializer.initial_data['source']: media.pk
+        })
+        qref.save()
+
         return Response(data=SimpleMediaSerializer(instance=media).data, status=201)
 
 

@@ -1,13 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import LoadingIndicator from "../../ui/loading";
-
+import uniq from "lodash/uniq";
 import { fetchIngestionQueue, loadIngestOptions } from "../../actions/ingest";
 import IngestForm, { TemplateForm } from "../../ui/ingest/form";
 
 import PreviewImage from "../filebrowser/image_preview";
 import PreviewFolder from "../filebrowser/folder_preview";
 import { queueForIngestion } from "../../api/ingest";
+
+import parseDate from "../../utils/daterange";
 
 class IngestQueue extends React.Component {
   constructor(props) {
@@ -40,10 +42,21 @@ class IngestQueue extends React.Component {
   };
 
   onError = (source, errors) => {
+    // patch start and end errors to date
+    let custom_errors = { ...errors };
+    const date_errors = uniq([
+      ...(errors.start || []),
+      ...(errors.end || []),
+      ...(errors.date || [])
+    ]);
+    delete custom_errors.start;
+    delete custom_errors.end;
+    custom_errors.date = date_errors;
     this.setState({
       errors: {
         ...this.state.errors,
-        [source]: errors
+
+        [source]: custom_errors
       }
     });
   };
@@ -63,9 +76,18 @@ class IngestQueue extends React.Component {
   };
 
   ingestItem = (ingestId, data) => {
+    let start, end;
+    try {
+      [start, end] = parseDate(data.date);
+    } catch (e) {
+      this.onError(ingestId, { date: ["invalid"] });
+      return;
+    }
     let response = queueForIngestion(this.props.queue.uuid, {
       source: ingestId,
-      ...data
+      ...data,
+      start,
+      end
     });
     response
       .then(data => console.log("success...", data))
@@ -83,10 +105,8 @@ class IngestQueue extends React.Component {
       return (
         <div>
           <h1>Ingesting {count === 1 ? "one file" : `${count} files`}</h1>
-          <p>
-            <em>Target</em>
-            <PreviewFolder source={queue.target} />
-          </p>
+          <em>Target</em>
+          <PreviewFolder source={queue.target} />
           <hr />
           {/* template form if more than one ingest file */}
           {count > 1 ? (

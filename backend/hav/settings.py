@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'channels',
     'webpack_loader',
     'rest_framework',
@@ -97,6 +98,8 @@ DATABASES = {
         'NAME': env('HAV_DB_NAME', default='hav'),
         'USER': env('HAV_DB_USER', default=''),
         'PASSWORD': env('HAV_DB_PW', default=''),
+        'ATOMIC_REQUESTS': True
+
     },
     'whav': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -105,9 +108,9 @@ DATABASES = {
         'NAME': env('WHAV_DB_NAME', default='whav'),
         'USER': env('WHAV_DB_USER', default=''),
         'PASSWORD': env('HAV_DB_PW', default=''),
+        'ATOMIC_REQUESTS': True
     },
 }
-
 
 
 DATABASE_ROUTERS = [

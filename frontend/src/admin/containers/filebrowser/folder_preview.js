@@ -33,11 +33,10 @@ const mapStateToProps = (state, ownProps) => {
   const { source } = ownProps;
   const slice = state.repositories.browser;
   const data = slice[source];
-  console.log(data);
   return data
     ? {
         folder: data,
-        parent_folders: data.parents.map(src => slice[src]),
+        parent_folders: (data.parents || []).map(src => slice[src]),
         loading: false
       }
     : {

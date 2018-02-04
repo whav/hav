@@ -5,6 +5,7 @@ from django.conf import settings
 from apps.sets.models import Node
 from apps.archive.models import ArchiveFile
 
+from .types import media_types
 
 class MediaCreator(models.Model):
     first_name = models.CharField(max_length=100, blank=True)
@@ -63,9 +64,15 @@ class MediaManager(models.Manager):
 
 class Media(models.Model):
 
+    MEDIA_TYPE_CHOICES = media_types
+
     creators = models.ManyToManyField(MediaCreator, through=MediaToCreator, verbose_name='creators')
     creation_date = DateTimeRangeField()
     license = models.ForeignKey(License, null=True, on_delete=models.SET_NULL)
+
+    original_media_type = models.IntegerField(choices=MEDIA_TYPE_CHOICES, default=1)
+    original_media_description = models.TextField(blank=True)
+    original_media_identifier = models.CharField(blank=True, max_length=200)
 
     set = models.ForeignKey(Node, on_delete=models.PROTECT)
 
@@ -77,5 +84,6 @@ class Media(models.Model):
     files = models.ManyToManyField(ArchiveFile)
 
     objects = MediaManager()
+
 
 

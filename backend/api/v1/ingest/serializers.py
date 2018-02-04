@@ -53,67 +53,6 @@ class MediaCreatorSerializer(serializers.ModelSerializer):
         fields = ['role', 'creator']
 
 
-
-class CreateMediaSerializer(serializers.Serializer):
-
-    ingestion_id = serializers.CharField(max_length=500)
-
-    year = serializers.IntegerField(min_value=1950, max_value=2050)
-    month = serializers.IntegerField(min_value=1, max_value=12, required=False)
-    day = serializers.IntegerField(min_value=1, max_value=31, required=False)
-    timestamp = serializers.DateTimeField(required=False)
-
-    creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
-    license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
-
-    def validate_ingestion_identifier(self, value):
-        if not os.path.exists(value):
-            raise serializers.ValidationError('The file {} does not seem to exist.'.format(value))
-
-        if not os.path.isfile(value):
-            raise serializers.ValidationError('The path {} does not point to a file.'.format(value))
-
-        if not os.access(value, os.R_OK):
-            raise serializers.ValidationError('The file at {} is not readable.'.format(value))
-
-        hash = generate_hash(value)
-        try:
-            af = ArchiveFile.objects.get(hash=hash)
-        except ArchiveFile.DoesNotExist:
-            return value
-        else:
-            raise serializers.ValidationError('''
-                The same file already exists in the archive. 
-                The associated media id is {}'''.format(af.media_set.get().pk))
-
-    def validate_dates(self, data):
-        year = data.get('year')
-        month = data.get('month')
-        day = data.get('day')
-
-        timestamp = data.get('timestamp')
-
-        if day and not month:
-            raise serializers.ValidationError('Cannot have a day without a month')
-
-        if any([year, month, day]) and timestamp:
-            raise serializers.ValidationError('Can not use timestamp and any of year, month, day together.')
-
-        if any([year, month, day]):
-            start, end = range_from_partial_date(year, month, day)
-
-            if start > end:
-                raise serializers.ValidationError('Start can not be before end of timerange.')
-
-    def validate(self, data):
-        # print(data)
-        # self.validate_ingestion_identifier(data.get('ingestion_id'))
-        self.validate_dates(data)
-        return data
-
-
-
-
 class SimpleMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
@@ -135,14 +74,18 @@ class PrepareIngestSerializer(serializers.Serializer):
         child=IngestHyperlinkField()
     )
 
-
 class IngestSerializer(serializers.Serializer):
 
     source = InternalIngestHyperlinkField()
     start = serializers.DateTimeField()
     end = serializers.DateTimeField()
+
     creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
     license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
+
+    media_type = serializers.ChoiceField(choices=Media.MEDIA_TYPE_CHOICES)
+    media_description = serializers.CharField(allow_blank=True, required=False)
+    media_identifier = serializers.CharField(allow_blank=True, required=False)
 
     def validate_source(self, value):
         hash = generate_hash(value)
@@ -154,7 +97,7 @@ class IngestSerializer(serializers.Serializer):
 
     def validate(self, data):
         if data['start'] > data['end']:
-            raise serializers.ValidationError("Start time mus be before end time")
+            raise serializers.ValidationError("Start time must be before end time.")
         return data
 
 
@@ -168,7 +111,10 @@ class IngestSerializer(serializers.Serializer):
             creation_date=dt_range,
             license=validated_data.get('license'),
             set=target,
-            created_by=user
+            created_by=user,
+            original_media_type=validated_data['media_type'],
+            original_media_description=validated_data.get('media_description', ''),
+            original_media_identifier=validated_data.get('media_identifier', '')
         )
 
         # save m2m
@@ -178,17 +124,15 @@ class IngestSerializer(serializers.Serializer):
                 media=media
             )
 
-        def archive_file():
-            logger.info(
-                "Triggering archiving for file %s, media: %d, user: %d",
-                str(validated_data['source']),
-                media.pk,
-                user.pk
-            )
-            archive.delay(str(validated_data['source']), media.pk, user.pk)
+        logger.info(
+            "Triggering archiving for file %s, media: %d, user: %d",
+            str(validated_data['source']),
+            media.pk,
+            user.pk
+        )
 
         # this instructs django to execute the function after any commit
-        transaction.on_commit(archive_file)
+        transaction.on_commit(lambda: archive.delay(str(validated_data['source']), media.pk, user.pk))
 
         return media
 

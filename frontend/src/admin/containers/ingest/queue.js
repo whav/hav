@@ -61,6 +61,15 @@ class IngestQueue extends React.Component {
     });
   };
 
+  clearErrors = source => {
+    this.setState({
+      errors: {
+        ...this.state.errors,
+        [source]: {}
+      }
+    });
+  };
+
   onChange = (source, data) => {
     this.setState(state => {
       return {
@@ -80,9 +89,10 @@ class IngestQueue extends React.Component {
     try {
       [start, end] = parseDate(data.date);
     } catch (e) {
-      this.onError(ingestId, { date: ["invalid"] });
+      this.onError(ingestId, { date: ["invalid dates"] });
       return;
     }
+    this.clearErrors(ingestId);
     let response = queueForIngestion(this.props.queue.uuid, {
       source: ingestId,
       ...data,

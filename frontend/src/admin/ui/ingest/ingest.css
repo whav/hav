@@ -4,3 +4,7 @@ form.ingest-template-form {
 form.ingest-form {
   margin-top: 1rem;
 }
+
+div.Select.is-danger > .Select-control {
+  border-color: red;
+}

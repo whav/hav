@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from apps.media.models import MediaCreator, MediaCreatorRole, License
+from apps.media.models import MediaCreator, MediaCreatorRole, License, Media
 from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin
 from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, \
@@ -17,7 +17,8 @@ class IngestOptionsView(IncomingBaseMixin, APIView):
         return Response({
             "creators": [{'id': mc.pk, 'name': str(mc)} for mc in MediaCreator.objects.all()],
             "roles": MediaCreatorRoleSerializer(MediaCreatorRole.objects.all(), many=True).data,
-            "licenses": MediaLicenseSerializer(License.objects.all(), many=True).data
+            "licenses": MediaLicenseSerializer(License.objects.all(), many=True).data,
+            "media_types": Media.MEDIA_TYPE_CHOICES
         })
 
 
@@ -58,12 +59,12 @@ class IngestQueueIngestionView(IncomingBaseMixin, APIView):
 
         media = serializer.save()
 
+        # update the ingest queue
         qref = IngestQueue.objects.select_for_update().get(pk=queue.pk)
         qref.ingested_items.update({
             serializer.initial_data['source']: media.pk
         })
         qref.save()
-
         return Response(data=SimpleMediaSerializer(instance=media).data, status=201)
 
 

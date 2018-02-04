@@ -12,6 +12,7 @@ import Select from "react-select";
 import "react-select/dist/react-select.css";
 // import parseDate from "../../utils/daterange";
 import "./ingest.css";
+import { error } from "util";
 
 const Field = props => {
   const { label = "", errors = [], expanded = false } = props;
@@ -44,7 +45,6 @@ const FieldErrors = ({ errors }) =>
 const GlobalErrors = ({ errors = [] }) => {
   return errors.length ? (
     <div className="notification is-danger is-size-7">
-      <h3>Error</h3>
       <ul>{errors.map((msg, index) => <li key={index}>{msg}</li>)}</ul>
     </div>
   ) : null;
@@ -80,6 +80,35 @@ class CreatorSelect extends React.Component {
           options={options}
           multi={true}
         />
+      </Field>
+    );
+  }
+}
+
+class MediaTypeSelect extends React.Component {
+  render() {
+    const { types, errors } = this.props;
+    return (
+      <Field label="Media type" expanded errors={errors}>
+        <div
+          className={classnames("select", "is-fullwidth", {
+            "is-danger": errors
+          })}
+        >
+          <select
+            name="media_type"
+            value={this.props.value || ""}
+            onChange={this.props.onChange}
+            placeholder="Select..."
+          >
+            <option value="" />
+            {types.map(t => (
+              <option key={t[0]} value={t[0]}>
+                {t[1]}
+              </option>
+            ))}
+          </select>
+        </div>
       </Field>
     );
   }
@@ -139,7 +168,8 @@ const DateForm = ({ data, errors, children, ...props }) => {
 const formPropTypes = {
   licenses: PropTypes.array.isRequired,
   creators: PropTypes.array.isRequired,
-  roles: PropTypes.array.isRequired
+  roles: PropTypes.array.isRequired,
+  media_types: PropTypes.array.isRequired
 };
 
 class TemplateForm extends React.Component {
@@ -159,7 +189,13 @@ class TemplateForm extends React.Component {
   };
 
   render() {
-    const { licenses = [], creators = [], roles = [], data = {} } = this.props;
+    const {
+      licenses = [],
+      creators = [],
+      roles = [],
+      data = {},
+      media_types = []
+    } = this.props;
     return (
       <form
         noValidate
@@ -169,7 +205,7 @@ class TemplateForm extends React.Component {
         }}
         className="box ingest-template-form"
       >
-        <em>Template Form</em>
+        {/* <em>Template Form</em> */}
         <div className="columns">
           <div className="column">
             <DateForm data={data} onChange={this.handleChange} />
@@ -195,11 +231,21 @@ class TemplateForm extends React.Component {
           </div>
 
           <div className="column">
-            <Field>
-              <button className="button is-link" type="submit">
+            <MediaTypeSelect
+              types={media_types}
+              value={data.media_type}
+              name="media_type"
+              onChange={this.handleChange}
+            />
+          </div>
+        </div>
+        <div>
+          <div className="field is-grouped is-grouped-right">
+            <p className="control">
+              <button className="button is-link pull-right" type="submit">
                 Apply
               </button>
-            </Field>
+            </p>
           </div>
         </div>
       </form>
@@ -225,16 +271,6 @@ class IngestForm extends React.Component {
   };
 
   handleDateChange = value => {
-    // let start, end;
-    // try {
-    //   [start, end] = parseDate(value);
-    //   // clear any error
-    //   this.props.onError(this.props.source, { date: null });
-    // } catch (e) {
-    //   this.props.onError(this.props.source, {
-    //     date: ["invalid date/time"]
-    //   });
-    // }
     this.props.onChange(this.props.source, {
       date: value
     });
@@ -250,20 +286,28 @@ class IngestForm extends React.Component {
       licenses = [],
       creators = [],
       roles = [],
+      media_types = [],
       data = {},
       hide_fields = [],
       errors = {}
     } = this.props;
 
     let globalErrors = { ...errors };
-    ["date", "creators", "license"].forEach(k => delete globalErrors[k]);
+    [
+      "date",
+      "creators",
+      "license",
+      "media_type",
+      "media_description",
+      "media_identifier"
+    ].forEach(k => delete globalErrors[k]);
     const error_msgs = Object.entries(globalErrors).reduce(
       (collected_errors, [key, error_msgs]) => {
         return [...collected_errors, ...error_msgs];
       },
       []
     );
-
+    console.warn("Errors...", errors);
     return (
       <div className="box is-outlined">
         <form className="ingest-form" onSubmit={this.onSubmit}>
@@ -308,7 +352,43 @@ class IngestForm extends React.Component {
                     errors={errors.license}
                   />
                 </div>
-                <div className="column" />
+                <div className="column">
+                  <MediaTypeSelect
+                    required
+                    types={media_types}
+                    value={data.media_type}
+                    name="media_type"
+                    onChange={this.handleChange}
+                    errors={errors.media_type}
+                  />
+                </div>
+              </div>
+              <div className="columns">
+                <div className="column">
+                  <Field label="Media description">
+                    <textarea
+                      className={classnames("textarea", {
+                        "is-danger": errors.media_description
+                      })}
+                      value={data.media_description}
+                      name="media_description"
+                      onChange={this.handleChange}
+                    />
+                  </Field>
+                </div>
+                <div className="column">
+                  <Field label="Media identifier">
+                    <input
+                      type="text"
+                      className={classnames("input", {
+                        "is-danger": errors.media_identifier
+                      })}
+                      value={data.media_identifier}
+                      name="media_identifier"
+                      onChange={this.handleChange}
+                    />
+                  </Field>
+                </div>
               </div>
               <div>
                 <div className="field is-grouped is-grouped-right">

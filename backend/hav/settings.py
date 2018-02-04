@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
-    'channels',
     'webpack_loader',
     'rest_framework',
     'rest_framework.authtoken',

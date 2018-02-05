@@ -61,7 +61,7 @@ class IngestQueueIngestionView(IncomingBaseMixin, APIView):
 
         # update the ingest queue
         qref = IngestQueue.objects.select_for_update().get(pk=queue.pk)
-        qref.ingested_items.update({
+        qref.ingestion_items.update({
             serializer.initial_data['source']: media.pk
         })
         qref.save()

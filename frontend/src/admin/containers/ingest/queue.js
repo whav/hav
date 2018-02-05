@@ -25,7 +25,7 @@ class IngestQueue extends React.Component {
   applyTemplate = () => {
     const data = this.state.templateData;
 
-    this.props.queue.filtered_selection.forEach(k => {
+    this.props.items.forEach(k => {
       this.onChange(k, { ...this.state.formData[k], ...data });
     });
   };
@@ -93,30 +93,33 @@ class IngestQueue extends React.Component {
       return;
     }
     this.clearErrors(ingestId);
-    let response = queueForIngestion(this.props.queue.uuid, {
+    let response = queueForIngestion(this.props.uuid, {
       source: ingestId,
       ...data,
       start,
       end
     });
     response
-      .then(data => console.log("success...", data))
+      .then(data => {
+        console.log("success...", data);
+        this.props.loadIngestData();
+      })
       .catch(err => this.onError(ingestId, err));
   };
 
   render() {
-    const { queue, loading, options } = this.props;
+    const { loading, options, items = [], target } = this.props;
     const { formData, templateData, errors } = this.state;
-
+    console.warn(this.props);
     if (loading) {
       return <LoadingIndicator />;
     } else {
-      const count = queue.filtered_selection.length;
+      const count = items.length;
       return (
         <div>
           <h1>Ingesting {count === 1 ? "one file" : `${count} files`}</h1>
           <em>Target</em>
-          <PreviewFolder source={queue.target} />
+          <PreviewFolder source={target} />
           <hr />
           {/* template form if more than one ingest file */}
           {count > 1 ? (
@@ -127,7 +130,7 @@ class IngestQueue extends React.Component {
               onChange={this.onTemplateChange}
             />
           ) : null}
-          {queue.filtered_selection.map((source, index) => {
+          {items.map((source, index) => {
             return (
               <IngestForm
                 key={source}
@@ -157,11 +160,20 @@ class IngestQueue extends React.Component {
 
 export default connect(
   (state, ownProps) => {
-    const queue_data = state.ingest.ingestionQueues[ownProps.match.params.uuid];
+    const queue = state.ingest.ingestionQueues[ownProps.match.params.uuid];
+    const { ingested_items = [], ingestion_items = {} } = queue;
+
+    // these items will be considered for ingestion
+    const items = Object.keys(ingestion_items).filter(
+      k => ingested_items.indexOf(k) === -1
+    );
+
     return {
-      queue: queue_data,
+      items,
+      uuid: queue.uuid,
+      target: queue.target,
       options: state.ingest.options,
-      loading: queue_data && queue_data.filtered_selection ? false : true
+      loading: queue && items ? false : true
     };
   },
   (dispatch, ownProps) => {

@@ -142,7 +142,7 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
     item_count = serializers.SerializerMethodField()
 
     def get_item_count(self, obj):
-        return len(obj.selection)
+        return len(obj.ingestion_items)
 
     class Meta:
         model = IngestQueue
@@ -157,27 +157,21 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
 class IngestQueueSerializer(serializers.ModelSerializer):
 
     target = HAVTargetField()
-    selection = serializers.ListField(child=IngestHyperlinkField())
 
-    filtered_selection = serializers.SerializerMethodField()
+    selection = serializers.ListField(child=IngestHyperlinkField(), source='ingestion_items', write_only=True)
 
-    def get_filtered_selection(self, obj):
-        filtered = []
-        ingested_items = set(obj.ingested_items.keys())
-        for source in obj.selection:
-            # skip ingested items
-            if source in ingested_items:
-                continue
 
-            target = resolveUrlToObject(source)
-
-            if isinstance(target, Path) and target.is_file():
-                filtered.append(source)
-        return filtered
+    def validate_selection(self, data):
+        return {
+            k: None for k in data
+        }
 
     def create(self, validated_data):
         logger.debug('creating queue: %s', validated_data)
-        return IngestQueue.objects.create(**validated_data, created_by=self.context['request'].user)
+        return IngestQueue.objects.create(
+            **validated_data,
+            created_by=self.context['request'].user
+        )
 
     class Meta:
         model = IngestQueue
@@ -185,6 +179,6 @@ class IngestQueueSerializer(serializers.ModelSerializer):
             'uuid',
             'target',
             'selection',
-            'filtered_selection',
-            'created_at'
+            'ingestion_items',
+            'ingested_items'
         ]

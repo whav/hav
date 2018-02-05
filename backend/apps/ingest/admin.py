@@ -5,12 +5,8 @@ from .models import IngestQueue
 class IngestQAdmin(admin.ModelAdmin):
     list_display = ('uuid', 'selection_length', 'created_at', 'created_by')
     readonly_fields = (
-        'selection',
         'created_by',
-        'expanded_selection',
-        'data',
-        'ingested',
+        'ingestion_items',
         'target',
-        'ready_for_ingestion'
     )
 admin.site.register(IngestQueue, IngestQAdmin)

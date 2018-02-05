@@ -84,7 +84,6 @@ export const saveIngestionData = (target, entries) => {
 
     saveIngestionQueue(data)
       .then(data => {
-        console.warn(data);
         dispatch({
           type: SAVE_INGESTION_DATA_SUCCESS,
           data

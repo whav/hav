@@ -313,7 +313,9 @@ class IngestForm extends React.Component {
       <div className="box is-outlined">
         <form className="ingest-form" onSubmit={this.onSubmit}>
           <div className="columns is-desktop">
-            <div className="column is-one-third">{this.props.children}</div>
+            <div className="column is-one-third is-clipped">
+              {this.props.children}
+            </div>
             <div className="column is-two-thirds">
               <a
                 className="delete is-pulled-right"

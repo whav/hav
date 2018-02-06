@@ -88,7 +88,12 @@ class IngestSerializer(serializers.Serializer):
     media_identifier = serializers.CharField(allow_blank=True, required=False)
 
     def validate_source(self, value):
-        hash = generate_hash(value)
+        print(value)
+        try:
+            hash = generate_hash(value)
+        except FileNotFoundError:
+            raise serializers.ValidationError("The file could not be found.")
+
         try:
             ArchiveFile.objects.get(hash=hash)
             raise serializers.ValidationError("A file with the hash %s is already archived." % hash)

@@ -307,7 +307,7 @@ class IngestForm extends React.Component {
       },
       []
     );
-    console.warn("Errors...", errors);
+
     return (
       <div className="box is-outlined">
         <form className="ingest-form" onSubmit={this.onSubmit}>

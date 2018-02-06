@@ -44,8 +44,12 @@ class IngestHyperlinkField(serializers.Field):
             )
         elif isinstance(obj, Path):
             path = Path(unquote(str(obj)))
-            is_file = path.is_file()
 
+            if not path.exists():
+                self.fail('no_match')
+
+            is_file = path.is_file()
+            
             url_name = 'api:v1:fs_browser:{}'
 
             if path.is_absolute():

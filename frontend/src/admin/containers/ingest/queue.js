@@ -110,7 +110,7 @@ class IngestQueue extends React.Component {
   render() {
     const { loading, options, items = [], target } = this.props;
     const { formData, templateData, errors } = this.state;
-    console.warn(this.props);
+
     if (loading) {
       return <LoadingIndicator />;
     } else {
@@ -139,10 +139,7 @@ class IngestQueue extends React.Component {
                 onChange={this.onChange}
                 data={formData[source] || {}}
                 errors={errors[source] || {}}
-                onSubmit={() =>
-                  // console.log(formData),
-                  this.ingestItem(source, formData[source] || {})
-                }
+                onSubmit={() => this.ingestItem(source, formData[source] || {})}
                 onError={this.onError}
               >
                 <span>Asset #{index + 1}</span>
@@ -161,6 +158,11 @@ class IngestQueue extends React.Component {
 export default connect(
   (state, ownProps) => {
     const queue = state.ingest.ingestionQueues[ownProps.match.params.uuid];
+    if (!queue) {
+      return {
+        loading: true
+      };
+    }
     const { ingested_items = [], ingestion_items = {} } = queue;
 
     // these items will be considered for ingestion

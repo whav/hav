@@ -313,8 +313,12 @@ class IngestForm extends React.Component {
       <div className="box is-outlined">
         <form className="ingest-form" onSubmit={this.onSubmit}>
           <div className="columns is-desktop">
-            <div className="column">{this.props.children}</div>
+            <div className="column is-one-third">{this.props.children}</div>
             <div className="column is-two-thirds">
+              <a
+                className="delete is-pulled-right"
+                onClick={this.props.onDelete}
+              />
               <GlobalErrors errors={error_msgs} />
               <div className="columns">
                 <div className="column">
@@ -393,17 +397,6 @@ class IngestForm extends React.Component {
               </div>
               <div>
                 <div className="field is-grouped is-grouped-right">
-                  <p className="control">
-                    <button
-                      className="button is-danger"
-                      onClick={e => {
-                        e.preventDefault();
-                        this.props.onDelete();
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </p>
                   <p className="control">
                     <button className="button is-link" type="submit">
                       Ingest

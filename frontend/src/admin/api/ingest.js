@@ -3,7 +3,8 @@ import {
   ingest as ingestionEndpoint,
   ingestQueueDetail,
   ingestOptions,
-  ingestFileEndpoint
+  ingestFileEndpoint,
+  ingestQueueModifierEndpoint
 } from "./urls";
 import { getCSRFCookie } from "../../utils/xhr";
 
@@ -51,6 +52,21 @@ export const fetchIngestOptions = () => {
       Accept: "application/json",
       "Content-Type": "application/json"
     })
+  }).then(response => response.json());
+};
+
+export const removeItemFromQueue = (uuid, item) => {
+  return fetch(ingestQueueModifierEndpoint(uuid, item), {
+    method: "DELETE",
+    body: JSON.stringify({
+      items: [item]
+    }),
+    headers: new Headers({
+      "X-CSRFTOKEN": getCSRFCookie(),
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }),
+    credentials: "same-origin"
   }).then(response => response.json());
 };
 

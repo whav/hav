@@ -2,7 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import LoadingIndicator from "../../ui/loading";
 import uniq from "lodash/uniq";
-import { fetchIngestionQueue, loadIngestOptions } from "../../actions/ingest";
+import {
+  fetchIngestionQueue,
+  loadIngestOptions,
+  ingestionSuccess,
+  deleteIngestItem
+} from "../../actions/ingest";
 import IngestForm, { TemplateForm } from "../../ui/ingest/form";
 
 import PreviewImage from "../filebrowser/image_preview";
@@ -101,7 +106,6 @@ class IngestQueue extends React.Component {
     });
     response
       .then(data => {
-        console.log("success...", data);
         this.props.loadIngestData();
       })
       .catch(err => this.onError(ingestId, err));
@@ -141,6 +145,9 @@ class IngestQueue extends React.Component {
                 errors={errors[source] || {}}
                 onSubmit={() => this.ingestItem(source, formData[source] || {})}
                 onError={this.onError}
+                onDelete={() => {
+                  this.props.deleteIngestItem(source);
+                }}
               >
                 <span>Asset #{index + 1}</span>
                 <p>
@@ -184,6 +191,12 @@ export default connect(
       loadIngestData: () => {
         dispatch(fetchIngestionQueue(uuid));
         dispatch(loadIngestOptions());
+      },
+      onIngestSuccess: media_id => {
+        dispatch(ingestionSuccess(uuid, media_id));
+      },
+      deleteIngestItem: source_id => {
+        dispatch(deleteIngestItem(uuid, source_id));
       }
     };
   }

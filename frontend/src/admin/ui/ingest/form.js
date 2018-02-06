@@ -256,7 +256,8 @@ class TemplateForm extends React.Component {
 class IngestForm extends React.Component {
   static propTypes = {
     ...formPropTypes,
-    source: PropTypes.string.isRequired
+    source: PropTypes.string.isRequired,
+    onDelete: PropTypes.func.isRequired
   };
 
   handleChange = event => {
@@ -392,6 +393,17 @@ class IngestForm extends React.Component {
               </div>
               <div>
                 <div className="field is-grouped is-grouped-right">
+                  <p className="control">
+                    <button
+                      className="button is-danger"
+                      onClick={e => {
+                        e.preventDefault();
+                        this.props.onDelete();
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </p>
                   <p className="control">
                     <button className="button is-link" type="submit">
                       Ingest

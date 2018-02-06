@@ -43,10 +43,19 @@ class IngestQueueDetailView(IncomingBaseMixin, RetrieveAPIView):
         return IngestQueue.objects.filter(created_by=self.request.user, target__isnull=False)
 
 
-class IngestQueueIngestionView(IncomingBaseMixin, APIView):
+class IngestQMixin(object):
+    def get_queue(self):
+        return get_object_or_404(
+            IngestQueue,
+            pk=self.kwargs.get('pk'),
+            created_by=self.request.user,
+            target__isnull=False
+        )
+
+class IngestQueueIngestionView(IncomingBaseMixin, IngestQMixin, APIView):
 
     def post(self, request, pk):
-        queue = get_object_or_404(IngestQueue, pk=pk, created_by=request.user, target__isnull=False)
+        queue = self.get_queue()
         context = {
             'user': request.user,
             'target': queue.target
@@ -68,6 +77,22 @@ class IngestQueueIngestionView(IncomingBaseMixin, APIView):
         return Response(data=SimpleMediaSerializer(instance=media).data, status=201)
 
 
+class IngestQueueModifier(IncomingBaseMixin, IngestQMixin, APIView):
+
+    def delete(self, request, pk):
+        queue = self.get_queue()
+        for item in request.data.get('items', []):
+            try:
+                queue.delete_item(item)
+            except KeyError:
+                continue
+
+        queue.save()
+        return Response(data=IngestQueueSerializer(
+            instance=queue,
+            context={
+                'request': request
+            }).data)
 
 
 

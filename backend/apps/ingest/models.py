@@ -24,6 +24,14 @@ class IngestQueue(models.Model):
             self.ingestion_items.keys()
         )
 
+    def add_items(self, items):
+        self.ingestion_items.update({
+            i: None for i in items
+        })
+
+    def delete_item(self, item):
+        del self.ingestion_items[item]
+
     def __str__(self):
         return str(self.pk)
 

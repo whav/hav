@@ -18,3 +18,5 @@ export const ingestQueueDetail = uuid => `${apiPrefix}ingest/${uuid}/`;
 export const ingestOptions = `${apiPrefix}ingest/options/`;
 
 export const ingestFileEndpoint = uuid => `${ingestQueueDetail(uuid)}ingest/`;
+export const ingestQueueModifierEndpoint = uuid =>
+  `${ingestQueueDetail(uuid)}modify/`;

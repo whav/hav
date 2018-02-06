@@ -11,7 +11,8 @@ import {
   INGESTION_QUEUE_LOADED,
   INGESTION_QUEUES_LOADED,
   LOADING_SUCCESS,
-  RECEIVE_INGEST_OPTIONS
+  RECEIVE_INGEST_OPTIONS,
+  INGESTION_SUCCESS
 } from "../actions/ingest";
 
 const queue = (state = [], action) => {
@@ -115,6 +116,7 @@ const ingestionQueues = (state = {}, action) => {
         queues[queue.uuid] = queue;
       });
       return queues;
+    case INGESTION_SUCCESS:
     default:
       return state;
   }

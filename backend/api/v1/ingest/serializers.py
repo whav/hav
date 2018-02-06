@@ -163,20 +163,17 @@ class IngestQueueSerializer(serializers.ModelSerializer):
 
     target = HAVTargetField()
 
-    selection = serializers.ListField(child=IngestHyperlinkField(), source='ingestion_items', write_only=True)
-
-
-    def validate_selection(self, data):
-        return {
-            k: None for k in data
-        }
+    selection = serializers.ListField(child=IngestHyperlinkField(), write_only=True)
 
     def create(self, validated_data):
         logger.debug('creating queue: %s', validated_data)
-        return IngestQueue.objects.create(
-            **validated_data,
+        q = IngestQueue(
+            target=validated_data['target'],
             created_by=self.context['request'].user
         )
+        q.add_items(validated_data['selection'])
+        q.save(force_insert=True)
+        return q
 
     class Meta:
         model = IngestQueue

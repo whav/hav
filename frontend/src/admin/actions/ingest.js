@@ -6,7 +6,8 @@ import {
   saveIngestionQueue,
   loadIngestQueueData,
   fetchAllIngestionQueues,
-  fetchIngestOptions
+  fetchIngestOptions,
+  removeItemFromQueue
 } from "../api/ingest";
 
 export const QUEUE_FOR_INGESTION = "QUEUE_FOR_INGESTION";
@@ -25,6 +26,8 @@ export const SAVE_INGESTION_DATA_ERROR = "SAVE_INGESTION_DATA_ERROR";
 export const INGESTION_QUEUE_LOADED = "INGESTION_QUEUE_LOADED";
 // all Ingestion queues
 export const INGESTION_QUEUES_LOADED = "INGESTION_QUEUES_LOADED";
+
+export const INGESTION_SUCCESS = "INGESTION_SUCCESS";
 
 export const LOADING_SUCCESS = "LOADING_SUCCESS";
 export const RECEIVE_INGEST_OPTIONS = "RECEIVE_INGEST_OPTIONS";
@@ -118,6 +121,14 @@ export const loadIngestOptions = () => {
   };
 };
 
+export const ingestionSuccess = (uuid, media_id) => {
+  return {
+    type: INGESTION_SUCCESS,
+    uuid,
+    media_id
+  };
+};
+
 export const fetchIngestionQueue = uuid => {
   return dispatch => {
     // set loading state
@@ -150,5 +161,13 @@ export const loadAllIngestionQueues = () => {
         type: LOADING_SUCCESS
       });
     });
+  };
+};
+
+export const deleteIngestItem = (uuid, source) => {
+  return dispatch => {
+    removeItemFromQueue(uuid, source).then(() =>
+      dispatch(fetchIngestionQueue(uuid))
+    );
   };
 };

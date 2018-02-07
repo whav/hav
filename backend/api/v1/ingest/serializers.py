@@ -1,15 +1,8 @@
-import os
-
 from django.db import transaction
-
-from django.contrib.auth.models import User
-from pathlib import Path
+from django.db.models import F, Func
 from rest_framework import serializers
 
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
-from apps.media.utils.dtrange import range_from_partial_date
-from apps.sets.models import Node
-from apps.archive.operations.hash import generate_hash
 from apps.archive.models import ArchiveFile
 from apps.archive.tasks import archive
 from apps.archive.operations.hash import generate_hash
@@ -145,9 +138,13 @@ class IngestSerializer(serializers.Serializer):
 class SimpleIngestQueueSerializer(serializers.ModelSerializer):
     target = HAVTargetField()
     item_count = serializers.SerializerMethodField()
+    ingested_item_count = serializers.SerializerMethodField()
 
     def get_item_count(self, obj):
         return len(obj.ingestion_items)
+
+    def get_ingested_item_count(self, obj):
+        return len(obj.ingested_items)
 
     class Meta:
         model = IngestQueue
@@ -155,6 +152,7 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
             'uuid',
             'target',
             'item_count',
+            'ingested_item_count',
             'created_at'
         ]
 

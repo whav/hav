@@ -6,6 +6,7 @@ from django.conf import settings
 
 from apps.sets.models import Node
 
+
 class IngestQueue(models.Model):
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -17,12 +18,15 @@ class IngestQueue(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+
     @property
     def ingested_items(self):
-        return filter(
-            lambda x: self.ingestion_items[x] is not None,
-            self.ingestion_items.keys()
-        )
+        items = []
+        for k in self.ingestion_items.keys():
+            if self.ingestion_items[k] is None:
+                items.append(k)
+        return items
+
 
     def add_items(self, items):
         self.ingestion_items.update({

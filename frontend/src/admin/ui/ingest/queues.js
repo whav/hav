@@ -1,28 +1,34 @@
 import React from "react";
+import classnames from "classnames";
 
 import { DateTime } from "luxon";
 import { Link } from "react-router-dom";
 
+const IngestionQueueRow = ({ q }) => {
+  const { item_count, ingested_item_count } = q;
+  const remaining_items = item_count - ingested_item_count;
+  return (
+    <tr
+      className={classnames({ "has-text-grey-light": remaining_items === 0 })}
+    >
+      <td>
+        <Link to={`/ingest/${q.uuid}/`}>{q.uuid}</Link>
+      </td>
+      <td>
+        {DateTime.fromISO(q.created_at).toLocaleString(DateTime.DATETIME_SHORT)}
+      </td>
+      <td>
+        {remaining_items} / {item_count}
+        {/* <pre>{JSON.stringify(q, null, 2)}</pre> */}
+      </td>
+    </tr>
+  );
+};
+
 const IngestionQueueListing = ({ queues }) => {
   return (
     <table className="table">
-      <tbody>
-        {queues.map(q => {
-          return (
-            <tr key={q.uuid}>
-              <td>
-                <Link to={`/ingest/${q.uuid}/`}>{q.uuid}</Link>
-              </td>
-              <td>
-                {DateTime.fromISO(q.created_at).toLocaleString(
-                  DateTime.DATETIME_SHORT
-                )}
-              </td>
-              <td>{q.item_count} assets selected</td>
-            </tr>
-          );
-        })}
-      </tbody>
+      <tbody>{queues.map(q => <IngestionQueueRow key={q.uuid} q={q} />)}</tbody>
     </table>
   );
 };

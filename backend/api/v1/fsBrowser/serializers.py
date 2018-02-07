@@ -4,15 +4,24 @@ import base64
 from mimetypes import guess_type
 from django.urls import reverse
 from rest_framework import serializers
-
+import binascii
 from ..utils.ingest import buildIngestId
 from hav.thumbor import get_image_url
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 def encodePath(path):
     return base64.urlsafe_b64encode(path.encode('utf-8')).decode('utf-8')
 
 def decodePath(encodedPath):
-    return base64.urlsafe_b64decode(encodedPath).decode('utf-8')
+    try:
+        return base64.urlsafe_b64decode(encodedPath).decode('utf-8')
+    except binascii.Error as e:
+        logger.warning(e)
+        raise ValueError('%s can not be decoded.' % encodedPath)
+
 
 def is_hidden(fn):
     return fn.startswith('.')
@@ -53,29 +62,22 @@ class FileBrowserBaseSerializer(serializers.Serializer):
 
     def get_path(self, path):
         root = self.context.get('root')
-        location = ''
-        relative_path = path.relative_to(root)
-        parts = relative_path.parts
+        if root == path:
+            return ''
 
-        if len(parts) > 0:
-            suffix = '/' if relative_path.is_dir() else ''
-            location = os.path.join(*(list(parts) + [suffix]))
-            # location = quote(location)
-
-        return location
+        relative_path = os.path.normpath(path.relative_to(root))
+        return encodePath(relative_path)
 
     def get_url_for_path(self, path):
         request = self.context.get('request')
         match = request.resolver_match
-        url_lookup = '%s:%s' % (':'.join(match.namespaces), match.url_name)
-        return request.build_absolute_uri(
-            reverse(
-                url_lookup,
-                kwargs={
-                    'path': self.get_path(path)
-                }
-            )
-        )
+        namespaces = ':'.join(match.namespaces)
+        if path == self.get_root():
+            rel_url = reverse('%s:filebrowser_root' % namespaces)
+        else:
+            rel_url = reverse('%s:filebrowser' % namespaces, kwargs={'path': self.get_path(path)})
+
+        return request.build_absolute_uri(rel_url)
 
 
 class FileSerializer(FileBrowserBaseSerializer):
@@ -89,6 +91,7 @@ class FileSerializer(FileBrowserBaseSerializer):
         request = self.context.get('request')
         match = request.resolver_match
         url_lookup = '%s:%s' % (':'.join(match.namespaces), 'filebrowser')
+
         return request.build_absolute_uri(
             reverse(
                 url_lookup,
@@ -100,7 +103,8 @@ class FileSerializer(FileBrowserBaseSerializer):
 
     def get_path(self, path):
         root = self.get_root()
-        return path.relative_to(root).as_posix()
+        np = os.path.normpath(path.relative_to(root))
+        return encodePath(np)
 
     def get_mime(self, path):
         return guess_type(path.name)[0]
@@ -108,7 +112,9 @@ class FileSerializer(FileBrowserBaseSerializer):
     def get_preview_url(self, path):
         mime = self.get_mime(path) or ''
         if mime.startswith('image/'):
-            return get_image_url(self.get_path(path))
+            rel_path = path.relative_to(self.get_root()).as_posix()
+            print(rel_path, type(rel_path))
+            return get_image_url(rel_path)
 
 
 class BaseDirectorySerializer(FileBrowserBaseSerializer):

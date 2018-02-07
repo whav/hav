@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 from urllib.request import url2pathname
-
 from django.http import Http404
 from django.conf import settings
 
@@ -14,7 +13,7 @@ from rest_framework.exceptions import APIException
 
 from ..permissions import IncomingBaseMixin
 
-from .serializers import FileSerializer, DirectorySerializer, BaseDirectorySerializer
+from .serializers import FileSerializer, DirectorySerializer, decodePath
 
 
 class FileBrowserMixin(object):
@@ -37,9 +36,13 @@ class FileBrowserMixin(object):
         return Path(self.root).resolve()
 
     def resolve_directory(self, path):
-        path = path or '/'
-        parts = [url2pathname(p) for p in path.split('/')]
-        absolute_path = os.path.join(self.root, *parts)
+        if path:
+            try:
+                path = decodePath(path)
+            except ValueError:
+                raise Http404()
+
+        absolute_path = os.path.join(self.root, path or '')
         path = Path(absolute_path).resolve()
         assert(path >= self.root_path)
         return path
@@ -52,6 +55,7 @@ class FileBrowserMixin(object):
 class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     def get(self, request, path=None, **kwargs):
+
         path = self.resolve_directory(path)
 
         if path.is_file():
@@ -82,7 +86,6 @@ class FileOperationException(APIException):
 class FileBrowserFileDetail(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     def get(self, request, path=None, **kwargs):
-        print(self.__class__, path)
         path = self.resolve_directory(path)
         try:
             assert(path.is_file())

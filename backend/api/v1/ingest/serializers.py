@@ -1,6 +1,6 @@
 from django.db import transaction
-from django.db.models import F, Func
 from rest_framework import serializers
+from psycopg2.extras import DateTimeTZRange
 
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from apps.archive.models import ArchiveFile
@@ -8,10 +8,8 @@ from apps.archive.tasks import archive
 from apps.archive.operations.hash import generate_hash
 from apps.ingest.models import IngestQueue
 
-from psycopg2.extras import DateTimeTZRange
-
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
-    InternalIngestHyperlinkField, resolveUrlToObject
+    InternalIngestHyperlinkField
 
 import logging
 
@@ -81,7 +79,6 @@ class IngestSerializer(serializers.Serializer):
     media_identifier = serializers.CharField(allow_blank=True, required=False)
 
     def validate_source(self, value):
-        print(value)
         try:
             hash = generate_hash(value)
         except FileNotFoundError:
@@ -137,6 +134,7 @@ class IngestSerializer(serializers.Serializer):
 
 class SimpleIngestQueueSerializer(serializers.ModelSerializer):
     target = HAVTargetField()
+
     item_count = serializers.SerializerMethodField()
     ingested_item_count = serializers.SerializerMethodField()
 
@@ -153,6 +151,7 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
             'target',
             'item_count',
             'ingested_item_count',
+            'ingestion'
             'created_at'
         ]
 

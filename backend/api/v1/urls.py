@@ -1,13 +1,16 @@
 from django.conf.urls import url, include
 from django.conf import settings
 
-from .fsBrowser.urls import fs_urls
-from .whavBrowser.urls import whav_urls
-from .havBrowser.urls import hav_urls
 from .ingest.urls import ingest_urls
+from .havBrowser.urls import hav_urls
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
+from sources.filesystem import FSSource
+from sources.whav import WHAVSource
+
+incoming_fss_source = FSSource(settings.INCOMING_FILES_ROOT, source_id='incoming')
+whav_source = WHAVSource()
 
 app_name = 'api'
 
@@ -22,14 +25,8 @@ def start(request):
 urlpatterns = [
     url('^$', start),
     url(r'^ingest/', include((ingest_urls, app_name))),
-    url(r'^incoming/', include(
-        (fs_urls(root_path=settings.INCOMING_FILES_ROOT, identifier='incoming'), app_name),
-        namespace='fs_browser'
-    )),
-    url(r'^whav/', include(
-        (whav_urls('whav'), app_name),
-        namespace='whav_browser')
-    ),
+    url(r'^incoming/', include(incoming_fss_source.urls)),
+    url(r'^whav/', include(whav_source.urls)),
     url(r'^hav/', include(
         (hav_urls('hav'), app_name),
         namespace='hav_browser')

@@ -5,7 +5,6 @@ from mimetypes import guess_type
 from django.urls import reverse
 from rest_framework import serializers
 import binascii
-from ..utils.ingest import buildIngestId
 from hav.thumbor import get_image_url
 
 import logging

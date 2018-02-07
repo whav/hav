@@ -151,7 +151,7 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
             'target',
             'item_count',
             'ingested_item_count',
-            'ingestion'
+            # 'ingestion_',
             'created_at'
         ]
 

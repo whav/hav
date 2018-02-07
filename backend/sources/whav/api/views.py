@@ -2,9 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 from apps.whav.models import ImageCollection, MediaOrdering
-from ..permissions import IncomingBaseMixin
+from ...permissions import IncomingBaseMixin
 from .serializers import WHAVCollectionSerializer, RootWHAVCollectionSerializer, WHAVFileSerializer
 
 

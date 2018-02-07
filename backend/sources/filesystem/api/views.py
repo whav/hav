@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
-from urllib.request import url2pathname
 from django.http import Http404
-from django.conf import settings
 
 from django.core.files.storage import FileSystemStorage
 
@@ -11,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
 from rest_framework.exceptions import APIException
 
-from ..permissions import IncomingBaseMixin
+from ...permissions import IncomingBaseMixin
 
 from .serializers import FileSerializer, DirectorySerializer, decodePath
 

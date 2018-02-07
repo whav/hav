@@ -23,7 +23,7 @@ class IngestQueue(models.Model):
     def ingested_items(self):
         items = []
         for k in self.ingestion_items.keys():
-            if self.ingestion_items[k] is None:
+            if self.ingestion_items[k] is not None:
                 items.append(k)
         return items
 

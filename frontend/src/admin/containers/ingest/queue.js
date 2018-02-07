@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+
 import LoadingIndicator from "../../ui/loading";
 import uniq from "lodash/uniq";
 import {
@@ -8,7 +9,7 @@ import {
   ingestionSuccess,
   deleteIngestItem
 } from "../../actions/ingest";
-import IngestForm, { TemplateForm } from "../../ui/ingest/form";
+import IngestForm, { TemplateForm, FormSet } from "../../ui/ingest/form";
 
 import PreviewImage from "../filebrowser/image_preview";
 import PreviewFolder from "../filebrowser/folder_preview";
@@ -119,6 +120,29 @@ class IngestQueue extends React.Component {
       return <LoadingIndicator />;
     } else {
       const count = items.length;
+      const forms = items.map((source, index) => {
+        return (
+          <IngestForm
+            key={source}
+            source={source}
+            {...options}
+            onChange={this.onChange}
+            data={formData[source] || {}}
+            errors={errors[source] || {}}
+            onSubmit={() => this.ingestItem(source, formData[source] || {})}
+            onError={this.onError}
+            onDelete={() => {
+              this.props.deleteIngestItem(source);
+            }}
+          >
+            <span>Asset #{index + 1}</span>
+            <p>
+              <PreviewImage source={source} />
+            </p>
+          </IngestForm>
+        );
+      });
+
       return (
         <div>
           <h1>Ingesting {count === 1 ? "one file" : `${count} files`}</h1>
@@ -134,28 +158,7 @@ class IngestQueue extends React.Component {
               onChange={this.onTemplateChange}
             />
           ) : null}
-          {items.map((source, index) => {
-            return (
-              <IngestForm
-                key={source}
-                source={source}
-                {...options}
-                onChange={this.onChange}
-                data={formData[source] || {}}
-                errors={errors[source] || {}}
-                onSubmit={() => this.ingestItem(source, formData[source] || {})}
-                onError={this.onError}
-                onDelete={() => {
-                  this.props.deleteIngestItem(source);
-                }}
-              >
-                <span>Asset #{index + 1}</span>
-                <p>
-                  <PreviewImage source={source} />
-                </p>
-              </IngestForm>
-            );
-          })}
+          <FormSet>{forms}</FormSet>
         </div>
       );
     }

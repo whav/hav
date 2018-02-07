@@ -8,3 +8,12 @@ form.ingest-form {
 div.Select.is-danger > .Select-control {
   border-color: red;
 }
+
+.ingest-form-leave {
+  opacity: 1;
+}
+
+.ingest-form-leave.ingest-form-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}

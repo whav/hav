@@ -14,6 +14,8 @@ import "react-select/dist/react-select.css";
 import "./ingest.css";
 import { error } from "util";
 
+import { CSSTransitionGroup } from "react-transition-group"; // ES6
+
 const Field = props => {
   const { label = "", errors = [], expanded = false } = props;
   return (
@@ -313,14 +315,20 @@ class IngestForm extends React.Component {
       <div className="box is-outlined">
         <form className="ingest-form" onSubmit={this.onSubmit}>
           <div className="columns is-desktop">
-            <div className="column is-one-third is-clipped">
-              {this.props.children}
-            </div>
-            <div className="column is-two-thirds">
+            <div className="column is-one-third" />
+            <div className="column is-one-third" />
+            <div className="column is-one-third has-text-right">
               <a
                 className="delete is-pulled-right"
                 onClick={this.props.onDelete}
               />
+            </div>
+          </div>
+          <div className="columns is-desktop">
+            <div className="column is-one-third is-clipped">
+              {this.props.children}
+            </div>
+            <div className="column is-two-thirds">
               <GlobalErrors errors={error_msgs} />
               <div className="columns">
                 <div className="column">
@@ -414,5 +422,17 @@ class IngestForm extends React.Component {
   }
 }
 
+const FormSet = ({ children }) => {
+  return (
+    <CSSTransitionGroup
+      transitionName="ingest-form"
+      transitionEnterTimeout={500}
+      transitionLeaveTimeout={300}
+    >
+      {children}
+    </CSSTransitionGroup>
+  );
+};
+
 export default IngestForm;
-export { TemplateForm };
+export { TemplateForm, FormSet };

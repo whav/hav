@@ -46,6 +46,13 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     # stat = FileStatsSerializer(source='*')
     size = serializers.SerializerMethodField()
 
+    @property
+    def _config(self):
+        return self.context['source_config']
+
+    @property
+    def request(self):
+        return self.context['request']
 
     def get_name(self, path):
         if path == self.get_root():
@@ -54,29 +61,17 @@ class FileBrowserBaseSerializer(serializers.Serializer):
 
     # some methods that are used in subclasses
     def get_root(self):
-        return self.context['root']
+        return self._config.root
 
     def get_size(self, path):
         return path.stat().st_size
 
     def get_path(self, path):
-        root = self.context.get('root')
-        if root == path:
-            return ''
-
-        relative_path = os.path.normpath(path.relative_to(root))
-        return encodePath(relative_path)
+        return self._config.to_url_path(path)
 
     def get_url_for_path(self, path):
-        request = self.context.get('request')
-        match = request.resolver_match
-        namespaces = ':'.join(match.namespaces)
-        if path == self.get_root():
-            rel_url = reverse('%s:filebrowser_root' % namespaces)
-        else:
-            rel_url = reverse('%s:filebrowser' % namespaces, kwargs={'path': self.get_path(path)})
-
-        return request.build_absolute_uri(rel_url)
+        rel_url = self._config.to_url(path, self.request)
+        return self.request.build_absolute_uri(rel_url)
 
 
 class FileSerializer(FileBrowserBaseSerializer):
@@ -86,33 +81,20 @@ class FileSerializer(FileBrowserBaseSerializer):
     preview_url = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
-    def get_url(self, path):
-        request = self.context.get('request')
-        match = request.resolver_match
-        url_lookup = '%s:%s' % (':'.join(match.namespaces), 'filebrowser')
-
-        return request.build_absolute_uri(
-            reverse(
-                url_lookup,
-                kwargs={
-                    'path': self.get_path(path),
-                }
-            )
-        )
-
     def get_path(self, path):
-        root = self.get_root()
-        np = os.path.normpath(path.relative_to(root))
-        return encodePath(np)
+        return self._config.to_url_path(path)
+
+    def get_url(self, path):
+        return self.request.build_absolute_uri(self._config.to_url(path, self.request))
 
     def get_mime(self, path):
         return guess_type(path.name)[0]
 
     def get_preview_url(self, path):
+        # TODO: fix me!
         mime = self.get_mime(path) or ''
         if mime.startswith('image/'):
             rel_path = path.relative_to(self.get_root()).as_posix()
-            print(rel_path, type(rel_path))
             return get_image_url(rel_path)
 
 
@@ -136,9 +118,7 @@ class DirectorySerializer(BaseDirectorySerializer):
     allowUpload = serializers.SerializerMethodField()
 
     def get_parentDirs(self, path):
-        path = path.resolve()
-        root = self.get_root()
-        parent_dirs = [p for p in path.parents if p >= root]
+        parent_dirs = [p for p in path.parents if p >= self._config.root_path]
         parent_dirs.reverse()
         return BaseDirectorySerializer(
             parent_dirs,

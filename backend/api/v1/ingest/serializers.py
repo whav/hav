@@ -9,7 +9,7 @@ from apps.archive.operations.hash import generate_hash
 from apps.ingest.models import IngestQueue
 
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
-    InternalIngestHyperlinkField
+    InternalIngestHyperlinkField, IngestionReferenceField
 
 import logging
 
@@ -160,7 +160,7 @@ class IngestQueueSerializer(serializers.ModelSerializer):
 
     target = HAVTargetField()
 
-    selection = serializers.ListField(child=IngestHyperlinkField(), write_only=True)
+    selection = serializers.ListField(child=IngestionReferenceField(), write_only=True)
 
     def create(self, validated_data):
         logger.debug('creating queue: %s', validated_data)

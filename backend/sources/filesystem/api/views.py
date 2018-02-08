@@ -14,47 +14,36 @@ from ...permissions import IncomingBaseMixin
 from .serializers import FileSerializer, DirectorySerializer, decodePath
 
 
+def not_implemented(*args, **kwargs):
+    raise NotImplementedError('This is a stub.')
+
 class FileBrowserMixin(object):
 
-    root = None
-    scheme = 'file'
-    identifier = None
+    source_config = None
 
     @property
     def context(self):
         return {
-            'root': self.root_path,
+            'source_config': self.source_config,
             'request': self.request,
-            'scheme': self.scheme,
-            'identifier': self.identifier
         }
 
     @property
     def root_path(self):
-        return Path(self.root).resolve()
+        return Path(self.source_config.root).resolve()
 
     def resolve_directory(self, path):
-        if path:
-            try:
-                path = decodePath(path)
-            except ValueError:
-                raise Http404()
-
-        absolute_path = os.path.join(self.root, path or '')
-        path = Path(absolute_path).resolve()
-        assert(path >= self.root_path)
-        return path
+        return self.source_config.to_fs_path(path)
 
     def build_absolute_path(self, path):
-        absolute = os.path.join(self.root, path)
-        return os.path.normpath(absolute)
+        return self.source_config.to_fs_path(path)
 
 
 class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     def get(self, request, path=None, **kwargs):
 
-        path = self.resolve_directory(path)
+        path = self.source_config.to_fs_path(path)
 
         if path.is_file():
             serializer = FileSerializer(
@@ -78,7 +67,6 @@ class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 class FileOperationException(APIException):
     default_detail = 'The file operation you have requested could not be completed.'
     default_code = 'file_handling_error'
-
 
 
 class FileBrowserFileDetail(IncomingBaseMixin, FileBrowserMixin, APIView):

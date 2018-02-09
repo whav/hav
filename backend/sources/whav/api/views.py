@@ -22,8 +22,10 @@ class BaseWHAVBrowser(IncomingBaseMixin):
 class WHAVCollectionBrowser(BaseWHAVBrowser, APIView):
 
     def get(self, request, collection_id=None):
+        # any truthy object will do if there is no imagecollection
         image_collection = object()
         serializer_class = RootWHAVCollectionSerializer
+
         if collection_id:
             try:
                 image_collection = ImageCollection.objects.get(pk=collection_id)
@@ -32,7 +34,6 @@ class WHAVCollectionBrowser(BaseWHAVBrowser, APIView):
                 raise Http404()
 
         serializer = serializer_class(
-            # any truthy object will do if there is no imagecollection
             instance=image_collection,
             context=self.context
         )

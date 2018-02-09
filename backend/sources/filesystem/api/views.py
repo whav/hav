@@ -11,7 +11,7 @@ from rest_framework.exceptions import APIException
 
 from ...permissions import IncomingBaseMixin
 
-from .serializers import FileSerializer, DirectorySerializer, decodePath
+from .serializers import FileSerializer, DirectorySerializer
 
 
 def not_implemented(*args, **kwargs):

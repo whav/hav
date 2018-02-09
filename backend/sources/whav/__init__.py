@@ -6,7 +6,7 @@ from .. import Source
 class WHAVSource(Source):
 
     def to_url(self, obj=None, request=None):
-        namespaces = list(request._request.match.namespaces) if request else []
+        namespaces = list(request._request.resolver_match.namespaces) if request else []
         kwargs = {}
 
         if not obj:

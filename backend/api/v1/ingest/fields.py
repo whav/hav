@@ -15,6 +15,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class IngestHyperlinkField(serializers.Field):
 
     default_error_messages = serializers.HyperlinkedRelatedField.default_error_messages
@@ -99,6 +100,23 @@ class IngestHyperlinkField(serializers.Field):
 
     def to_representation(self, value):
         return value
+
+
+class IngestionReferenceField(serializers.Field):
+
+    def get_file_path(self, url):
+        path = urlparse(url).path
+        match = resolve(path)
+        config = match.func.view_initkwargs.get('source_config')
+        return config.to_fs_path(*match.args, **match.kwargs)
+
+    def to_internal_value(self, data):
+        # TODO: Error handling
+        p = self.get_file_path(data)
+        print(p)
+        return data
+
+
 
 
 

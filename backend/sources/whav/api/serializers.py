@@ -6,9 +6,18 @@ from rest_framework.reverse import reverse
 from apps.whav.models import ImageCollection, MediaOrdering
 from hav.thumbor import get_image_url
 
+class WHAVSerializerMixin(object):
+
+    @property
+    def _config(self):
+        return self.context['source_config']
+
+    @property
+    def request(self):
+        return self.context['request']
 
 
-class WHAVFileSerializer(serializers.Serializer):
+class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
 
     path = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
@@ -47,17 +56,10 @@ class WHAVFileSerializer(serializers.Serializer):
         return get_image_url(url)
 
     def get_url(self, mo):
-        request = self.context['request']
-        name = ':'.join(request.resolver_match.namespaces + ['whav_media'])
-        return request.build_absolute_uri(reverse(
-            name,
-            kwargs={
-                'mediaordering_id': mo.pk
-            }
-        ))
+        return self._config.to_url(mo, self.request)
 
 
-class BaseWHAVCollectionSerializer(serializers.Serializer):
+class BaseWHAVCollectionSerializer(WHAVSerializerMixin, serializers.Serializer):
 
     name = serializers.SerializerMethodField()
     path = serializers.SerializerMethodField()
@@ -73,23 +75,13 @@ class BaseWHAVCollectionSerializer(serializers.Serializer):
         return '%d' % instance.pk
 
     def get_url(self, instance):
-        request = self.context['request']
-        match = request.resolver_match
-        url_lookup = '%s:%s' % (':'.join(match.namespaces), 'whav_collection')
-        url_kwargs = {'collection_id': instance.pk}
-        return request.build_absolute_uri(
-            reverse(
-                url_lookup,
-                kwargs=url_kwargs
-            )
-        )
+        return self._config.to_url(instance, self.request)
 
     def get_allowUpload(self, instance):
         return False
 
 
 class BaseRootWHAVCollectionSerializer(BaseWHAVCollectionSerializer):
-
 
     def get_name(self, _):
         return 'WHAV'
@@ -98,12 +90,7 @@ class BaseRootWHAVCollectionSerializer(BaseWHAVCollectionSerializer):
         return ''
 
     def get_url(self, _):
-        request = self.context['request']
-        match = request.resolver_match
-        url_lookup = '%s:%s' % (':'.join(match.namespaces), 'whav_root')
-        return request.build_absolute_uri(
-            reverse(url_lookup)
-        )
+        return super().get_url(None)
 
 
 
@@ -135,8 +122,6 @@ class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
             many=True,
             context=self.context
         ).data
-
-
 
 
 class RootWHAVCollectionSerializer(BaseRootWHAVCollectionSerializer):

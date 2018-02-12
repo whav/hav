@@ -1,9 +1,6 @@
 import os
 from pathlib import Path
-from urllib.request import url2pathname
-
 from django.http import Http404
-from django.conf import settings
 
 from django.core.files.storage import FileSystemStorage
 
@@ -12,47 +9,41 @@ from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
 from rest_framework.exceptions import APIException
 
-from ..permissions import IncomingBaseMixin
+from ...permissions import IncomingBaseMixin
 
-from .serializers import FileSerializer, DirectorySerializer, BaseDirectorySerializer
+from .serializers import FileSerializer, DirectorySerializer
 
+
+def not_implemented(*args, **kwargs):
+    raise NotImplementedError('This is a stub.')
 
 class FileBrowserMixin(object):
 
-    root = None
-    scheme = 'file'
-    identifier = None
+    source_config = None
 
     @property
     def context(self):
         return {
-            'root': self.root_path,
+            'source_config': self.source_config,
             'request': self.request,
-            'scheme': self.scheme,
-            'identifier': self.identifier
         }
 
     @property
     def root_path(self):
-        return Path(self.root).resolve()
+        return Path(self.source_config.root).resolve()
 
     def resolve_directory(self, path):
-        path = path or '/'
-        parts = [url2pathname(p) for p in path.split('/')]
-        absolute_path = os.path.join(self.root, *parts)
-        path = Path(absolute_path).resolve()
-        assert(path >= self.root_path)
-        return path
+        return self.source_config.to_fs_path(path)
 
     def build_absolute_path(self, path):
-        absolute = os.path.join(self.root, path)
-        return os.path.normpath(absolute)
+        return self.source_config.to_fs_path(path)
 
 
 class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     def get(self, request, path=None, **kwargs):
-        path = self.resolve_directory(path)
+
+        path = self.source_config.to_fs_path(path)
 
         if path.is_file():
             serializer = FileSerializer(
@@ -78,11 +69,9 @@ class FileOperationException(APIException):
     default_code = 'file_handling_error'
 
 
-
 class FileBrowserFileDetail(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     def get(self, request, path=None, **kwargs):
-        print(self.__class__, path)
         path = self.resolve_directory(path)
         try:
             assert(path.is_file())

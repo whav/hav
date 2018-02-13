@@ -77,15 +77,15 @@ class IngestHyperlinkField(serializers.Field):
     def get_object(self, url):
         path = urlparse(url).path
         match = resolve(path)
-
+        print(match)
         # whav ingestion
-        if match.view_name == 'api:v1:whav_browser:whav_media':
+        if match.view_name == 'api:v1:whav_media':
             return MediaOrdering.objects.get(pk=match.kwargs['mediaordering_id'])
-        elif match.view_name == 'api:v1:whav_browser:whav_collection':
+        elif match.view_name == 'api:v1:whav_collection':
             return ImageCollection.objects.get(pk=match.kwargs['collection_id'])
 
         # deal with filebrowsers
-        elif match.view_name in ['api:v1:fs_browser:filebrowser_file', 'api:v1:fs_browser:filebrowser']:
+        elif match.view_name in ['api:v1:filebrowser_file', 'api:v1:filebrowser']:
             return Path(settings.INCOMING_FILES_ROOT).joinpath(match.kwargs['path'])
         return self.fail('no_match')
 
@@ -117,9 +117,6 @@ class IngestionReferenceField(serializers.Field):
         return data
 
 
-
-
-
 class FinalIngestHyperlinkField(IngestHyperlinkField):
     '''
     Same as IngestHyperlinkField, but limits valid selections to
@@ -145,13 +142,13 @@ class FinalIngestHyperlinkField(IngestHyperlinkField):
         return obj
 
 
-class InternalIngestHyperlinkField(FinalIngestHyperlinkField):
+class InternalIngestHyperlinkField(IngestionReferenceField):
 
     def to_internal_value(self, url):
-        try:
-            return self.get_object(url)
-        except ObjectDoesNotExist:
+        path = self.get_file_path(url)
+        if not path.is_file():
             self.fail('does_not_exist')
+        return path
 
 
 class HAVTargetField(serializers.HyperlinkedRelatedField):

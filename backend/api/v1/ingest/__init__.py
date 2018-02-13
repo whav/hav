@@ -60,6 +60,7 @@ class IngestQueueIngestionView(IncomingBaseMixin, IngestQMixin, APIView):
             'user': request.user,
             'target': queue.target
         }
+        print(request.data)
         serializer = IngestSerializer(
             data=request.data,
             context=context

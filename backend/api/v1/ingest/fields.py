@@ -1,17 +1,15 @@
-
-from urllib.parse import urlparse, unquote
+import logging
 from pathlib import Path
+from urllib.parse import urlparse, unquote
 
-from django.urls import resolve
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.urls import resolve
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from apps.whav.models import ImageCollection, MediaOrdering
 from apps.sets.models import Node
-
-import logging
+from apps.whav.models import ImageCollection, MediaOrdering
 
 logger = logging.getLogger(__name__)
 
@@ -113,7 +111,6 @@ class IngestionReferenceField(serializers.Field):
     def to_internal_value(self, data):
         # TODO: Error handling
         p = self.get_file_path(data)
-        print(p)
         return data
 
 

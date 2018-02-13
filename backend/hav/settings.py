@@ -194,7 +194,7 @@ STORAGES = {
 LOGIN_URL = 'admin:login'
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/1')
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default=CELERY_BROKER_URL)
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='django-db')
 
 # 10 days expiration for results
 CELERY_RESULT_EXPIRES = 3600 * 24 * 10

@@ -1,17 +1,16 @@
+import logging
+
 from django.db import transaction
-from rest_framework import serializers
 from psycopg2.extras import DateTimeTZRange
+from rest_framework import serializers
 
-from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from apps.archive.models import ArchiveFile
-from apps.archive.tasks import archive
 from apps.archive.operations.hash import generate_hash
+from apps.archive.tasks import archive
 from apps.ingest.models import IngestQueue
-
+from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     InternalIngestHyperlinkField, IngestionReferenceField
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +63,7 @@ class PrepareIngestSerializer(serializers.Serializer):
     items = serializers.ListField(
         child=IngestHyperlinkField()
     )
+
 
 class IngestSerializer(serializers.Serializer):
 

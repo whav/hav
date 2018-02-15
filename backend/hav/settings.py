@@ -181,6 +181,8 @@ STATICFILES_DIRS = (
     ('frontend_assets', WEBPACK_ASSET_PATH)
 )
 
+STATIC_ROOT = env('STATIC_ROOT', default=project_root('dist/static/'))
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = env('MEDIA_ROOT', default=project_root('dist/media/'))

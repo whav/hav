@@ -1,10 +1,13 @@
-var path = require("path");
-var webpack = require("webpack");
-var autoprefixer = require("autoprefixer");
+const path = require("path");
+const webpack = require("webpack");
+const autoprefixer = require("autoprefixer");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const BundleTracker = require("webpack-bundle-tracker");
 
 module.exports = opts => {
   const { PROJECT_ROOT, NODE_ENV } = opts;
+
+  const output_path = path.resolve(PROJECT_ROOT, "./build/");
 
   let plugins = [
     new webpack.DefinePlugin({
@@ -16,7 +19,10 @@ module.exports = opts => {
       name: "vendor",
       chunks: ["hav", "havAdmin"]
     }),
-    new ExtractTextPlugin(opts.EXTRACT_CSS_NAME || "[name]-[contenthash].css")
+    new ExtractTextPlugin(opts.EXTRACT_CSS_NAME || "[name]-[contenthash].css"),
+    new BundleTracker({
+      path: output_path
+    })
   ];
 
   return {
@@ -27,7 +33,7 @@ module.exports = opts => {
       vendor: ["whatwg-fetch", "react", "react-dom", "babel-polyfill"]
     },
     output: {
-      path: path.resolve(PROJECT_ROOT, "./build/"),
+      path: output_path,
       filename: "[name]-[hash].js"
     },
     plugins,

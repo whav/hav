@@ -7,23 +7,17 @@ let ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = opts => {
   const { CDN_PATH, PROJECT_ROOT } = opts,
-    config = baseConfig(opts),
-    output_path = path.resolve(PROJECT_ROOT, "dist/");
+    config = baseConfig(opts);
 
   return {
     ...config,
     output: {
       ...config.output,
-      path: output_path,
       // set CDN_PATH to your cdn static file directory
       publicPath: CDN_PATH || "/static/wp/"
     },
     plugins: [
       ...config.plugins,
-      // production bundle stats file
-      new BundleTracker({
-        path: output_path
-      }),
       // pass options to uglify
       new webpack.LoaderOptionsPlugin({
         minimize: true,

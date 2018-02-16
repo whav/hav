@@ -36,8 +36,7 @@ class FSSource(Source):
     def to_url_path(self, path=None):
         if path and path.is_absolute() and path != self.root_path:
             path = path.relative_to(self.root_path)
-            path = os.path.normpath(path)
-            return encodePath(path)
+            return encodePath(str(path))
         return ''
 
     def to_url(self, path, request):

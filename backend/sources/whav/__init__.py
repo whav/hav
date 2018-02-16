@@ -3,6 +3,7 @@ from apps.whav.models import ImageCollection, MediaOrdering
 from .api.views import WHAVCollectionBrowser, WHAVMediaDetail
 from .. import Source
 
+
 class WHAVSource(Source):
 
     def to_url(self, obj=None, request=None):

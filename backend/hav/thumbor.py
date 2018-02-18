@@ -20,5 +20,5 @@ def get_image_url(path, **kwargs):
     for k, v in defaults.items():
         kwargs.setdefault(k, v)
 
-    url = crypto.generate(image_url=path, **kwargs)
+    url = crypto.generate(image_url=quote(path), **kwargs)
     return '%s/%s' % (server, url.lstrip('/'))

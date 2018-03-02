@@ -24,3 +24,5 @@ django_celery_results = "==1.0.1"
 
 [dev-packages]
 
+[requires]
+python_version = "3.6"

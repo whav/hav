@@ -41,8 +41,8 @@ class HAVNodeBrowser(IncomingBaseMixin, APIView):
         )
         return Response(serializer.data)
 
-    def post(self, request, node_id=None):
-        if not node_id:
+    def post(self, request, pk=None):
+        if not pk:
             return Response('Cannot create root nodes', status=400)
         sc = self.get_serializer_class()
         serializer = sc(

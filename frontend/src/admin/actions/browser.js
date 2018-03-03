@@ -52,6 +52,7 @@ export const switchFilebrowserDisplayType = displayType => {
 };
 
 export const createDirectoryAction = (name, path, url) => {
+  console.log(name, path, url);
   return dispatch => {
     dispatch({
       type: MKDIR,
@@ -63,7 +64,7 @@ export const createDirectoryAction = (name, path, url) => {
           type: MKDIR_SUCCESS
         });
         // request the same directory again
-        dispatch(requestDirectoryAction(path, url));
+        dispatch(requestDirectoryAction(url));
       })
       .catch(err => {
         console.error(err);

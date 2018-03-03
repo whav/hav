@@ -1,6 +1,5 @@
 let path = require("path");
 let webpack = require("webpack");
-let BundleTracker = require("webpack-bundle-tracker");
 let baseConfig = require("./webpack.base.config");
 
 module.exports = opts => {

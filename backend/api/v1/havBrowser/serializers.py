@@ -2,7 +2,15 @@ from django.urls import reverse
 from rest_framework import serializers
 
 from apps.sets.models import Node
+from apps.media.models import Media
 
+class HAVMediaSerializer(serializers.ModelSerializer):
+
+    name = serializers.IntegerField(source='pk')
+
+    class Meta:
+        model = Media
+        fields = ['pk', 'name']
 
 class BaseHAVNodeSerializer(serializers.ModelSerializer):
 
@@ -68,6 +76,9 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
     def create(self, validated_data, parent):
         node = parent.add_child(**validated_data)
         return node
+
+    def get_files(self, instance):
+        return HAVMediaSerializer(instance.media_set.all(), many=True, context=self.context).data
 
 
 class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):

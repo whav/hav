@@ -91,6 +91,9 @@ export const saveIngestionData = (target, entries) => {
           type: SAVE_INGESTION_DATA_SUCCESS,
           data
         });
+        // clear the queue
+        dispatch(clearIngestionQueue());
+        // and redirect to the newly created queue
         history.push(`/ingest/${data.uuid}/`);
       })
       .catch(errors => {

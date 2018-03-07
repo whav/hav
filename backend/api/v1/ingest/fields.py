@@ -102,6 +102,8 @@ class IngestHyperlinkField(serializers.Field):
 
 class IngestionReferenceField(serializers.Field):
 
+    default_error_messages = serializers.HyperlinkedRelatedField.default_error_messages
+
     def get_file_path(self, url):
         path = urlparse(url).path
         match = resolve(path)

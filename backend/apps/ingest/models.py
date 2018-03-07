@@ -18,6 +18,9 @@ class IngestQueue(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+    @property
+    def ingestion_items_length(self):
+        return len(self.ingestion_items)
 
     @property
     def ingested_items(self):

@@ -1,10 +1,19 @@
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from django.http import Http404
 
 from apps.sets.models import Node
+from apps.media.models import Media
 from ..permissions import IncomingBaseMixin
-from .serializers import HAVNodeSerializer, RootHAVCollectionSerializer, CreateHAVCollectionSerializer
+from .serializers import HAVNodeSerializer, RootHAVCollectionSerializer, CreateHAVCollectionSerializer, HAVMediaSerializer
+
+
+class HAVMediaView(IncomingBaseMixin, RetrieveAPIView):
+    queryset = Media.objects.all()
+    serializer_class = HAVMediaSerializer
+
+    keys = []
 
 
 class HAVNodeBrowser(IncomingBaseMixin, APIView):

@@ -7,10 +7,23 @@ from apps.media.models import Media
 class HAVMediaSerializer(serializers.ModelSerializer):
 
     name = serializers.IntegerField(source='pk')
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, instance):
+        request = self.context['request']
+        match = request.resolver_match
+        url_lookup = '%s:%s' % (':'.join(match.namespaces), 'hav_media')
+        url_kwargs = {'pk': instance.pk}
+        return request.build_absolute_uri(
+            reverse(
+                url_lookup,
+                kwargs=url_kwargs
+            )
+        )
 
     class Meta:
         model = Media
-        fields = ['pk', 'name']
+        fields = ['pk', 'name', 'url']
 
 class BaseHAVNodeSerializer(serializers.ModelSerializer):
 

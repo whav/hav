@@ -75,7 +75,6 @@ class IngestHyperlinkField(serializers.Field):
     def get_object(self, url):
         path = urlparse(url).path
         match = resolve(path)
-        print(match)
         # whav ingestion
         if match.view_name == 'api:v1:whav_media':
             return MediaOrdering.objects.get(pk=match.kwargs['mediaordering_id'])

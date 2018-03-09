@@ -27,7 +27,7 @@ class HAVMediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Media
-        fields = ['pk', 'name', 'url']
+        fields = ['pk', 'name', 'url', 'ingestable']
 
 class BaseHAVNodeSerializer(serializers.ModelSerializer):
 

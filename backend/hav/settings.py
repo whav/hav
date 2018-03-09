@@ -33,6 +33,7 @@ environ.Env.read_env(project_root('.env'))
 
 DEBUG = env('DEBUG', False)
 
+
 SECRET_KEY = env("SECRET_KEY")
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'webpack_loader',
@@ -61,6 +63,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -293,4 +296,5 @@ INGESTION_SOURCES = {
     }
 }
 
-
+IMAGEPROXY_KEY = env('IMAGEPROXY_KEY')
+IMAGEPROXY_SALT = env('IMAGEPROXY_SALT')

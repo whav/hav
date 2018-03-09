@@ -8,6 +8,7 @@ class HAVMediaSerializer(serializers.ModelSerializer):
 
     name = serializers.IntegerField(source='pk')
     url = serializers.SerializerMethodField()
+    ingestable = serializers.SerializerMethodField()
 
     def get_url(self, instance):
         request = self.context['request']
@@ -20,6 +21,9 @@ class HAVMediaSerializer(serializers.ModelSerializer):
                 kwargs=url_kwargs
             )
         )
+
+    def get_ingestable(self, _):
+        return False
 
     class Meta:
         model = Media

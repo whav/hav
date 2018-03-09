@@ -31,5 +31,11 @@ def validate_file_path(path):
         raise ValidationError('The path ${0} is not within a registered source.'.format(path.to_posix()))
 
 
+def to_absolute_path(path, root):
+    p = pathlib.Path(path)
+    if p.is_absolute():
+        return path
+
+    return str(pathlib.Path(root).joinpath(p).absolute())
 
 

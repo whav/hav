@@ -14,6 +14,8 @@ import environ
 import raven
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
+from .utils.sources import to_absolute_path
+
 
 project_root = environ.Path(__file__) - 3
 django_root = environ.Path(__file__) - 2
@@ -28,7 +30,6 @@ env = environ.Env(
 
 # read the .env file
 environ.Env.read_env(project_root('.env'))
-
 
 DEBUG = env('DEBUG', False)
 
@@ -271,11 +272,15 @@ THUMBOR_SERVER = env('THUMBOR_SERVER', default='')
 THUMBOR_SECRET_KEY = env('THUMBOR_SECRET_KEY', default='')
 
 # These settings will change ....
-INCOMING_FILES_ROOT = env('INCOMING_FILES_ROOT', default=MEDIA_ROOT)
+INCOMING_FILES_ROOT = to_absolute_path(
+    env('INCOMING_FILES_ROOT', default=MEDIA_ROOT),
+    str(project_root)
+)
 
-HAV_ARCHIVE_PATH = env('HAV_ARCHIVE_PATH', default=project_root('dist/archive'))
-
-
+HAV_ARCHIVE_PATH = to_absolute_path(
+    env('HAV_ARCHIVE_PATH', default=project_root('dist/archive')),
+    str(project_root)
+)
 
 INGESTION_SOURCES = {
     "whav": {

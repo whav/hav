@@ -1,6 +1,5 @@
 import os
 import stat
-import base64
 from mimetypes import guess_type
 from rest_framework import serializers
 from hav.thumbor import get_image_url
@@ -8,7 +7,6 @@ from hav.thumbor import get_image_url
 import logging
 
 logger = logging.getLogger(__name__)
-
 
 def is_hidden(fn):
     return fn.startswith('.')
@@ -33,6 +31,8 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     name = serializers.SerializerMethodField()
     # stat = FileStatsSerializer(source='*')
     size = serializers.SerializerMethodField()
+
+    ingestable = serializers.SerializerMethodField()
 
     @property
     def _config(self):
@@ -61,6 +61,8 @@ class FileBrowserBaseSerializer(serializers.Serializer):
         rel_url = self._config.to_url(path, self.request)
         return self.request.build_absolute_uri(rel_url)
 
+    def get_ingestable(self, _):
+        return False
 
 class FileSerializer(FileBrowserBaseSerializer):
 
@@ -68,6 +70,7 @@ class FileSerializer(FileBrowserBaseSerializer):
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
+
 
     def get_path(self, path):
         return self._config.to_url_path(path)
@@ -85,6 +88,9 @@ class FileSerializer(FileBrowserBaseSerializer):
             rel_path = path.relative_to(self.get_root()).as_posix()
             return get_image_url(rel_path)
 
+    def get_ingestable(self, _):
+        return True
+
 
 class BaseDirectorySerializer(FileBrowserBaseSerializer):
 
@@ -94,6 +100,8 @@ class BaseDirectorySerializer(FileBrowserBaseSerializer):
     def get_url(self, path):
         return self.get_url_for_path(path)
 
+    def get_ingestable(self, _):
+        return True
 
 class DirectorySerializer(BaseDirectorySerializer):
 

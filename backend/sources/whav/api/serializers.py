@@ -27,6 +27,8 @@ class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
     size = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
+    ingestable = serializers.SerializerMethodField()
+
     def get_name(self, mo):
         media = mo.media
         path = self.get_path_for_media(media)
@@ -58,6 +60,8 @@ class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
     def get_url(self, mo):
         return self._config.to_url(mo, self.request)
 
+    def get_ingestable(self, _):
+        return True
 
 class BaseWHAVCollectionSerializer(WHAVSerializerMixin, serializers.Serializer):
 

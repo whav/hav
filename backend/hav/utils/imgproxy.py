@@ -19,8 +19,6 @@ defaults = {
 
 
 def generate_imgproxy_url(url, **kwargs):
-
-
     encoded_url = base64.urlsafe_b64encode(url).rstrip(b"=").decode()
     # You can trim padding spaces to get good-looking url
     encoded_url = '/'.join(textwrap.wrap(encoded_url, 16))

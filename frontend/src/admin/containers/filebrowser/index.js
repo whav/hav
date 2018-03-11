@@ -60,7 +60,7 @@ class FileBrowser extends React.Component {
     if (this.props.loading) {
       return <LoadingIndicator />;
     } else {
-      let {
+      const {
         directory,
         parentDirectories,
         childrenDirectories,
@@ -74,7 +74,8 @@ class FileBrowser extends React.Component {
         allowCreate,
         saveFileSelection,
         createDirectory,
-        selectItems
+        selectItems,
+        ingestable
       } = this.props;
 
       let uploads = this.props.uploads;
@@ -103,8 +104,7 @@ class FileBrowser extends React.Component {
       let isEmpty =
         childrenDirectories.length + files.length + uploads.length === 0;
 
-      let selectedItemIds = new Set(directory.selected);
-
+      const selectedItemIds = new Set(directory.selected);
       const header_items = [
         <h1 key="title" className="title">
           {directory.name}
@@ -117,11 +117,11 @@ class FileBrowser extends React.Component {
               switchDisplayType={switchDisplayStyle}
               selectedDisplayType={settings.selectedDisplayType}
               addDirectory={allowCreate ? createDirectory : false}
-              selectedItemIds={Array.from(selectedItemIds)}
+              selectedItemIds={Array.from(ingestable)}
               allItemIds={directory.content}
               handleSelect={selectItems}
               saveFileSelection={() =>
-                saveFileSelection(Array.from(selectedItemIds))
+                saveFileSelection(Array.from(ingestable))
               }
             />
           }
@@ -218,6 +218,10 @@ export default connect(
     const childrenDirectories = allChildren.filter(c => c.isDirectory);
     const files = allChildren.filter(c => c.isFile);
 
+    // get a list of all ingestable and selected items
+    const selected = new Set(directory.selected);
+    const ingestable = allChildren.filter(f => selected.has(f) && f.ingestable);
+
     // get the un-finished uploads for directory
     let directoryUploads = Object.values(
       getUploadsForPath(props.match.params, uploadState)
@@ -232,6 +236,7 @@ export default connect(
       childrenDirectories,
       parentDirectories,
       files,
+      ingestable,
       allowUpload: directory.allowUpload || false,
       allowCreate: directory.allowCreate || false
     };

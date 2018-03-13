@@ -2,7 +2,8 @@ import os
 import stat
 from mimetypes import guess_type
 from rest_framework import serializers
-from hav.thumbor import get_image_url
+
+from hav.utils.imgproxy import generate_imgproxy_url
 
 import logging
 
@@ -86,7 +87,11 @@ class FileSerializer(FileBrowserBaseSerializer):
         mime = self.get_mime(path) or ''
         if mime.startswith('image/'):
             rel_path = path.relative_to(self.get_root()).as_posix()
-            return get_image_url(rel_path)
+            url = generate_imgproxy_url(
+                'local://%s' % os.path.join('mnt/incoming', rel_path)
+            )
+            print(url, rel_path)
+            return url
 
     def get_ingestable(self, _):
         return True

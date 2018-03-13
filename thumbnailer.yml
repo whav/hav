@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+
+  imgproxy:
+    image: darthsim/imgproxy
+    ports:
+      - 9000:8080
+    environment:
+      - IMGPROXY_KEY=${IMAGEPROXY_KEY}
+      - IMGPROXY_SALT=${IMAGEPROXY_SALT}
+      - IMGPROXY_LOCAL_FILESYSTEM_ROOT=/mnt
+    volumes:
+      - ${INCOMING_FILES_ROOT}:/mnt/incoming:ro
+      - ${HAV_ARCHIVE_PATH}:/mnt/archive:ro

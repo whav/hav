@@ -1,12 +1,16 @@
 from django.conf import settings
 
+
 import base64
 import hashlib
 import hmac
 import textwrap
 
-imgproxy_key = bytes.fromhex(settings.IMAGEPROXY_KEY)
-imgproxy_salt = bytes.fromhex(settings.IMAGEPROXY_SALT)
+imgproxy = settings.IMGPROXY_CONFIG
+
+imgproxy_key = bytes.fromhex(imgproxy['key'])
+imgproxy_salt = bytes.fromhex(imgproxy['salt'])
+imgproxy_server = str.encode(imgproxy['server'].rstrip('/'))
 
 defaults = {
     "resize": "fill",
@@ -16,6 +20,7 @@ defaults = {
     "enlarge": 1,
     "extension": "png",
 }
+
 
 
 def generate_imgproxy_url(url, **kwargs):
@@ -34,7 +39,8 @@ def generate_imgproxy_url(url, **kwargs):
     digest = hmac.new(imgproxy_key, msg=imgproxy_salt + path, digestmod=hashlib.sha256).digest()
 
     protection = base64.urlsafe_b64encode(digest).rstrip(b"=")
-    url = b'http://127.0.0.1:8088/%s%s' % (
+    url = b'%s/%s%s' % (
+        imgproxy_server,
         protection,
         path,
     )

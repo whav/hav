@@ -270,9 +270,11 @@ logging.config.dictConfig({
     },
 })
 
-
-THUMBOR_SERVER = env('THUMBOR_SERVER', default='')
-THUMBOR_SECRET_KEY = env('THUMBOR_SECRET_KEY', default='')
+IMGPROXY_CONFIG = {
+    "server": env('IMGPROXY_SERVER', default='http://127.0.0.1:9000/'),
+    "key": env("IMGPROXY_KEY"),
+    "salt": env("IMGPROXY_SALT")
+}
 
 # These settings will change ....
 INCOMING_FILES_ROOT = to_absolute_path(

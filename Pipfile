@@ -22,6 +22,7 @@ django-celery-monitor = "==1.1.2"
 django-celery-results = "==1.0.1"
 whitenoise = "*"
 uwsgi = "*"
+ipython = "*"
 
 
 [dev-packages]

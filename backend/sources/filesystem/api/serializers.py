@@ -87,11 +87,9 @@ class FileSerializer(FileBrowserBaseSerializer):
         mime = self.get_mime(path) or ''
         if mime.startswith('image/'):
             rel_path = path.relative_to(self.get_root()).as_posix()
-            url = generate_imgproxy_url(
-                'local://%s' % os.path.join('mnt/incoming', rel_path)
+            return generate_imgproxy_url(
+                'local://%s' % os.path.join('urxn/incoming', rel_path)
             )
-            print(url, rel_path)
-            return url
 
     def get_ingestable(self, _):
         return True

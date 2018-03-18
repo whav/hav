@@ -24,6 +24,7 @@ whitenoise = "*"
 uwsgi = "*"
 ipython = "*"
 pylint = "*"
+docker-compose = "*"
 
 
 [dev-packages]

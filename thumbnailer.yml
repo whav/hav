@@ -10,6 +10,7 @@ services:
       - IMGPROXY_KEY=${IMGPROXY_KEY}
       - IMGPROXY_SALT=${IMGPROXY_SALT}
       - IMGPROXY_LOCAL_FILESYSTEM_ROOT=/mnt
+      - IMGPROXY_MAX_SRC_RESOLUTION=25
     volumes:
       - ${INCOMING_FILES_ROOT}:/mnt/incoming:ro
       - ${HAV_ARCHIVE_PATH}:/mnt/archive:ro

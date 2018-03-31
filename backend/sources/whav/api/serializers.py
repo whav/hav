@@ -4,8 +4,7 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 from apps.whav.models import ImageCollection, MediaOrdering
-from hav.utils.imgproxy import generate_imgproxy_url
-
+from hav.utils.imaginary import generate_imaginary_url
 
 class WHAVSerializerMixin(object):
 
@@ -56,7 +55,7 @@ class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
         rel_path, ext = os.path.splitext(rel_path)
         rel_path = '%s_display_image%s' %(rel_path, ext)
         url = 'https://whav.aussereurop.univie.ac.at/display/%s' % rel_path
-        return generate_imgproxy_url(url)
+        return generate_imaginary_url(url)
 
     def get_url(self, mo):
         return self._config.to_url(mo, self.request)

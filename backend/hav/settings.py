@@ -276,6 +276,11 @@ IMGPROXY_CONFIG = {
     "salt": env("IMGPROXY_SALT")
 }
 
+
+IMAGINARY_CONFIG = {
+    "server": env("IMAGINARY_SERVER", default='http://127.0.0.1:9000/')
+}
+
 # These settings will change ....
 INCOMING_FILES_ROOT = to_absolute_path(
     env('INCOMING_FILES_ROOT', default=MEDIA_ROOT),

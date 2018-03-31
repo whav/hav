@@ -4,10 +4,14 @@ from rest_framework import serializers
 from apps.sets.models import Node
 from apps.media.models import Media
 
+from hav.utils.imaginary import generate_imaginary_url
+
 class HAVMediaSerializer(serializers.ModelSerializer):
 
     name = serializers.IntegerField(source='pk')
     url = serializers.SerializerMethodField()
+    preview_url = serializers.SerializerMethodField()
+
     ingestable = serializers.SerializerMethodField()
 
     def get_url(self, instance):
@@ -22,12 +26,20 @@ class HAVMediaSerializer(serializers.ModelSerializer):
             )
         )
 
+    def get_preview_url(self, media):
+        print(media)
+        try:
+            archive_file = media.files.all()[0]
+        except IndexError:
+            return 'urxn'
+        print(archive_file)
+
     def get_ingestable(self, _):
         return False
 
     class Meta:
         model = Media
-        fields = ['pk', 'name', 'url', 'ingestable']
+        fields = ['pk', 'name', 'url', 'ingestable', 'preview_url']
 
 class BaseHAVNodeSerializer(serializers.ModelSerializer):
 

@@ -220,8 +220,10 @@ export default connect(
 
     // get a list of all ingestable and selected items
     const selected = new Set(directory.selected);
-    const ingestable = allChildren.filter(f => selected.has(f) && f.ingestable);
-
+    const ingestable = allChildren
+      .filter(f => selected.has(f.url) && f.ingestable)
+      .map(f => f.url);
+    console.log(selected, ingestable);
     // get the un-finished uploads for directory
     let directoryUploads = Object.values(
       getUploadsForPath(props.match.params, uploadState)

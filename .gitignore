@@ -49,5 +49,9 @@ activate
 env/
 
 hav/settings/secrets.py
+.env
 
 .thumbor/
+.vscode/
+.env/
+docs/site/

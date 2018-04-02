@@ -17,6 +17,6 @@ def generate_imaginary_url(path):
         kwargs.update({
             'file': path
         })
-    return 'http://127.0.0.1:9000/crop?{0}'.format(
+    return 'http://127.0.0.1:9000/unsafe/crop?{0}'.format(
         urlencode(kwargs, safe='/')
     )

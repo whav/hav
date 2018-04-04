@@ -1,12 +1,11 @@
 version: "3"
 services:
   nginx:
-    build:
-      context: ./docker/nginx-imaginary
+    image: nginx:mainline-alpine
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     environment:
-      - SECRET_SAUCE=TOPSECRET
+      - SECRET_SAUCE=${IMAGESERVER_SECRET}
     ports:
       - "9000:80"
 

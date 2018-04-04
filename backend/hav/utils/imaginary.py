@@ -5,7 +5,7 @@ import base64
 import hashlib
 
 
-SECRET = 'TOPSECRET'
+SECRET = settings.IMAGESERVER_CONFIG['secret']
 
 def is_absolute(url):
     return bool(urlparse(url).netloc)

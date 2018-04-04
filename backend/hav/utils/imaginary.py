@@ -28,8 +28,6 @@ def generate_imaginary_url(path):
     query = 'crop?{}'.format(urlencode(kwargs, safe='/'))
     md5_digest = hashlib.md5('{}:{}'.format(query, SECRET).encode('utf-8')).digest()
     key = base64.b64encode(md5_digest).decode('utf-8')
-    print(key, type(key))
     # Make the key look like Nginx expects.
     key = key.replace('+', '-').replace('/', '_').rstrip('=')
-
     return 'http://127.0.0.1:9000/{}/{}'.format(key, query)

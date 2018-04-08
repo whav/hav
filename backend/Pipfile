@@ -25,6 +25,7 @@ uwsgi = "*"
 ipython = "*"
 pylint = "*"
 docker-compose = "*"
+requests = "*"
 
 
 [dev-packages]

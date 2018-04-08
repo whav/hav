@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'apps.sets',
     'apps.archive',
     'apps.media',
-    'apps.ingest'
+    'apps.ingest',
+    'apps.webassets'
 ]
 
 MIDDLEWARE = [
@@ -193,8 +194,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = env('MEDIA_ROOT', default=project_root('dist/media/'))
 
 STORAGES = {
-    'examples': {
-        'path': project_root('dist/examples/')
+    'webassets': {
+        'path': env('WEBASSET_ROOT', default=project_root('dist/webassets/'))
     }
 }
 

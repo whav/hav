@@ -10,12 +10,17 @@ SECRET = settings.IMAGESERVER_CONFIG['secret']
 def is_absolute(url):
     return bool(urlparse(url).netloc)
 
-def generate_imaginary_url(path):
-    kwargs = {
+def generate_imaginary_url(path, operation='crop', **funckwargs):
+    default_kwargs = {
         'width': 300,
         'height': 300,
         'type': 'auto'
     }
+
+    default_kwargs.update(funckwargs)
+
+    kwargs = {k: v for k, v in default_kwargs.items() if v is not None}
+
     if is_absolute(path):
         kwargs.update({
             'url': path
@@ -25,7 +30,7 @@ def generate_imaginary_url(path):
             'file': path
         })
 
-    query = 'crop?{}'.format(urlencode(kwargs, safe='/'))
+    query = '{}?{}'.format(operation, urlencode(kwargs, safe='/'))
     md5_digest = hashlib.md5('{}:{}'.format(query, SECRET).encode('utf-8')).digest()
     key = base64.b64encode(md5_digest).decode('utf-8')
     # Make the key look like Nginx expects.

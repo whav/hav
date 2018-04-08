@@ -1,9 +1,9 @@
+import os
 from django.urls import reverse
 from rest_framework import serializers
 
 from apps.sets.models import Node
 from apps.media.models import Media
-
 from hav.utils.imaginary import generate_imaginary_url
 
 class HAVMediaSerializer(serializers.ModelSerializer):
@@ -27,12 +27,12 @@ class HAVMediaSerializer(serializers.ModelSerializer):
         )
 
     def get_preview_url(self, media):
-        print(media)
         try:
             archive_file = media.files.all()[0]
         except IndexError:
-            return 'urxn'
-        print(archive_file)
+            return None
+        return generate_imaginary_url(os.path.join('archive/', archive_file.file.name))
+
 
     def get_ingestable(self, _):
         return False

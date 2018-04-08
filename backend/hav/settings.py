@@ -25,7 +25,8 @@ env = environ.Env(
     DEBUG=(bool, False),
     ALLOWED_HOSTS=(list, []),
     SENTRY_DSN=(str, ''),
-    LOGLEVEL=(str, 'info')
+    LOGLEVEL=(str, 'info'),
+    IMAGESERVER_SECRET=str
 )
 
 # read the .env file
@@ -270,15 +271,8 @@ logging.config.dictConfig({
     },
 })
 
-IMGPROXY_CONFIG = {
-    "server": env('IMGPROXY_SERVER', default='http://127.0.0.1:9000/'),
-    "key": env("IMGPROXY_KEY"),
-    "salt": env("IMGPROXY_SALT")
-}
-
-
-IMAGINARY_CONFIG = {
-    "server": env("IMAGINARY_SERVER", default='http://127.0.0.1:9000/')
+IMAGESERVER_CONFIG = {
+    'secret': env('IMAGESERVER_SECRET')
 }
 
 # These settings will change ....

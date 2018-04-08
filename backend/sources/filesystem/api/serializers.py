@@ -3,7 +3,6 @@ import stat
 from mimetypes import guess_type
 from rest_framework import serializers
 
-from hav.utils.imgproxy import generate_imgproxy_url
 from hav.utils.imaginary import generate_imaginary_url
 
 import logging

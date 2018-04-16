@@ -1,21 +1,21 @@
-# ffmpeg -i input.avi -c:v libx264 -crf 22 -c:a aac -movflags faststart output.mp4
-# ['ffmpeg', '-i', 'input.avi', '-c:v', 'libx264', '-crf', '22', '-c:a', 'aac', '-movflags', 'faststart', 'output.mp4']
-
 import subprocess
 
+
 def convert(source, target, *args):
-    print(source, target)
-    subprocess.Popen([
+    task = subprocess.run([
         'ffmpeg',
         '-i', source,
-        '-c:v', 'libx264',
-        '-crf', '22',
-        '-c:a', 'aac',
-        '-movflags',
-        'faststart',
+        '-c:v', 'libx264',          # x264 codec
+        '-crf', '22',               # constant rate factor
+        '-c:a', 'aac',              # audio codec aac
+        '-movflags', 'faststart',   # this moves the moov atom to the front of the file
+        '-y',                       # overwrite output files
         target
-    ])
-    return
+    ],
+        check=True,
+        stderr=subprocess.PIPE
+    )
+    return task
 
 
 convert.extension = '.mp4'

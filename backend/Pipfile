@@ -22,9 +22,11 @@ pylint = "*"
 docker-compose = "*"
 requests = "*"
 pip = "*"
+channels = "*"
 
 [dev-packages]
 ipdb = "*"
 
 [pipenv]
 keep_outdated = true
+

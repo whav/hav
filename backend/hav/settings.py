@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'webpack_loader',
@@ -65,7 +64,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -224,11 +222,13 @@ CELERY_TASK_ROUTES = {
 
 CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 
+
+
 RAVEN_CONFIG = {
     'dsn': env('SENTRY_DSN'),
     # If you are using git, you can also automatically configure the
     # release based on the git info.
-    'release': raven.fetch_git_sha(project_root()),
+    # 'release': raven.fetch_git_sha(project_root()),
 }
 
 

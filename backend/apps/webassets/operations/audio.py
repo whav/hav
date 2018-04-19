@@ -10,8 +10,7 @@ def convert(source, target, *args):
         '-y',                       # overwrite output files
         target
     ],
-        check=True,
-        stderr=subprocess.PIPE
+        check=True
     )
     return task
 

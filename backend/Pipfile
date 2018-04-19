@@ -1,10 +1,13 @@
 [[source]]
+
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
+
 [packages]
-django = "*"
+
+Django = "*"
 django-webpack-loader = "==0.5.0"
 django-model-utils = "==2.6.1"
 "psycopg2" = "==2.7.3.1"
@@ -14,17 +17,21 @@ django-environ = "==0.4.4"
 raven = "==6.4.0"
 django-treebeard = "==4.2.0"
 celery = {extras = ["redis"], version = "==4.1.0"}
-django-celery-monitor = "==1.1.2"
-django-celery-results = "==1.0.1"
-uwsgi = "*"
+django_celery_results = "==1.0.1"
+uWSGI = "*"
 ipython = "*"
 pylint = "*"
 docker-compose = "*"
 requests = "*"
 pip = "*"
+flower = "*"
+
 
 [dev-packages]
+
 ipdb = "*"
 
+
 [pipenv]
+
 keep_outdated = true

@@ -22,9 +22,13 @@ def create_webassets(archived_file_id):
 
     if type == 'image':
         convert = image_convert
+    elif type == 'video':
+        convert = video_convert
+    elif type == 'audio':
+        convert = audio_convert
     else:
         raise NotImplementedError('Webasset creation not yet implemented for type %s' % source_mime)
 
-    target_file_name = wa.get_available_file_name('.jpg')
+    target_file_name = wa.get_available_file_name(convert.extension)
 
     convert(source_file_name, target_file_name, af)

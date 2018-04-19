@@ -222,11 +222,7 @@ CELERY_TASK_ROUTES = {
 }
 
 
-# CELERY_TASK_QUEUES = ([
-#     ('apps.webassets.tasks.*', {'queue': 'webassets'}),
-#     ('apps.archive.tasks.*', {'queue': 'archive'})
-# ])
-
+CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 
 RAVEN_CONFIG = {
     'dsn': env('SENTRY_DSN'),

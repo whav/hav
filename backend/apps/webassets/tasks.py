@@ -6,7 +6,8 @@ from .operations import create_webassets
 
 @app.task
 def create(archived_file_id):
-    return create_webassets(archived_file_id)
+    webasset = create_webassets(archived_file_id)
+    return webasset.pk
 
 
 

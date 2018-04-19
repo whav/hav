@@ -36,4 +36,4 @@ class WebAsset(models.Model):
     def save(self, *args, **kwargs):
         if not self.mime_type and self.file:
             self.mime_type = mimetypes.guess_type(self.file.name)
-        return super(self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)

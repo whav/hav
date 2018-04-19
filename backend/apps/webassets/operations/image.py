@@ -18,7 +18,6 @@ def convert(source, target, archivefile):
     )
 
     response = requests.get(url, stream=True)
-    print(response.headers)
     # create intermediate directories if needed
     create_directories(target)
     with open(target, 'wb') as out_file:

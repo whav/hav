@@ -212,6 +212,22 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
+CELERY_TASK_ROUTES = {
+    'apps.webassets.tasks.*': {
+        'queue': 'webassets'
+    },
+    'apps.archive.tasks.*': {
+        'queue': 'archive'
+    }
+}
+
+
+# CELERY_TASK_QUEUES = ([
+#     ('apps.webassets.tasks.*', {'queue': 'webassets'}),
+#     ('apps.archive.tasks.*', {'queue': 'archive'})
+# ])
+
+
 RAVEN_CONFIG = {
     'dsn': env('SENTRY_DSN'),
     # If you are using git, you can also automatically configure the

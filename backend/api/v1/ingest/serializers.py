@@ -7,6 +7,7 @@ from rest_framework import serializers
 from apps.archive.models import ArchiveFile
 from apps.archive.operations.hash import generate_hash
 from apps.archive.tasks import archive
+from apps.webassets.tasks import create as create_webassets
 from apps.ingest.models import IngestQueue
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
@@ -126,8 +127,15 @@ class IngestSerializer(serializers.Serializer):
             user.pk
         )
 
+        def ingestion_trigger():
+            return (
+                archive.s(str(validated_data['source']), media.pk, user.pk) |
+                create_webassets.s()
+            )()
+
+
         # this instructs django to execute the function after any commit
-        transaction.on_commit(lambda: archive.delay(str(validated_data['source']), media.pk, user.pk))
+        transaction.on_commit(ingestion_trigger)
 
         return media
 

@@ -2,7 +2,6 @@ import os
 import shutil
 import requests
 from hav.utils.imaginary import generate_imaginary_url
-from .utils import create_directories
 
 def convert(source, target, archivefile):
     # since the source argument is absolute
@@ -18,8 +17,7 @@ def convert(source, target, archivefile):
     )
 
     response = requests.get(url, stream=True)
-    # create intermediate directories if needed
-    create_directories(target)
+
     with open(target, 'wb') as out_file:
         shutil.copyfileobj(response.raw, out_file)
     del response

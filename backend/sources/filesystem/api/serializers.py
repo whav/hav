@@ -84,9 +84,9 @@ class FileSerializer(FileBrowserBaseSerializer):
 
     def get_preview_url(self, path):
         mime = self.get_mime(path) or ''
-        if mime.startswith('image/'):
-            rel_path = path.relative_to(self.get_root()).as_posix()
-            return generate_imaginary_url(os.path.join('/incoming/', rel_path))
+        # if mime.startswith('image/'):
+        rel_path = path.relative_to(self.get_root()).as_posix()
+        return generate_imaginary_url(os.path.join('/incoming/', rel_path))
 
 
     def get_ingestable(self, _):

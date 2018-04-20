@@ -1,7 +1,13 @@
 import subprocess
 
+from celery.utils.log import get_task_logger
+
+logger = get_task_logger(__name__)
 
 def convert(source, target, *args):
+    logger.info('Converting video')
+    logger.info(source)
+    logger.info(target)
     task = subprocess.run([
         'ffmpeg',
         '-i', source,
@@ -12,8 +18,7 @@ def convert(source, target, *args):
         '-y',                       # overwrite output files
         target
     ],
-        check=True,
-        stderr=subprocess.PIPE
+        check=True
     )
     return task
 

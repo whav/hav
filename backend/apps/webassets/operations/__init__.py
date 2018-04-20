@@ -39,6 +39,9 @@ def create_webassets(archived_file_id):
 
     target_file_name = wa.get_available_file_name(convert.extension)
 
+    # create intermediate directories
+    os.makedirs(os.path.dirname(target_file_name), exist_ok=True)
+
     logger.info("Source %s, target %s" % (source_file_name, target_file_name))
 
     result = convert(source_file_name, target_file_name, af)

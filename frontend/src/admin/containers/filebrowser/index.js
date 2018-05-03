@@ -174,26 +174,23 @@ export default connect(
     const state = rootState.repositories;
     const uploadState = rootState.uploads;
     const settings = state.settings;
-    const path = props.match.params;
-
+    const { path, repository } = props.match.params;
     // construct a helper function to build frontend urls
-    const baseURL = pathToRegexp.compile(props.match.path)({
-      repository: path.repository
-    });
+    const baseURLResolver = pathToRegexp.compile(props.match.path);
 
     const buildFrontendURL = p => {
-      p = p ? `${baseURL}${p}/` : baseURL;
-      return normalizePath(p);
+      const url = baseURLResolver({ repository, path: p || null });
+      return normalizePath(url);
     };
 
     // build a selector for this repository
     const getDirectoryContent = getRepositoryDataFromState.bind(
       this,
       rootState,
-      path.repository
+      repository
     );
 
-    let directory = getDirectoryContent(path.path);
+    let directory = getDirectoryContent(path);
 
     let mappedProps = {
       directory,

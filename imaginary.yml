@@ -16,4 +16,4 @@ services:
     volumes:
       - ${INCOMING_FILES_ROOT}:/mnt/incoming:ro
       - ${HAV_ARCHIVE_PATH}:/mnt/archive:ro
-    command: -enable-url-source -mount /mnt/ -enable-placeholder
+    command: -enable-url-source -mount /mnt/

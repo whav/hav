@@ -14,6 +14,7 @@ import GoPackage from "react-icons/go/package";
 import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
 import HAVFileBrowser from "./containers/filebrowser/hav";
+import HAVMediaDetail from "./containers/filebrowser/mediaDetail";
 import { Uploads } from "./containers/uploads";
 import IngestionQueueList from "./containers/ingest/queues";
 import IngestionQueue from "./containers/ingest/queue";
@@ -32,10 +33,6 @@ const routes = [
     path: "/uploads/",
     main: Uploads
   },
-  // {
-  //   path: "/ingest/step1/",
-  //   main: IngestionStep1
-  // },
   {
     path: "/ingest/",
     main: IngestionQueueList
@@ -49,8 +46,12 @@ const routes = [
     main: IngestionQueue
   },
   {
-    path: "/:repository(hav)/:path*/",
+    path: "/:repository(hav)/:path?/",
     main: HAVFileBrowser
+  },
+  {
+    path: "/:respository(hav)/media/:media_id/",
+    main: HAVMediaDetail
   }
 ];
 

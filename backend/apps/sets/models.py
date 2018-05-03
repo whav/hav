@@ -1,6 +1,6 @@
 from django.db import models
 from treebeard.mp_tree import MP_Node
-from apps.archive.models import ArchiveFile
+
 
 class Node(MP_Node):
 

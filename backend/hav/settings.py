@@ -16,7 +16,7 @@ from django.utils.log import DEFAULT_LOGGING
 from .utils.sources import to_absolute_path
 
 # this is needed to let daphne install the twisted reactor
-import daphne.server
+import daphne.server # noqa
 
 
 project_root = environ.Path(__file__) - 3

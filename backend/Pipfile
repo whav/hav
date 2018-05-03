@@ -24,8 +24,8 @@ pylint = "*"
 docker-compose = "*"
 requests = "*"
 pip = "*"
+channels = "*"
 flower = "*"
-
 
 [dev-packages]
 
@@ -35,3 +35,4 @@ ipdb = "*"
 [pipenv]
 
 keep_outdated = true
+

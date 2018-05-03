@@ -13,6 +13,9 @@ from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCrea
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     InternalIngestHyperlinkField, IngestionReferenceField
 
+from .resolver import resolveIngestionItems
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -126,7 +129,6 @@ class IngestSerializer(serializers.Serializer):
             media.pk,
             user.pk
         )
-
         def ingestion_trigger():
             return (
                 archive.s(str(validated_data['source']), media.pk, user.pk) |
@@ -136,7 +138,6 @@ class IngestSerializer(serializers.Serializer):
 
         # this instructs django to execute the function after any commit
         transaction.on_commit(ingestion_trigger)
-
         return media
 
 
@@ -170,6 +171,8 @@ class IngestQueueSerializer(serializers.ModelSerializer):
 
     selection = serializers.ListField(child=IngestionReferenceField(), write_only=True)
 
+    media_entries = serializers.SerializerMethodField()
+
     def create(self, validated_data):
         logger.debug('creating queue: %s', validated_data)
         q = IngestQueue(
@@ -180,6 +183,16 @@ class IngestQueueSerializer(serializers.ModelSerializer):
         q.save(force_insert=True)
         return q
 
+    def get_media_entries(self, iq):
+        field = IngestionReferenceField()
+        items = []
+        for k, v in iq.ingestion_items.items():
+            items.append(field.get_file_path(k))
+
+        print(resolveIngestionItems(items))
+
+        return []
+
     class Meta:
         model = IngestQueue
         fields = [
@@ -187,5 +200,6 @@ class IngestQueueSerializer(serializers.ModelSerializer):
             'target',
             'selection',
             'ingestion_items',
-            'ingested_items'
+            'ingested_items',
+            'media_entries'
         ]

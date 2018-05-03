@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, CreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from apps.media.models import MediaCreator, MediaCreatorRole, License, Media
@@ -8,8 +8,6 @@ from ..permissions import IncomingBaseMixin
 from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, \
     PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, \
     SimpleIngestQueueSerializer, IngestSerializer, SimpleMediaSerializer
-
-from .resolver import resolveIngestionItems
 
 
 class IngestOptionsView(IncomingBaseMixin, APIView):
@@ -51,6 +49,7 @@ class IngestQMixin(object):
             created_by=self.request.user,
             target__isnull=False
         )
+
 
 class IngestQueueIngestionView(IncomingBaseMixin, IngestQMixin, APIView):
 

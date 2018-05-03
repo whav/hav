@@ -107,11 +107,13 @@ class IngestionReferenceField(serializers.Field):
         path = urlparse(url).path
         match = resolve(path)
         config = match.func.view_initkwargs.get('source_config')
-        return config.to_fs_path(*match.args, **match.kwargs)
+        fs_path = config.to_fs_path(*match.args, **match.kwargs)
+        return fs_path
 
     def to_internal_value(self, data):
         # TODO: Error handling
         p = self.get_file_path(data)
+        print(p)
         return data
 
 

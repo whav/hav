@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import environ
-import raven
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
 from .utils.sources import to_absolute_path
+
+# this is needed to let daphne install the twisted reactor
+import daphne.server # noqa
 
 
 project_root = environ.Path(__file__) - 3
@@ -52,13 +54,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_celery_results',
     'treebeard',
-    'raven.contrib.django.raven_compat',
+    'channels',
     'apps.whav',
     'apps.sets',
     'apps.archive',
     'apps.media',
     'apps.ingest',
-    'apps.webassets'
+    'apps.webassets',
+    'raven.contrib.django.raven_compat',
 ]
 
 MIDDLEWARE = [
@@ -221,7 +224,7 @@ CELERY_TASK_ROUTES = {
 
 CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 
-
+ASGI_APPLICATION = "hav.routing.application"
 
 RAVEN_CONFIG = {
     'dsn': env('SENTRY_DSN'),
@@ -263,12 +266,16 @@ logging.config.dictConfig({
         # default for all undefined Python modules
         '': {
             'level': 'WARNING',
-            'handlers': ['console', 'sentry'],
+            'handlers': [
+                'console', 'sentry'],
         },
         # Our application code
         'app': {
             'level': LOGLEVEL,
-            'handlers': ['console', 'sentry'],
+            'handlers': [
+                'console',
+                'sentry'
+            ],
             # Avoid double logging because of root logger
             'propagate': False,
         },

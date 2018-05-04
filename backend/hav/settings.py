@@ -221,6 +221,8 @@ CELERY_TASK_ROUTES = {
     }
 }
 
+# CELERY_TASK_QUEUES = map(lambda k: {'name': CELERY_TASK_ROUTES[k]['queue']}, CELERY_TASK_ROUTES.keys())
+
 
 CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 

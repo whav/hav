@@ -20,21 +20,12 @@ class HAVWebAssetSerializer(serializers.ModelSerializer):
         model = WebAsset
         fields = '__all__'
 
-class HAVMediaSerializer(serializers.ModelSerializer):
-
+class SimpleHAVMediaSerializer(serializers.ModelSerializer):
     name = serializers.IntegerField(source='pk')
     url = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
 
     ingestable = serializers.SerializerMethodField()
-
-    archive_files = HAVArchiveFileSerializer(source='files', many=True)
-
-    # webassets = serializers.SerializerMethodField()
-    #
-    # def get_webassets(self, obj):
-    #     WebAsset.objects.filter()
-
 
     def get_url(self, instance):
         request = self.context['request']
@@ -61,7 +52,20 @@ class HAVMediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Media
-        fields = ['pk', 'name', 'url', 'ingestable', 'preview_url', 'archive_files']
+        fields = ['pk', 'name', 'url', 'ingestable', 'preview_url']
+
+
+class HAVMediaSerializer(SimpleHAVMediaSerializer):
+
+    archive_files = HAVArchiveFileSerializer(source='files', many=True)
+    webassets = serializers.SerializerMethodField()
+
+    def get_webassets(self, media):
+        assets = WebAsset.objects.filter(archivefile__media__id=media.pk)
+        return HAVWebAssetSerializer(assets, many=True, context=self.context).data
+
+    class Meta(SimpleHAVMediaSerializer.Meta):
+        fields = SimpleHAVMediaSerializer.Meta.fields + ['archive_files', 'webassets']
 
 class BaseHAVNodeSerializer(serializers.ModelSerializer):
 
@@ -129,7 +133,7 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
         return node
 
     def get_files(self, instance):
-        return HAVMediaSerializer(instance.media_set.all(), many=True, context=self.context).data
+        return SimpleHAVMediaSerializer(instance.media_set.all(), many=True, context=self.context).data
 
 
 class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):

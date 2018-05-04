@@ -48,7 +48,7 @@ def create_webassets(archived_file_id):
 
     logger.info('Conversion completed.')
     wa.file = os.path.relpath(target_file_name, start=wa.file.storage.location)
-    wa.mime_type = mimetypes.guess_type(target_file_name)
+    wa.mime_type = mimetypes.guess_type(target_file_name)[0]
     wa.save()
     logger.info('WebAsset %d successfully created.' % wa.pk)
     return wa

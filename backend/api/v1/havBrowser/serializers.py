@@ -4,7 +4,21 @@ from rest_framework import serializers
 
 from apps.sets.models import Node
 from apps.media.models import Media
+from apps.archive.models import ArchiveFile
+from apps.webassets.models import WebAsset
 from hav.utils.imaginary import generate_imaginary_url
+
+class HAVArchiveFileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ArchiveFile
+        fields = '__all__'
+
+class HAVWebAssetSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = WebAsset
+        fields = '__all__'
 
 class HAVMediaSerializer(serializers.ModelSerializer):
 
@@ -13,6 +27,14 @@ class HAVMediaSerializer(serializers.ModelSerializer):
     preview_url = serializers.SerializerMethodField()
 
     ingestable = serializers.SerializerMethodField()
+
+    archive_files = HAVArchiveFileSerializer(source='files', many=True)
+
+    # webassets = serializers.SerializerMethodField()
+    #
+    # def get_webassets(self, obj):
+    #     WebAsset.objects.filter()
+
 
     def get_url(self, instance):
         request = self.context['request']
@@ -39,7 +61,7 @@ class HAVMediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Media
-        fields = ['pk', 'name', 'url', 'ingestable', 'preview_url']
+        fields = ['pk', 'name', 'url', 'ingestable', 'preview_url', 'archive_files']
 
 class BaseHAVNodeSerializer(serializers.ModelSerializer):
 

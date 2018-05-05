@@ -12,7 +12,7 @@ const IngestionQueueRow = ({ q }) => {
       className={classnames({ "has-text-grey-light": remaining_items === 0 })}
     >
       <td>
-        <Link to={`/ingest/${q.uuid}/`}>{q.uuid}</Link>
+        <Link to={`/ingest/${q.uuid}/`}>{q.name || q.uuid}</Link>
       </td>
       <td>
         {DateTime.fromISO(q.created_at).toLocaleString(DateTime.DATETIME_SHORT)}

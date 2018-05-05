@@ -129,12 +129,12 @@ class IngestSerializer(serializers.Serializer):
             media.pk,
             user.pk
         )
+
         def ingestion_trigger():
             return (
                 archive.s(str(validated_data['source']), media.pk, user.pk) |
                 create_webassets.s()
             )()
-
 
         # this instructs django to execute the function after any commit
         transaction.on_commit(ingestion_trigger)
@@ -158,6 +158,7 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
         fields = [
             'uuid',
             'target',
+            'name',
             'item_count',
             'ingested_item_count',
             # 'ingestion_',
@@ -177,6 +178,7 @@ class IngestQueueSerializer(serializers.ModelSerializer):
         logger.debug('creating queue: %s', validated_data)
         q = IngestQueue(
             target=validated_data['target'],
+            name=validated_data['name'],
             created_by=self.context['request'].user
         )
         q.add_items(validated_data['selection'])
@@ -189,7 +191,7 @@ class IngestQueueSerializer(serializers.ModelSerializer):
         for k, v in iq.ingestion_items.items():
             items.append(field.get_file_path(k))
 
-        print(resolveIngestionItems(items))
+        # print(resolveIngestionItems(items))
 
         return []
 
@@ -197,6 +199,7 @@ class IngestQueueSerializer(serializers.ModelSerializer):
         model = IngestQueue
         fields = [
             'uuid',
+            'name',
             'target',
             'selection',
             'ingestion_items',

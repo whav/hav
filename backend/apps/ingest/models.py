@@ -11,6 +11,8 @@ class IngestQueue(models.Model):
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
+    name = models.CharField(max_length=100)
+
     target = models.ForeignKey(Node, null=True, on_delete=models.SET_NULL)
 
     ingestion_items = JSONField(default=dict)

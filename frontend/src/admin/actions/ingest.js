@@ -75,14 +75,15 @@ export const fetchInitialData = (items, target) => {
   };
 };
 
-export const saveIngestionData = (target, entries) => {
+export const saveIngestionData = (target, entries, name) => {
   return dispatch => {
     dispatch({
       type: LOADING_INGESTION_DATA
     });
     const data = {
       target,
-      selection: entries
+      selection: entries,
+      name
     };
 
     saveIngestionQueue(data)

@@ -17,10 +17,19 @@ import pickBy from "lodash/pickBy";
 class Ingest extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      name: ""
+    };
   }
 
-  saveData = () => {
-    this.props.saveIngestionData(this.props.target, this.props.initialItems);
+  saveData = e => {
+    console.log(this.state);
+    e.preventDefault();
+    this.props.saveIngestionData(
+      this.props.target,
+      this.props.initialItems,
+      this.state.name
+    );
   };
 
   loadFormData = () => {
@@ -28,23 +37,39 @@ class Ingest extends React.Component {
   };
 
   render() {
-    console.warn(this.props);
     const props = this.props;
     // if (this.props.loading) {
     return (
-      <div>
-        <pre>
-          {JSON.stringify(
-            {
-              target: props.target,
-              entries: this.props.initialItems
-            },
-            null,
-            2
-          )}
-        </pre>
-        <button onClick={() => this.saveData()}>Save</button>
-      </div>
+      <form className="section" onSubmit={this.saveData}>
+        <div className="container">
+          <h1 className="title">New ingestion queue</h1>
+          <div className="field">
+            <label className="label">Name</label>
+            <div className="control">
+              <input
+                className="input"
+                placeholder="Name the ingestion queue"
+                type="text"
+                onChange={e => this.setState({ name: e.target.value })}
+                value={this.state.name}
+                required
+              />
+            </div>
+          </div>
+
+          <pre>
+            {JSON.stringify(
+              {
+                target: props.target,
+                entries: this.props.initialItems
+              },
+              null,
+              2
+            )}
+          </pre>
+          <button type="submit">Save</button>
+        </div>
+      </form>
     );
     // }
     // return (

@@ -3,8 +3,18 @@ from apps.whav.models import ImageCollection, MediaOrdering
 from .api.views import WHAVCollectionBrowser, WHAVMediaDetail
 from .. import Source
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 class WHAVSource(Source):
+
+    def to_fs_path(self, *args, **kwargs):
+        if 'mediaordering_id' in kwargs:
+            mo = MediaOrdering.objects.filter(pk=kwargs['mediaordering_id']).select_related('media__localfile').first()
+            mo.media.localfile.path
+        raise NotImplementedError('WHAV cannot resolve to filename')
+
 
     def to_url(self, obj=None, request=None):
         namespaces = list(request._request.resolver_match.namespaces) if request else []

@@ -18,15 +18,29 @@ app_name = 'api'
 def start(request):
     return Response(
         {
-            "hav": reverse('api:v1:hav_browser:hav_root', request=request)
+            "hav": reverse('api:v1:hav_browser:hav_root', request=request),
+            "sources": [
+                {
+                "name": "Incoming",
+                "url": reverse('api:v1:filebrowser_root', request=request)
+                },
+                {
+                    "name": "WHAV",
+                    "url": reverse("api:v1:whav_root", request=request)
+                }
+            ]
         }
     )
+
+source_patterns = [
+    url(r'^incoming/', include(incoming_fss_source.urls)),
+    url(r'^whav/', include(whav_source.urls))
+]
 
 urlpatterns = [
     url('^$', start),
     url(r'^ingest/', include((ingest_urls, app_name))),
-    url(r'^incoming/', include(incoming_fss_source.urls)),
-    url(r'^whav/', include(whav_source.urls)),
+    url(r'^sources/', include(source_patterns)),
     url(r'^hav/', include(
         (hav_urls('hav'), app_name),
         namespace='hav_browser')

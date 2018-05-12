@@ -42,7 +42,6 @@ class FileBrowserMixin(object):
 class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     def get(self, request, path=None, **kwargs):
-
         path = self.source_config.to_fs_path(path)
 
         if path.is_file():

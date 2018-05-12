@@ -307,10 +307,16 @@ HAV_ARCHIVE_PATH = to_absolute_path(
     str(project_root)
 )
 
+WHAV_ARCHIVE_PATH = to_absolute_path(
+    env('WHAV_ARCHIVE_PATH'),
+    str(project_root)
+)
+
 INGESTION_SOURCES = {
     "whav": {
         "engine": "sources.whav.WHAVSource",
-        "db": "whav"
+        "db": "whav",
+
     },
     "incoming": {
         "engine": "sources.filesystem.FSSource",

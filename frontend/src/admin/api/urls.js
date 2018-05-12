@@ -20,3 +20,13 @@ export const ingestOptions = `${apiPrefix}ingest/options/`;
 export const ingestFileEndpoint = uuid => `${ingestQueueDetail(uuid)}ingest/`;
 export const ingestQueueModifierEndpoint = uuid =>
   `${ingestQueueDetail(uuid)}modify/`;
+
+const buildFrontendUrl = url => {
+  return url.startsWith(apiPrefix) ? url.slice(apiPrefix.length - 1) : url;
+};
+
+const buildApiUrl = path => {
+  return `${apiPrefix.slice(0, -1)}${path}`;
+};
+
+export { buildFrontendUrl, buildApiUrl };

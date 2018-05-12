@@ -1,3 +1,5 @@
+import os
+from django.conf import settings
 from django.urls import path, reverse
 from apps.whav.models import ImageCollection, MediaOrdering
 from .api.views import WHAVCollectionBrowser, WHAVMediaDetail
@@ -11,10 +13,9 @@ class WHAVSource(Source):
 
     def to_fs_path(self, *args, **kwargs):
         if 'mediaordering_id' in kwargs:
-            mo = MediaOrdering.objects.filter(pk=kwargs['mediaordering_id']).select_related('media__localfile').first()
-            mo.media.localfile.path
-        raise NotImplementedError('WHAV cannot resolve to filename')
-
+            mo = MediaOrdering.objects.filter(pk=kwargs['mediaordering_id']).select_related('media').first()
+            return os.path.join(settings.WHAV_ARCHIVE_PATH, mo.media.localfile.path)
+        return None
 
     def to_url(self, obj=None, request=None):
         namespaces = list(request._request.resolver_match.namespaces) if request else []

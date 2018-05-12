@@ -27,7 +27,7 @@ const filesByUri = (state = {}, action) => {
         isFile: false,
         isDirectory: false
       };
-      let { files, childrenDirs, parentDirs } = action.payload;
+      let { files = [], childrenDirs = [], parentDirs = [] } = action.payload;
       let mapping = {};
       files.forEach(f => {
         mapping[f.url] = {
@@ -62,7 +62,7 @@ const filesByUri = (state = {}, action) => {
       };
 
       const ownKey = ownData.url;
-      const parents = ownData.parentDirs.map(d => d.url);
+      const parents = parentDirs.map(d => d.url);
 
       const existingData = state[ownKey] || {};
 

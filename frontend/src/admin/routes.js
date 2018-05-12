@@ -26,7 +26,7 @@ const routes = [
     main: Welcome
   },
   {
-    path: "/source/:repository/:path*/",
+    path: "/sources/:repository/:path*/",
     main: FileBrowser
   },
   {
@@ -79,13 +79,13 @@ const mainNav = [
     icon: GoFileSubmodule,
     sub: [
       {
-        link: "/source/incoming/",
+        link: "/sources/incoming/",
         icon: GoFileDirectory,
         title: "Incoming",
         menuExact: false
       },
       {
-        link: "/source/whav/",
+        link: "/sources/whav/",
         icon: GoDatabase,
         title: "WHAV",
         menuExact: false

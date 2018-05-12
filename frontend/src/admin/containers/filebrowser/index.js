@@ -34,10 +34,7 @@ import FileList, {
 
 import { FileBrowserMenu } from "../../ui/filebrowser/controls";
 import UploadTrigger from "../uploads";
-
-import { getRepositoryDataFromState } from "../../reducers";
-
-import { buildAPIUrl, normalizePath } from "../../api/browser";
+import { buildFrontendUrl, buildApiUrl } from "../../api/urls";
 
 import { getUploadsForPath } from "../../reducers/uploads";
 
@@ -68,7 +65,6 @@ class FileBrowser extends React.Component {
         settings,
         switchDisplayStyle,
         selectFiles,
-        buildFrontendURL,
         path,
         allowUpload,
         allowCreate,
@@ -84,7 +80,7 @@ class FileBrowser extends React.Component {
           dirs={parentDirectories.map(d => {
             return {
               ...d,
-              link: buildFrontendURL(d.path)
+              link: buildFrontendUrl(d.url)
             };
           })}
           current_dir={directory.name}
@@ -96,7 +92,7 @@ class FileBrowser extends React.Component {
         return {
           ...d,
           navigate: () => {
-            this.props.history.push(buildFrontendURL(d.path));
+            this.props.history.push(buildFrontendUrl(d.url));
           }
         };
       });
@@ -172,30 +168,20 @@ FileBrowser.propTypes = {
 export default connect(
   (rootState, props) => {
     const state = rootState.repositories;
+
     const uploadState = rootState.uploads;
     const settings = state.settings;
     const { path, repository } = props.match.params;
     // construct a helper function to build frontend urls
     const baseURLResolver = pathToRegexp.compile(props.match.path);
 
-    const buildFrontendURL = p => {
-      const url = baseURLResolver({ repository, path: p || null });
-      return normalizePath(url);
-    };
-
-    // build a selector for this repository
-    const getDirectoryContent = getRepositoryDataFromState.bind(
-      this,
-      rootState,
-      repository
-    );
-
-    let directory = getDirectoryContent(path);
+    const key = buildApiUrl(props.location.pathname);
+    let directory = state.browser[key];
 
     let mappedProps = {
       directory,
       path,
-      buildFrontendURL
+      buildFrontendUrl
     };
 
     if (directory === undefined || !directory.lastLoaded) {
@@ -220,7 +206,7 @@ export default connect(
     const ingestable = allChildren
       .filter(f => selected.has(f.url) && f.ingestable)
       .map(f => f.url);
-    console.log(selected, ingestable);
+
     // get the un-finished uploads for directory
     let directoryUploads = Object.values(
       getUploadsForPath(props.match.params, uploadState)
@@ -241,12 +227,7 @@ export default connect(
     };
   },
   (dispatch, props) => {
-    let path = { ...props.match.params };
-    let apiURL = `/api/v1/${path.repository}/`;
-    if (path.path) {
-      apiURL = `${apiURL}${path.path}/`;
-    }
-    const key = buildAPIUrl(path.repository, path.path);
+    const apiURL = buildApiUrl(props.location.pathname);
 
     const saveFileSelection = ids => {
       dispatch(queueForIngestion(ids));
@@ -263,7 +244,7 @@ export default connect(
         dispatch(switchFilebrowserDisplayType(style)),
       createDirectory: name =>
         dispatch(createDirectoryAction(name, path, apiURL)),
-      selectItems: (items = []) => dispatch(selectItems(key, items))
+      selectItems: (items = []) => dispatch(selectItems(apiURL, items))
     };
   }
 )(FileBrowser);

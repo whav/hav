@@ -1,13 +1,15 @@
-import PropTypes from "prop-types";
 /**
  * Created by sean on 03/02/17.
  */
+
+import { history } from "../../app";
 import React from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import filesize from "filesize";
 import uniq from "lodash/uniq";
-
+import PropTypes from "prop-types";
+import { buildFrontendUrl } from "../../api/urls";
 import GoFileDirectory from "react-icons/go/file-directory";
 import GoFileMedia from "react-icons/go/file-media";
 import GoCheck from "react-icons/go/check";
@@ -117,9 +119,7 @@ const GGalleryItem = ({
       <span className={classNames("g-gallery-select", { green: selected })}>
         <GoCheck />
       </span>
-      {/*<div className='preview'>*/}
       {preview}
-      {/*</div>*/}
 
       <div className="g-gallery-item-name">{name}</div>
     </div>
@@ -202,6 +202,15 @@ export default class FileList extends React.Component {
     this.handleFileSelectEvent = this.handleFileSelectEvent.bind(this);
   }
 
+  handleClick = (file, event) => {
+    let { ctrlKey, shiftKey } = event;
+    if (!ctrlKey && !shiftKey && file.url) {
+      history.push(buildFrontendUrl(file.url));
+    } else {
+      this.handleFileSelectEvent(file, event);
+    }
+  };
+
   handleFileSelectEvent(file, event) {
     let { ctrlKey, shiftKey } = event;
     const key = file.url;
@@ -260,7 +269,7 @@ export default class FileList extends React.Component {
       return (
         <GGalleryDirectory
           {...directory}
-          select={this.handleFileSelectEvent.bind(this, directory)}
+          select={this.handleClick.bind(this, directory)}
           key={index}
           selected={selectedItemIds.has(directory.url)}
         />
@@ -270,7 +279,7 @@ export default class FileList extends React.Component {
     let rendererFiles = files.map((file, index) => {
       let props = {
         file: file,
-        toggleSelect: this.handleFileSelectEvent.bind(this, file),
+        toggleSelect: this.handleClick.bind(this, file),
         selected: selectedItemIds.has(file.url)
       };
       return <GGalleryFile key={index} {...props} />;

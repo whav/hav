@@ -23,23 +23,19 @@ const normalize_url = url => {
 const filesByUri = (state = {}, action) => {
   switch (action.type) {
     case RECEIVE_DIRECTORY_CONTENT:
-      const attrs = {
-        isFile: false,
-        isDirectory: false
-      };
       let { files = [], childrenDirs = [], parentDirs = [] } = action.payload;
       let mapping = {};
       files.forEach(f => {
         mapping[f.url] = {
-          ...attrs,
           isFile: true,
+          isDirectory: false,
           ...f
         };
       });
 
       childrenDirs.forEach(directory => {
         mapping[directory.url] = {
-          ...attrs,
+          isFile: false,
           isDirectory: true,
           ...directory
         };
@@ -51,7 +47,7 @@ const filesByUri = (state = {}, action) => {
       parentDirs.forEach(directory => {
         mapping[directory.url] = {
           ...(state[directory.url] || {}),
-          ...attrs,
+          isFile: false,
           isDirectory: true,
           ...directory
         };

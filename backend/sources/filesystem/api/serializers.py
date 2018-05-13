@@ -65,6 +65,8 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     def get_ingestable(self, _):
         return False
 
+
+
 class FileSerializer(FileBrowserBaseSerializer):
 
     path = serializers.SerializerMethodField()
@@ -72,6 +74,7 @@ class FileSerializer(FileBrowserBaseSerializer):
     preview_url = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
+    isFile = serializers.SerializerMethodField()
 
     def get_path(self, path):
         return self._config.to_url_path(path)
@@ -88,8 +91,10 @@ class FileSerializer(FileBrowserBaseSerializer):
         rel_path = path.relative_to(self.get_root()).as_posix()
         return generate_imaginary_url(os.path.join('/incoming/', rel_path))
 
-
     def get_ingestable(self, _):
+        return True
+
+    def get_isFile(self, _):
         return True
 
 
@@ -98,11 +103,16 @@ class BaseDirectorySerializer(FileBrowserBaseSerializer):
     url = serializers.SerializerMethodField()
     path = serializers.SerializerMethodField()
 
+    isFile = serializers.SerializerMethodField()
+
     def get_url(self, path):
         return self.get_url_for_path(path)
 
     def get_ingestable(self, _):
         return True
+
+    def get_isFile(self, _):
+        return False
 
 class DirectorySerializer(BaseDirectorySerializer):
 

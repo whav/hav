@@ -8,6 +8,7 @@ from hav.utils.imaginary import generate_imaginary_url
 
 class WHAVSerializerMixin(object):
 
+
     @property
     def _config(self):
         return self.context['source_config']
@@ -15,6 +16,9 @@ class WHAVSerializerMixin(object):
     @property
     def request(self):
         return self.context['request']
+
+    def get_isFile(self, obj):
+        return isinstance(obj, MediaOrdering)
 
 
 class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
@@ -28,6 +32,9 @@ class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
     url = serializers.SerializerMethodField()
 
     ingestable = serializers.SerializerMethodField()
+
+    isFile = serializers.SerializerMethodField()
+
 
     def get_name(self, mo):
         media = mo.media
@@ -70,7 +77,7 @@ class BaseWHAVCollectionSerializer(WHAVSerializerMixin, serializers.Serializer):
     url = serializers.SerializerMethodField()
 
     allowUpload = serializers.SerializerMethodField()
-
+    isFile = serializers.SerializerMethodField()
 
     def get_name(self, instance):
         return instance.name

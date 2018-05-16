@@ -1,9 +1,7 @@
 import React from "react";
 
-const DebugView = props => <pre>{JSON.stringify(props, null, 2)}</pre>;
-
-const Audio = DebugView;
-const Video = DebugView;
-const Image = DebugView;
+const Audio = ({ url }) => <audio controls src={url} />;
+const Video = ({ url }) => <video controls src={url} />;
+const Image = ({ url }) => <img src={url} alt="webasset" />;
 
 export { Audio, Video, Image };

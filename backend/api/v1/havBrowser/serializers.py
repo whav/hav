@@ -16,9 +16,18 @@ class HAVArchiveFileSerializer(serializers.ModelSerializer):
 
 class HAVWebAssetSerializer(serializers.ModelSerializer):
 
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, webasset):
+        return webasset.file.url
+
     class Meta:
         model = WebAsset
-        fields = '__all__'
+        fields = [
+            'url',
+            'mime_type',
+            'id'
+        ]
 
 class SimpleHAVMediaSerializer(serializers.ModelSerializer):
     name = serializers.IntegerField(source='pk')

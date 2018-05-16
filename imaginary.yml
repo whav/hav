@@ -4,6 +4,9 @@ services:
     image: nginx:mainline-alpine
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf.template:ro
+      - ${INCOMING_FILES_ROOT}:/var/www/incoming:ro
+      - ${WEBASSET_ROOT}:/var/www/webassets:ro
+      - ${HAV_ARCHIVE_PATH}:/var/www/archive:ro
     environment:
       - IMAGESERVER_SECRET
     ports:
@@ -14,6 +17,7 @@ services:
   imaginary:
     image: h2non/imaginary:latest
     volumes:
-      - ${INCOMING_FILES_ROOT}:/mnt/incoming:ro
-      - ${HAV_ARCHIVE_PATH}:/mnt/archive:ro
-    command: -enable-url-source -mount /mnt/
+      - ${INCOMING_FILES_ROOT}:/var/www/incoming:ro
+      - ${HAV_ARCHIVE_PATH}:/var/www/archive:ro
+      - ${WEBASSET_ROOT}:/var/www/webassets:ro
+    command: -enable-url-source -mount /var/www/

@@ -22,6 +22,7 @@ import daphne.server # noqa
 project_root = environ.Path(__file__) - 3
 django_root = environ.Path(__file__) - 2
 
+
 # set up the environment
 env = environ.Env(
     DEBUG=(bool, False),
@@ -187,15 +188,22 @@ STATICFILES_DIRS = (
     ('frontend_assets', WEBPACK_ASSET_PATH)
 )
 
-STATIC_ROOT = env('STATIC_ROOT', default=project_root('dist/static/'))
+STATIC_ROOT = project_root(env('STATIC_ROOT', default='dist/static/'))
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = env('MEDIA_ROOT', default=project_root('dist/media/'))
+MEDIA_ROOT = project_root(env('MEDIA_ROOT', default='dist/media/'))
 
 STORAGES = {
     'webassets': {
-        'path': env('WEBASSET_ROOT', default=project_root('dist/webassets/'))
+        'location': project_root(
+            env(
+                'WEBASSET_ROOT',
+                default='dist/webassets/'
+            )
+        ),
+        'base_url': '//127.0.0.1:9000/',
+        'storage_class': 'hav.utils.storages.ProtectedFileSystemStorage'
     }
 }
 
@@ -297,19 +305,14 @@ IMAGESERVER_CONFIG = {
 }
 
 # These settings will change ....
-INCOMING_FILES_ROOT = to_absolute_path(
-    env('INCOMING_FILES_ROOT', default=MEDIA_ROOT),
-    str(project_root)
-)
+INCOMING_FILES_ROOT =  project_root(env('INCOMING_FILES_ROOT', default='dist/incoming'))
+HAV_ARCHIVE_PATH = project_root(env('HAV_ARCHIVE_PATH', default='dist/archive'))
 
-HAV_ARCHIVE_PATH = to_absolute_path(
-    env('HAV_ARCHIVE_PATH', default=project_root('dist/archive')),
-    str(project_root)
-)
-
-WHAV_ARCHIVE_PATH = to_absolute_path(
-    env('WHAV_ARCHIVE_PATH'),
-    str(project_root)
+WHAV_ARCHIVE_PATH = project_root(
+    env(
+        'WHAV_ARCHIVE_PATH',
+        default='dist/whav'
+    )
 )
 
 INGESTION_SOURCES = {

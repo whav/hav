@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import environ
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
-from .utils.sources import to_absolute_path
 
 # this is needed to let daphne install the twisted reactor
 import daphne.server # noqa
@@ -74,6 +73,20 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+if DEBUG:
+    INSTALLED_APPS = INSTALLED_APPS + [
+        'debug_toolbar'
+    ]
+
+    MIDDLEWARE = [
+        'debug_toolbar.middleware.DebugToolbarMiddleware'
+    ] + MIDDLEWARE
+
+    INTERNAL_IPS = [
+        '127.0.0.1'
+    ]
 
 ROOT_URLCONF = 'hav.urls'
 

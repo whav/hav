@@ -1,7 +1,6 @@
 from django.conf.urls import url, include
 from django.contrib import admin as django_admin
 from django.conf import settings
-from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
 
@@ -28,4 +27,15 @@ urlpatterns = [
     ),
     url(r'^admin/', include(hav_admin_patterns, namespace='hav_admin')),
     url(r'^dbadmin/', django_admin.site.urls),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+
+if settings.DEBUG:
+    import debug_toolbar
+    from django.conf.urls.static import static
+
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

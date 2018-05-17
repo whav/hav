@@ -1,7 +1,7 @@
 from django.db import models
 from django.template.defaultfilters import filesizeformat
 from .storage import ArchiveStorage
-
+from mimetypes import guess_type
 from django.conf import settings
 
 import uuid
@@ -20,5 +20,10 @@ class ArchiveFile(models.Model):
     archived_at = models.DateTimeField(auto_now_add=True)
     archived_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
 
+    @property
+    def mime_type(self):
+        return guess_type(self.original_filename)[0]
+
+
     def __str__(self):
-        return '{0} ({1})'.format(self.file.path, filesizeformat(self.file.size))
+        return '{0} ({1})'.format(self.file.path, filesizeformat(self.size))

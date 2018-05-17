@@ -1,5 +1,6 @@
 import os
 from django.urls import reverse
+from django.db.models import ObjectDoesNotExist
 from rest_framework import serializers
 
 from apps.sets.models import Node
@@ -36,6 +37,14 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
 
     ingestable = serializers.SerializerMethodField()
 
+    mime_type = serializers.SerializerMethodField()
+
+    def get_mime_type(self, media):
+        try:
+            return media.files.first().mime_type
+        except ObjectDoesNotExist:
+            return ''
+
     def get_url(self, instance):
         request = self.context['request']
         match = request.resolver_match
@@ -50,8 +59,8 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
 
     def get_preview_url(self, media):
         try:
-            archive_file = media.files.all()[0]
-        except IndexError:
+            archive_file = media.files.first()
+        except ObjectDoesNotExist:
             return None
         return generate_imaginary_url(os.path.join('archive/', archive_file.file.name))
 
@@ -61,7 +70,7 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Media
-        fields = ['pk', 'name', 'url', 'ingestable', 'preview_url']
+        fields = ['pk', 'name', 'url', 'ingestable', 'preview_url', 'mime_type']
 
 
 class HAVMediaSerializer(SimpleHAVMediaSerializer):
@@ -142,7 +151,7 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
         return node
 
     def get_files(self, instance):
-        return SimpleHAVMediaSerializer(instance.media_set.all(), many=True, context=self.context).data
+        return SimpleHAVMediaSerializer(instance.media_set.all().prefetch_related('files'), many=True, context=self.context).data
 
 
 class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):

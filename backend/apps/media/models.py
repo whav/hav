@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import DateTimeRangeField
 from django.conf import settings
-
+from django.utils.functional import cached_property
 from apps.sets.models import Node
 from apps.archive.models import ArchiveFile
 
@@ -83,6 +83,13 @@ class Media(models.Model):
     modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name='modified_media')
 
     files = models.ManyToManyField(ArchiveFile)
+
+    @cached_property
+    def primary_file(self):
+        try:
+            return self.files.all()[0]
+        except IndexError:
+            return None
 
     objects = MediaManager()
 

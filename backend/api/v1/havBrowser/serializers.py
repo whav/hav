@@ -40,10 +40,7 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
     mime_type = serializers.SerializerMethodField()
 
     def get_mime_type(self, media):
-        try:
-            return media.files.first().mime_type
-        except ObjectDoesNotExist:
-            return ''
+        return media.primary_file.mime_type if media.primary_file else ''
 
     def get_url(self, instance):
         request = self.context['request']
@@ -58,12 +55,9 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
         )
 
     def get_preview_url(self, media):
-        try:
-            archive_file = media.files.first()
-        except ObjectDoesNotExist:
-            return None
-        return generate_imaginary_url(os.path.join('archive/', archive_file.file.name))
-
+        if media.primary_file:
+            return generate_imaginary_url(os.path.join('archive/', media.primary_file.file.name))
+        return ''
 
     def get_ingestable(self, _):
         return False

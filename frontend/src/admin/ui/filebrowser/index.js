@@ -74,15 +74,27 @@ export class FallBackImageLoader extends React.Component {
     });
   }
   render() {
-    let {
+    const {
       src,
       alt = "image",
       title = "",
-      fallbackImage = FaChainBroken
+      fallbackImage,
+      mime_type
     } = this.props;
     let { hasError } = this.state;
     if (hasError) {
-      let FallBackImage = fallbackImage;
+      let FallBackImage;
+      const mime = mime_type.split("/")[0];
+      switch (mime) {
+        case "video":
+          FallBackImage = FaFileMovieO;
+          break;
+        case "audio":
+          FallBackImage = FaFileAudioO;
+          break;
+        default:
+          FallBackImage = FaChainBroken;
+      }
       return <FallBackImage />;
     }
     return (
@@ -152,6 +164,7 @@ export const GGalleryFile = ({ file, toggleSelect, ...props }) => {
       src={file.preview_url}
       title={`${file.name} ${file.mime}`}
       alt="preview image"
+      mime_type={file.mime_type}
     />
   ) : (
     <FilePlaceHolder mime={file.mime} />

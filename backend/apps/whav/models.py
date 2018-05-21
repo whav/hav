@@ -27,7 +27,7 @@ class Media(models.Model):
 
     @cached_property
     def basefile(self):
-        return self.basefile_set.get()
+        return self.basefile_set.all()[0]
 
     @cached_property
     def localfile(self):

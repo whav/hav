@@ -2,6 +2,7 @@ import os
 from mimetypes import guess_type
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from django.utils.functional import cached_property
 
 from apps.whav.models import ImageCollection, MediaOrdering
 from hav.utils.imaginary import generate_imaginary_url
@@ -129,7 +130,7 @@ class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
 
     def get_files(self, ic):
         return WHAVFileSerializer(
-            MediaOrdering.objects.filter(collection=ic),
+            MediaOrdering.objects.filter(collection=ic).select_related('media', 'media__webimage').prefetch_related('media__basefile_set__localfile'),
             many=True,
             context=self.context
         ).data

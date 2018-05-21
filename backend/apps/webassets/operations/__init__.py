@@ -10,10 +10,8 @@ from .video import convert as video_convert
 
 import logging
 
-logger = logging.getLogger()
 
-
-def create_webassets(archived_file_id):
+def create_webassets(archived_file_id, logger=logging.getLogger(__name__)):
     logger.info('Processing archive file %s' % archived_file_id)
     af = ArchiveFile.objects.get(pk=archived_file_id)
     wa = WebAsset(archivefile=af)
@@ -23,6 +21,7 @@ def create_webassets(archived_file_id):
         raise AssertionError('Could not determine mime type of file %s' % source_file_name)
 
     type = source_mime.split('/')[0]
+
     if type not in ['image', 'video', 'audio']:
         raise AssertionError('Unable to process file %s of type %s.' % (source_file_name, source_mime))
 
@@ -44,7 +43,7 @@ def create_webassets(archived_file_id):
 
     logger.info("Source %s, target %s" % (source_file_name, target_file_name))
 
-    result = convert(source_file_name, target_file_name, af)
+    result = convert(source_file_name, target_file_name, af, logger=logger)
 
     logger.info('Conversion completed.')
     wa.file = os.path.relpath(target_file_name, start=wa.file.storage.location)

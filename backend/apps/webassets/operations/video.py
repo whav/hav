@@ -1,12 +1,10 @@
 import subprocess
-from celery.utils.log import get_task_logger
 
-logger = get_task_logger(__name__)
+import logging
 
-def convert(source, target, *args):
+def convert(source, target, *args, logger=logging.getLogger(__name__)):
     logger.info('Converting video. Source file: {}, target file: {}'.format(source, target))
-    try:
-        task = subprocess.run([
+    cmd = [
             'ffmpeg',
             '-i', source,
             '-c:v', 'libx264',          # x264 codec
@@ -15,17 +13,19 @@ def convert(source, target, *args):
             '-movflags', 'faststart',   # this moves the moov atom to the front of the file
             '-y',                       # overwrite output files
             target
-        ],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT
-        )
-    except subprocess.CalledProcessError as e:
-        logger.error(e.stdout)
-        raise e
-    else:
-        logger.info(task.stdout)
-    return task
+        ]
+
+    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+    for line in iter(popen.stdout.readline, ""):
+        logger.info(line)
+
+    popen.stdout.close()
+    return_code = popen.wait()
+
+    if return_code:
+        raise subprocess.CalledProcessError(return_code, cmd)
+
+    return return_code
 
 
 convert.extension = '.mp4'

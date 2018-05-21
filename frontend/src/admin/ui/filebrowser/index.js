@@ -79,11 +79,12 @@ export class FallBackImageLoader extends React.Component {
       alt = "image",
       title = "",
       fallbackImage,
-      mime_type
+      mime_type = ""
     } = this.props;
     let { hasError } = this.state;
     if (hasError) {
       let FallBackImage;
+
       const mime = mime_type.split("/")[0];
       switch (mime) {
         case "video":

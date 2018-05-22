@@ -33,7 +33,7 @@ def generate_url(path, operation='crop', **funckwargs):
             'file': path
         })
 
-    query = '{}?{}'.format(operation, urlencode(kwargs, safe='/'))
+    query = '{}?{}'.format(operation, urlencode(kwargs))
     md5_digest = hashlib.md5('{}:{}'.format(query, SECRET).encode('utf-8')).digest()
     key = base64.b64encode(md5_digest).decode('utf-8')
     # Make the key look like Nginx expects.
@@ -47,7 +47,7 @@ def generate_urls(file_path):
         results.append(
             (
                 kwargs.get('width'),
-                generate_url(file_path, operation='resize', **kwargs)
+                generate_url(file_path, operation='thumbnail', **kwargs)
             )
         )
     return results

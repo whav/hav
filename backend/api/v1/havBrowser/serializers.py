@@ -59,9 +59,17 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
 
     def get_preview_url(self, media):
         if media.primary_file:
-            base_file = os.path.join('archive/', media.primary_file.file.name)
+            webasset_images = filter(
+                lambda x: x.mime_type.startswith('image'),
+                media.primary_file.webasset_set.all()
+            )
+            webasset_images = list(webasset_images)
+            try:
+                base_file = os.path.join('webassets/', webasset_images[0].file.name)
+            except IndexError:
+                base_file = os.path.join('archive/', media.primary_file.file.name)
             return generate_urls(base_file)
-        return ''
+        return
 
     def get_ingestable(self, _):
         return False
@@ -150,7 +158,11 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
         return node
 
     def get_files(self, instance):
-        return SimpleHAVMediaSerializer(instance.media_set.all().prefetch_related('files'), many=True, context=self.context).data
+        return SimpleHAVMediaSerializer(
+            instance.media_set.all().prefetch_related('files__webasset_set'),
+            many=True,
+            context=self.context
+        ).data
 
 
 class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):

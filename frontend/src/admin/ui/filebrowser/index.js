@@ -32,10 +32,6 @@ export class DirectoryListingBreadcrumbs extends React.Component {
   }
 }
 
-const SrcSetImage = ({ sources = [] }) => {
-  return <img src={sources[0][1]} />;
-};
-
 const FilePlaceHolder = ({ mime, className }) => {
   let Icon = GoFileMedia;
   if (mime) {
@@ -82,6 +78,7 @@ export class FallBackImageLoader extends React.Component {
     const {
       src,
       sources = [],
+      sizes = "100vw",
       alt = "image",
       title = "",
       fallbackImage,
@@ -110,7 +107,8 @@ export class FallBackImageLoader extends React.Component {
       srcSetProps["srcSet"] = sources
         .map(([width, url]) => `${url} ${width}w`)
         .join(", ");
-      srcSetProps["sizes"] = "20vw";
+      // TODO: do something proper with the width
+      srcSetProps["sizes"] = sizes;
     }
     return (
       <img
@@ -133,7 +131,8 @@ const GGalleryItem = ({
   preview,
   directory = false,
   selected = false,
-  onClick
+  onClick,
+  size
 }) => {
   return (
     <div
@@ -143,6 +142,7 @@ const GGalleryItem = ({
         "g-gallery-directory": directory
       })}
       onClick={onClick}
+      style={{ flexBasis: size }}
     >
       <span className={classNames("g-gallery-select", { green: selected })}>
         <GoCheck />
@@ -174,8 +174,8 @@ class GGalleryDirectory extends React.Component {
   }
 }
 
-export const GGalleryFile = ({ file, toggleSelect, ...props }) => {
-  let preview = <FilePlaceHolder mime={file.mime} />;
+export const GGalleryFile = ({ file, toggleSelect, size, ...props }) => {
+  let preview;
   if (file.preview_url) {
     let sources = [];
     let src = file.preview_url;
@@ -187,11 +187,14 @@ export const GGalleryFile = ({ file, toggleSelect, ...props }) => {
       <FallBackImageLoader
         src={src}
         sources={sources}
+        sizes={size}
         title={`${file.name} ${file.mime}`}
         alt="preview image"
         mime_type={file.mime_type}
       />
     );
+  } else {
+    preview = <FilePlaceHolder mime={file.mime} />;
   }
 
   return (
@@ -199,6 +202,7 @@ export const GGalleryFile = ({ file, toggleSelect, ...props }) => {
       onClick={toggleSelect}
       name={file.name}
       preview={preview}
+      size={size}
       {...props}
     />
   );
@@ -289,8 +293,11 @@ export default class FileList extends React.Component {
       uploads = [],
       displayType,
       selectedItemIds,
-      handleSelect
+      handleSelect,
+      settings
     } = this.props;
+
+    const size = settings.gallerySize;
 
     if (files.length + directories.length === 0) {
       return null;
@@ -309,15 +316,18 @@ export default class FileList extends React.Component {
           select={this.handleClick.bind(this, directory)}
           key={index}
           selected={selectedItemIds.has(directory.url)}
+          settings={this.props.settings}
+          size={size}
         />
       );
     });
 
     let rendererFiles = files.map((file, index) => {
       let props = {
-        file: file,
+        file,
         toggleSelect: this.handleClick.bind(this, file),
-        selected: selectedItemIds.has(file.url)
+        selected: selectedItemIds.has(file.url),
+        size
       };
       return <GGalleryFile key={index} {...props} />;
     });

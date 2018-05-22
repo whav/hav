@@ -1,3 +1,4 @@
+# https://support.squarespace.com/hc/en-us/articles/206542517-Formatting-your-images-for-display-on-the-web#toc-what-happens-after-i-upload-an-image-
 widths = [
     100,
     300,

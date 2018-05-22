@@ -108,7 +108,8 @@ const filesByUri = (state = {}, action) => {
 const settings = (
   state = {
     selectedDisplayType: fileListDisplayValues[0],
-    availableDisplayTypes: fileListDisplayValues
+    availableDisplayTypes: fileListDisplayValues,
+    gallerySize: "20vw"
   },
   action
 ) => {

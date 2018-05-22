@@ -7,13 +7,15 @@ from apps.sets.models import Node
 from apps.media.models import Media
 from apps.archive.models import ArchiveFile
 from apps.webassets.models import WebAsset
-from hav.utils.imaginary import generate_imaginary_url
+from hav.utils.imaginary import generate_urls
+
 
 class HAVArchiveFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ArchiveFile
         fields = '__all__'
+
 
 class HAVWebAssetSerializer(serializers.ModelSerializer):
 
@@ -29,6 +31,7 @@ class HAVWebAssetSerializer(serializers.ModelSerializer):
             'mime_type',
             'id'
         ]
+
 
 class SimpleHAVMediaSerializer(serializers.ModelSerializer):
     name = serializers.IntegerField(source='pk')
@@ -56,7 +59,8 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
 
     def get_preview_url(self, media):
         if media.primary_file:
-            return generate_imaginary_url(os.path.join('archive/', media.primary_file.file.name))
+            base_file = os.path.join('archive/', media.primary_file.file.name)
+            return generate_urls(base_file)
         return ''
 
     def get_ingestable(self, _):
@@ -78,6 +82,7 @@ class HAVMediaSerializer(SimpleHAVMediaSerializer):
 
     class Meta(SimpleHAVMediaSerializer.Meta):
         fields = SimpleHAVMediaSerializer.Meta.fields + ['archive_files', 'webassets']
+
 
 class BaseHAVNodeSerializer(serializers.ModelSerializer):
 

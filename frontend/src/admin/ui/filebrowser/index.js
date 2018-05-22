@@ -20,6 +20,7 @@ import FaFileAudioO from "react-icons/fa/file-audio-o";
 import FaChainBroken from "react-icons/fa/chain-broken";
 
 import Breadcrumbs from "../components/breadcrumbs";
+import { arrayOfDeffered } from "redux-saga/utils";
 
 require("./index.css");
 
@@ -30,6 +31,10 @@ export class DirectoryListingBreadcrumbs extends React.Component {
     return <Breadcrumbs items={items} />;
   }
 }
+
+const SrcSetImage = ({ sources = [] }) => {
+  return <img src={sources[0][1]} />;
+};
 
 const FilePlaceHolder = ({ mime, className }) => {
   let Icon = GoFileMedia;
@@ -76,6 +81,7 @@ export class FallBackImageLoader extends React.Component {
   render() {
     const {
       src,
+      sources = [],
       alt = "image",
       title = "",
       fallbackImage,
@@ -98,9 +104,18 @@ export class FallBackImageLoader extends React.Component {
       }
       return <FallBackImage />;
     }
+
+    let srcSetProps = {};
+    if (sources) {
+      srcSetProps["srcSet"] = sources
+        .map(([width, url]) => `${url} ${width}w`)
+        .join(", ");
+      srcSetProps["sizes"] = "20vw";
+    }
     return (
       <img
         src={src}
+        {...srcSetProps}
         onError={this.handleImageLoadError}
         title={title}
         alt={alt}
@@ -160,16 +175,24 @@ class GGalleryDirectory extends React.Component {
 }
 
 export const GGalleryFile = ({ file, toggleSelect, ...props }) => {
-  let preview = file.preview_url ? (
-    <FallBackImageLoader
-      src={file.preview_url}
-      title={`${file.name} ${file.mime}`}
-      alt="preview image"
-      mime_type={file.mime_type}
-    />
-  ) : (
-    <FilePlaceHolder mime={file.mime} />
-  );
+  let preview = <FilePlaceHolder mime={file.mime} />;
+  if (file.preview_url) {
+    let sources = [];
+    let src = file.preview_url;
+    if (Array.isArray(file.preview_url)) {
+      sources = file.preview_url;
+      src = file.preview_url[0][1];
+    }
+    preview = (
+      <FallBackImageLoader
+        src={src}
+        sources={sources}
+        title={`${file.name} ${file.mime}`}
+        alt="preview image"
+        mime_type={file.mime_type}
+      />
+    );
+  }
 
   return (
     <GGalleryItem

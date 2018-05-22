@@ -7,10 +7,13 @@ import hashlib
 
 SECRET = settings.IMAGESERVER_CONFIG['secret']
 
+
 def is_absolute(url):
     return bool(urlparse(url).netloc)
 
-def generate_imaginary_url(path, operation='crop', **funckwargs):
+
+def generate_url(path, operation='crop', **funckwargs):
+
     default_kwargs = {
         'width': 300,
         'height': 300,
@@ -36,3 +39,15 @@ def generate_imaginary_url(path, operation='crop', **funckwargs):
     # Make the key look like Nginx expects.
     key = key.replace('+', '-').replace('/', '_').rstrip('=')
     return 'http://127.0.0.1:9000/{}/{}'.format(key, query)
+
+
+def generate_urls(file_path):
+    results = []
+    for kwargs in settings.IMAGE_RESOLUTIONS:
+        results.append(
+            (
+                kwargs.get('width'),
+                generate_url(file_path, operation='resize', **kwargs)
+            )
+        )
+    return results

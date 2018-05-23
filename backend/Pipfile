@@ -26,6 +26,7 @@ requests = "*"
 pip = "*"
 channels = "*"
 flower = "*"
+pillow = "*"
 
 
 [dev-packages]

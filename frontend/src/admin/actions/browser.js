@@ -52,7 +52,6 @@ export const switchFilebrowserDisplayType = displayType => {
 };
 
 export const createDirectoryAction = (name, path, url) => {
-  console.log(name, path, url);
   return dispatch => {
     dispatch({
       type: MKDIR,

@@ -1,12 +1,9 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 django = "*"
 django-webpack-loader = "==0.5.0"
 django-model-utils = "==2.6.1"
@@ -21,7 +18,6 @@ django-celery-results = "==1.0.1"
 uwsgi = "*"
 ipython = "*"
 pylint = "*"
-docker-compose = "*"
 requests = "*"
 pip = "*"
 channels = "*"
@@ -29,13 +25,9 @@ flower = "*"
 pillow = "*"
 pyvips = "*"
 
-
 [dev-packages]
-
 ipdb = "*"
 django-debug-toolbar = "*"
 
-
 [pipenv]
-
 keep_outdated = true

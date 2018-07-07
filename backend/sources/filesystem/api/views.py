@@ -14,9 +14,6 @@ from ...permissions import IncomingBaseMixin
 from .serializers import FileSerializer, DirectorySerializer
 
 
-def not_implemented(*args, **kwargs):
-    raise NotImplementedError('This is a stub.')
-
 class FileBrowserMixin(object):
 
     source_config = None

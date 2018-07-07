@@ -1,5 +1,6 @@
 import os
 import mimetypes
+from PIL import Image
 from django.db import models
 
 from ..archive.models import ArchiveFile
@@ -22,8 +23,15 @@ class WebAsset(models.Model):
     file = models.FileField(storage=storage, upload_to=upload_to)
     mime_type = models.CharField(max_length=20)
 
+    # these fields are used for images
+    width = models.PositiveIntegerField(null=True, blank=True)
+    height = models.PositiveIntegerField(null=True, blank=True)
+
     def __str__(self):
         return '%s %s' % (self.file.name, self.mime_type)
+
+    def is_image(self):
+        return self.mime_type.startswith('image')
 
     def get_available_file_name(self, extension):
         if not extension.startswith('.'):
@@ -36,4 +44,9 @@ class WebAsset(models.Model):
     def save(self, *args, **kwargs):
         if not self.mime_type and self.file:
             self.mime_type = mimetypes.guess_type(self.file.name)
+
+        if self.is_image():
+            img = Image.open(self.file.path)
+            self.width, self.height = img.size
+
         return super().save(*args, **kwargs)

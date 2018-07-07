@@ -55,3 +55,5 @@ hav/settings/secrets.py
 .vscode/
 .env/
 docs/site/
+dist/*
+!dist/README.*

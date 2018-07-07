@@ -14,6 +14,8 @@ import environ
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
 
+from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
+
 # this is needed to let daphne install the twisted reactor
 import daphne.server # noqa
 

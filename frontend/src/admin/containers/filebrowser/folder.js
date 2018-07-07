@@ -124,6 +124,7 @@ class FileBrowserDirectory extends React.Component {
           displayType={settings.selectedDisplayType}
           handleSelect={selectItems}
           selectedItemIds={selectedItemIds}
+          settings={settings}
         />
       );
 
@@ -165,7 +166,7 @@ const FileBrowserDirectoryView = connect(
       directory,
       path
     };
-    console.warn(directory);
+    console.warn(settings);
     const allChildren = (directory.content || []).map(c => state.browser[c]);
     const parentDirectories = (directory.parents || []).map(d => {
       return state.browser[d];

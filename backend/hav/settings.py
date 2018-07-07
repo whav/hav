@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'apps.media',
     'apps.ingest',
     'apps.webassets',
+    'apps.hav_collections',
     'raven.contrib.django.raven_compat',
 ]
 

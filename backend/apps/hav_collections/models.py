@@ -5,7 +5,9 @@ from apps.sets.models import Node
 
 
 def root_nodes():
-    return Node.get_root_nodes()
+    return {
+        'pk__in': Node.get_root_nodes().values_list('pk', flat=True)
+    }
 
 
 class Collection(models.Model):

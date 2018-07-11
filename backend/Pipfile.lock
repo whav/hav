@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d7aeff21b8bfc254bef3509760bc4d66338953bccf201f0038a97c963aeece50"
+            "sha256": "69efdce51de378d88b0503307f7aaf42237f96e1ab7364d3403120e6f00dbce2"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -211,10 +211,10 @@
         },
         "django-treebeard": {
             "hashes": [
-                "sha256:c1830d6e98618f524af654e084cd40e9449fdd1c9959f6fe679f08d54b964ba9"
+                "sha256:c21db06a8d4943bf2a28d9d7a119058698fb76116df2679ecbf15a46a501de42"
             ],
             "index": "pypi",
-            "version": "==4.2.0"
+            "version": "==4.3.0"
         },
         "django-webpack-loader": {
             "hashes": [
@@ -340,6 +340,7 @@
         },
         "parso": {
             "hashes": [
+                "sha256:35704a43a3c113cce4de228ddb39aab374b8004f4f2407d070b6a2ca784ce8a2",
                 "sha256:895c63e93b94ac1e1690f5fdd40b65f07c8171e3e53cbd7793b5b96c0e0a7f24"
             ],
             "version": "==0.3.1"
@@ -662,6 +663,7 @@
         },
         "parso": {
             "hashes": [
+                "sha256:35704a43a3c113cce4de228ddb39aab374b8004f4f2407d070b6a2ca784ce8a2",
                 "sha256:895c63e93b94ac1e1690f5fdd40b65f07c8171e3e53cbd7793b5b96c0e0a7f24"
             ],
             "version": "==0.3.1"

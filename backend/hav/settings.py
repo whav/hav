@@ -30,7 +30,8 @@ env = environ.Env(
     ALLOWED_HOSTS=(list, []),
     SENTRY_DSN=(str, ''),
     LOGLEVEL=(str, 'info'),
-    IMAGESERVER_SECRET=str
+    IMAGESERVER_SECRET=str,
+    IMAGESERVER_URL_PREFIX=(str, '/')
 )
 
 # read the .env file
@@ -313,6 +314,7 @@ logging.config.dictConfig({
 })
 
 IMAGESERVER_CONFIG = {
+    'prefix': env('IMAGESERVER_URL_PREFIX'),
     'secret': env('IMAGESERVER_SECRET')
 }
 

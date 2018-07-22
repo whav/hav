@@ -1,12 +1,12 @@
 from django.conf import settings
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlparse, urljoin
 
 import base64
 import hashlib
 
 
 SECRET = settings.IMAGESERVER_CONFIG['secret']
-
+URL_PREFIX = settings.IMAGESERVER_CONFIG['prefix']
 
 def is_absolute(url):
     return bool(urlparse(url).netloc)
@@ -38,7 +38,8 @@ def generate_url(path, operation='crop', **funckwargs):
     key = base64.b64encode(md5_digest).decode('utf-8')
     # Make the key look like Nginx expects.
     key = key.replace('+', '-').replace('/', '_').rstrip('=')
-    return 'http://127.0.0.1:9000/{}/{}'.format(key, query)
+    path = '{}/{}'.format(key, query)
+    return urljoin(URL_PREFIX, path)
 
 
 def generate_urls(file_path):

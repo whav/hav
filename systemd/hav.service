@@ -1,5 +1,5 @@
 [Unit]
-Description=HAV Application
+Description=HAV Production instance
 
 [Service]
 # The dummy program will exit
@@ -11,4 +11,6 @@ RemainAfterExit=yes
 
 [Install]
 # Components of this application should be started at boot time
-WantedBy=default.target
+WantedBy=multi-user.target
+
+

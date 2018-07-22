@@ -1,0 +1,22 @@
+[Unit]
+Description=HAV celery daemon
+
+PartOf=hav.service
+
+# Start this unit after the dummy hav service
+After=hav.service
+
+[Service]
+WorkingDirectory=/home/hav/production/hav/backend/
+ExecStart=/home/hav/.local/share/virtualenvs/backend-xltUeC_Q/bin/celery -A hav -Q webassets,archive worker
+
+User=archive
+Group=havupload
+
+Restart=on-failure
+KillSignal=SIGQUIT
+StandardError=syslog
+
+[Install]
+WantedBy=hav.service
+

@@ -1,0 +1,13 @@
+[Unit]
+Description=ensure group-writeability of sftp uploads to /archive/incoming_hav/
+Wants=ssh_secondary.service
+PartOf=hav.service
+# Start this unit after the dummy hav service
+After=hav.service
+
+[Service]
+ExecStart=/usr/local/sbin/inotifieduploadpermfixer.sh /archive/incoming_hav/
+Type=simple
+
+[Install]
+WantedBy=hav.service

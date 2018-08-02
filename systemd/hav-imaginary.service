@@ -1,28 +1,23 @@
 [Unit]
-Description=HAV uwsgi server
+Description=Imgproxy Server for the HAV
 PartOf=hav.service
 # Start this unit after the dummy hav service
 After=hav.service
 
-[Service]
 
+[Service]
 WorkingDirectory=/home/hav/production/hav/backend/
 
-ExecStart=/home/hav/.local/bin/pipenv --py run uwsgi \
-	--master \
-	--socket /run/hav/uwsgi.sock \
-	--chmod-socket=666 \
- 	/etc/hav/uwsgi.ini
+ExecStart=/home/hav/.local/bin/pipenv run docker-compose -f ../imaginary.yml up
 
+Type=simple
 User=hav
-Group=www-data
+#Group=havupload
 Restart=on-failure
 KillSignal=SIGQUIT
-Type=notify
+
 StandardError=syslog
-NotifyAccess=all
 
 [Install]
 WantedBy=hav.service
-
 

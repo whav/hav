@@ -166,7 +166,7 @@ const FileBrowserDirectoryView = connect(
       directory,
       path
     };
-    console.warn(settings);
+
     const allChildren = (directory.content || []).map(c => state.browser[c]);
     const parentDirectories = (directory.parents || []).map(d => {
       return state.browser[d];
@@ -175,7 +175,7 @@ const FileBrowserDirectoryView = connect(
     // populate children dirs and files from state
     const childrenDirectories = allChildren.filter(c => c.isDirectory);
     const files = allChildren.filter(c => c.isFile);
-    console.warn(files);
+
     // get a list of all ingestable and selected items
     const selected = new Set(directory.selected);
     const ingestable = allChildren
@@ -203,7 +203,6 @@ const FileBrowserDirectoryView = connect(
   },
   (dispatch, props) => {
     const apiURL = buildApiUrl(props.location.pathname);
-
     const saveFileSelection = ids => {
       dispatch(queueForIngestion(ids));
       props.history.push("/hav/");
@@ -215,8 +214,7 @@ const FileBrowserDirectoryView = connect(
 
       switchDisplayStyle: style =>
         dispatch(switchFilebrowserDisplayType(style)),
-      createDirectory: name =>
-        dispatch(createDirectoryAction(name, path, apiURL)),
+      createDirectory: name => dispatch(createDirectoryAction(name, apiURL)),
       selectItems: (items = []) => dispatch(selectItems(apiURL, items))
     };
   }

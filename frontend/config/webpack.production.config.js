@@ -1,9 +1,8 @@
 let path = require("path");
 let webpack = require("webpack");
-let BundleTracker = require("webpack-bundle-tracker");
+
 let baseConfig = require("./webpack.base.config");
 let WebpackCleanupPlugin = require("webpack-cleanup-plugin");
-let ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = opts => {
   const { CDN_PATH, PROJECT_ROOT } = opts,
@@ -11,6 +10,7 @@ module.exports = opts => {
 
   return {
     ...config,
+    mode: "production",
     output: {
       ...config.output,
       // set CDN_PATH to your cdn static file directory
@@ -18,21 +18,6 @@ module.exports = opts => {
     },
     plugins: [
       ...config.plugins,
-      // pass options to uglify
-      new webpack.LoaderOptionsPlugin({
-        minimize: true,
-        debug: false
-      }),
-      // minifies your code
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false
-        },
-        output: {
-          comments: false
-        },
-        sourceMap: false
-      }),
       // this cleans up the build directory
       new WebpackCleanupPlugin({
         exclude: ["webpack-stats.json"]

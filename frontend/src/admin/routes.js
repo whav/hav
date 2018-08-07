@@ -3,13 +3,16 @@
  */
 
 //  Icons
-import GoHome from "react-icons/go/home";
-import GoFileDirectory from "react-icons/go/file-directory";
-import GoFileSubmodule from "react-icons/go/file-submodule";
-import GoCloudUpload from "react-icons/go/cloud-upload";
-import FaArchive from "react-icons/lib/fa/archive";
-import GoDatabase from "react-icons/go/database";
-import GoPackage from "react-icons/go/package";
+import {
+  GoHome,
+  GoFileDirectory,
+  GoFileSubmodule,
+  GoCloudUpload,
+  GoDatabase,
+  GoPackage
+} from "react-icons/go";
+import { FaArchive } from "react-icons/fa";
+
 // base components
 import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";

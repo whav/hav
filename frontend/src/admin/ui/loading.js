@@ -3,7 +3,7 @@
  */
 import React from "react";
 
-import LoadingCircle from "react-icons/fa/circle-o-notch";
+import { LoadingCircle } from "react-icons/fa";
 
 const LoadingIndicator = () => {
   return (

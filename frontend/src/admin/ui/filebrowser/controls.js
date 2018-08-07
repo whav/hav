@@ -6,13 +6,15 @@ import Dropzone from "react-dropzone";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 
-import GoCloudUpload from "react-icons/go/cloud-upload";
-import MdSelectAll from "react-icons/lib/md/select-all";
-import FaCheckSquareO from "react-icons/lib/fa/check-square-o";
-import FaSquareO from "react-icons/lib/fa/square-o";
-import FaTable from "react-icons/lib/fa/table";
-import FaList from "react-icons/lib/fa/list";
-import FaPlusIcon from "react-icons/lib/fa/plus-circle";
+import { GoCloudUpload } from "react-icons/go";
+import { MdSelectAll } from "react-icons/md";
+import {
+  FaCheckSquareO,
+  FaSquareO,
+  FaTable,
+  FaList,
+  FaPlusIcon
+} from "react-icons/fa";
 
 import Button, { ButtonGroup } from "../components/buttons";
 

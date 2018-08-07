@@ -17,8 +17,8 @@ module.exports = opts => {
       }
     }),
     new MiniCssExtractPlugin({
-      filename: devMode ? "[name].css" : "[name].[hash].css",
-      chunkFilename: devMode ? "[id].css" : "[id].[hash].css"
+      filename: devMode ? "[name].css" : "[name]-[hash].css",
+      chunkFilename: devMode ? "[id].css" : "[id]-[hash].css"
     }),
     new BundleTracker({
       path: output_path
@@ -29,8 +29,7 @@ module.exports = opts => {
     context: PROJECT_ROOT,
     entry: {
       hav: ["./src/hav/index"],
-      havAdmin: ["./src/admin/ui/bulma.sass", "./src/admin/index"],
-      vendor: ["whatwg-fetch", "react", "react-dom", "babel-polyfill"]
+      havAdmin: ["./src/admin/index"]
     },
     output: {
       path: output_path,

@@ -11,6 +11,8 @@ import HavAdminApp from "./app";
 import { PersistGate } from "redux-persist/es/integration/react";
 import Loading from "./ui/loading";
 
+require("./ui/bulma.sass");
+
 const { store, persistor } = configureStore();
 
 const render = Component => {

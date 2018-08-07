@@ -10,14 +10,18 @@ import filesize from "filesize";
 import uniq from "lodash/uniq";
 import PropTypes from "prop-types";
 import { buildFrontendUrl } from "../../api/urls";
-import GoFileDirectory from "react-icons/go/file-directory";
-import GoFileMedia from "react-icons/go/file-media";
-import GoCheck from "react-icons/go/check";
-import GoHourglass from "react-icons/go/hourglass";
-import FaFileImageO from "react-icons/fa/file-image-o";
-import FaFileMovieO from "react-icons/fa/file-movie-o";
-import FaFileAudioO from "react-icons/fa/file-audio-o";
-import FaChainBroken from "react-icons/fa/chain-broken";
+import {
+  GoFileDirectory,
+  GoFileMedia,
+  GoCheck,
+  GoHourglass
+} from "react-icons/go";
+import {
+  FaFileImageO,
+  FaFileMovieO,
+  FaFileAudioO,
+  FaChainBroken
+} from "react-icons/fa";
 
 import Breadcrumbs from "../components/breadcrumbs";
 import { arrayOfDeffered } from "redux-saga/utils";

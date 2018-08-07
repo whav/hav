@@ -50,3 +50,7 @@ body,
   margin: 0.5em 10%;
   height: auto;
 }
+
+.react-icon {
+  vertical-align: middle;
+}

@@ -11,6 +11,7 @@ module.exports = opts => {
   return {
     ...config,
     mode: "production",
+    devtool: "source-map",
     output: {
       ...config.output,
       // set CDN_PATH to your cdn static file directory

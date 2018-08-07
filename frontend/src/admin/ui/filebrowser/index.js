@@ -6,25 +6,19 @@ import { history } from "../../app";
 import React from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import filesize from "filesize";
 import uniq from "lodash/uniq";
 import PropTypes from "prop-types";
 import { buildFrontendUrl } from "../../api/urls";
+import { GoFileDirectory, GoFileMedia, GoCheck } from "react-icons/go";
 import {
-  GoFileDirectory,
-  GoFileMedia,
-  GoCheck,
-  GoHourglass
-} from "react-icons/go";
-import {
-  FaFileImageO,
-  FaFileMovieO,
-  FaFileAudioO,
-  FaChainBroken
+  FaFileImage,
+  FaFileVideo,
+  FaFileAudio,
+  FaFile,
+  FaHourglass
 } from "react-icons/fa";
 
 import Breadcrumbs from "../components/breadcrumbs";
-import { arrayOfDeffered } from "redux-saga/utils";
 
 require("./index.css");
 
@@ -42,13 +36,13 @@ const FilePlaceHolder = ({ mime, className }) => {
     let category = mime.split("/")[0];
     switch (category) {
       case "video":
-        Icon = FaFileMovieO;
+        Icon = FaFileVideo;
         break;
       case "image":
-        Icon = FaFileImageO;
+        Icon = FaFileImage;
         break;
       case "audio":
-        Icon = FaFileAudioO;
+        Icon = FaFileAudio;
         break;
       default:
         break;
@@ -85,7 +79,6 @@ export class FallBackImageLoader extends React.Component {
       sizes = "100vw",
       alt = "image",
       title = "",
-      fallbackImage,
       mime_type = ""
     } = this.props;
     let { hasError } = this.state;
@@ -95,13 +88,13 @@ export class FallBackImageLoader extends React.Component {
       const mime = mime_type.split("/")[0];
       switch (mime) {
         case "video":
-          FallBackImage = FaFileMovieO;
+          FallBackImage = FaFileVideo;
           break;
         case "audio":
-          FallBackImage = FaFileAudioO;
+          FallBackImage = FaFileAudio;
           break;
         default:
-          FallBackImage = FaChainBroken;
+          FallBackImage = FaFile;
       }
       return <FallBackImage />;
     }
@@ -219,7 +212,7 @@ const GGalleryUpload = ({ upload }) => {
         {upload.preview ? (
           <FallBackImageLoader
             src={upload.preview}
-            fallbackImage={GoHourglass}
+            fallbackImage={FaHourglass}
           />
         ) : null}
       </div>

@@ -37,7 +37,7 @@ module.exports = opts => {
     },
     plugins,
     resolve: {
-      extensions: [".js", ".json"]
+      extensions: [".mjs", ".js", ".jsx", ".json"]
     },
     module: {
       rules: [
@@ -63,10 +63,10 @@ module.exports = opts => {
         },
         // react-icons does not have an es5 build
         // so we need to pipe it through babel
-        {
-          test: /react-icons\/(.)*(.js)$/,
-          loader: "babel-loader"
-        },
+        // {
+        //   test: /react-icons\/(.)*(.js)$/,
+        //   loader: "babel-loader"
+        // },
         // everything else
         {
           test: /\.jsx?$/,

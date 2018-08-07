@@ -6,15 +6,14 @@ import Dropzone from "react-dropzone";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 
-import { GoCloudUpload } from "react-icons/go";
-import { MdSelectAll } from "react-icons/md";
 import {
-  FaCheckSquareO,
-  FaSquareO,
-  FaTable,
-  FaList,
-  FaPlusIcon
-} from "react-icons/fa";
+  MdCheckBoxOutlineBlank as CheckboxBlankIcon,
+  MdCheckBox as CheckboxCheckedIcon,
+  MdAddBox as AddIcon,
+  MdViewModule as GalleryIcon,
+  MdViewList as ListIcon,
+  MdFileUpload as UploadIcon
+} from "react-icons/md";
 
 import Button, { ButtonGroup } from "../components/buttons";
 
@@ -29,7 +28,7 @@ class UploadControl extends React.Component {
   render() {
     return (
       <Dropzone onDrop={this.handleDrop} className="--foo">
-        <GoCloudUpload /> Add files
+        <UploadIcon /> Add files
       </Dropzone>
     );
   }
@@ -51,14 +50,14 @@ const FilebrowserViewControl = ({ selectedDisplayType, switchDisplayType }) => {
         onClick={() => switchDisplayType("g-gallery")}
         className={classNames({ active: selectedDisplayType === "g-gallery" })}
       >
-        <FaTable />
+        <GalleryIcon />
       </Button>
       <Button
         basic
         onClick={() => switchDisplayType("table")}
         className={classNames({ active: selectedDisplayType === "table" })}
       >
-        <FaList />
+        <ListIcon />
       </Button>
     </div>
   );
@@ -102,23 +101,21 @@ class FileBrowserMenu extends React.Component {
         <SelectedFilesControls key="ingest" save={saveFileSelection} />
       ) : null,
       <Button key="selectall" onClick={this.selectAll}>
-        <FaCheckSquareO title="Check all" />
+        <CheckboxCheckedIcon title="Check all" />
       </Button>,
       <Button key="unselectall" onClick={this.selectNone}>
-        <FaSquareO title="Uncheck all" />
+        <CheckboxBlankIcon title="Uncheck all" />
       </Button>,
       <Button
         key="invertselection"
         onClick={this.invertSelection}
         title="Invert Selection"
       >
-        <FaCheckSquareO />
-        ⇄
-        <FaSquareO />
+        <CheckboxCheckedIcon />⇄<CheckboxBlankIcon />
       </Button>,
       this.props.addDirectory ? (
         <Button key="create-directory" onClick={this.createDirectory}>
-          <FaPlusIcon /> Add Folder
+          <AddIcon /> Add Folder
         </Button>
       ) : null
     ];

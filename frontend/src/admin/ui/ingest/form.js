@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 
 import Select from "react-select";
+import "react-select/dist/react-select.css";
 
 import "./ingest.css";
 import { error } from "util";

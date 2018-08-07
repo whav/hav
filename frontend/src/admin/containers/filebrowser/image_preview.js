@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { requestFile } from "../../actions/browser";
+import { FallBackImageLoader } from "../../ui/filebrowser/index";
 
 class PreviewImage extends React.Component {
   constructor(props) {
@@ -18,11 +19,15 @@ class PreviewImage extends React.Component {
       return null;
     }
     return (
-      <img
-        src={asset.preview_url}
-        alt={`preview image for ${source}`}
-        {...imgProps}
-      />
+      <figure>
+        <FallBackImageLoader
+          src={asset.preview_url}
+          alt={asset.name}
+          title={asset.name}
+          mime_type={asset.mime}
+        />
+        <figcaption>{asset.name}</figcaption>
+      </figure>
     );
   }
 }

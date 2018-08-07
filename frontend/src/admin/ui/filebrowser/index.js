@@ -30,8 +30,7 @@ export class DirectoryListingBreadcrumbs extends React.Component {
   }
 }
 
-const FilePlaceHolder = props => {
-  console.log(props);
+export const FilePlaceHolder = props => {
   let Icon = GoFileMedia;
   const { mime, className } = props;
 
@@ -58,24 +57,22 @@ const FilePlaceHolder = props => {
 export class FallBackImageLoader extends React.Component {
   constructor(props) {
     super(props);
-    this.handleImageLoadError = this.handleImageLoadError.bind(this);
-    this.handleImageLoad = this.handleImageLoad.bind(this);
     this.state = {
       hasError: false,
       hasLoaded: false
     };
   }
-  handleImageLoadError(e) {
+  handleImageLoadError = e => {
     this.setState({
       hasError: true
     });
-  }
+  };
 
-  handleImageLoad(e) {
+  handleImageLoad = e => {
     this.setState({
       hasLoaded: true
     });
-  }
+  };
   render() {
     const {
       src,

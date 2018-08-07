@@ -9,11 +9,11 @@ div.Select.is-danger > .Select-control {
   border-color: red;
 }
 
-.ingest-form-leave {
+.ingest-form-exit {
   opacity: 1;
 }
 
-.ingest-form-leave.ingest-form-leave-active {
+.ingest-form-exit.ingest-form-exit-active {
   opacity: 0.01;
   transition: opacity 100ms ease-in;
 }

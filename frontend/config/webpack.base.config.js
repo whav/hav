@@ -61,13 +61,6 @@ module.exports = opts => {
             limit: 10000
           }
         },
-        // react-icons does not have an es5 build
-        // so we need to pipe it through babel
-        // {
-        //   test: /react-icons\/(.)*(.js)$/,
-        //   loader: "babel-loader"
-        // },
-        // everything else
         {
           test: /\.jsx?$/,
           exclude: /(node_modules|bower_components)/,

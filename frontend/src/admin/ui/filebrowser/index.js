@@ -30,10 +30,14 @@ export class DirectoryListingBreadcrumbs extends React.Component {
   }
 }
 
-const FilePlaceHolder = ({ mime, className }) => {
+const FilePlaceHolder = props => {
+  console.log(props);
   let Icon = GoFileMedia;
+  const { mime, className } = props;
+
   if (mime) {
     let category = mime.split("/")[0];
+    console.log(category);
     switch (category) {
       case "video":
         Icon = FaFileVideo;
@@ -83,20 +87,7 @@ export class FallBackImageLoader extends React.Component {
     } = this.props;
     let { hasError } = this.state;
     if (hasError) {
-      let FallBackImage;
-
-      const mime = mime_type.split("/")[0];
-      switch (mime) {
-        case "video":
-          FallBackImage = FaFileVideo;
-          break;
-        case "audio":
-          FallBackImage = FaFileAudio;
-          break;
-        default:
-          FallBackImage = FaFile;
-      }
-      return <FallBackImage />;
+      return <FilePlaceHolder mime={mime_type} />;
     }
 
     let srcSetProps = {};
@@ -187,7 +178,7 @@ export const GGalleryFile = ({ file, toggleSelect, size, ...props }) => {
         sizes={size}
         title={`${file.name} ${file.mime}`}
         alt="preview image"
-        mime_type={file.mime_type}
+        mime_type={file.mime}
       />
     );
   } else {

@@ -68,13 +68,13 @@ class FileOperationException(APIException):
 class FileBrowserFileDetail(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     def get(self, request, path=None, **kwargs):
+
         path = self.resolve_directory(path)
         try:
             assert(path.is_file())
             assert(os.access(str(path), os.R_OK))
         except (FileNotFoundError, AssertionError):
             raise Http404()
-
         serializer = FileSerializer(
             instance=path,
             context=self.context
@@ -104,7 +104,7 @@ class FileBrowserFileUpload(IncomingBaseMixin, FileBrowserMixin, APIView):
         if path.is_absolute():
             path = path.relative_to(self.root_path)
 
-        storage = FileSystemStorage(location=self.root)
+        storage = FileSystemStorage(location=self.root_path)
         try:
             with storage.open(path, mode) as destination:
                 for chunk in file.chunks():

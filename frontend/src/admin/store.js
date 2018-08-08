@@ -5,30 +5,16 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import thunkMiddleware from "redux-thunk";
 
-import { persistStore, persistCombineReducers } from "redux-persist";
-// import storage from "redux-persist/es/storage"; // default: localStorage if web, AsyncStorage if react-native
-import storage from "redux-persist/lib/storage/session";
-import rootReducers from "./reducers";
-
-const config = {
-  key: "root",
-  storage,
-  whitelist: ["ingest"]
-};
-
-const reducer = persistCombineReducers(config, rootReducers);
+import rootReducer from "./ducks/index";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-function configureStore() {
-  let store = createStore(
-    reducer,
+const configureStore = () => {
+  return createStore(
+    rootReducer,
     composeEnhancers(applyMiddleware(thunkMiddleware))
   );
-  let persistor = persistStore(store);
-
-  return { persistor, store };
-}
+};
 
 export const ROOT_PATH_KEY = "__ROOT__";
 
@@ -48,21 +34,5 @@ const getFinishedUploads = uploads => {
   });
   return finishedUploads;
 };
-
-// const localStorageKey = 'havAdmin'
-// import {loadState, saveState} from './localStorage'
-
-// save some stuff to localStorage
-// store.subscribe(throttle(() => {
-//     let state = store.getState();
-//     let finishedUploads = getFinishedUploads(state.uploads);
-//     // console.log('Writing uploads to local storage', finishedUploads, new Date());
-//     saveState(
-//         localStorageKey,
-//         {
-//             uploads: finishedUploads
-//         }
-//     )
-// }), 50000);
 
 export default configureStore;

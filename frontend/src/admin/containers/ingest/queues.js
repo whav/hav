@@ -4,7 +4,7 @@ import LoadingIndicator from "../../ui/loading";
 import Error from "../../ui/components/errors";
 import Debug from "../../ui/debug";
 
-import { loadAllIngestionQueues } from "../../actions/ingest";
+import { loadAllIngestionQueues } from "../../ducks/ingest";
 import IngestionQueueListing from "../../ui/ingest/queues";
 
 class IngestQueueList extends React.Component {

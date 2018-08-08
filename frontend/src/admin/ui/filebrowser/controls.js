@@ -18,21 +18,24 @@ import {
 import Button, { ButtonGroup } from "../components/buttons";
 
 class UploadControl extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleDrop = this.handleDrop.bind(this);
-  }
-  handleDrop(acceptedFiles, rejectedFiles) {
-    this.props.uploadFiles(acceptedFiles, rejectedFiles);
-  }
+  handleDrop = (acceptedFiles, rejectedFiles) => {
+    acceptedFiles.forEach(f => this.props.uploadFile(f));
+  };
+
   render() {
     return (
       <Dropzone onDrop={this.handleDrop} className="--foo">
-        <UploadIcon /> Add files
+        <Button>
+          <UploadIcon /> Add files
+        </Button>
       </Dropzone>
     );
   }
 }
+
+UploadControl.propTypes = {
+  uploadFile: PropTypes.func.isRequired
+};
 
 const SelectedFilesControls = ({ save }) => {
   return (
@@ -94,9 +97,17 @@ class FileBrowserMenu extends React.Component {
   };
 
   render() {
-    const { saveFileSelection, selectedItemIds } = this.props;
+    const {
+      saveFileSelection,
+      selectedItemIds,
+      allowUpload,
+      uploadFile
+    } = this.props;
 
     const controls = [
+      allowUpload ? (
+        <UploadControl key="upload" uploadFile={uploadFile} />
+      ) : null,
       selectedItemIds.length > 0 ? (
         <SelectedFilesControls key="ingest" save={saveFileSelection} />
       ) : null,

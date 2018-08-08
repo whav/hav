@@ -3,40 +3,26 @@
  */
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import pathToRegexp from "path-to-regexp";
 import PropTypes from "prop-types";
 
-import {
-  requestDirectoryAction,
-  switchFilebrowserDisplayType,
-  createDirectoryAction,
-  selectItems
-} from "../../actions/browser";
+import { createDirectoryAction, selectItems } from "../../ducks/browser";
 
-import { queueForIngestion } from "../../actions/ingest";
-
-import {
-  getIngestionQueues,
-  queueFilesForIngestion
-} from "../../actions/ingest";
-
+import { switchFilebrowserDisplayType } from "../../ducks/settings";
+import { queueForIngestion } from "../../ducks/ingest";
+import { startFileUpload } from "../../ducks/uploads";
 import LoadingIndicator from "../../ui/loading";
 
 import Level from "../../ui/components/level";
 
 import FileList, {
   DirectoryListingBreadcrumbs,
-  DirectoryListing,
-  fileListDisplayValues,
   FileBrowserInterface
 } from "../../ui/filebrowser";
 
 import { FileBrowserMenu } from "../../ui/filebrowser/controls";
-import UploadTrigger from "../uploads";
 import { buildFrontendUrl, buildApiUrl } from "../../api/urls";
 
-import { getUploadsForPath } from "../../reducers/uploads";
+import { getUploadsForPath } from "../../ducks/uploads";
 
 class FileBrowserDirectory extends React.Component {
   constructor(props) {
@@ -54,9 +40,9 @@ class FileBrowserDirectory extends React.Component {
         files,
         settings,
         switchDisplayStyle,
-        selectFiles,
         path,
         allowUpload,
+        uploadFile,
         allowCreate,
         saveFileSelection,
         createDirectory,
@@ -64,6 +50,7 @@ class FileBrowserDirectory extends React.Component {
         ingestable
       } = this.props;
 
+      console.log(this.props);
       let uploads = this.props.uploads;
       let breadcrumbs = (
         <DirectoryListingBreadcrumbs
@@ -109,6 +96,8 @@ class FileBrowserDirectory extends React.Component {
               saveFileSelection={() =>
                 saveFileSelection(Array.from(ingestable))
               }
+              allowUpload={allowUpload}
+              uploadFile={uploadFile}
             />
           }
         />
@@ -150,6 +139,7 @@ FileBrowserDirectory.propTypes = {
   settings: PropTypes.object,
   saveFileSelection: PropTypes.func,
   allowUpload: PropTypes.bool,
+  uploadFile: PropTypes.func,
   allowCreate: PropTypes.bool
 };
 
@@ -157,19 +147,20 @@ const FileBrowserDirectoryView = connect(
   (rootState, props) => {
     const state = rootState.repositories;
     const uploadState = rootState.uploads;
-    const settings = state.settings;
-    const { path, repository } = props.match.params;
+    const settings = rootState.settings;
+    const { path } = props.match.params;
 
     const key = buildApiUrl(props.location.pathname);
+
     let directory = props.data;
     let mappedProps = {
       directory,
       path
     };
 
-    const allChildren = (directory.content || []).map(c => state.browser[c]);
+    const allChildren = (directory.content || []).map(c => state[c]);
     const parentDirectories = (directory.parents || []).map(d => {
-      return state.browser[d];
+      return state[d];
     });
 
     // populate children dirs and files from state
@@ -210,8 +201,7 @@ const FileBrowserDirectoryView = connect(
 
     return {
       saveFileSelection,
-      uploadToURL: apiURL,
-
+      uploadFile: file => dispatch(startFileUpload(file, apiURL)),
       switchDisplayStyle: style =>
         dispatch(switchFilebrowserDisplayType(style)),
       createDirectory: name => dispatch(createDirectoryAction(name, apiURL)),

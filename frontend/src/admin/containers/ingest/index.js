@@ -10,7 +10,7 @@ import {
   fetchInitialData,
   saveIngestionData,
   updateIngestionData
-} from "../../actions/ingest";
+} from "../../ducks/ingest";
 
 import pickBy from "lodash/pickBy";
 

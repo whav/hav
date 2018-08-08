@@ -1,8 +1,9 @@
 import React from "react";
 import { IconContext } from "react-icons";
 
-// css, images and stuff
+// import css
 require("./index.css");
+require("./bulma.sass");
 
 const App = ({ children }) => (
   <IconContext.Provider value={{ className: "react-icon" }}>

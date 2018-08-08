@@ -8,7 +8,7 @@ import {
   loadIngestOptions,
   ingestionSuccess,
   deleteIngestItem
-} from "../../actions/ingest";
+} from "../../ducks/ingest";
 import IngestForm, { TemplateForm, FormSet } from "../../ui/ingest/form";
 
 import PreviewImage from "../filebrowser/image_preview";

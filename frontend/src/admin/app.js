@@ -6,7 +6,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import createBrowserHistory from "history/createBrowserHistory";
 
 import { Provider } from "react-redux";
-import Nav from "./nav";
+import Nav from "./containers/nav";
 import { routes, mainNav } from "./routes";
 
 import App from "./ui/index";

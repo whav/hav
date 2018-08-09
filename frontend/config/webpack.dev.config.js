@@ -9,7 +9,8 @@ module.exports = opts => {
 
   return {
     ...config,
-    devtool: "source-map",
+    mode: "development",
+    devtool: "eval-source-map",
     output: {
       ...config.output,
       path: output_path,

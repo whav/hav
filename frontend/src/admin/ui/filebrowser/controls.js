@@ -6,32 +6,36 @@ import Dropzone from "react-dropzone";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 
-import GoCloudUpload from "react-icons/go/cloud-upload";
-import MdSelectAll from "react-icons/lib/md/select-all";
-import FaCheckSquareO from "react-icons/lib/fa/check-square-o";
-import FaSquareO from "react-icons/lib/fa/square-o";
-import FaTable from "react-icons/lib/fa/table";
-import FaList from "react-icons/lib/fa/list";
-import FaPlusIcon from "react-icons/lib/fa/plus-circle";
+import {
+  CheckboxBlankIcon,
+  CheckboxCheckedIcon,
+  AddIcon,
+  GalleryIcon,
+  ListIcon,
+  UploadIcon
+} from "../icons";
 
 import Button, { ButtonGroup } from "../components/buttons";
 
 class UploadControl extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleDrop = this.handleDrop.bind(this);
-  }
-  handleDrop(acceptedFiles, rejectedFiles) {
-    this.props.uploadFiles(acceptedFiles, rejectedFiles);
-  }
+  handleDrop = (acceptedFiles, rejectedFiles) => {
+    acceptedFiles.forEach(f => this.props.uploadFile(f));
+  };
+
   render() {
     return (
       <Dropzone onDrop={this.handleDrop} className="--foo">
-        <GoCloudUpload /> Add files
+        <Button>
+          <UploadIcon /> Add files
+        </Button>
       </Dropzone>
     );
   }
 }
+
+UploadControl.propTypes = {
+  uploadFile: PropTypes.func.isRequired
+};
 
 const SelectedFilesControls = ({ save }) => {
   return (
@@ -49,14 +53,14 @@ const FilebrowserViewControl = ({ selectedDisplayType, switchDisplayType }) => {
         onClick={() => switchDisplayType("g-gallery")}
         className={classNames({ active: selectedDisplayType === "g-gallery" })}
       >
-        <FaTable />
+        <GalleryIcon />
       </Button>
       <Button
         basic
         onClick={() => switchDisplayType("table")}
         className={classNames({ active: selectedDisplayType === "table" })}
       >
-        <FaList />
+        <ListIcon />
       </Button>
     </div>
   );
@@ -93,30 +97,36 @@ class FileBrowserMenu extends React.Component {
   };
 
   render() {
-    const { saveFileSelection, selectedItemIds } = this.props;
+    const {
+      saveFileSelection,
+      selectedItemIds,
+      allowUpload,
+      uploadFile
+    } = this.props;
 
     const controls = [
+      allowUpload ? (
+        <UploadControl key="upload" uploadFile={uploadFile} />
+      ) : null,
       selectedItemIds.length > 0 ? (
         <SelectedFilesControls key="ingest" save={saveFileSelection} />
       ) : null,
       <Button key="selectall" onClick={this.selectAll}>
-        <FaCheckSquareO title="Check all" />
+        <CheckboxCheckedIcon title="Check all" />
       </Button>,
       <Button key="unselectall" onClick={this.selectNone}>
-        <FaSquareO title="Uncheck all" />
+        <CheckboxBlankIcon title="Uncheck all" />
       </Button>,
       <Button
         key="invertselection"
         onClick={this.invertSelection}
         title="Invert Selection"
       >
-        <FaCheckSquareO />
-        ⇄
-        <FaSquareO />
+        <CheckboxCheckedIcon />⇄<CheckboxBlankIcon />
       </Button>,
       this.props.addDirectory ? (
         <Button key="create-directory" onClick={this.createDirectory}>
-          <FaPlusIcon /> Add Folder
+          <AddIcon /> Add Folder
         </Button>
       ) : null
     ];

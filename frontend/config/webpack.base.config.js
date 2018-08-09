@@ -1,11 +1,12 @@
 const path = require("path");
 const webpack = require("webpack");
 const autoprefixer = require("autoprefixer");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const BundleTracker = require("webpack-bundle-tracker");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = opts => {
   const { PROJECT_ROOT, NODE_ENV } = opts;
+  const devMode = NODE_ENV !== "production";
 
   const output_path = path.resolve(PROJECT_ROOT, "./build/");
 
@@ -15,11 +16,10 @@ module.exports = opts => {
         NODE_ENV: JSON.stringify(NODE_ENV)
       }
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor",
-      chunks: ["hav", "havAdmin"]
+    new MiniCssExtractPlugin({
+      filename: devMode ? "[name].css" : "[name]-[hash].css",
+      chunkFilename: devMode ? "[id].css" : "[id]-[hash].css"
     }),
-    new ExtractTextPlugin(opts.EXTRACT_CSS_NAME || "[name]-[contenthash].css"),
     new BundleTracker({
       path: output_path
     })
@@ -29,8 +29,7 @@ module.exports = opts => {
     context: PROJECT_ROOT,
     entry: {
       hav: ["./src/hav/index"],
-      havAdmin: ["./src/admin/ui/bulma.sass", "./src/admin/index"],
-      vendor: ["whatwg-fetch", "react", "react-dom", "babel-polyfill"]
+      havAdmin: ["./src/admin/index"]
     },
     output: {
       path: output_path,
@@ -38,16 +37,18 @@ module.exports = opts => {
     },
     plugins,
     resolve: {
-      extensions: [".js", ".json"]
+      extensions: [".mjs", ".js", ".jsx", ".json"]
     },
     module: {
       rules: [
         {
-          test: /\.css$/,
-          use: ExtractTextPlugin.extract({
-            fallback: "style-loader",
-            use: ["css-loader?importLoaders=1", "postcss-loader"]
-          })
+          test: /\.(sa|sc|c)ss$/,
+          use: [
+            devMode ? "style-loader" : MiniCssExtractPlugin.loader,
+            "css-loader",
+            "postcss-loader",
+            "sass-loader"
+          ]
         },
         {
           test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
@@ -60,27 +61,6 @@ module.exports = opts => {
             limit: 10000
           }
         },
-        {
-          test: /\.sass$/,
-          use: [
-            {
-              loader: "style-loader" // translates CSS into CommonJS
-            },
-            {
-              loader: "css-loader" // translates CSS into CommonJS
-            },
-            {
-              loader: "sass-loader" // compiles sass to CSS
-            }
-          ]
-        },
-        // react-icons does not have an es5 build
-        // so we need to pipe it through babel
-        {
-          test: /react-icons\/(.)*(.js)$/,
-          loader: "babel-loader"
-        },
-        // everything else
         {
           test: /\.jsx?$/,
           exclude: /(node_modules|bower_components)/,

@@ -10,11 +10,11 @@ import classnames from "classnames";
 
 import Select from "react-select";
 import "react-select/dist/react-select.css";
-// import parseDate from "../../utils/daterange";
+
 import "./ingest.css";
 import { error } from "util";
 
-import { CSSTransitionGroup } from "react-transition-group"; // ES6
+import { TransitionGroup, CSSTransition } from "react-transition-group"; // ES6
 
 const Field = props => {
   const { label = "", errors = [], expanded = false } = props;
@@ -424,13 +424,17 @@ class IngestForm extends React.Component {
 
 const FormSet = ({ children }) => {
   return (
-    <CSSTransitionGroup
-      transitionName="ingest-form"
-      transitionEnterTimeout={500}
-      transitionLeaveTimeout={300}
-    >
-      {children}
-    </CSSTransitionGroup>
+    <TransitionGroup>
+      {children.map((c, i) => (
+        <CSSTransition
+          classNames="ingest-form"
+          timeout={{ enter: 500, exit: 300 }}
+          key={i}
+        >
+          {c}
+        </CSSTransition>
+      ))}
+    </TransitionGroup>
   );
 };
 

@@ -10,7 +10,7 @@ import {
   fetchInitialData,
   saveIngestionData,
   updateIngestionData
-} from "../../actions/ingest";
+} from "../../ducks/ingest";
 
 import pickBy from "lodash/pickBy";
 
@@ -57,7 +57,7 @@ class Ingest extends React.Component {
             </div>
           </div>
 
-          <pre>
+          {/* <pre>
             {JSON.stringify(
               {
                 target: props.target,
@@ -66,20 +66,11 @@ class Ingest extends React.Component {
               null,
               2
             )}
-          </pre>
+          </pre> */}
           <button type="submit">Save</button>
         </div>
       </form>
     );
-    // }
-    // return (
-    //   <BatchIngest
-    //     ingestionFiles={this.props.entries}
-    //     {...this.props.options}
-    //     onChange={this.props.updateIngestionData}
-    //     save={this.saveData}
-    //   />
-    // );
   }
 }
 

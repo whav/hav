@@ -3,12 +3,12 @@
  */
 import React from "react";
 
-import LoadingCircle from "react-icons/fa/circle-o-notch";
+import { SpinnerIcon } from "./icons";
 
 const LoadingIndicator = () => {
   return (
     <span className="icon is-large">
-      <LoadingCircle />
+      <SpinnerIcon />
     </span>
   );
 };

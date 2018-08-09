@@ -6,21 +6,21 @@ import { history } from "../../app";
 import React from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import filesize from "filesize";
 import uniq from "lodash/uniq";
 import PropTypes from "prop-types";
 import { buildFrontendUrl } from "../../api/urls";
-import GoFileDirectory from "react-icons/go/file-directory";
-import GoFileMedia from "react-icons/go/file-media";
-import GoCheck from "react-icons/go/check";
-import GoHourglass from "react-icons/go/hourglass";
-import FaFileImageO from "react-icons/fa/file-image-o";
-import FaFileMovieO from "react-icons/fa/file-movie-o";
-import FaFileAudioO from "react-icons/fa/file-audio-o";
-import FaChainBroken from "react-icons/fa/chain-broken";
+
+import {
+  DirectoryIcon,
+  SelectFileCheckboxIcon,
+  VideoFallbackIcon,
+  ImageFallbackIcon,
+  AudioFallbackIcon,
+  GenericFallbackIcon,
+  HourglassIcon
+} from "../icons";
 
 import Breadcrumbs from "../components/breadcrumbs";
-import { arrayOfDeffered } from "redux-saga/utils";
 
 require("./index.css");
 
@@ -32,19 +32,22 @@ export class DirectoryListingBreadcrumbs extends React.Component {
   }
 }
 
-const FilePlaceHolder = ({ mime, className }) => {
-  let Icon = GoFileMedia;
+export const FilePlaceHolder = props => {
+  let Icon = GenericFallbackIcon;
+  const { mime, className } = props;
+
   if (mime) {
     let category = mime.split("/")[0];
+    console.log(category);
     switch (category) {
       case "video":
-        Icon = FaFileMovieO;
+        Icon = VideoFallbackIcon;
         break;
       case "image":
-        Icon = FaFileImageO;
+        Icon = ImageFallbackIcon;
         break;
       case "audio":
-        Icon = FaFileAudioO;
+        Icon = AudioFallbackIcon;
         break;
       default:
         break;
@@ -56,24 +59,22 @@ const FilePlaceHolder = ({ mime, className }) => {
 export class FallBackImageLoader extends React.Component {
   constructor(props) {
     super(props);
-    this.handleImageLoadError = this.handleImageLoadError.bind(this);
-    this.handleImageLoad = this.handleImageLoad.bind(this);
     this.state = {
       hasError: false,
       hasLoaded: false
     };
   }
-  handleImageLoadError(e) {
+  handleImageLoadError = e => {
     this.setState({
       hasError: true
     });
-  }
+  };
 
-  handleImageLoad(e) {
+  handleImageLoad = e => {
     this.setState({
       hasLoaded: true
     });
-  }
+  };
   render() {
     const {
       src,
@@ -81,25 +82,11 @@ export class FallBackImageLoader extends React.Component {
       sizes = "100vw",
       alt = "image",
       title = "",
-      fallbackImage,
       mime_type = ""
     } = this.props;
     let { hasError } = this.state;
     if (hasError) {
-      let FallBackImage;
-
-      const mime = mime_type.split("/")[0];
-      switch (mime) {
-        case "video":
-          FallBackImage = FaFileMovieO;
-          break;
-        case "audio":
-          FallBackImage = FaFileAudioO;
-          break;
-        default:
-          FallBackImage = FaChainBroken;
-      }
-      return <FallBackImage />;
+      return <FilePlaceHolder mime={mime_type} />;
     }
 
     let srcSetProps = {};
@@ -145,7 +132,7 @@ const GGalleryItem = ({
       style={{ flexBasis: size }}
     >
       <span className={classNames("g-gallery-select", { green: selected })}>
-        <GoCheck />
+        <SelectFileCheckboxIcon />
       </span>
       {preview}
 
@@ -167,7 +154,7 @@ class GGalleryDirectory extends React.Component {
         name={name}
         onClick={this.navigateOrSelect}
         directory={true}
-        preview={<GoFileDirectory />}
+        preview={<DirectoryIcon />}
         selected={selected}
       />
     );
@@ -190,7 +177,7 @@ export const GGalleryFile = ({ file, toggleSelect, size, ...props }) => {
         sizes={size}
         title={`${file.name} ${file.mime}`}
         alt="preview image"
-        mime_type={file.mime_type}
+        mime_type={file.mime}
       />
     );
   } else {
@@ -215,7 +202,7 @@ const GGalleryUpload = ({ upload }) => {
         {upload.preview ? (
           <FallBackImageLoader
             src={upload.preview}
-            fallbackImage={GoHourglass}
+            fallbackImage={HourglassIcon}
           />
         ) : null}
       </div>

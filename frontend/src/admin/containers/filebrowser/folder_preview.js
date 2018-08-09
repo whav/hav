@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Breadcrumbs from "../../ui/components/breadcrumbs";
-import { requestDirectoryAction } from "../../actions/browser";
+import { requestDirectoryAction } from "../../ducks/browser";
 
 class PreviewFolder extends React.Component {
   constructor(props) {
@@ -31,7 +31,7 @@ PreviewFolder.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   const { source } = ownProps;
-  const slice = state.repositories.browser;
+  const slice = state.repositories;
   const data = slice[source];
   return data
     ? {
@@ -50,4 +50,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PreviewFolder);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreviewFolder);

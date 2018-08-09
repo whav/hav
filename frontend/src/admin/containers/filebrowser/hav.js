@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { clearIngestionQueue, saveIngestionIntent } from "../../actions/ingest";
+import { clearIngestionQueue, saveIngestionIntent } from "../../ducks/ingest";
 import FileBrowser from "./index";
 import IngestionFooter from "../../ui/ingest/footer";
 
@@ -29,7 +29,7 @@ const HAVFileBrowser = ({
 export default connect(
   (state, { match }) => {
     const ingestToKey = resolvers.resolveKeyFromMatch(match);
-    const ingestTarget = state.repositories.browser[ingestToKey];
+    const ingestTarget = state.repositories[ingestToKey];
     return {
       hasQueue: state.ingest.queue.length > 0,
       ingestionIds: state.ingest.queue,

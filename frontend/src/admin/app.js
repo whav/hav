@@ -6,15 +6,13 @@ import { Router, Route, Switch } from "react-router-dom";
 import createBrowserHistory from "history/createBrowserHistory";
 
 import { Provider } from "react-redux";
-import Nav from "./nav";
+import Nav from "./containers/nav";
 import { routes, mainNav } from "./routes";
 
-// css, images and stuff
-require("./ui/index.css");
+import App from "./ui/index";
 
 const logo = require("../assets/logo.png");
 
-const App = ({ children }) => <div className="hav-admin-app">{children}</div>;
 const Navigation = ({ ...props }) => <Nav navItems={mainNav} {...props} />;
 
 const history = createBrowserHistory({

@@ -3,13 +3,16 @@
  */
 
 //  Icons
-import GoHome from "react-icons/go/home";
-import GoFileDirectory from "react-icons/go/file-directory";
-import GoFileSubmodule from "react-icons/go/file-submodule";
-import GoCloudUpload from "react-icons/go/cloud-upload";
-import FaArchive from "react-icons/lib/fa/archive";
-import GoDatabase from "react-icons/go/database";
-import GoPackage from "react-icons/go/package";
+
+import {
+  DirectoryIcon,
+  UploadIcon,
+  ArchiveIcon,
+  DatabaseIcon,
+  HomeIcon,
+  IngestPackageIcon
+} from "./ui/icons";
+
 // base components
 import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
@@ -58,46 +61,45 @@ const routes = [
 const mainNav = [
   {
     title: "Home",
-    icon: GoHome,
+    icon: HomeIcon,
     menuExact: true,
     link: "/"
   },
   {
     title: "HAV",
     link: "/hav/",
-    icon: FaArchive,
+    icon: ArchiveIcon,
     menuExact: false
   },
   {
     title: "Ingest",
     link: "/ingest/",
-    icon: GoPackage,
+    icon: IngestPackageIcon,
     menuExact: false
   },
   {
     title: "Sources",
-    icon: GoFileSubmodule,
     sub: [
       {
         link: "/sources/incoming/",
-        icon: GoFileDirectory,
+        icon: DirectoryIcon,
         title: "Incoming",
         menuExact: false
       },
       {
         link: "/sources/whav/",
-        icon: GoDatabase,
+        icon: DatabaseIcon,
         title: "WHAV",
         menuExact: false
       }
     ]
+  },
+  {
+    icon: UploadIcon,
+    title: "Uploads",
+    menuExact: true,
+    link: "/uploads/"
   }
-  // {
-  //     icon: GoCloudUpload,
-  //     title: 'Uploads',
-  //     menuExact: true,
-  //     link: '/uploads/'
-  // }
 ];
 
 export { mainNav, routes };

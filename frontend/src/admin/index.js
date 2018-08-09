@@ -8,17 +8,13 @@ import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import configureStore from "./store";
 import HavAdminApp from "./app";
-import { PersistGate } from "redux-persist/es/integration/react";
-import Loading from "./ui/loading";
 
-const { store, persistor } = configureStore();
+const store = configureStore();
 
 const render = Component => {
   ReactDOM.render(
     <AppContainer>
-      <PersistGate persistor={persistor} loading={<Loading />}>
-        <Component store={store} />
-      </PersistGate>
+      <Component store={store} />
     </AppContainer>,
     document.getElementById("root")
   );

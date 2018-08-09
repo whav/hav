@@ -1,10 +1,10 @@
 from django.core.exceptions import ImproperlyConfigured
-from django.urls import path, reverse, resolve
+from django.urls import path, reverse, re_path
 import os
 from pathlib import Path
 from .. import Source
 from .utils import encodePath, decodePath
-from .api.views import FileBrowser
+from .api.views import FileBrowser, FileBrowserFileUpload
 
 import logging
 
@@ -59,5 +59,13 @@ class FSSource(Source):
         }
         return [
             path('', FileBrowser.as_view(**kwargs), name='filebrowser_root'),
-            path('<str:path>/', FileBrowser.as_view(**kwargs), name='filebrowser')
+            # re_path(
+            #     r'(?P<path>\w+\/$)?(?P<filename>[\w.]+)$',
+            #     FileBrowserFileUpload.as_view(**kwargs),
+            #     name='filebrowser_upload'
+            # ),
+            path('<str:filename>', FileBrowserFileUpload.as_view(**kwargs)),
+            path('<str:path>/<str:filename>', FileBrowserFileUpload.as_view(**kwargs), name='filebrowser_upload'),
+            path('<str:path>/', FileBrowser.as_view(**kwargs), name='filebrowser'),
+
         ]

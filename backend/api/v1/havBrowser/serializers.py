@@ -201,7 +201,7 @@ class RootHAVCollectionSerializer(BaseRootHAVNodeSerializer):
 
     def get_childrenDirs(self, _):
         return BaseHAVNodeSerializer(
-            Node.get_root_nodes(),
+            Node.get_collection_roots(),
             many=True,
             context=self.context
         ).data

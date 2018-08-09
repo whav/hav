@@ -27,5 +27,5 @@ class Collection(models.Model):
     )
 
     def __str__(self):
-        return self.slug()
+        return self.slug
 

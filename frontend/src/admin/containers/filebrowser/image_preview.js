@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { requestFile } from "../../actions/browser";
+import { requestFile } from "../../ducks/browser";
 import { FallBackImageLoader } from "../../ui/filebrowser/index";
 
 class PreviewImage extends React.Component {
@@ -41,7 +41,7 @@ PreviewImage.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   const { source } = ownProps;
-  const slice = state.repositories.browser;
+  const slice = state.repositories;
   const data = slice[source];
   return data
     ? {
@@ -59,4 +59,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PreviewImage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreviewImage);

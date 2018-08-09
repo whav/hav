@@ -3,13 +3,12 @@
  */
 import React from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 
-import { requestDirectoryAction } from "../../actions/browser";
+import { requestDirectoryAction } from "../../ducks/browser";
 
 import LoadingIndicator from "../../ui/loading";
 
-import { buildFrontendUrl, buildApiUrl } from "../../api/urls";
+import { buildApiUrl } from "../../api/urls";
 
 import DirectoryView from "./folder";
 import FileView from "./detail";
@@ -40,7 +39,7 @@ class FilebrowserView extends React.Component {
 export default connect(
   (state, props) => {
     const key = buildApiUrl(props.location.pathname);
-    const data = state.repositories.browser[key];
+    const data = state.repositories[key];
     return {
       loading: data == undefined,
       data: data

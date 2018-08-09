@@ -3,12 +3,12 @@
  */
 import React from "react";
 
-import { FaSpinner } from "react-icons/fa";
+import { SpinnerIcon } from "./icons";
 
 const LoadingIndicator = () => {
   return (
     <span className="icon is-large">
-      <FaSpinner />
+      <SpinnerIcon />
     </span>
   );
 };

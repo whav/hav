@@ -1,14 +1,14 @@
-import {
-  RECEIVE_DIRECTORY_CONTENT,
-  CHANGE_FILE_BROWSER_SETTINGS,
-  SELECT_ITEMS,
-  RECEIVE_FILE_INFO
-} from "../actions/browser";
+import { requestDirectory, createDirectory } from "../api/browser";
+import { UPLOAD_COMPLETED } from "./uploads";
+export const REQUEST_DIRECTORY = "REQUEST_DIRECTORY";
+export const RECEIVE_DIRECTORY_CONTENT = "RECEIVE_DIRECTORY_CONTENT";
+export const RECEIVE_FILE_INFO = "RECEIVE_FILE_INFO";
 
-import { UPLOAD_COMPLETED } from "../actions/uploads";
+export const SELECT_ITEMS = "SELECT_ITEMS";
 
-import { fileListDisplayValues } from "../ui/filebrowser/index";
-import { combineReducers } from "redux";
+export const MKDIR = "MKDIR";
+export const MKDIR_SUCCESS = "MKDIR_SUCCESS";
+export const MKDIR_FAIL = "MKDIR_FAIL";
 
 const normalize_url = url => {
   let key;
@@ -20,7 +20,9 @@ const normalize_url = url => {
   return key;
 };
 
-const filesByUri = (state = {}, action) => {
+/* REDUCERS */
+
+const reducer = (state = {}, action) => {
   switch (action.type) {
     case RECEIVE_DIRECTORY_CONTENT:
       let { files = [], childrenDirs = [], parentDirs = [] } = action.payload;
@@ -99,34 +101,78 @@ const filesByUri = (state = {}, action) => {
           ...data
         }
       };
-    default:
-      return state;
-  }
-};
-
-// this is being used to hold global filebrowser settings
-const settings = (
-  state = {
-    selectedDisplayType: fileListDisplayValues[0],
-    availableDisplayTypes: fileListDisplayValues,
-    gallerySize: "20vw"
-  },
-  action
-) => {
-  switch (action.type) {
-    case CHANGE_FILE_BROWSER_SETTINGS:
+    case UPLOAD_COMPLETED:
+      const folder = state[action.key];
+      const file_info = action.payload;
       return {
         ...state,
-        ...action.payload
+        [action.key]: {
+          ...folder,
+          content: [...folder.content, file_info.url]
+        },
+        [file_info.url]: file_info
       };
     default:
       return state;
   }
 };
 
-const fileBrowsers = combineReducers({
-  settings,
-  browser: filesByUri
-});
+export const requestDirectoryAction = url => {
+  return dispatch => {
+    dispatch({
+      type: REQUEST_DIRECTORY,
+      url
+    });
+    requestDirectory(url).then(data => {
+      dispatch({
+        type: RECEIVE_DIRECTORY_CONTENT,
+        payload: data,
+        url
+      });
+    });
+  };
+};
 
-export default fileBrowsers;
+export const requestFile = url => {
+  return dispatch => {
+    requestDirectory(url).then(data => {
+      dispatch({
+        type: RECEIVE_FILE_INFO,
+        payload: data
+      });
+    });
+  };
+};
+
+export const selectItems = (container_id, items = []) => {
+  return {
+    type: SELECT_ITEMS,
+    container_id,
+    item_ids: items
+  };
+};
+
+export const createDirectoryAction = (name, url) => {
+  return dispatch => {
+    dispatch({
+      type: MKDIR,
+      name
+    });
+    createDirectory(name, url)
+      .then(data => {
+        dispatch({
+          type: MKDIR_SUCCESS
+        });
+        // request the same directory again
+        dispatch(requestDirectoryAction(url));
+      })
+      .catch(err => {
+        console.error(err);
+        dispatch({
+          type: MKDIR_FAIL
+        });
+      });
+  };
+};
+
+export default reducer;

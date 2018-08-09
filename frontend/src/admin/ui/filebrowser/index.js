@@ -9,14 +9,16 @@ import classNames from "classnames";
 import uniq from "lodash/uniq";
 import PropTypes from "prop-types";
 import { buildFrontendUrl } from "../../api/urls";
-import { GoFileDirectory, GoFileMedia, GoCheck } from "react-icons/go";
+
 import {
-  FaFileImage,
-  FaFileVideo,
-  FaFileAudio,
-  FaFile,
-  FaHourglass
-} from "react-icons/fa";
+  DirectoryIcon,
+  SelectFileCheckboxIcon,
+  VideoFallbackIcon,
+  ImageFallbackIcon,
+  AudioFallbackIcon,
+  GenericFallbackIcon,
+  HourglassIcon
+} from "../icons";
 
 import Breadcrumbs from "../components/breadcrumbs";
 
@@ -31,7 +33,7 @@ export class DirectoryListingBreadcrumbs extends React.Component {
 }
 
 export const FilePlaceHolder = props => {
-  let Icon = GoFileMedia;
+  let Icon = GenericFallbackIcon;
   const { mime, className } = props;
 
   if (mime) {
@@ -39,13 +41,13 @@ export const FilePlaceHolder = props => {
     console.log(category);
     switch (category) {
       case "video":
-        Icon = FaFileVideo;
+        Icon = VideoFallbackIcon;
         break;
       case "image":
-        Icon = FaFileImage;
+        Icon = ImageFallbackIcon;
         break;
       case "audio":
-        Icon = FaFileAudio;
+        Icon = AudioFallbackIcon;
         break;
       default:
         break;
@@ -130,7 +132,7 @@ const GGalleryItem = ({
       style={{ flexBasis: size }}
     >
       <span className={classNames("g-gallery-select", { green: selected })}>
-        <GoCheck />
+        <SelectFileCheckboxIcon />
       </span>
       {preview}
 
@@ -152,7 +154,7 @@ class GGalleryDirectory extends React.Component {
         name={name}
         onClick={this.navigateOrSelect}
         directory={true}
-        preview={<GoFileDirectory />}
+        preview={<DirectoryIcon />}
         selected={selected}
       />
     );
@@ -200,7 +202,7 @@ const GGalleryUpload = ({ upload }) => {
         {upload.preview ? (
           <FallBackImageLoader
             src={upload.preview}
-            fallbackImage={FaHourglass}
+            fallbackImage={HourglassIcon}
           />
         ) : null}
       </div>

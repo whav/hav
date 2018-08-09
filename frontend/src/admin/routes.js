@@ -3,15 +3,15 @@
  */
 
 //  Icons
+
 import {
-  GoHome,
-  GoFileDirectory,
-  GoFileSubmodule,
-  GoCloudUpload,
-  GoDatabase,
-  GoPackage
-} from "react-icons/go";
-import { FaArchive } from "react-icons/fa";
+  DirectoryIcon,
+  UploadIcon,
+  ArchiveIcon,
+  DatabaseIcon,
+  HomeIcon,
+  IngestPackageIcon
+} from "./ui/icons";
 
 // base components
 import Welcome from "./home";
@@ -61,46 +61,45 @@ const routes = [
 const mainNav = [
   {
     title: "Home",
-    icon: GoHome,
+    icon: HomeIcon,
     menuExact: true,
     link: "/"
   },
   {
     title: "HAV",
     link: "/hav/",
-    icon: FaArchive,
+    icon: ArchiveIcon,
     menuExact: false
   },
   {
     title: "Ingest",
     link: "/ingest/",
-    icon: GoPackage,
+    icon: IngestPackageIcon,
     menuExact: false
   },
   {
     title: "Sources",
-    icon: GoFileSubmodule,
     sub: [
       {
         link: "/sources/incoming/",
-        icon: GoFileDirectory,
+        icon: DirectoryIcon,
         title: "Incoming",
         menuExact: false
       },
       {
         link: "/sources/whav/",
-        icon: GoDatabase,
+        icon: DatabaseIcon,
         title: "WHAV",
         menuExact: false
       }
     ]
+  },
+  {
+    icon: UploadIcon,
+    title: "Uploads",
+    menuExact: true,
+    link: "/uploads/"
   }
-  // {
-  //     icon: GoCloudUpload,
-  //     title: 'Uploads',
-  //     menuExact: true,
-  //     link: '/uploads/'
-  // }
 ];
 
 export { mainNav, routes };

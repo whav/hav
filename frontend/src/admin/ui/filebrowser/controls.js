@@ -7,13 +7,13 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 
 import {
-  MdCheckBoxOutlineBlank as CheckboxBlankIcon,
-  MdCheckBox as CheckboxCheckedIcon,
-  MdAddBox as AddIcon,
-  MdViewModule as GalleryIcon,
-  MdViewList as ListIcon,
-  MdFileUpload as UploadIcon
-} from "react-icons/md";
+  CheckboxBlankIcon,
+  CheckboxCheckedIcon,
+  AddIcon,
+  GalleryIcon,
+  ListIcon,
+  UploadIcon
+} from "../icons";
 
 import Button, { ButtonGroup } from "../components/buttons";
 

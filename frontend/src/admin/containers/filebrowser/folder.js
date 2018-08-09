@@ -50,8 +50,8 @@ class FileBrowserDirectory extends React.Component {
         ingestable
       } = this.props;
 
-      console.log(this.props);
       let uploads = this.props.uploads;
+
       let breadcrumbs = (
         <DirectoryListingBreadcrumbs
           dirs={parentDirectories.map(d => {
@@ -174,10 +174,10 @@ const FileBrowserDirectoryView = connect(
       .map(f => f.url);
 
     // get the un-finished uploads for directory
-    let directoryUploads = Object.values(
-      getUploadsForPath(props.match.params, uploadState)
-    ).filter(u => !u.finished);
-
+    console.warn(uploadState[key]);
+    let directoryUploads = Object.values(uploadState[key] || []).filter(
+      u => !u.finished
+    );
     return {
       ...mappedProps,
       loading: false,

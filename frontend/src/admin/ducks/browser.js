@@ -1,5 +1,5 @@
 import { requestDirectory, createDirectory } from "../api/browser";
-
+import { UPLOAD_COMPLETED } from "./uploads";
 export const REQUEST_DIRECTORY = "REQUEST_DIRECTORY";
 export const RECEIVE_DIRECTORY_CONTENT = "RECEIVE_DIRECTORY_CONTENT";
 export const RECEIVE_FILE_INFO = "RECEIVE_FILE_INFO";
@@ -100,6 +100,17 @@ const reducer = (state = {}, action) => {
           isDirectory: false,
           ...data
         }
+      };
+    case UPLOAD_COMPLETED:
+      const folder = state[action.key];
+      const file_info = action.payload;
+      return {
+        ...state,
+        [action.key]: {
+          ...folder,
+          content: [...folder.content, file_info.url]
+        },
+        [file_info.url]: file_info
       };
     default:
       return state;

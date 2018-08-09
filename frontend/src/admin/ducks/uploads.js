@@ -1,4 +1,5 @@
 import uploadFile from "../api/upload";
+import { requestDirectoryAction } from "./browser";
 
 export const UPLOAD_STARTED = "UPLOAD_STARTED";
 export const UPLOAD_FAILED = "UPLOAD_FAILED";
@@ -61,7 +62,7 @@ const reducer = (state = {}, action) => {
 
 export const startFileUpload = (file, uploadTo) => {
   let default_args = {
-    path: uploadTo,
+    key: uploadTo,
     file: file.name,
     preview: file.preview
   };
@@ -73,7 +74,10 @@ export const startFileUpload = (file, uploadTo) => {
     uploadFile(
       file,
       uploadTo,
-      (response, status) => dispatch(upload_completed(default_args, response)),
+      (response, status) => {
+        dispatch(upload_completed(default_args, response));
+        // dispatch(requestDirectoryAction(uploadTo));
+      },
       (progress = 0) => dispatch(upload_progress(default_args, progress)),
       (reason, status) => dispatch(upload_failed(default_args, reason, status)),
       false

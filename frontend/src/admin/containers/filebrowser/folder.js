@@ -22,8 +22,6 @@ import FileList, {
 import { FileBrowserMenu } from "../../ui/filebrowser/controls";
 import { buildFrontendUrl, buildApiUrl } from "../../api/urls";
 
-import { getUploadsForPath } from "../../ducks/uploads";
-
 class FileBrowserDirectory extends React.Component {
   constructor(props) {
     super(props);
@@ -40,7 +38,6 @@ class FileBrowserDirectory extends React.Component {
         files,
         settings,
         switchDisplayStyle,
-        path,
         allowUpload,
         uploadFile,
         allowCreate,
@@ -174,7 +171,6 @@ const FileBrowserDirectoryView = connect(
       .map(f => f.url);
 
     // get the un-finished uploads for directory
-    console.warn(uploadState[key]);
     let directoryUploads = Object.values(uploadState[key] || []).filter(
       u => !u.finished
     );

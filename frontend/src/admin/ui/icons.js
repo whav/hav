@@ -42,5 +42,6 @@ export {
   HomeIcon,
   ArchiveIcon,
   DatabaseIcon,
-  IngestPackageIcon
+  IngestPackageIcon,
+  SpinnerIcon
 };

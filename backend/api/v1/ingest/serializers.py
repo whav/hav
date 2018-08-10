@@ -116,6 +116,8 @@ class IngestSerializer(serializers.Serializer):
     def validate(self, data):
         if data['start'] > data['end']:
             raise serializers.ValidationError("Start time must be before end time.")
+        if not self.target.is_descendant_of(self.collection.root_node) and not self.target == self.collection:
+            raise serializers.ValidationError("Target set is not a descendant of the specified collection.")
         return data
 
 

@@ -108,7 +108,7 @@ const reducer = (state = {}, action) => {
         ...state,
         [action.key]: {
           ...folder,
-          content: [...folder.content, file_info.url]
+          content: [file_info.url, ...folder.content]
         },
         [file_info.url]: file_info
       };

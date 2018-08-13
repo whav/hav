@@ -59,11 +59,6 @@ class FSSource(Source):
         }
         return [
             path('', FileBrowser.as_view(**kwargs), name='filebrowser_root'),
-            # re_path(
-            #     r'(?P<path>\w+\/$)?(?P<filename>[\w.]+)$',
-            #     FileBrowserFileUpload.as_view(**kwargs),
-            #     name='filebrowser_upload'
-            # ),
             path('<str:filename>', FileBrowserFileUpload.as_view(**kwargs)),
             path('<str:path>/<str:filename>', FileBrowserFileUpload.as_view(**kwargs), name='filebrowser_upload'),
             path('<str:path>/', FileBrowser.as_view(**kwargs), name='filebrowser'),

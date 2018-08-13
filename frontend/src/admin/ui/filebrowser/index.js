@@ -38,7 +38,6 @@ export const FilePlaceHolder = props => {
 
   if (mime) {
     let category = mime.split("/")[0];
-    console.log(category);
     switch (category) {
       case "video":
         Icon = VideoFallbackIcon;

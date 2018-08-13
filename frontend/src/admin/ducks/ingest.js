@@ -134,6 +134,14 @@ const ingestionQueues = (state = {}, action) => {
       });
       return queues;
     case INGESTION_SUCCESS:
+      const { uuid, source_id } = action;
+      return {
+        ...state,
+        [uuid]: {
+          ...state[uuid],
+          ingested_items: [...state[uuid].ingested_items, source_id]
+        }
+      };
     default:
       return state;
   }
@@ -241,11 +249,12 @@ export const loadIngestOptions = () => {
   };
 };
 
-export const ingestionSuccess = (uuid, media_id) => {
+export const ingestionSuccess = (uuid, source_id, media_id) => {
   return {
     type: INGESTION_SUCCESS,
     uuid,
-    media_id
+    media_id,
+    source_id
   };
 };
 

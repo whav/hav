@@ -24,7 +24,7 @@ channels = "*"
 flower = "*"
 pillow = "*"
 pyvips = "*"
-docker-compose = "*"
+redis = "*"
 
 [dev-packages]
 ipdb = "*"

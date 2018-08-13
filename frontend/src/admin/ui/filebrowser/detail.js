@@ -1,6 +1,7 @@
 import React from "react";
 import filesize from "filesize";
 import { FallBackImageLoader } from "./index";
+import Button from "../components/buttons";
 
 export default class extends React.Component {
   render() {
@@ -22,7 +23,9 @@ export default class extends React.Component {
           />
         </div>
         <h2>Properties</h2>
-
+        <Button onClick={props.ingest} className="is-primary">
+          Ingest
+        </Button>
         <table className="table is-striped">
           <tbody>
             {Object.entries(tableProps).map(([key, value]) => (

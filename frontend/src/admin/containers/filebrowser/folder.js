@@ -192,7 +192,6 @@ const FileBrowserDirectoryView = connect(
     const apiURL = buildApiUrl(props.location.pathname);
     const saveFileSelection = ids => {
       dispatch(queueForIngestion(ids));
-      props.history.push("/hav/");
     };
 
     return {

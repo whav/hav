@@ -43,6 +43,13 @@ const queue = (state = [], action) => {
   }
 };
 
+const ingestToUrl = (state = "/hav/", action) => {
+  if (action.type === INGEST_TO) {
+    return history.location.pathname;
+  }
+  return state;
+};
+
 const ingestTo = (state = null, action) => {
   switch (action.type) {
     case INGEST_TO:
@@ -153,6 +160,7 @@ const reducer = combineReducers({
   options,
   queue,
   ingestTo,
+  ingestToUrl,
   ingestionQueues
 });
 
@@ -163,9 +171,13 @@ const cleanData = data => {
 };
 
 export const queueForIngestion = ingestionIds => {
-  return {
-    type: QUEUE_FOR_INGESTION,
-    ingestionIds
+  return (dispatch, getState) => {
+    dispatch({
+      type: QUEUE_FOR_INGESTION,
+      ingestionIds
+    });
+    const url = getState().ingest.ingestToUrl || "/hav/";
+    history.push(url);
   };
 };
 

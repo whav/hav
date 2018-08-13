@@ -1,7 +1,10 @@
 import React from "react";
 import filesize from "filesize";
+import { FallBackImageLoader } from "./index";
+
 export default class extends React.Component {
   render() {
+    const props = this.props;
     const tableProps = {
       Size: filesize(this.props.size),
       "Mime Type": this.props.mime,
@@ -10,7 +13,14 @@ export default class extends React.Component {
     return (
       <div className="container content">
         <h1>{this.props.name}</h1>
-
+        <hr />
+        <div>
+          <FallBackImageLoader
+            sources={this.props.srcset}
+            mime_type={props.mime_type}
+            alt={props.name}
+          />
+        </div>
         <h2>Properties</h2>
 
         <table className="table is-striped">
@@ -23,7 +33,7 @@ export default class extends React.Component {
             ))}
           </tbody>
         </table>
-        {/* <pre>{JSON.stringify(this.props, null, 2)}</pre> */}
+        <pre>{JSON.stringify(this.props, null, 2)}</pre>
       </div>
     );
   }

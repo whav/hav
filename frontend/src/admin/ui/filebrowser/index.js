@@ -103,13 +103,16 @@ export class FallBackImageLoader extends React.Component {
         onError={this.handleImageLoadError}
         title={title}
         alt={alt}
+        className="image"
       />
     );
   }
 }
 
 FallBackImageLoader.propTypes = {
-  src: PropTypes.string.isRequired
+  src: PropTypes.string,
+  sources: PropTypes.array,
+  mime_type: PropTypes.string
 };
 
 const GGalleryItem = ({

@@ -137,9 +137,7 @@ class IngestQueue extends React.Component {
             }}
           >
             <span>Asset #{index + 1}</span>
-            <p>
-              <PreviewImage source={source} />
-            </p>
+            <PreviewImage source={source} />
           </IngestForm>
         );
       });

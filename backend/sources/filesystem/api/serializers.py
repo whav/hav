@@ -3,7 +3,7 @@ import stat
 from mimetypes import guess_type
 from rest_framework import serializers
 
-from hav.utils.imaginary import generate_url
+from hav.utils.imaginary import generate_url, generate_urls
 
 import logging
 
@@ -72,6 +72,7 @@ class FileSerializer(FileBrowserBaseSerializer):
     path = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
+    srcset = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
     isFile = serializers.SerializerMethodField()
@@ -86,10 +87,12 @@ class FileSerializer(FileBrowserBaseSerializer):
         return guess_type(path.name)[0]
 
     def get_preview_url(self, path):
-        mime = self.get_mime(path) or ''
-        # if mime.startswith('image/'):
         rel_path = path.relative_to(self.get_root()).as_posix()
         return generate_url(os.path.join('/incoming/', rel_path))
+
+    def get_srcset(self, path):
+        rel_path = path.relative_to(self.get_root()).as_posix()
+        return generate_urls(os.path.join('/incoming/', rel_path))
 
     def get_ingestable(self, _):
         return True

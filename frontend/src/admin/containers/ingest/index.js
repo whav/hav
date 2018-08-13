@@ -1,18 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-
-import LoadingIndicator from "../../ui/loading";
-
-import BatchIngest from "../../ui/ingest";
-
-import {
-  fetchInitialData,
-  saveIngestionData,
-  updateIngestionData
-} from "../../ducks/ingest";
-
-import pickBy from "lodash/pickBy";
+import uuid from "uuid/v4";
+import { saveIngestionData } from "../../ducks/ingest";
 
 class Ingest extends React.Component {
   constructor(props) {
@@ -20,10 +10,13 @@ class Ingest extends React.Component {
     this.state = {
       name: ""
     };
+
+    if (props.initialItems.length === 1) {
+      props.saveIngestionData(props.target, props.initialItems, uuid());
+    }
   }
 
   saveData = e => {
-    console.log(this.state);
     e.preventDefault();
     this.props.saveIngestionData(
       this.props.target,
@@ -38,9 +31,8 @@ class Ingest extends React.Component {
 
   render() {
     const props = this.props;
-    // if (this.props.loading) {
     return (
-      <form className="section" onSubmit={this.saveData}>
+      <form className="section container" onSubmit={this.saveData}>
         <div className="container">
           <h1 className="title">New ingestion queue</h1>
           <div className="field">
@@ -56,17 +48,6 @@ class Ingest extends React.Component {
               />
             </div>
           </div>
-
-          {/* <pre>
-            {JSON.stringify(
-              {
-                target: props.target,
-                entries: this.props.initialItems
-              },
-              null,
-              2
-            )}
-          </pre> */}
           <button type="submit">Save</button>
         </div>
       </form>

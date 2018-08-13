@@ -22,6 +22,7 @@ import { Uploads } from "./containers/uploads";
 import IngestionQueueList from "./containers/ingest/queues";
 import IngestionQueue from "./containers/ingest/queue";
 import SaveIngestionQueue from "./containers/ingest/index";
+import SingleIngestionItem from "./containers/ingest/single";
 
 const routes = [
   {
@@ -43,6 +44,10 @@ const routes = [
   {
     path: "/ingest/create/",
     main: SaveIngestionQueue
+  },
+  {
+    path: "/ingests/single/",
+    main: SingleIngestionItem
   },
   {
     path: "/ingest/:uuid/",

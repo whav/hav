@@ -9,6 +9,7 @@ from apps.archive.operations.hash import generate_hash
 from apps.archive.tasks import archive
 from apps.webassets.tasks import create as create_webassets
 from apps.ingest.models import IngestQueue
+from apps.hav_collections.models import Collection
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     InternalIngestHyperlinkField, IngestionReferenceField
@@ -82,6 +83,24 @@ class IngestSerializer(serializers.Serializer):
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
 
+    @property
+    def target(self):
+        return self.context['target']
+
+    @property
+    def collection(self):
+        try:
+            return self.target.collection
+        except Collection.DoesNotExist:
+            ancestor = self.target.get_ancestors().filter(collection__isnull=False).last()
+            if ancestor is None:
+                return None
+            else:
+                return ancestor.collection
+
+        return None
+
+
     def validate_source(self, value):
         try:
             hash = generate_hash(value)
@@ -97,19 +116,21 @@ class IngestSerializer(serializers.Serializer):
     def validate(self, data):
         if data['start'] > data['end']:
             raise serializers.ValidationError("Start time must be before end time.")
+        if not self.target.is_descendant_of(self.collection.root_node) and not self.target == self.collection.root_node:
+            raise serializers.ValidationError("Target set is not a descendant of the specified collection.")
         return data
 
 
     def create(self, validated_data):
         user = self.context['user']
-        target = self.context['target']
         dt_range = DateTimeTZRange(lower=validated_data['start'], upper=validated_data['end'])
 
         # actually create the media object
         media = Media.objects.create(
             creation_date=dt_range,
             license=validated_data.get('license'),
-            set=target,
+            set=self.target,
+            collection=self.collection,
             created_by=user,
             original_media_type=validated_data['media_type'],
             original_media_description=validated_data.get('media_description', ''),
@@ -122,7 +143,7 @@ class IngestSerializer(serializers.Serializer):
                 creator=creator,
                 media=media
             )
-
+        print(media.pk)
         logger.info(
             "Triggering archiving for file %s, media: %d, user: %d",
             str(validated_data['source']),

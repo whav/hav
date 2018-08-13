@@ -107,7 +107,8 @@ class IngestQueue extends React.Component {
     });
     response
       .then(data => {
-        this.props.loadIngestData();
+        this.props.onIngestSuccess(ingestId, data.pk);
+        // this.props.loadIngestData();
       })
       .catch(err => this.onError(ingestId, err));
   };
@@ -136,9 +137,7 @@ class IngestQueue extends React.Component {
             }}
           >
             <span>Asset #{index + 1}</span>
-            <p>
-              <PreviewImage source={source} />
-            </p>
+            <PreviewImage source={source} />
           </IngestForm>
         );
       });
@@ -195,8 +194,8 @@ export default connect(
         dispatch(fetchIngestionQueue(uuid));
         dispatch(loadIngestOptions());
       },
-      onIngestSuccess: media_id => {
-        dispatch(ingestionSuccess(uuid, media_id));
+      onIngestSuccess: (source_id, media_id) => {
+        dispatch(ingestionSuccess(uuid, source_id, media_id));
       },
       deleteIngestItem: source_id => {
         dispatch(deleteIngestItem(uuid, source_id));

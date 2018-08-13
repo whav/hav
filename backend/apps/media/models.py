@@ -4,6 +4,7 @@ from django.conf import settings
 from django.utils.functional import cached_property
 from apps.sets.models import Node
 from apps.archive.models import ArchiveFile
+from apps.hav_collections.models import Collection
 
 from .types import media_types
 
@@ -66,6 +67,8 @@ class MediaManager(models.Manager):
 class Media(models.Model):
 
     MEDIA_TYPE_CHOICES = media_types
+
+    collection = models.ForeignKey(Collection, null=True, blank=False, on_delete=models.SET_NULL)
 
     creators = models.ManyToManyField(MediaCreator, through=MediaToCreator, verbose_name='creators')
     creation_date = DateTimeRangeField()

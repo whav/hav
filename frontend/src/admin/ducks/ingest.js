@@ -43,6 +43,13 @@ const queue = (state = [], action) => {
   }
 };
 
+const ingestToUrl = (state = "/hav/", action) => {
+  if (action.type === INGEST_TO) {
+    return history.location.pathname;
+  }
+  return state;
+};
+
 const ingestTo = (state = null, action) => {
   switch (action.type) {
     case INGEST_TO:
@@ -134,6 +141,14 @@ const ingestionQueues = (state = {}, action) => {
       });
       return queues;
     case INGESTION_SUCCESS:
+      const { uuid, source_id } = action;
+      return {
+        ...state,
+        [uuid]: {
+          ...state[uuid],
+          ingested_items: [...state[uuid].ingested_items, source_id]
+        }
+      };
     default:
       return state;
   }
@@ -145,6 +160,7 @@ const reducer = combineReducers({
   options,
   queue,
   ingestTo,
+  ingestToUrl,
   ingestionQueues
 });
 
@@ -155,9 +171,13 @@ const cleanData = data => {
 };
 
 export const queueForIngestion = ingestionIds => {
-  return {
-    type: QUEUE_FOR_INGESTION,
-    ingestionIds
+  return (dispatch, getState) => {
+    dispatch({
+      type: QUEUE_FOR_INGESTION,
+      ingestionIds
+    });
+    const url = getState().ingest.ingestToUrl || "/hav/";
+    history.push(url);
   };
 };
 
@@ -241,11 +261,12 @@ export const loadIngestOptions = () => {
   };
 };
 
-export const ingestionSuccess = (uuid, media_id) => {
+export const ingestionSuccess = (uuid, source_id, media_id) => {
   return {
     type: INGESTION_SUCCESS,
     uuid,
-    media_id
+    media_id,
+    source_id
   };
 };
 

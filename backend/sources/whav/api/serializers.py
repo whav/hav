@@ -1,11 +1,10 @@
 import os
 from mimetypes import guess_type
 from rest_framework import serializers
-from rest_framework.reverse import reverse
-from django.utils.functional import cached_property
+
 
 from apps.whav.models import ImageCollection, MediaOrdering
-from hav.utils.imaginary import generate_urls
+from hav.utils.imaginary import generate_urls, generate_url
 
 class WHAVSerializerMixin(object):
 
@@ -27,7 +26,9 @@ class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
     path = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
+
     preview_url = serializers.SerializerMethodField()
+    srcset = serializers.SerializerMethodField()
 
     size = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -57,13 +58,18 @@ class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
         media = mo.media
         return media.basefile.mime_type or guess_type(self.get_name(mo))[0]
 
-    def get_preview_url(self, mo):
+    def _get_image_url(self, mo):
         media = mo.media
         rel_path = media.webimage.original_image
         rel_path, ext = os.path.splitext(rel_path)
-        rel_path = '%s_display_image%s' %(rel_path, ext)
-        url = 'https://whav.aussereurop.univie.ac.at/display/%s' % rel_path
-        return generate_urls(url)
+        rel_path = '%s_display_image%s' % (rel_path, ext)
+        return 'https://whav.aussereurop.univie.ac.at/display/%s' % rel_path
+
+    def get_srcset(self, mo):
+        return generate_urls(self._get_image_url(mo))
+
+    def get_preview_url(self, mo):
+        return generate_url(self._get_image_url(mo))
 
     def get_url(self, mo):
         return self._config.to_url(mo, self.request)

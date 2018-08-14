@@ -52,16 +52,17 @@ export const FilePlaceHolder = props => {
         break;
     }
   }
-  return <Icon title={mime || ""} className={className} />;
+  return <Icon className={className} />;
 };
 
 export class FallBackImageLoader extends React.Component {
+  state = {
+    hasError: false,
+    hasLoaded: false
+  };
+
   constructor(props) {
     super(props);
-    this.state = {
-      hasError: false,
-      hasLoaded: false
-    };
   }
   handleImageLoadError = e => {
     this.setState({
@@ -83,9 +84,10 @@ export class FallBackImageLoader extends React.Component {
       title = "",
       mime_type = ""
     } = this.props;
-    let { hasError } = this.state;
-    if (hasError) {
-      return <FilePlaceHolder mime={mime_type} />;
+    let { hasError, hasLoaded } = this.state;
+
+    if (hasError || !hasLoaded) {
+      return <FilePlaceHolder title={title} mime={mime_type} />;
     }
 
     let srcSetProps = {};
@@ -117,11 +119,11 @@ FallBackImageLoader.propTypes = {
 
 const GGalleryItem = ({
   name,
-  preview,
   directory = false,
   selected = false,
   onClick,
-  size
+  size,
+  children
 }) => {
   return (
     <div
@@ -136,7 +138,7 @@ const GGalleryItem = ({
       <span className={classNames("g-gallery-select", { green: selected })}>
         <SelectFileCheckboxIcon />
       </span>
-      {preview}
+      {children}
 
       <div className="g-gallery-item-name">{name}</div>
     </div>
@@ -156,15 +158,16 @@ class GGalleryDirectory extends React.Component {
         name={name}
         onClick={this.navigateOrSelect}
         directory={true}
-        preview={<DirectoryIcon />}
         selected={selected}
-      />
+      >
+        <DirectoryIcon />
+      </GGalleryItem>
     );
   }
 }
 
 export const GGalleryFile = ({ file, toggleSelect, size, ...props }) => {
-  let preview;
+  let preview = <FilePlaceHolder mime={file.mime_type} />;
   if (file.preview_url) {
     let sources = [];
     let src = file.preview_url;
@@ -177,23 +180,21 @@ export const GGalleryFile = ({ file, toggleSelect, size, ...props }) => {
         src={src}
         sources={sources}
         sizes={size}
-        title={`${file.name} ${file.mime}`}
+        title={`${file.name} (${file.mime_type})`}
         alt="preview image"
-        mime_type={file.mime}
+        mime_type={file.mime_type}
       />
     );
-  } else {
-    preview = <FilePlaceHolder mime={file.mime} />;
   }
-
   return (
     <GGalleryItem
       onClick={toggleSelect}
       name={file.name}
-      preview={preview}
       size={size}
       {...props}
-    />
+    >
+      {preview}
+    </GGalleryItem>
   );
 };
 

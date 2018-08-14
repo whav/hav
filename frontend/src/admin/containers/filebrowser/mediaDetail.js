@@ -1,25 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-
-import { Audio, Video, Image } from "../../ui/components/webassets";
-
-const WebAsset = props => {
-  switch (props.mime_type.split("/")[0].toLowerCase()) {
-    case "audio":
-      return <Audio {...props} />;
-    case "image":
-      return <Image {...props} />;
-    case "video":
-      return <Video {...props} />;
-    default:
-      return <pre>{JSON.stringify(props, null, 2)}</pre>;
-  }
-};
+import Loading from "../../ui/loading";
+import MediaDetail from "../../ui/filebrowser/hav/detail";
 
 class HavMediaDetail extends React.Component {
-  state = {
-    details: null
-  };
+  state = { loading: true };
+
   componentDidMount() {
     fetch(`/api/v1/hav/media/${this.props.match.params.media_id}/`, {
       method: "GET",
@@ -30,27 +16,14 @@ class HavMediaDetail extends React.Component {
       })
     })
       .then(resp => resp.json())
-      .then(data => this.setState({ details: data }));
+      .then(data => this.setState({ details: data, loading: false }));
   }
   render() {
-    return (
-      <div>
-        {this.state.details && this.state.details.preview_url ? (
-          <div>
-            <img src={this.state.details.preview_url} />
-          </div>
-        ) : null}
-
-        <h3>WebAssets</h3>
-        {this.state.details &&
-          this.state.details.webassets.map((wa, index) => (
-            <WebAsset key={index} {...wa} />
-          ))}
-        <h3>Props</h3>
-        <pre>{JSON.stringify(this.state.details || this.props, null, 2)}</pre>
-      </div>
-    );
+    if (this.state.loading) {
+      return <Loading />;
+    }
+    return <MediaDetail details={this.state.details} />;
   }
 }
 
-export default HavMediaDetail;
+export default connect()(HavMediaDetail);

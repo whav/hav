@@ -115,7 +115,7 @@ class IngestSerializer(serializers.Serializer):
 
     def validate(self, data):
         user = self.context['user']
-        if user not in self.collection.administrators or not user.is_superuser:
+        if not user.is_superuser or user not in self.collection.administrators.all():
             raise serializers.ValidationError('You do not have the appropriate permissions to ingest into the collection "{}"'.format(self.collection.name))
 
         if data['start'] > data['end']:

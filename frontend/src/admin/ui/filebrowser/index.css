@@ -33,6 +33,7 @@
   /* border-collapse: collapse; */
   margin: 0.4rem;
   padding: 0.6rem;
+  width: 200px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

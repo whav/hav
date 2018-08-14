@@ -17,7 +17,6 @@ class ProtectedFileSystemStorage(FileSystemStorage):
     def url(self, name):
         name = name.lstrip('/')
         name = urljoin('webassets/', name)
-        print('hashing path:', name, self.secret_key)
         digested_name = '{}:{}'.format(name, self.secret_key).encode('utf-8')
         md5_digest = hashlib.md5(digested_name).digest()
         key = base64.b64encode(md5_digest).decode('utf-8')

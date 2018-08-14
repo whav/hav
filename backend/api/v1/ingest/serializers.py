@@ -114,10 +114,15 @@ class IngestSerializer(serializers.Serializer):
             return value
 
     def validate(self, data):
+        user = self.context['user']
+        if user not in self.collection.administrators or not user.is_superuser:
+            raise serializers.ValidationError('You do not have the appropriate permissions to ingest into the collection "{}"'.format(self.collection.name))
+
         if data['start'] > data['end']:
             raise serializers.ValidationError("Start time must be before end time.")
         if not self.target.is_descendant_of(self.collection.root_node) and not self.target == self.collection.root_node:
             raise serializers.ValidationError("Target set is not a descendant of the specified collection.")
+
         return data
 
 
@@ -143,7 +148,7 @@ class IngestSerializer(serializers.Serializer):
                 creator=creator,
                 media=media
             )
-        print(media.pk)
+
         logger.info(
             "Triggering archiving for file %s, media: %d, user: %d",
             str(validated_data['source']),

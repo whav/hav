@@ -7,6 +7,7 @@ PartOf=hav.service
 After=hav.service
 
 [Service]
+Type=forked
 WorkingDirectory=/home/hav/production/hav/backend/
 ExecStart=/home/hav/.local/share/virtualenvs/backend-xltUeC_Q/bin/celery -A hav -Q webassets,archive worker
 

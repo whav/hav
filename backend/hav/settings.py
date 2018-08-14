@@ -31,7 +31,8 @@ env = environ.Env(
     SENTRY_DSN=(str, ''),
     LOGLEVEL=(str, 'info'),
     IMAGESERVER_SECRET=str,
-    IMAGESERVER_URL_PREFIX=(str, '/')
+    IMAGESERVER_URL_PREFIX=(str, '/'),
+    WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000')
 )
 
 # read the .env file
@@ -219,7 +220,7 @@ STORAGES = {
                 default='dist/webassets/'
             )
         ),
-        'base_url': '//127.0.0.1:9000/',
+        'base_url': env('WEBASSET_URL_PREFIX'),
         'storage_class': 'hav.utils.storages.ProtectedFileSystemStorage'
     }
 }

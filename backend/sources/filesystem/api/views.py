@@ -106,7 +106,7 @@ class FileBrowserFileUpload(IncomingBaseMixin, FileBrowserMixin, APIView):
 
         storage = FileSystemStorage(location=self.root_path)
         try:
-            with storage.open(path, mode) as destination:
+            with storage.open(storage.get_available_name(path), mode) as destination:
                 for chunk in file.chunks():
                     destination.write(chunk)
         except OSError as err:

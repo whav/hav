@@ -57,13 +57,13 @@ export const FilePlaceHolder = props => {
 
 export class FallBackImageLoader extends React.Component {
   state = {
-    hasError: false,
-    hasLoaded: false
+    hasError: false
   };
 
   constructor(props) {
     super(props);
   }
+
   handleImageLoadError = e => {
     this.setState({
       hasError: true
@@ -84,9 +84,9 @@ export class FallBackImageLoader extends React.Component {
       title = "",
       mime_type = ""
     } = this.props;
-    let { hasError, hasLoaded } = this.state;
+    let { hasError } = this.state;
 
-    if (hasError || !hasLoaded) {
+    if (hasError) {
       return <FilePlaceHolder title={title} mime={mime_type} />;
     }
 

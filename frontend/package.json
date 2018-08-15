@@ -36,7 +36,7 @@
     "whatwg-fetch": "^2.0.4"
   },
   "scripts": {
-    "test": "BABEL_ENV=test jest",
+    "test": "jest",
     "test:watch": "npm test -- --watch",
     "babel": "./node_modules/.bin/babel-node",
     "webpack": "npm run babel -- ./node_modules/.bin/webpack --progress",
@@ -48,12 +48,14 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.56",
-    "@babel/core": "^7.0.0-beta.56",
+    "@babel/core": "^7.0.0-rc.1",
     "@babel/node": "^7.0.0-beta.56",
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.56",
     "@babel/preset-env": "^7.0.0-beta.56",
     "@babel/preset-react": "^7.0.0-beta.56",
     "autoprefixer": "^9.1.0",
+    "babel-core": "^7.0.0-0",
+    "babel-jest": "^23.4.2",
     "babel-loader": "^8.0.0-beta",
     "bulma": "^0.7.1",
     "css-loader": "^1.0.0",
@@ -68,6 +70,7 @@
     "prettier": "^1.14.0",
     "react-hot-loader": "4.3.4",
     "react-transform-hmr": "^1.0.4",
+    "regenerator-runtime": "^0.12.1",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.21.0",
     "url-loader": "^1.0.1",

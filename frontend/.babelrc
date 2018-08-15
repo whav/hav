@@ -7,6 +7,9 @@
   "env": {
     "hmr": {
       "plugins": ["react-hot-loader/babel"]
+    },
+    "test": {
+      "presets": ["@babel/preset-react", "@babel/preset-env"]
     }
   }
 }

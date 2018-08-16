@@ -142,11 +142,14 @@ const ingestionQueues = (state = {}, action) => {
       return queues;
     case INGESTION_SUCCESS:
       const { uuid, source_id } = action;
+
       return {
         ...state,
         [uuid]: {
           ...state[uuid],
-          ingested_items: [...state[uuid].ingested_items, source_id]
+          ingestion_queue: state[uuid].ingestion_queue.filter(
+            s => s !== source_id
+          )
         }
       };
     default:

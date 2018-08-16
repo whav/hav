@@ -16,6 +16,7 @@ import PreviewFolder from "../filebrowser/folder_preview";
 import { queueForIngestion } from "../../api/ingest";
 
 import parseDate from "../../utils/daterange";
+import { PreviouslyIngestedMedia } from "../../ui/ingest";
 
 class IngestQueue extends React.Component {
   constructor(props) {
@@ -114,7 +115,13 @@ class IngestQueue extends React.Component {
   };
 
   render() {
-    const { loading, options, items = [], target } = this.props;
+    const {
+      loading,
+      options,
+      items = [],
+      target,
+      created_media_entries = []
+    } = this.props;
     const { formData, templateData, errors } = this.state;
 
     if (loading) {
@@ -147,6 +154,7 @@ class IngestQueue extends React.Component {
           <h1>Ingesting {count === 1 ? "one file" : `${count} files`}</h1>
           <em>Target</em>
           <PreviewFolder source={target} />
+
           <hr />
           {/* template form if more than one ingest file */}
           {count > 1 ? (
@@ -158,6 +166,15 @@ class IngestQueue extends React.Component {
             />
           ) : null}
           <FormSet>{forms}</FormSet>
+          {created_media_entries.length > 0 ? (
+            <React.Fragment>
+              <h2>Previously ingested</h2>
+              <hr />
+              {created_media_entries.map(m => (
+                <PreviouslyIngestedMedia key={m.name} media={m} />
+              ))}
+            </React.Fragment>
+          ) : null}
         </div>
       );
     }
@@ -172,19 +189,14 @@ export default connect(
         loading: true
       };
     }
-    const { ingested_items = [], ingestion_items = {} } = queue;
-
-    // these items will be considered for ingestion
-    const items = Object.keys(ingestion_items).filter(
-      k => ingested_items.indexOf(k) === -1
-    );
-
+    const { ingestion_queue, created_media_entries } = queue;
     return {
-      items,
+      items: ingestion_queue,
+      created_media_entries,
       uuid: queue.uuid,
       target: queue.target,
       options: state.ingest.options,
-      loading: queue && items ? false : true
+      loading: queue && state.ingest.options ? false : true
     };
   },
   (dispatch, ownProps) => {

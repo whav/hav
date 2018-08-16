@@ -24,6 +24,5 @@ class ArchiveFile(models.Model):
     def mime_type(self):
         return guess_type(self.original_filename)[0]
 
-
     def __str__(self):
         return '{0} ({1})'.format(self.file.path, filesizeformat(self.size))

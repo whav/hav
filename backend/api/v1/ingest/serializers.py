@@ -3,6 +3,10 @@ import logging
 from django.db import transaction
 from psycopg2.extras import DateTimeTZRange
 from rest_framework import serializers
+from django.urls import reverse
+
+
+from api.v1.havBrowser.serializers import SimpleHAVMediaSerializer
 
 from apps.archive.models import ArchiveFile
 from apps.archive.operations.hash import generate_hash
@@ -13,8 +17,6 @@ from apps.hav_collections.models import Collection
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     InternalIngestHyperlinkField, IngestionReferenceField
-
-from .resolver import resolveIngestionItems
 
 
 logger = logging.getLogger(__name__)
@@ -47,11 +49,6 @@ class MediaCreatorSerializer(serializers.ModelSerializer):
         model = MediaToCreator
         fields = ['role', 'creator']
 
-
-class SimpleMediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Media
-        fields = ['pk', 'creators', 'license', 'creation_date']
 
 
 class IngestionItemSerializer(serializers.Serializer):
@@ -128,6 +125,7 @@ class IngestSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = self.context['user']
+        queue = self.context['queue']
         dt_range = DateTimeTZRange(lower=validated_data['start'], upper=validated_data['end'])
 
         # actually create the media object
@@ -148,6 +146,11 @@ class IngestSerializer(serializers.Serializer):
                 creator=creator,
                 media=media
             )
+
+        # update the ingest queue by removing the source
+        queue = IngestQueue.objects.select_for_update().get(pk=queue.pk)
+        queue.link_to_media(media, self.initial_data['source'])
+        queue.save()
 
         logger.info(
             "Triggering archiving for file %s, media: %d, user: %d",
@@ -174,10 +177,10 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
     ingested_item_count = serializers.SerializerMethodField()
 
     def get_item_count(self, obj):
-        return len(obj.ingestion_items)
+        return len(obj.ingestion_queue)
 
     def get_ingested_item_count(self, obj):
-        return len(obj.ingested_items)
+        return obj.created_media_entries.count()
 
     class Meta:
         model = IngestQueue
@@ -187,10 +190,22 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
             'name',
             'item_count',
             'ingested_item_count',
-            # 'ingestion_',
             'created_at'
         ]
 
+
+class SimpleMediaSerializer(SimpleHAVMediaSerializer):
+
+    def get_url(self, instance):
+        request = self.context.get('request')
+        url_lookup = 'api:v1:hav_browser:hav_media'
+        url_kwargs = {'pk': instance.pk}
+        return request.build_absolute_uri(
+            reverse(
+                url_lookup,
+                kwargs=url_kwargs
+            )
+        )
 
 class IngestQueueSerializer(serializers.ModelSerializer):
 
@@ -198,28 +213,24 @@ class IngestQueueSerializer(serializers.ModelSerializer):
 
     selection = serializers.ListField(child=IngestionReferenceField(), write_only=True)
 
-    media_entries = serializers.SerializerMethodField()
+    created_media_entries = serializers.SerializerMethodField()
+
+    def get_created_media_entries(self, queue):
+        return SimpleMediaSerializer(queue.created_media_entries.all(), many=True, context=self.context).data
+
 
     def create(self, validated_data):
         logger.debug('creating queue: %s', validated_data)
         q = IngestQueue(
             target=validated_data['target'],
             name=validated_data['name'],
-            created_by=self.context['request'].user
+            created_by=self.context['request'].user,
+            ingestion_queue=validated_data['selection']
         )
         q.add_items(validated_data['selection'])
         q.save(force_insert=True)
         return q
 
-    def get_media_entries(self, iq):
-        field = IngestionReferenceField()
-        items = []
-        for k, v in iq.ingestion_items.items():
-            items.append(field.get_file_path(k))
-
-        # print(resolveIngestionItems(items))
-
-        return []
 
     class Meta:
         model = IngestQueue
@@ -228,7 +239,6 @@ class IngestQueueSerializer(serializers.ModelSerializer):
             'name',
             'target',
             'selection',
-            'ingestion_items',
-            'ingested_items',
-            'media_entries'
+            'ingestion_queue',
+            'created_media_entries'
         ]

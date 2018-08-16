@@ -156,6 +156,25 @@ const DateForm = ({ data, ...props }) => {
   );
 };
 
+const PreviouslyIngestedMedia = ({ media }) => (
+  <div className="box">
+    <div className="media">
+      <div className="media-left">
+        <figure className="image is-128x128">
+          <img src={media.preview_url} />
+        </figure>
+      </div>
+    </div>
+    <div className="media-content">
+      <div className="content">
+        <p>
+          <strong>{media.name}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+);
+
 class IngestForm extends React.Component {
   static propType = {
     licenses: PropTypes.array.isRequired,
@@ -332,4 +351,4 @@ class BatchIngest extends React.Component {
 }
 
 export default BatchIngest;
-export { IngestForm };
+export { IngestForm, PreviouslyIngestedMedia };

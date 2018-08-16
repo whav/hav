@@ -31,9 +31,19 @@ class IngestQueueList extends React.Component {
 }
 
 export default connect(
-  (state, ownProps) => {
+  state => {
+    const queues = Object.values(state.ingest.ingestionQueues).filter(q => {
+      if (q.ingested_item_count === q.item_count) {
+        return false;
+      }
+      if (q.item_count === 1) {
+        return false;
+      }
+      return true;
+    });
+    console.log(queues.slice(0, 5));
     return {
-      queues: Object.values(state.ingest.ingestionQueues),
+      queues,
       loading: state.ingest.loading
     };
   },

@@ -1,13 +1,12 @@
 import os
 from django.urls import reverse
-from django.db.models import ObjectDoesNotExist
 from rest_framework import serializers
 
 from apps.sets.models import Node
 from apps.media.models import Media
 from apps.archive.models import ArchiveFile
 from apps.webassets.models import WebAsset
-from hav.utils.imaginary import generate_urls
+from hav.utils.imaginary import generate_urls, generate_url
 
 
 class HAVArchiveFileSerializer(serializers.ModelSerializer):
@@ -64,11 +63,9 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
                 media.primary_file.webasset_set.all()
             )
             webasset_images = list(webasset_images)
-            try:
-                base_file = os.path.join('webassets/', webasset_images[0].file.name)
-            except IndexError:
-                base_file = os.path.join('archive/', media.primary_file.file.name)
-            return generate_urls(base_file)
+            base_file = os.path.join('webassets/', webasset_images[0].file.name)
+            return generate_url(base_file)
+        
         return
 
     def get_ingestable(self, _):

@@ -16,6 +16,7 @@ services:
 
   imaginary:
     image: h2non/imaginary:latest
+    restart: on-failure
     volumes:
       - ${INCOMING_FILES_ROOT}:/var/www/incoming:ro
       - ${HAV_ARCHIVE_PATH}:/var/www/archive:ro

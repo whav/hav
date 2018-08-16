@@ -15,27 +15,52 @@ const WebAsset = props => {
   }
 };
 
+const TableRow = ({ name, value }) => {
+  console.log(name, value);
+  return (
+    <tr>
+      <td>{name}</td>
+      <td>{value}</td>
+    </tr>
+  );
+};
+
+const ArchiveFileDetails = props => {
+  const keys = [
+    "original_filename",
+    "size",
+    "hash",
+    "archived_at",
+    "archived_by"
+  ];
+  return (
+    <table className="table">
+      <tbody>
+        {keys.map(k => (
+          <TableRow key={k} name={k} value={props[k]} />
+        ))}
+      </tbody>
+    </table>
+  );
+};
 class HavMediaDetail extends React.Component {
   render() {
     const { details } = this.props;
     return (
       <div>
-        {details && details.preview_url ? (
-          <div>
-            <img src={details.preview_url} />
-          </div>
-        ) : null}
-
-        <h3>WebAssets</h3>
+        <h1>#{details.name}</h1>
 
         {details &&
           details.webassets.map((wa, index) => (
             <WebAsset key={index} {...wa} />
           ))}
 
-        <h3>Props</h3>
+        {details.archive_files.map((af, index) => (
+          <ArchiveFileDetails key={index} {...af} />
+        ))}
+        {/* <h3>Props</h3> */}
 
-        <pre>{JSON.stringify(details, null, 2)}</pre>
+        {/* <pre>{JSON.stringify(details, null, 2)}</pre> */}
       </div>
     );
   }

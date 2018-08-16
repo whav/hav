@@ -136,7 +136,7 @@ class FileBrowserMenu extends React.Component {
 
 FileBrowserMenu.propTypes = {
   selectedItemIds: PropTypes.array.isRequired,
-  allItemIds: PropTypes.array.isRequired,
+  // allItemIds: PropTypes.array.isRequired,
   handleSelect: PropTypes.func.isRequired,
   saveFileSelection: PropTypes.func.isRequired
 };

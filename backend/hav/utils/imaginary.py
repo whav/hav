@@ -1,5 +1,6 @@
 from django.conf import settings
 from urllib.parse import urlencode, urlparse, urljoin
+from mimetypes import guess_type
 
 import base64
 import hashlib
@@ -12,8 +13,17 @@ def is_absolute(url):
     return bool(urlparse(url).netloc)
 
 
-def generate_url(path, operation='crop', **funckwargs):
+def is_image(filename):
+    t, _ = guess_type(filename)
+    if t is None:
+        return False
 
+    return t.split('/')[0] == 'image'
+
+def generate_url(path, operation='crop', **funckwargs):
+    if not is_image(path):
+        return None
+    
     default_kwargs = {
         'width': 300,
         'height': 300,
@@ -44,6 +54,8 @@ def generate_url(path, operation='crop', **funckwargs):
 
 def generate_urls(file_path):
     results = []
+    if not is_image(file_path):
+        return results
     for kwargs in settings.IMAGE_RESOLUTIONS:
         results.append(
             (
@@ -55,4 +67,5 @@ def generate_urls(file_path):
 
 
 def generate_info_url(path):
+    print(path)
     return generate_url(path, width=None, height=None, type=None, operation='info')

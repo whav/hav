@@ -3,7 +3,7 @@ import React from "react";
 import Button from "../components/buttons";
 import { LargeModal as Modal } from "../components/modal";
 import { ErrorList } from "../components/errors";
-
+import { FallBackImageLoader } from "../filebrowser/index";
 import PropTypes from "prop-types";
 
 import classnames from "classnames";
@@ -161,7 +161,11 @@ const PreviouslyIngestedMedia = ({ media }) => (
     <div className="media">
       <div className="media-left">
         <figure className="image is-128x128">
-          <img src={media.preview_url} />
+          {/* <img src={media.pre / view_url} /> */}
+          <FallBackImageLoader
+            src={media.preview_url}
+            mime_type={media.mime_type}
+          />
         </figure>
       </div>
     </div>

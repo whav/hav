@@ -56,6 +56,7 @@ class IngestQueueIngestionView(IncomingBaseMixin, IngestQMixin, APIView):
     def post(self, request, pk):
         queue = self.get_queue()
         context = {
+            'request': request,
             'user': request.user,
             'queue': queue,
             'target': queue.target,
@@ -68,7 +69,7 @@ class IngestQueueIngestionView(IncomingBaseMixin, IngestQMixin, APIView):
 
         media = serializer.save()
 
-        return Response(data=SimpleMediaSerializer(instance=media).data, status=201)
+        return Response(data=SimpleMediaSerializer(instance=media, context=context).data, status=201)
 
 
 class IngestQueueModifier(IncomingBaseMixin, IngestQMixin, APIView):

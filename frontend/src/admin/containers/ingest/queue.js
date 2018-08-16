@@ -108,7 +108,7 @@ class IngestQueue extends React.Component {
     });
     response
       .then(data => {
-        this.props.onIngestSuccess(ingestId, data.pk);
+        this.props.onIngestSuccess(ingestId, data);
         // this.props.loadIngestData();
       })
       .catch(err => this.onError(ingestId, err));
@@ -206,8 +206,8 @@ export default connect(
         dispatch(fetchIngestionQueue(uuid));
         dispatch(loadIngestOptions());
       },
-      onIngestSuccess: (source_id, media_id) => {
-        dispatch(ingestionSuccess(uuid, source_id, media_id));
+      onIngestSuccess: (source_id, data) => {
+        dispatch(ingestionSuccess(uuid, source_id, data));
       },
       deleteIngestItem: source_id => {
         dispatch(deleteIngestItem(uuid, source_id));

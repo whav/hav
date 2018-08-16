@@ -207,6 +207,7 @@ class SimpleMediaSerializer(SimpleHAVMediaSerializer):
             )
         )
 
+
 class IngestQueueSerializer(serializers.ModelSerializer):
 
     target = HAVTargetField()
@@ -217,7 +218,6 @@ class IngestQueueSerializer(serializers.ModelSerializer):
 
     def get_created_media_entries(self, queue):
         return SimpleMediaSerializer(queue.created_media_entries.all(), many=True, context=self.context).data
-
 
     def create(self, validated_data):
         logger.debug('creating queue: %s', validated_data)

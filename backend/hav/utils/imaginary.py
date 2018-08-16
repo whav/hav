@@ -23,7 +23,7 @@ def is_image(filename):
 def generate_url(path, operation='crop', **funckwargs):
     if not is_image(path):
         return None
-    
+
     default_kwargs = {
         'width': 300,
         'height': 300,

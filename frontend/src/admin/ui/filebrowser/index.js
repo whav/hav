@@ -86,7 +86,7 @@ export class FallBackImageLoader extends React.Component {
     } = this.props;
     let { hasError } = this.state;
 
-    if (hasError) {
+    if (!src || hasError) {
       return <FilePlaceHolder title={title} mime={mime_type} />;
     }
 

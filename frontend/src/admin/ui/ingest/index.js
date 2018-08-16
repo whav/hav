@@ -265,7 +265,7 @@ class BatchIngest extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="content">
         <h1 className="title">Ingest</h1>
 
         <button className="button is-primary" onClick={this.toggleTemplateForm}>

@@ -63,9 +63,14 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
                 media.primary_file.webasset_set.all()
             )
             webasset_images = list(webasset_images)
-            base_file = os.path.join('webassets/', webasset_images[0].file.name)
-            return generate_url(base_file)
-        
+            try:
+                filename =  webasset_images[0].file.name
+            except IndexError:
+                pass
+            else:
+                base_file = os.path.join('webassets/', filename)
+                return generate_url(base_file)
+
         return
 
     def get_ingestable(self, _):

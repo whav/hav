@@ -46,21 +46,18 @@ const ArchiveFileDetails = props => {
 class HavMediaDetail extends React.Component {
   render() {
     const { details } = this.props;
+    const { webassets = [], archive_files = [] } = details;
     return (
-      <div>
+      <div className="content">
         <h1>#{details.name}</h1>
 
-        {details &&
-          details.webassets.map((wa, index) => (
-            <WebAsset key={index} {...wa} />
-          ))}
+        {webassets.map((wa, index) => (
+          <WebAsset key={index} {...wa} />
+        ))}
 
-        {details.archive_files.map((af, index) => (
+        {archive_files.map((af, index) => (
           <ArchiveFileDetails key={index} {...af} />
         ))}
-        {/* <h3>Props</h3> */}
-
-        {/* <pre>{JSON.stringify(details, null, 2)}</pre> */}
       </div>
     );
   }

@@ -3,27 +3,37 @@ import { connect } from "react-redux";
 import Loading from "../../ui/loading";
 import MediaDetail from "../../ui/filebrowser/hav/detail";
 
-class HavMediaDetail extends React.Component {
-  state = { loading: true };
+import { requestFile } from "../../ducks/browser";
+import { buildApiUrl } from "../../api/urls";
 
-  componentDidMount() {
-    fetch(`/api/v1/hav/media/${this.props.match.params.media_id}/`, {
-      method: "GET",
-      credentials: "same-origin",
-      headers: new Headers({
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      })
-    })
-      .then(resp => resp.json())
-      .then(data => this.setState({ details: data, loading: false }));
+class HavMediaDetail extends React.Component {
+  constructor(props) {
+    super(props);
+    this.props.loadData();
   }
   render() {
-    if (this.state.loading) {
+    const { loading, data } = this.props;
+    if (loading) {
       return <Loading />;
     }
-    return <MediaDetail details={this.state.details} />;
+    return <MediaDetail details={data} />;
   }
 }
 
-export default connect()(HavMediaDetail);
+export default connect(
+  (state, props) => {
+    const key = buildApiUrl(props.location.pathname);
+    const data = state.repositories[key];
+    console.warn(key, data);
+    return {
+      loading: data == undefined,
+      data: data
+    };
+  },
+  (dispatch, props) => {
+    const url = buildApiUrl(props.location.pathname);
+    return {
+      loadData: () => dispatch(requestFile(url))
+    };
+  }
+)(HavMediaDetail);

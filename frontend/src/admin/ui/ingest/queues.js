@@ -27,9 +27,15 @@ const IngestionQueueRow = ({ q }) => {
 
 const IngestionQueueListing = ({ queues }) => {
   return (
-    <table className="table">
-      <tbody>{queues.map(q => <IngestionQueueRow key={q.uuid} q={q} />)}</tbody>
-    </table>
+    <div className="content">
+      <table className="table">
+        <tbody>
+          {queues.map(q => (
+            <IngestionQueueRow key={q.uuid} q={q} />
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

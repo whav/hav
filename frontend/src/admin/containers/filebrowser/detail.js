@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import DetailView from "../../ui/filebrowser/detail";
 import { clearIngestionQueue, queueForIngestion } from "../../ducks/ingest";
-import { history } from "../../index";
 
 class MediaDetail extends React.Component {
   render() {

@@ -51,3 +51,4 @@ def create_webassets(archived_file_id, logger=logging.getLogger(__name__)):
     wa.save()
     logger.info('WebAsset %d successfully created.' % wa.pk)
     return wa
+

@@ -10,16 +10,6 @@ export const MKDIR = "MKDIR";
 export const MKDIR_SUCCESS = "MKDIR_SUCCESS";
 export const MKDIR_FAIL = "MKDIR_FAIL";
 
-const normalize_url = url => {
-  let key;
-  try {
-    key = new URL(url);
-  } catch (e) {
-    key = new URL(url, window.location.href);
-  }
-  return key;
-};
-
 /* REDUCERS */
 
 const reducer = (state = {}, action) => {

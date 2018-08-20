@@ -321,7 +321,7 @@ IMAGESERVER_CONFIG = {
 }
 
 # These settings will change ....
-INCOMING_FILES_ROOT =  project_root(env('INCOMING_FILES_ROOT', default='dist/incoming'))
+INCOMING_FILES_ROOT = project_root(env('INCOMING_FILES_ROOT', default='dist/incoming'))
 HAV_ARCHIVE_PATH = project_root(env('HAV_ARCHIVE_PATH', default='dist/archive'))
 
 WHAV_ARCHIVE_PATH = project_root(

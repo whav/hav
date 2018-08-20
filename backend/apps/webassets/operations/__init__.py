@@ -6,9 +6,22 @@ from ..models import WebAsset
 
 from .image import convert as image_convert
 from .audio import convert as audio_convert
-from .video import convert as video_convert
+from .video import convert as video_convert, create_thumbnail
+
 
 import logging
+
+logger = logging.getLogger(__name__)
+
+
+def create_video_thumbnail(af):
+    wa = WebAsset(archivefile=af)
+    file_name = wa.get_available_file_name('jpeg')
+    os.makedirs(os.path.dirname(file_name), exist_ok=True)
+    create_thumbnail(af.file.path, file_name)
+    wa.file = os.path.relpath(file_name, start=wa.file.storage.location)
+    wa.save()
+    logger.info('Video thumbnail WebAsset %d successfully created.' % wa.pk)
 
 
 def create_webassets(archived_file_id, logger=logging.getLogger(__name__)):
@@ -29,6 +42,8 @@ def create_webassets(archived_file_id, logger=logging.getLogger(__name__)):
         convert = image_convert
     elif type == 'video':
         convert = video_convert
+        # create a video thumbnail before processing
+        create_video_thumbnail(af)
     elif type == 'audio':
         convert = audio_convert
     else:

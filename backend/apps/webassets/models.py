@@ -43,7 +43,7 @@ class WebAsset(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.mime_type and self.file:
-            self.mime_type = mimetypes.guess_type(self.file.name)
+            self.mime_type = mimetypes.guess_type(self.file.name)[0]
 
         if self.is_image():
             img = Image.open(self.file.path)

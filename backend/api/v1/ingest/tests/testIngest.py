@@ -1,24 +1,24 @@
-from rest_framework.test import APITestCase, APISimpleTestCase
-from rest_framework import status
-from django.urls import reverse
-from uuid import uuid4
 from datetime import date
-from apps.sets.models import Node
-from apps.media.models import License, MediaCreator
+from uuid import uuid4
+
 from django.contrib.auth.models import User
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
 
-# from ..serializers import MediaCreatorSerializer
-#
-# class MediaSerializerTest(APISimpleTestCase):
-#
-#     def test_serializer(self):
+from apps.media.models import License, MediaCreator
+from apps.sets.models import Node
+from apps.ingest.models import IngestQueue
 
+from unittest import skip
 
+@skip
 class BatchTest(APITestCase):
 
     def setUp(self):
         self.root = Node.add_root(name='testroot')
         self.target = self.root.add_child(name='testchild')
+        self.queue = IngestQueue.objects.create(target=self.root)
         self.url = reverse('api:v1:ingest')
         self.user = User.objects.create_superuser('tester', 'test@example.com', uuid4())
         self.creator = MediaCreator.objects.create(first_name='Tester', last_name='Testeroo')

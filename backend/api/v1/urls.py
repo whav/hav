@@ -37,7 +37,6 @@ source_patterns = [
     url(r'^whav/', include(whav_source.urls))
 ]
 
-print(source_patterns)
 
 urlpatterns = [
     url('^$', start),

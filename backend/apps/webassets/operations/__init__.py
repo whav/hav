@@ -66,7 +66,7 @@ def create_webassets(archived_file_id, logger=logging.getLogger(__name__)):
 
     logger.info('Determined converter:  {}'.format(convert.__name__))
 
-    wa = prepare_webasset(convert.extension)
+    wa = prepare_webasset(af, convert.extension)
 
     target_file_name = wa.get_available_file_name(convert.extension)
 

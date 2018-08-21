@@ -30,7 +30,7 @@ def create_waveform(source, target):
         '-i', source,
         '-filter_complex',
         'aformat=channel_layouts=mono,showwavespic=s=1024x768:colors=black',
-        '- frames:v','1',
+        '-frames:v', '1',
         '-y',
         target,
     ], check=True

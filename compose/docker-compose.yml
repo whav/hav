@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+ django:
+  build:
+   context: ..
+   dockerfile: Dockerfile.django
+  image: docker_tutorial_django
+  tty: true

@@ -40,7 +40,7 @@ source_patterns = [
 
 urlpatterns = [
     url('^$', start),
-    url(r'^ingest/', include((ingest_urls, app_name))),
+    url(r'^ingest/', include((ingest_urls, 'ingest'))),
     url(r'^sources/', include(source_patterns)),
     url(r'^hav/', include(
         (hav_urls('hav'), app_name),

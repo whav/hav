@@ -8,6 +8,7 @@ import uuid
 
 
 class ArchiveFile(models.Model):
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(storage=ArchiveStorage(), upload_to='%Y/%m/%d', editable=False)
 

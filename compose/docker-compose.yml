@@ -1,9 +1,22 @@
 version: "3"
 
 services:
- django:
-  build:
-   context: ..
-   dockerfile: Dockerfile.django
-  image: docker_tutorial_django
-  tty: true
+    django:
+        build:
+            context: ../backend/
+        image: hav_django
+        command: ./manage.py runserver
+        ports:
+            - "8000:8000"
+    node:
+        build:
+            context: ../frontend
+        image:
+            hav_node
+        command: ls -lah
+    redis:
+        image: redis:4.0
+            
+
+
+

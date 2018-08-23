@@ -1,2 +1,10 @@
 dist/
+frontend/node_modules/
+frontend/build/
+env_files/
+docs/
+designs/
+compose/
+.git
+.idea
 

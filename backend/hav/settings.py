@@ -27,10 +27,11 @@ django_root = environ.Path(__file__) - 2
 # set up the environment
 env = environ.Env(
     DEBUG=(bool, False),
+    SECRET_KEY=(str, "VERY_VERY_UNSAFE"),
     ALLOWED_HOSTS=(list, []),
     SENTRY_DSN=(str, ''),
     LOGLEVEL=(str, 'info'),
-    IMAGESERVER_SECRET=str,
+    IMAGESERVER_SECRET=(str, 'quite_unsafe_i_must_say'),
     IMAGESERVER_URL_PREFIX=(str, '/'),
     WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000')
 )
@@ -39,7 +40,6 @@ env = environ.Env(
 environ.Env.read_env(project_root('.env'))
 
 DEBUG = env('DEBUG', False)
-
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -117,31 +117,15 @@ WSGI_APPLICATION = 'hav.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': env('HAV_DB_HOST', default=''),
-        'PORT': env('HAV_DB_PORT', default=''),
-        'NAME': env('HAV_DB_NAME', default='hav'),
-        'USER': env('HAV_DB_USER', default=''),
-        'PASSWORD': env('HAV_DB_PW', default=''),
-        'ATOMIC_REQUESTS': True
-
-    },
-    'whav': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': env('WHAV_DB_HOST', default=''),
-        'PORT': env('WHAV_DB_PORT', default=''),
-        'NAME': env('WHAV_DB_NAME', default='whav'),
-        'USER': env('WHAV_DB_USER', default=''),
-        'PASSWORD': env('HAV_DB_PW', default=''),
-        'ATOMIC_REQUESTS': True
-    },
+    'default': env.db('DATABASE_URL', 'postgres:///hav'),
+    'whav': env.db('WHAV_DATABASE_URL', 'postgres:///whav')
 }
-
 
 DATABASE_ROUTERS = [
     'hav.db_router.WhavDBRouter'
 ]
+
+print(DATABASES)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -184,7 +168,6 @@ REST_FRAMEWORK = {
 
 WEBPACK_BUILD_PATH = project_root('frontend/build/')
 
-WEBPACK_ASSET_PATH = project_root('frontend/src/assets/')
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -203,7 +186,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     ('wp', WEBPACK_BUILD_PATH),
-    ('frontend_assets', WEBPACK_ASSET_PATH)
+    ('dj_static', django_root('static/'))
 )
 
 STATIC_ROOT = project_root(env('STATIC_ROOT', default='dist/static/'))

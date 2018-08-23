@@ -1,22 +1,42 @@
 version: "3"
 
+volumes:
+    archive:
+    incoming:
+
 services:
     django:
         build:
-            context: ../backend/
+            context: ../
         image: hav_django
+        env_file:
+            - ../env_files/docker.env
         command: ./manage.py runserver
         ports:
             - "8000:8000"
-    node:
-        build:
-            context: ../frontend
-        image:
-            hav_node
-        command: ls -lah
+        command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+            - archive:/archive/hav/
+            - incoming:/archive/incoming
     redis:
         image: redis:4.0
-            
+
+    hav_db:
+        image: postgres
+        environment:
+            - POSTGRES_PASSWORD=opensesame
+            - POSTGRES_USER=hav
+        expose:
+          - 5432
+
+    whav_db:
+        image: postgres
+        environment:
+            - POSTGRES_PASSWORD=opensesame
+            - POSTGRES_USER=whav
+        expose:
+          - 5432
+
 
 
 

@@ -11,4 +11,3 @@ class VideoTestCase(WebAssetTestCase):
         create_webassets(afs.pk)
         self.assertEqual(afs.webasset_set.count(), 1)
         image = afs.webasset_set.get(mime_type__startswith='image/')
-        print(image)

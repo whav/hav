@@ -18,7 +18,6 @@ COPY --from=build-stage /code/build ./build
 WORKDIR /hav/backend
 COPY backend/Pipfile backend/Pipfile.lock ./
 
-RUN pipenv install --system
 RUN pipenv install --system --dev
 
 # Copy all backend files

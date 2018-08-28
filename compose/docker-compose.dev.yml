@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+    django:
+        command: ./manage.py runserver
+        ports:
+            - "8000:8000"
+        volumes:
+            - ../backend:/hav/backend

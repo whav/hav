@@ -67,5 +67,4 @@ def generate_urls(file_path):
 
 
 def generate_info_url(path):
-    print(path)
     return generate_url(path, width=None, height=None, type=None, operation='info')

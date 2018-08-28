@@ -2,7 +2,25 @@ version: "3"
 
 volumes:
     archive:
+        driver: local
+        driver_opts:
+            o: bind
+            device: ../dist/archive
     incoming:
+        driver: local
+        driver_opts:
+            o: bind
+            device: ../dist/incoming
+    webassets:
+        driver: local
+        driver_opts:
+            o: bind
+            device: ../dist/webassets
+    imagecache:
+        driver: local
+        driver_opts:
+            o: bind
+            device: ../dist/imgcache
 
 services:
     django:
@@ -20,8 +38,9 @@ services:
           - redis
         command: python manage.py runserver 0.0.0.0:8000
         volumes:
-            - archive:/archive/hav/
-            - incoming:/archive/incoming
+            - ../dist/archive:/archive/hav/
+            - ../dist/incoming:/archive/incoming
+            - ../dist/webassets:/archive/webassets
     redis:
         image: redis:4.0
 

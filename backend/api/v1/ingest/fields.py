@@ -112,8 +112,7 @@ class IngestionReferenceField(serializers.Field):
 
     def to_internal_value(self, data):
         # TODO: Error handling
-        p = self.get_file_path(data)
-        print(p)
+        # p = self.get_file_path(data)
         return data
 
 

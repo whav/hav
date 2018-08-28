@@ -1,10 +1,10 @@
-from django.conf import settings
-from urllib.parse import urlencode, urlparse, urljoin
-from mimetypes import guess_type
+from collections import OrderedDict
 
 import base64
-import hashlib
-
+import hmac
+from django.conf import settings
+from mimetypes import guess_type
+from urllib.parse import urlencode, urlparse, urljoin
 
 SECRET = settings.IMAGESERVER_CONFIG['secret']
 URL_PREFIX = settings.IMAGESERVER_CONFIG['prefix']
@@ -19,6 +19,19 @@ def is_image(filename):
         return False
 
     return t.split('/')[0] == 'image'
+
+
+def generate_secret(secret, operation, kwargs):
+    kwargs = OrderedDict(sorted(kwargs.items(), key=lambda t: t[0]))
+    urlPath = '/{}'.format(operation)
+    urlQuery = urlencode(kwargs)
+    HMAC = hmac.new(
+        secret.encode('utf-8'),
+        msg='{}{}'.format(urlPath, urlQuery).encode('utf-8'),
+        digestmod='sha256'
+    )
+    secret = base64.urlsafe_b64encode(HMAC.digest()).decode('utf-8')
+    return secret.rstrip('=')
 
 def generate_url(path, operation='crop', **funckwargs):
     if not is_image(path):
@@ -43,12 +56,13 @@ def generate_url(path, operation='crop', **funckwargs):
             'file': path
         })
 
-    query = '{}?{}'.format(operation, urlencode(kwargs))
-    md5_digest = hashlib.md5('{}:{}'.format(query, SECRET).encode('utf-8')).digest()
-    key = base64.b64encode(md5_digest).decode('utf-8')
-    # Make the key look like Nginx expects.
-    key = key.replace('+', '-').replace('/', '_').rstrip('=')
-    path = '{}/{}'.format(key, query)
+    # URL Signature is created as described here
+    # https://github.com/h2non/imaginary#url-signature
+
+    secret = generate_secret(SECRET, operation, kwargs)
+
+    kwargs['sign'] = secret
+    path = '{}?{}'.format(operation, urlencode(kwargs))
     return urljoin(URL_PREFIX, path)
 
 

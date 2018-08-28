@@ -1,27 +1,5 @@
 version: "3"
 
-volumes:
-    archive:
-        driver: local
-        driver_opts:
-            o: bind
-            device: ../dist/archive
-    incoming:
-        driver: local
-        driver_opts:
-            o: bind
-            device: ../dist/incoming
-    webassets:
-        driver: local
-        driver_opts:
-            o: bind
-            device: ../dist/webassets
-    imagecache:
-        driver: local
-        driver_opts:
-            o: bind
-            device: ../dist/imgcache
-
 services:
     django:
         build:
@@ -41,6 +19,7 @@ services:
             - ../dist/archive:/archive/hav/
             - ../dist/incoming:/archive/incoming
             - ../dist/webassets:/archive/webassets
+
     redis:
         image: redis:4.0
 
@@ -60,6 +39,19 @@ services:
         expose:
           - 5432
 
+    imaginary:
+        build: https://github.com/h2non/imaginary.git
+        env_file:
+          - ../env_files/docker.env
+        volumes:
+            - ../dist/archive:/www/archive:ro
+            - ../dist/incoming:/www/incoming:ro
+            - ../dits/webassets:/www/webassets:ro
+        ports:
+            - "9000:9000"
+        environment:
+            - URL_SIGNATURE_KEY=${IMAGESERVER_SECRET}
+        command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000
 
 
 

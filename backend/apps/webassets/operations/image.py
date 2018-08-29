@@ -1,7 +1,7 @@
 import os
 import shutil
 import requests
-from hav.utils.imaginary import generate_url
+from apps.webassets.imaginary import generate_url
 import logging
 
 

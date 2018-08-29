@@ -29,6 +29,7 @@ redis = "*"
 [dev-packages]
 ipdb = "*"
 django-debug-toolbar = "*"
+django-extensions = "*"
 
 [pipenv]
 keep_outdated = true

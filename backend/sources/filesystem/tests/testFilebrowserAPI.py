@@ -1,10 +1,8 @@
 import os
 
 from rest_framework.test import APISimpleTestCase
-from rest_framework.permissions import AllowAny
-from rest_framework.test import APIRequestFactory
 
-from ..fsBrowser.views import FileBrowser
+from .. import FSSource
 
 
 class FileBrowserTest(APISimpleTestCase):
@@ -14,11 +12,9 @@ class FileBrowserTest(APISimpleTestCase):
         self.root = os.path.join(os.path.dirname(__file__), 'filebrowser/')
 
         # disable all security measures and point the root to the test directory
-        self.view = FileBrowser.as_view(
-            root=self.root,
-            permission_classes=[AllowAny,]
-        )
+        self.source = FSSource(self.root, 'test_fs_source')
 
-    # def testMetadataAccess(self):
+    def testFBUrls(self):
+        self.assertTrue(len(self.source.urls) > 0)
 
 

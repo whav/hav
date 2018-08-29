@@ -3,7 +3,7 @@ import mimetypes
 from PIL import Image
 from django.db import models
 
-from ..archive.models import ArchiveFile
+from apps.archive.models import ArchiveFile
 from hav.utils.storages import getStorage
 
 storage = getStorage('webassets')

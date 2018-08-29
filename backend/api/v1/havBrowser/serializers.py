@@ -6,7 +6,7 @@ from apps.sets.models import Node
 from apps.media.models import Media
 from apps.archive.models import ArchiveFile
 from apps.webassets.models import WebAsset
-from hav.utils.imaginary import generate_urls, generate_url
+from apps.webassets.imaginary import generate_url
 
 
 class HAVArchiveFileSerializer(serializers.ModelSerializer):

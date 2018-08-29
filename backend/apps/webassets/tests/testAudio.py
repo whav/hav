@@ -1,9 +1,6 @@
-from django.contrib.auth.models import User
-
 from ..operations import create_webassets
 
 from . import WebAssetTestCase
-
 
 class AudioTestCase(WebAssetTestCase):
 
@@ -14,3 +11,5 @@ class AudioTestCase(WebAssetTestCase):
         self.assertEqual(afs.webasset_set.count(), 2)
         image = afs.webasset_set.get(mime_type__startswith='image/')
         audio = afs.webasset_set.get(mime_type__startswith='audio/')
+        self.assertIsNotNone(image.width)
+        self.assertIsNotNone(image.height)

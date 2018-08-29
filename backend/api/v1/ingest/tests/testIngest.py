@@ -1,48 +1,85 @@
-from rest_framework.test import APITestCase, APISimpleTestCase
-from rest_framework import status
-from django.urls import reverse
+from datetime import datetime, timedelta
 from uuid import uuid4
-from datetime import date
-from apps.sets.models import Node
-from apps.media.models import License, MediaCreator
+import os
+import random
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
 
-# from ..serializers import MediaCreatorSerializer
-#
-# class MediaSerializerTest(APISimpleTestCase):
-#
-#     def test_serializer(self):
+from apps.media.models import License, MediaCreator, media_types
+from apps.sets.models import Node
+from apps.ingest.models import IngestQueue
+from apps.hav_collections.models import Collection
+
+# from sources.filesystem.api.serializers import
+
+def create_image(target):
+    from PIL import Image, ImageDraw
+
+    def point():
+        return random.randint(1, 254), random.randint(1, 254)
+    points = point(), point(), point()
+
+    im = Image.new('RGB', (255, 255))
+    draw = ImageDraw.Draw(im)
+    draw.polygon(points)  # outline='red', fill='blue'
+    im.save(target)
 
 
-class BatchTest(APITestCase):
+class IngestTest(APITestCase):
 
     def setUp(self):
         self.root = Node.add_root(name='testroot')
         self.target = self.root.add_child(name='testchild')
-        self.url = reverse('api:v1:ingest')
         self.user = User.objects.create_superuser('tester', 'test@example.com', uuid4())
         self.creator = MediaCreator.objects.create(first_name='Tester', last_name='Testeroo')
         self.license = License.objects.create(short_name='WTFPL')
 
-    def generateMediaData(self, count=1):
-        today = date.today()
-        entries = []
-        for i in range(count):
-            entries.append({
-                'year': today.year,
-                'month': today.month,
-                'day': today.day,
+        self.collection = Collection.objects.create(
+            name='Testcollection',
+            root_node=self.target,
+        )
+        self.collection.administrators.set([self.user])
+        self.source_id = self.generate_source_id()
+        self.queue = IngestQueue.objects.create(target=self.target, created_by=self.user, ingestion_queue=[self.source_id])
+        self.url = reverse('api:v1:ingest:ingest_queue_ingest', kwargs={'pk': str(self.queue.pk)})
+
+
+    def generate_source_id(self):
+        filename = '{}.jpg'.format(uuid4())
+        target = os.path.join(settings.INCOMING_FILES_ROOT, filename)
+        create_image(target)
+
+        # get the source id from the api
+        api_url = reverse('api:v1:filebrowser_root')
+        self.client.force_login(self.user)
+        resp = self.client.get(api_url, format='json')
+
+        files = resp.data['files']
+        uploaded_file = list(filter(lambda f: f['name'] == filename, files))[0]
+        # log the client out again, to test permissions from a clean sheet
+        self.client.logout()
+        return uploaded_file['url']
+
+
+    def generateMediaData(self):
+        start = datetime.utcnow()
+        end = start + timedelta(days=1)
+
+        return {
+                'start': start.isoformat(),
+                'end': end.isoformat(),
                 'creators': [self.creator.pk],
                 'license': self.license.pk,
-                'ingestion_id': __file__
-            })
-        return entries
+                'media_type': media_types[0][0],
+                'source': self.source_id
+        }
+
 
     def test_create_permissions(self):
-        data = {
-            'target': self.target.pk,
-            'entries': []
-        }
+        data = self.generateMediaData()
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -51,10 +88,7 @@ class BatchTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create(self):
-        data = {
-            'target': self.target.pk,
-            'entries': self.generateMediaData(count=5)
-        }
+        data = self.generateMediaData()
         self.client.force_login(self.user)
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

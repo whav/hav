@@ -16,7 +16,7 @@ class IngestQueue(models.Model):
 
     target = models.ForeignKey(Node, null=True, on_delete=models.SET_NULL)
 
-    ingestion_queue = ArrayField(models.URLField(max_length=100), default=list)
+    ingestion_queue = ArrayField(models.URLField(max_length=200), default=list)
 
     created_media_entries = models.ManyToManyField(Media, blank=True, editable=False)
 

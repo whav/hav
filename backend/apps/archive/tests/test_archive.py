@@ -7,7 +7,7 @@ from ..operations import archive_file
 from .test_hash import file_hash, file_path
 
 from apps.media import utils, models
-
+from ..models import ArchiveFile
 
 class ArchiveTest(TestCase):
 
@@ -22,7 +22,8 @@ class ArchiveTest(TestCase):
             'urxn'
         )
         cls.media = utils.generate_test_media()
-        cls.af = archive_file(cls.test_file, cls.media.pk, cls.user.pk)
+        cls.af_pk = archive_file(cls.test_file, cls.media.pk, cls.user.pk)
+        cls.af = ArchiveFile.objects.get(pk=cls.af_pk)
 
     def test_archive_attributes(self):
         self.assertEqual(self.af.hash, file_hash)

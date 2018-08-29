@@ -23,13 +23,14 @@ pip = "*"
 channels = "*"
 flower = "*"
 pillow = "*"
-pyvips = "*"
 redis = "*"
 
 [dev-packages]
 ipdb = "*"
 django-debug-toolbar = "*"
 django-extensions = "*"
+pytest = "*"
+pytest-django = "*"
 
 [pipenv]
 keep_outdated = true

@@ -18,8 +18,10 @@ class ProtectedFileSystemStorage(FileSystemStorage):
         name, args, kwargs = super().deconstruct()
         # remove location and base_url as these are defined by environment variables
         # and may change at any time
-        kwargs.pop('location')
-        kwargs.pop('base_url')
+        if 'location' in kwargs:
+            kwargs.pop('location')
+        if 'base_url' in kwargs:
+            kwargs.pop('base_url')
         return name, args, kwargs
 
     def url(self, name):

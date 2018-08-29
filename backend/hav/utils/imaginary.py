@@ -22,6 +22,8 @@ def is_image(filename):
 
 
 def generate_secret(secret, operation, kwargs):
+    # URL Signature is created as described here
+    # https://github.com/h2non/imaginary#url-signature
     kwargs = OrderedDict(sorted(kwargs.items(), key=lambda t: t[0]))
     urlPath = '/{}'.format(operation)
     urlQuery = urlencode(kwargs)
@@ -55,9 +57,6 @@ def generate_url(path, operation='crop', **funckwargs):
         kwargs.update({
             'file': path
         })
-
-    # URL Signature is created as described here
-    # https://github.com/h2non/imaginary#url-signature
 
     secret = generate_secret(SECRET, operation, kwargs)
 

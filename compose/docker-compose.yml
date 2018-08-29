@@ -4,6 +4,7 @@ services:
     django:
         build:
             context: ../
+            dockerfile: Dockerfile.backend
         image: hav_django
         env_file:
             - ../env_files/docker.env
@@ -32,7 +33,7 @@ services:
           - 5432
 
     whav_db:
-        image: postgres
+        image: mdillon/postgis:9.4
         environment:
             - POSTGRES_PASSWORD=opensesame
             - POSTGRES_USER=whav
@@ -49,8 +50,6 @@ services:
             - ../dits/webassets:/www/webassets:ro
         ports:
             - "9000:9000"
-        environment:
-            - URL_SIGNATURE_KEY=${IMAGESERVER_SECRET}
         command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000
 
 

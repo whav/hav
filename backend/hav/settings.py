@@ -31,7 +31,7 @@ env = environ.Env(
     ALLOWED_HOSTS=(list, []),
     SENTRY_DSN=(str, ''),
     LOGLEVEL=(str, 'info'),
-    IMAGESERVER_SECRET=(str, 'quite_unsafe_i_must_say'),
+    URL_SIGNATURE_KEY=(str, 'quite_unsafe_i_must_say'),
     IMAGESERVER_URL_PREFIX=(str, '/'),
     WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000')
 )
@@ -298,7 +298,7 @@ logging.config.dictConfig({
 
 IMAGESERVER_CONFIG = {
     'prefix': env('IMAGESERVER_URL_PREFIX'),
-    'secret': env('IMAGESERVER_SECRET')
+    'secret': env('URL_SIGNATURE_KEY')
 }
 
 # These settings will change ....

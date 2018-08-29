@@ -1,13 +1,13 @@
-from django.conf.urls import url, include
 from django.conf import settings
-
-from .ingest.urls import ingest_urls
-from .havBrowser.urls import hav_urls
-from rest_framework.response import Response
+from django.conf.urls import url, include
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework.reverse import reverse
+
 from sources.filesystem import FSSource
 from sources.whav import WHAVSource
+from .havBrowser.urls import hav_urls
+from .ingest.urls import ingest_urls
 
 incoming_fss_source = FSSource(settings.INCOMING_FILES_ROOT, source_id='incoming')
 whav_source = WHAVSource()
@@ -36,7 +36,6 @@ source_patterns = [
     url(r'^incoming/', include(incoming_fss_source.urls)),
     url(r'^whav/', include(whav_source.urls))
 ]
-
 
 urlpatterns = [
     url('^$', start),

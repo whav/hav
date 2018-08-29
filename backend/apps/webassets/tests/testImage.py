@@ -17,4 +17,3 @@ class VideoTestCase(WebAssetTestCase):
         pil_img = Image.open(afs.file.path)
         self.assertEqual(image.height, pil_img.height, 'Original dimensions of the source are kept.')
         self.assertEqual(image.width, pil_img.width, 'Original dimensions of the source are kept.')
-

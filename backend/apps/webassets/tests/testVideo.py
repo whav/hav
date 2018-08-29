@@ -11,6 +11,6 @@ class VideoTestCase(WebAssetTestCase):
         create_webassets(afs.pk)
         self.assertEqual(afs.webasset_set.count(), 2)
         image = afs.webasset_set.get(mime_type__startswith='image/')
-        self.assertTrue(afs.webasset_set.filter(mime_type__startswith='video/').exists())
+        video = afs.webasset_set.get(mime_type__startswith='video/')
         self.assertIsNotNone(image.width)
         self.assertIsNotNone(image.height)

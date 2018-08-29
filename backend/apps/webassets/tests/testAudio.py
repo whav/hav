@@ -1,9 +1,6 @@
-from django.contrib.auth.models import User
-
 from ..operations import create_webassets
 
 from . import WebAssetTestCase
-
 
 class AudioTestCase(WebAssetTestCase):
 

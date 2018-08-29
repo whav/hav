@@ -91,7 +91,6 @@ class IngestTest(APITestCase):
         data = self.generateMediaData()
         self.client.force_login(self.user)
         response = self.client.post(self.url, data, format='json')
-        print(response.status_code, response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 

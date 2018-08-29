@@ -11,8 +11,16 @@ from django.core.files.storage import FileSystemStorage, DefaultStorage
 class ProtectedFileSystemStorage(FileSystemStorage):
 
     def __init__(self, *args, secret_key=settings.IMAGESERVER_CONFIG.get('secret'), **kwargs):
-        self.secret_key=secret_key
+        self.secret_key = secret_key
         super().__init__(*args, **kwargs)
+
+    def deconstruct(self):
+        name, args, kwargs = super().deconstruct()
+        # remove location and base_url as these are defined by environment variables
+        # and may change at any time
+        kwargs.pop('location')
+        kwargs.pop('base_url')
+        return name, args, kwargs
 
     def url(self, name):
         name = name.lstrip('/')

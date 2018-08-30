@@ -4,7 +4,7 @@ from mimetypes import guess_type
 from rest_framework import serializers
 
 from apps.webassets.imaginary import generate_url, generate_urls
-
+from hav.utils.exif import get_exif_data
 import logging
 
 logger = logging.getLogger(__name__)
@@ -34,6 +34,7 @@ class FileBrowserBaseSerializer(serializers.Serializer):
     size = serializers.SerializerMethodField()
 
     ingestable = serializers.SerializerMethodField()
+
 
     @property
     def _config(self):
@@ -72,7 +73,6 @@ class FileSerializer(FileBrowserBaseSerializer):
     path = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
-    srcset = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
     isFile = serializers.SerializerMethodField()
@@ -90,16 +90,26 @@ class FileSerializer(FileBrowserBaseSerializer):
         rel_path = path.relative_to(self.get_root()).as_posix()
         return generate_url(os.path.join('/incoming/', rel_path))
 
-    def get_srcset(self, path):
-        rel_path = path.relative_to(self.get_root()).as_posix()
-        return generate_urls(os.path.join('/incoming/', rel_path))
-
     def get_ingestable(self, _):
         return True
 
     def get_isFile(self, _):
         return True
 
+
+class FileDetailSerializer(FileSerializer):
+
+    meta = serializers.SerializerMethodField()
+    srcset = serializers.SerializerMethodField()
+
+
+    def get_meta(self, path):
+        print(path, type(path))
+        return get_exif_data(path)
+
+    def get_srcset(self, path):
+        rel_path = path.relative_to(self.get_root()).as_posix()
+        return generate_urls(os.path.join('/incoming/', rel_path))
 
 class BaseDirectorySerializer(FileBrowserBaseSerializer):
 

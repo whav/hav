@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "04cafe376488a8f84ee324f0b9589d52edcf657a4cff6c23fccd1e8f4fc2ec43"
+            "sha256": "80ecb021837c31a3fce73636a6f799305ad4cbfb001f1b1a513a6979c212e5ad"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -413,6 +413,9 @@
                 "sha256:d7cc528d76e76342423ca640335bd3633420dc1366f258cb31d05e865ef5ca1f"
             ],
             "version": "==0.6.0"
+        },
+        "pyexiftool": {
+            "file": "https://github.com/smarnach/pyexiftool/tarball/master"
         },
         "pygments": {
             "hashes": [

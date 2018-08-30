@@ -11,7 +11,7 @@ from rest_framework.exceptions import APIException
 
 from ...permissions import IncomingBaseMixin
 
-from .serializers import FileSerializer, DirectorySerializer
+from .serializers import FileSerializer, DirectorySerializer, FileDetailSerializer
 
 
 class FileBrowserMixin(object):
@@ -42,7 +42,7 @@ class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
         path = self.source_config.to_fs_path(path)
 
         if path.is_file():
-            serializer = FileSerializer(
+            serializer = FileDetailSerializer(
                 instance=path,
                 context=self.context
             )
@@ -75,7 +75,7 @@ class FileBrowserFileDetail(IncomingBaseMixin, FileBrowserMixin, APIView):
             assert(os.access(str(path), os.R_OK))
         except (FileNotFoundError, AssertionError):
             raise Http404()
-        serializer = FileSerializer(
+        serializer = FileDetailSerializer(
             instance=path,
             context=self.context
         )

@@ -21,31 +21,33 @@ class WHAVSerializerMixin(object):
         return isinstance(obj, MediaOrdering)
 
 
-class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
+
+class SimpleWHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
 
     path = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     mime = serializers.SerializerMethodField()
 
     preview_url = serializers.SerializerMethodField()
-    srcset = serializers.SerializerMethodField()
 
-    size = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
     ingestable = serializers.SerializerMethodField()
 
     isFile = serializers.SerializerMethodField()
 
+    size = serializers.SerializerMethodField()
+
+    def get_size(self, mo):
+        media = mo.media
+        return media.basefile.size
 
     def get_name(self, mo):
         media = mo.media
         path = self.get_path_for_media(media)
         return os.path.split(path)[1]
 
-    def get_size(self, mo):
-        media = mo.media
-        return media.basefile.size
+
 
     def get_path_for_media(self, media):
         return media.localfile.path
@@ -65,8 +67,7 @@ class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
         rel_path = '%s_display_image%s' % (rel_path, ext)
         return 'https://whav.aussereurop.univie.ac.at/display/%s' % rel_path
 
-    def get_srcset(self, mo):
-        return generate_urls(self._get_image_url(mo))
+
 
     def get_preview_url(self, mo):
         return generate_url(self._get_image_url(mo))
@@ -76,6 +77,17 @@ class WHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
 
     def get_ingestable(self, _):
         return True
+
+
+class WHAVFileSerializer(SimpleWHAVFileSerializer):
+
+    srcset = serializers.SerializerMethodField()
+
+    def get_srcset(self, mo):
+        return generate_urls(self._get_image_url(mo))
+
+
+
 
 class BaseWHAVCollectionSerializer(WHAVSerializerMixin, serializers.Serializer):
 
@@ -135,7 +147,7 @@ class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
             ).data
 
     def get_files(self, ic):
-        return WHAVFileSerializer(
+        return SimpleWHAVFileSerializer(
             MediaOrdering.objects.filter(collection=ic).select_related('media', 'media__webimage').prefetch_related('media__basefile_set__localfile'),
             many=True,
             context=self.context

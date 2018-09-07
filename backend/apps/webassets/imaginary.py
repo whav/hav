@@ -9,14 +9,24 @@ from urllib.parse import urlencode, urlparse, urljoin
 SECRET = settings.IMAGESERVER_CONFIG['secret']
 URL_PREFIX = settings.IMAGESERVER_CONFIG['prefix']
 
+ALLOWED_MIME_TYPES = [
+    'application/pdf',
+]
+
+mime_types = set(ALLOWED_MIME_TYPES)
+
 def is_absolute(url):
     return bool(urlparse(url).netloc)
 
 
 def is_image(filename):
     t, _ = guess_type(filename)
+
     if t is None:
         return False
+    
+    if t in mime_types:
+        return True
 
     return t.split('/')[0] == 'image'
 

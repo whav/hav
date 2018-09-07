@@ -6,7 +6,7 @@ RUN yarn install
 COPY ./frontend ./
 RUN yarn build
 
-FROM python:3.6
+FROM python:3.6-stretch
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && \
@@ -23,7 +23,7 @@ COPY --from=build-stage /code/build ./build
 WORKDIR /hav/backend
 COPY backend/Pipfile backend/Pipfile.lock ./
 
-RUN pipenv install --system --dev
+RUN pipenv install --system && pipenv install --system --dev
 
 # Copy all backend files
 COPY ./backend .

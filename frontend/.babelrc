@@ -1,15 +1,27 @@
 {
   "presets": [
     "@babel/preset-react",
-    ["@babel/preset-env", { "modules": false }]
+    [
+      "@babel/preset-env",
+      {
+        "modules": false
+      }
+    ]
   ],
-  "plugins": ["@babel/plugin-proposal-class-properties"],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties"
+  ],
   "env": {
     "hmr": {
-      "plugins": ["react-hot-loader/babel"]
+      "plugins": [
+        "react-hot-loader/babel"
+      ]
     },
     "test": {
-      "presets": ["@babel/preset-react", "@babel/preset-env"]
+      "presets": [
+        "@babel/preset-react",
+        "@babel/preset-env"
+      ]
     }
   }
 }

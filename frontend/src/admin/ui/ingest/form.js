@@ -47,7 +47,11 @@ const FieldErrors = ({ errors }) =>
 const GlobalErrors = ({ errors = [] }) => {
   return errors.length ? (
     <div className="notification is-danger is-size-7">
-      <ul>{errors.map((msg, index) => <li key={index}>{msg}</li>)}</ul>
+      <ul>
+        {errors.map((msg, index) => (
+          <li key={index}>{msg}</li>
+        ))}
+      </ul>
     </div>
   ) : null;
 };
@@ -66,7 +70,7 @@ class CreatorSelect extends React.Component {
   };
 
   render() {
-    const { creators, errors, value } = this.props;
+    const { creators, errors, value, name } = this.props;
     const options = creators.map(c => ({
       label: c.name,
       value: c.id
@@ -75,7 +79,7 @@ class CreatorSelect extends React.Component {
     return (
       <Field label="Creators" errors={errors}>
         <Select
-          name="creators"
+          name={name || "creators"}
           className={classnames({ "is-danger": errors })}
           value={selectedOptions}
           onChange={this.onChange}
@@ -89,7 +93,7 @@ class CreatorSelect extends React.Component {
 
 class MediaTypeSelect extends React.Component {
   render() {
-    const { types, errors } = this.props;
+    const { types, errors, name = "media_type" } = this.props;
     return (
       <Field label="Media type" expanded errors={errors}>
         <div
@@ -98,7 +102,7 @@ class MediaTypeSelect extends React.Component {
           })}
         >
           <select
-            name="media_type"
+            name={name}
             value={this.props.value || ""}
             onChange={this.props.onChange}
             placeholder="Select..."
@@ -118,7 +122,7 @@ class MediaTypeSelect extends React.Component {
 
 class LicenseSelect extends React.Component {
   render() {
-    const { licenses, errors } = this.props;
+    const { licenses, errors, name, onChange, value = "" } = this.props;
     const options = licenses.map(l => ({
       value: l.id,
       text: l.name,
@@ -132,9 +136,9 @@ class LicenseSelect extends React.Component {
           })}
         >
           <select
-            name="license"
-            value={this.props.value || ""}
-            onChange={this.props.onChange}
+            name={name}
+            value={value || ""}
+            onChange={onChange}
             placeholder="Select..."
           >
             <option value="" />
@@ -187,6 +191,7 @@ class TemplateForm extends React.Component {
     if (event.target.multiple) {
       value = Array.from(event.target.selectedOptions).map(opt => opt.value);
     }
+    console.log(name, value);
     this.props.onChange({ [name]: value });
   };
 
@@ -226,8 +231,8 @@ class TemplateForm extends React.Component {
           <div className="column">
             <LicenseSelect
               licenses={licenses}
-              value={data.license}
-              name="license"
+              value={data.media_license}
+              name="media_license"
               onChange={this.handleChange}
             />
           </div>
@@ -299,10 +304,11 @@ class IngestForm extends React.Component {
     [
       "date",
       "creators",
-      "license",
+      "media_license",
       "media_type",
       "media_description",
-      "media_identifier"
+      "media_identifier",
+      "media_title"
     ].forEach(k => delete globalErrors[k]);
     const error_msgs = Object.entries(globalErrors).reduce(
       (collected_errors, [key, error_msgs]) => {
@@ -315,21 +321,53 @@ class IngestForm extends React.Component {
       <div className="box is-outlined">
         <form className="ingest-form" onSubmit={this.onSubmit}>
           <div className="columns is-desktop">
-            <div className="column is-one-third" />
-            <div className="column is-one-third" />
-            <div className="column is-one-third has-text-right">
-              <a
-                className="delete is-pulled-right"
-                onClick={this.props.onDelete}
-              />
-            </div>
-          </div>
-          <div className="columns is-desktop">
             <div className="column is-one-third is-clipped">
               {this.props.children}
             </div>
+
             <div className="column is-two-thirds">
               <GlobalErrors errors={error_msgs} />
+
+              <Field label="Title">
+                <input
+                  type="text"
+                  className={classnames("input", {
+                    "is-danger": errors.media_title
+                  })}
+                  value={data.media_title}
+                  name="media_title"
+                  onChange={this.handleChange}
+                />
+              </Field>
+
+              <div className="columns">
+                <div className="column">
+                  <Field label="Description">
+                    <textarea
+                      className={classnames("textarea", {
+                        "is-danger": errors.media_description
+                      })}
+                      value={data.media_description}
+                      name="media_description"
+                      onChange={this.handleChange}
+                    />
+                  </Field>
+                </div>
+                <div className="column">
+                  <Field label="Identifier">
+                    <input
+                      type="text"
+                      className={classnames("input", {
+                        "is-danger": errors.media_identifier
+                      })}
+                      value={data.media_identifier}
+                      name="media_identifier"
+                      onChange={this.handleChange}
+                    />
+                  </Field>
+                </div>
+              </div>
+
               <div className="columns">
                 <div className="column">
                   <DateForm
@@ -356,15 +394,16 @@ class IngestForm extends React.Component {
                   />
                 </div>
               </div>
+
               <div className="columns">
                 <div className="column">
                   <LicenseSelect
                     required
                     licenses={licenses}
-                    value={data.license}
-                    name="license"
+                    value={data.media_license}
+                    name="media_license"
                     onChange={this.handleChange}
-                    errors={errors.license}
+                    errors={errors.media_license}
                   />
                 </div>
                 <div className="column">
@@ -378,42 +417,24 @@ class IngestForm extends React.Component {
                   />
                 </div>
               </div>
-              <div className="columns">
-                <div className="column">
-                  <Field label="Media description">
-                    <textarea
-                      className={classnames("textarea", {
-                        "is-danger": errors.media_description
-                      })}
-                      value={data.media_description}
-                      name="media_description"
-                      onChange={this.handleChange}
-                    />
-                  </Field>
-                </div>
-                <div className="column">
-                  <Field label="Media identifier">
-                    <input
-                      type="text"
-                      className={classnames("input", {
-                        "is-danger": errors.media_identifier
-                      })}
-                      value={data.media_identifier}
-                      name="media_identifier"
-                      onChange={this.handleChange}
-                    />
-                  </Field>
-                </div>
+            </div>
+          </div>
+          <div className="columns is-desktop">
+            <div className="column">
+              <div className="control">
+                <button
+                  className="button is-danger"
+                  onClick={this.props.onDelete}
+                >
+                  <i className="delete" />
+                  Remove
+                </button>
               </div>
-              <div>
-                <div className="field is-grouped is-grouped-right">
-                  <p className="control">
-                    <button className="button is-link" type="submit">
-                      Ingest
-                    </button>
-                  </p>
-                </div>
-              </div>
+            </div>
+            <div className="column is-half has-text-right">
+              <button className="button is-link" type="submit">
+                Ingest
+              </button>
             </div>
           </div>
         </form>

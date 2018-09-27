@@ -143,7 +143,7 @@ class IngestQueue extends React.Component {
               this.props.deleteIngestItem(source);
             }}
           >
-            <span>Asset #{index + 1}</span>
+            {/* <span>Asset #{index + 1}</span> */}
             <PreviewImage source={source} />
           </IngestForm>
         );
@@ -151,8 +151,10 @@ class IngestQueue extends React.Component {
 
       return (
         <div>
-          <h1>Ingesting {count === 1 ? "one file" : `${count} files`}</h1>
-          <em>Target</em>
+          <h1 className="title">
+            Ingesting {count === 1 ? "one file" : `${count} files`}
+          </h1>
+
           <PreviewFolder source={target} />
 
           <hr />

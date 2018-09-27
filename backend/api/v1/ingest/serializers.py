@@ -74,8 +74,9 @@ class IngestSerializer(serializers.Serializer):
     end = serializers.DateTimeField()
 
     creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
-    license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
 
+    media_license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
+    media_title = serializers.CharField(max_length=255)
     media_type = serializers.ChoiceField(choices=Media.MEDIA_TYPE_CHOICES)
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
@@ -105,9 +106,11 @@ class IngestSerializer(serializers.Serializer):
             raise serializers.ValidationError("The file could not be found.")
 
         try:
-            ArchiveFile.objects.get(hash=hash)
-            raise serializers.ValidationError("A file with the hash %s is already archived." % hash)
-        except ArchiveFile.DoesNotExist:
+            media = Media.objects.get(files__hash=hash)
+            raise serializers.ValidationError(
+                "A file with the hash '{}' is already archived. Check media {}".format(hash, media)
+            )
+        except Media.DoesNotExist:
             return value
 
     def validate(self, data):
@@ -131,12 +134,13 @@ class IngestSerializer(serializers.Serializer):
         # actually create the media object
         media = Media.objects.create(
             creation_date=dt_range,
-            license=validated_data.get('license'),
+            license=validated_data.get('media_license'),
+            title=validated_data.get('media_title', ''),
+            description=validated_data.get('media_description', ''),
             set=self.target,
             collection=self.collection,
             created_by=user,
             original_media_type=validated_data['media_type'],
-            original_media_description=validated_data.get('media_description', ''),
             original_media_identifier=validated_data.get('media_identifier', '')
         )
 

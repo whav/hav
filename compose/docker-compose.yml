@@ -8,7 +8,6 @@ services:
         image: hav_django
         env_file:
             - ../env_files/docker.env
-        command: ./manage.py runserver
         ports:
             - "8000:8000"
         depends_on:
@@ -47,7 +46,7 @@ services:
         volumes:
             - ../dist/archive:/www/archive:ro
             - ../dist/incoming:/www/incoming:ro
-            - ../dits/webassets:/www/webassets:ro
+            - ../dist/webassets:/www/webassets:ro
         ports:
             - "9000:9000"
         command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000

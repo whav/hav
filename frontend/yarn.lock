@@ -5665,6 +5665,10 @@ react-select@^1.0.0:
     prop-types "^15.5.8"
     react-input-autosize "^2.1.2"
 
+react-tag-autocomplete@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/react-tag-autocomplete/-/react-tag-autocomplete-5.6.0.tgz#6c10d83675f202d5ab46aef1efbfd589ce3da43e"
+
 react-transform-hmr@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/react-transform-hmr/-/react-transform-hmr-1.0.4.tgz#e1a40bd0aaefc72e8dfd7a7cda09af85066397bb"

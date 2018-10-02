@@ -1,9 +1,5 @@
 import React from "react";
 
-import Button from "../components/buttons";
-import { LargeModal as Modal } from "../components/modal";
-import { ErrorList } from "../components/errors";
-
 import PropTypes from "prop-types";
 
 import classnames from "classnames";
@@ -12,7 +8,7 @@ import Select from "react-select";
 import "react-select/dist/react-select.css";
 
 import "./ingest.css";
-import { error } from "util";
+import TagInput, { ExampleTagInput } from "./tags";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group"; // ES6
 
@@ -299,7 +295,7 @@ class IngestForm extends React.Component {
       hide_fields = [],
       errors = {}
     } = this.props;
-
+    console.log(this.props);
     let globalErrors = { ...errors };
     [
       "date",
@@ -337,6 +333,14 @@ class IngestForm extends React.Component {
                   value={data.media_title}
                   name="media_title"
                   onChange={this.handleChange}
+                />
+              </Field>
+              <Field label="Tags">
+                <TagInput
+                  tags={data.tags || []}
+                  onTagsChange={tags => {
+                    this.props.onChange(this.props.source, { tags });
+                  }}
                 />
               </Field>
 

@@ -1,6 +1,6 @@
 import React from "react";
 import PropType from "prop-types";
-
+import cn from "classnames";
 import uniq from "lodash/uniq";
 
 const styles = {
@@ -15,14 +15,18 @@ const styles = {
 };
 
 class TagComponent extends React.Component {
+  delete = e => {
+    e.preventDefault();
+    this.props.onDelete(this.props.tag);
+  };
   render() {
     const { tag, onDelete } = this.props;
     return (
       <div className="control" style={styles.input}>
         <div className="tags">
-          <span class="tag">
+          <span className="tag">
             {tag}
-            <button class="delete is-small" onClick={onDelete} />
+            <button className="delete is-small" onClick={this.delete} />
           </span>
         </div>
       </div>
@@ -66,6 +70,8 @@ class TagInput extends React.Component {
         onKeyDown={this.onKeyDown}
         placeholder={this.props.placeholder || "Add a tag"}
         style={styles.input}
+        onFocus={() => this.props.setFocus(true)}
+        onBlur={() => this.props.setFocus(false)}
       />
     );
   }
@@ -78,6 +84,12 @@ class TagInputField extends React.Component {
     onTagDeleted: PropType.func,
     onTagsChange: PropType.func
   };
+
+  state = {
+    hasFocus: false
+  };
+
+  setFocus = hasFocus => this.setState({ hasFocus });
 
   deleteLastTag = () => {
     const length = this.props.tags.length;
@@ -103,11 +115,12 @@ class TagInputField extends React.Component {
 
   render() {
     let tags = uniq(this.props.tags);
-
     return (
       <div
         style={styles.wrapper}
-        className="field is-grouped is-grouped-multiline input"
+        className={cn("field is-grouped is-grouped-multiline input", {
+          "is-focused": this.state.hasFocus
+        })}
       >
         {tags.map(t => (
           <TagComponent tag={t} key={t} onDelete={this.deleteTag} />
@@ -115,6 +128,7 @@ class TagInputField extends React.Component {
         <TagInput
           onTagEntered={this.tagAdded}
           deleteLast={this.deleteLastTag}
+          setFocus={this.setFocus}
         />
       </div>
     );

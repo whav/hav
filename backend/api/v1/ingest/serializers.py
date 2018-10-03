@@ -80,6 +80,8 @@ class IngestSerializer(serializers.Serializer):
     media_type = serializers.ChoiceField(choices=Media.MEDIA_TYPE_CHOICES)
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
+    media_tags = serializers.ListField(child=serializers.CharField(max_length=255), required=False)
+
 
     @property
     def target(self):

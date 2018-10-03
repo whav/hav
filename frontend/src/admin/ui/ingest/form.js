@@ -188,7 +188,6 @@ class TemplateForm extends React.Component {
     if (event.target.multiple) {
       value = Array.from(event.target.selectedOptions).map(opt => opt.value);
     }
-    console.log(name, value);
     this.props.onChange({ [name]: value });
   };
 
@@ -196,7 +195,6 @@ class TemplateForm extends React.Component {
     const {
       licenses = [],
       creators = [],
-      roles = [],
       data = {},
       media_types = []
     } = this.props;
@@ -290,13 +288,10 @@ class IngestForm extends React.Component {
     const {
       licenses = [],
       creators = [],
-      roles = [],
       media_types = [],
       data = {},
-      hide_fields = [],
       errors = {}
     } = this.props;
-    console.log(this.props);
     let globalErrors = { ...errors };
     [
       "date",
@@ -338,9 +333,11 @@ class IngestForm extends React.Component {
               </Field>
               <Field label="Tags">
                 <TagInputField
-                  tags={data.tags || []}
-                  onTagsChange={tags => {
-                    this.props.onChange(this.props.source, { tags });
+                  tags={data.media_tags || []}
+                  onTagsChange={media_tags => {
+                    this.props.onChange(this.props.source, {
+                      media_tags
+                    });
                   }}
                 />
               </Field>

@@ -8,7 +8,8 @@ import Select from "react-select";
 import "react-select/dist/react-select.css";
 
 import "./ingest.css";
-import TagInput, { ExampleTagInput } from "./tags";
+
+import TagInputField from "../components/taginput";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group"; // ES6
 
@@ -336,7 +337,7 @@ class IngestForm extends React.Component {
                 />
               </Field>
               <Field label="Tags">
-                <TagInput
+                <TagInputField
                   tags={data.tags || []}
                   onTagsChange={tags => {
                     this.props.onChange(this.props.source, { tags });

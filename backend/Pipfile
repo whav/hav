@@ -35,3 +35,6 @@ pytest-django = "*"
 
 [pipenv]
 keep_outdated = true
+
+[requires]
+python_version = "3.6"

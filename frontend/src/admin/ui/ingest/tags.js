@@ -1,22 +1,26 @@
 import React from "react";
 import PropType from "prop-types";
 import ReactTagInput from "react-tag-autocomplete";
-// import ReactTagComponent from "react-tag-autocomplete/dist-es6/Tag";
 
 import uniq from "lodash/uniq";
 
-import "react-tag-autocomplete/example/styles.css";
+// import "react-tag-autocomplete/example/styles.css";
+
+import "./tags.css";
 
 class TagComponent extends React.Component {
   render() {
     const { tag, onDelete } = this.props;
     return (
-      <span class="tag">
-        {tag.name}
-        <button class="delete is-small" onClick={onDelete} />
-      </span>
+      <div className="control">
+        <div className="tags">
+          <span class="tag">
+            {tag.name}
+            <button class="delete is-small" onClick={onDelete} />
+          </span>
+        </div>
+      </div>
     );
-    // return <ReactTagComponent {...this.props} />;
   }
 }
 
@@ -27,13 +31,14 @@ class TagInput extends React.Component {
     onTagsChange: PropType.func.isRequired
   };
 
-  static classNames = {
-    selected: "react-tags__selected tags",
-    root: "react-tags input"
+  classNames = {
+    selected: "",
+    root: "tagsinput field is-grouped is-grouped-multiline input",
+    searchInput: "",
+    search: ""
   };
 
   handleAdd = tag => {
-    console.log(tag);
     this.props.onTagsChange([...this.props.tags, tag.name]);
   };
 
@@ -46,6 +51,7 @@ class TagInput extends React.Component {
       id: index,
       name: t
     }));
+    console.log(this.classNames);
     return (
       <ReactTagInput
         tags={tags}

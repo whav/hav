@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 from apps.media.models import MediaCreator, MediaCreatorRole, License, Media
 from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin

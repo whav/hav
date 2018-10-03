@@ -128,6 +128,7 @@ class IngestSerializer(serializers.Serializer):
         return data
 
 
+    @transaction.atomic
     def create(self, validated_data):
         user = self.context['user']
         queue = self.context['queue']

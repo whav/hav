@@ -1,9 +1,5 @@
 import React from "react";
 
-import Button from "../components/buttons";
-import { LargeModal as Modal } from "../components/modal";
-import { ErrorList } from "../components/errors";
-
 import PropTypes from "prop-types";
 
 import classnames from "classnames";
@@ -12,7 +8,8 @@ import Select from "react-select";
 import "react-select/dist/react-select.css";
 
 import "./ingest.css";
-import { error } from "util";
+
+import TagInputField from "../components/taginput";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group"; // ES6
 
@@ -191,7 +188,6 @@ class TemplateForm extends React.Component {
     if (event.target.multiple) {
       value = Array.from(event.target.selectedOptions).map(opt => opt.value);
     }
-    console.log(name, value);
     this.props.onChange({ [name]: value });
   };
 
@@ -199,7 +195,6 @@ class TemplateForm extends React.Component {
     const {
       licenses = [],
       creators = [],
-      roles = [],
       data = {},
       media_types = []
     } = this.props;
@@ -293,13 +288,10 @@ class IngestForm extends React.Component {
     const {
       licenses = [],
       creators = [],
-      roles = [],
       media_types = [],
       data = {},
-      hide_fields = [],
       errors = {}
     } = this.props;
-
     let globalErrors = { ...errors };
     [
       "date",
@@ -337,6 +329,16 @@ class IngestForm extends React.Component {
                   value={data.media_title}
                   name="media_title"
                   onChange={this.handleChange}
+                />
+              </Field>
+              <Field label="Tags">
+                <TagInputField
+                  tags={data.media_tags || []}
+                  onTagsChange={media_tags => {
+                    this.props.onChange(this.props.source, {
+                      media_tags
+                    });
+                  }}
                 />
               </Field>
 

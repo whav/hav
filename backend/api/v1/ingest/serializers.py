@@ -80,6 +80,8 @@ class IngestSerializer(serializers.Serializer):
     media_type = serializers.ChoiceField(choices=Media.MEDIA_TYPE_CHOICES)
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
+    media_tags = serializers.ListField(child=serializers.CharField(max_length=255), required=False)
+
 
     @property
     def target(self):
@@ -130,8 +132,8 @@ class IngestSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context['user']
         queue = self.context['queue']
+        source = self.initial_data['source']
         dt_range = DateTimeTZRange(lower=validated_data['start'], upper=validated_data['end'])
-
         # actually create the media object
         media = Media.objects.create(
             creation_date=dt_range,
@@ -141,6 +143,8 @@ class IngestSerializer(serializers.Serializer):
             set=self.target,
             collection=self.collection,
             created_by=user,
+            source=source,
+            tags=validated_data.get('media_tags', []),
             original_media_type=validated_data['media_type'],
             original_media_identifier=validated_data.get('media_identifier', '')
         )
@@ -154,7 +158,7 @@ class IngestSerializer(serializers.Serializer):
 
         # update the ingest queue by removing the source
         queue = IngestQueue.objects.select_for_update().get(pk=queue.pk)
-        queue.link_to_media(media, self.initial_data['source'])
+        queue.link_to_media(media, source)
         queue.save()
 
         logger.info(

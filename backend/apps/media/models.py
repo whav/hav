@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import DateTimeRangeField
+from django.contrib.postgres.fields import DateTimeRangeField, ArrayField
 from django.conf import settings
 from django.utils.functional import cached_property
 
@@ -77,6 +77,10 @@ class Media(models.Model):
     creators = models.ManyToManyField(MediaCreator, through=MediaToCreator, verbose_name='creators')
     creation_date = DateTimeRangeField()
     license = models.ForeignKey(License, null=True, on_delete=models.SET_NULL)
+
+    tags = ArrayField(models.CharField(max_length=255), default=list)
+
+    source = models.CharField(max_length=255, blank=True)
 
     original_media_type = models.IntegerField(choices=MEDIA_TYPE_CHOICES, default=1)
     original_media_description = models.TextField(blank=True)

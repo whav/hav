@@ -46,7 +46,7 @@ const routes = [
     main: SaveIngestionQueue
   },
   {
-    path: "/ingests/single/",
+    path: "/ingest/single/",
     main: SingleIngestionItem
   },
   {

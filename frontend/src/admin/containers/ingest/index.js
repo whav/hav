@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import uuid from "uuid/v4";
 import { saveIngestionData } from "../../ducks/ingest";
+import { history } from "../../app";
 
 class Ingest extends React.Component {
   constructor(props) {
@@ -12,7 +12,11 @@ class Ingest extends React.Component {
     };
 
     if (props.initialItems.length === 1) {
-      props.saveIngestionData(props.target, props.initialItems, uuid());
+      const source = props.initialItems[0];
+      let params = new URLSearchParams();
+      params.append("source", source);
+      params.append("target", props.target);
+      history.push(`/ingest/single/?${params.toString()}`);
     }
   }
 

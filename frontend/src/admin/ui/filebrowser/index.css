@@ -29,8 +29,6 @@
   flex: 1 1 20%;
   /*needed for absolutely positioned selection marker*/
   position: relative;
-  /* border: 1px dotted grey; */
-  /* border-collapse: collapse; */
   margin: 0.4rem;
   padding: 0.6rem;
   max-width: 200px;

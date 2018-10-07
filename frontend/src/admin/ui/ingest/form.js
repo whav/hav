@@ -320,7 +320,7 @@ class IngestForm extends React.Component {
             <div className="column is-two-thirds">
               <GlobalErrors errors={error_msgs} />
 
-              <Field label="Title">
+              <Field label="Title" errors={errors.media_title}>
                 <input
                   type="text"
                   className={classnames("input", {

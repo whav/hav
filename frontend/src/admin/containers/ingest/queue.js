@@ -92,14 +92,13 @@ class IngestQueue extends React.Component {
   };
 
   ingestItem = (ingestId, data) => {
+    this.clearErrors(ingestId);
     let start, end;
     try {
       [start, end] = parseDate(data.date);
     } catch (e) {
-      this.onError(ingestId, { date: ["invalid dates"] });
-      return;
+      this.onError(ingestId, { date: ["Invalid dates."] });
     }
-    this.clearErrors(ingestId);
     let response = queueForIngestion(this.props.uuid, {
       source: ingestId,
       ...data,
@@ -111,7 +110,10 @@ class IngestQueue extends React.Component {
         this.props.onIngestSuccess(ingestId, data);
         // this.props.loadIngestData();
       })
-      .catch(err => this.onError(ingestId, err));
+      .catch(err => {
+        console.log(err);
+        this.onError(ingestId, err);
+      });
   };
 
   render() {

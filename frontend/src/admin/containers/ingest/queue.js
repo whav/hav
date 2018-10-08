@@ -154,7 +154,9 @@ class IngestQueue extends React.Component {
       return (
         <div>
           <h1 className="title">
-            Ingesting {count === 1 ? "one file" : `${count} files`}
+            {count === 1
+              ? "Single Item Ingestion"
+              : `Ingesting ${count} files.`}
           </h1>
 
           <PreviewFolder source={target} />
@@ -185,7 +187,27 @@ class IngestQueue extends React.Component {
   }
 }
 
-export default connect(
+class SingleItemIngest extends React.Component {
+  render() {
+    const searchParams = new URLSearchParams(this.props.location.search);
+    searchParams.get("source");
+    return (
+      <pre>
+        {JSON.stringify(
+          {
+            ...this.props,
+            source: searchParams.get("source"),
+            target: searchParams.get("target")
+          },
+          null,
+          2
+        )}
+      </pre>
+    );
+  }
+}
+
+const MultipleIngest = connect(
   (state, ownProps) => {
     const queue = state.ingest.ingestionQueues[ownProps.match.params.uuid];
     if (!queue) {
@@ -219,3 +241,24 @@ export default connect(
     };
   }
 )(IngestQueue);
+
+const SingleIngest = connect(
+  (state, ownProps) => {
+    const searchParams = new URLSearchParams(ownProps.location.search);
+    const source = searchParams.get("source");
+
+    return {
+      items: [source],
+      target: searchParams.get("target"),
+      options: state.ingest.options,
+      loading: state.ingest.options ? false : true
+    };
+  },
+  dispatch => ({
+    loadIngestData: () => dispatch(loadIngestOptions()),
+    onIngestSuccess: () => alert("saved..."),
+    deleteIngestItem: () => alert("deleted")
+  })
+)(IngestQueue);
+
+export { SingleIngest, MultipleIngest };

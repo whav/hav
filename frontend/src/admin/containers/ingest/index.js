@@ -16,7 +16,7 @@ class Ingest extends React.Component {
       let params = new URLSearchParams();
       params.append("source", source);
       params.append("target", props.target);
-      history.push(`/ingest/single/?${params.toString()}`);
+      history.replace(`/ingest/single/?${params.toString()}`);
     }
   }
 

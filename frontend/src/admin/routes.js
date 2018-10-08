@@ -20,9 +20,8 @@ import HAVFileBrowser from "./containers/filebrowser/hav";
 import HAVMediaDetail from "./containers/filebrowser/mediaDetail";
 import { Uploads } from "./containers/uploads";
 import IngestionQueueList from "./containers/ingest/queues";
-import IngestionQueue from "./containers/ingest/queue";
+import { MultipleIngest, SingleIngest } from "./containers/ingest/queue";
 import SaveIngestionQueue from "./containers/ingest/index";
-import SingleIngestionItem from "./containers/ingest/single";
 
 const routes = [
   {
@@ -47,11 +46,11 @@ const routes = [
   },
   {
     path: "/ingest/single/",
-    main: SingleIngestionItem
+    main: SingleIngest
   },
   {
     path: "/ingest/:uuid/",
-    main: IngestionQueue
+    main: MultipleIngest
   },
   {
     path: "/:repository(hav)/:path?/",

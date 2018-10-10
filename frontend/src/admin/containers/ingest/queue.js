@@ -187,78 +187,55 @@ class IngestQueue extends React.Component {
   }
 }
 
-class SingleItemIngest extends React.Component {
-  render() {
-    const searchParams = new URLSearchParams(this.props.location.search);
-    searchParams.get("source");
-    return (
-      <pre>
-        {JSON.stringify(
-          {
-            ...this.props,
-            source: searchParams.get("source"),
-            target: searchParams.get("target")
-          },
-          null,
-          2
-        )}
-      </pre>
-    );
-  }
-}
-
 const MultipleIngest = connect(
   (state, ownProps) => {
-    const queue = state.ingest.ingestionQueues[ownProps.match.params.uuid];
-    if (!queue) {
-      return {
-        loading: true
-      };
+    let { items, target } = ownProps.location.state;
+    const isLocalQueue = items && target;
+    let queue = {},
+      created_media_entries = [];
+
+    if (!isLocalQueue) {
+      queue = state.ingest.ingestionQueues[ownProps.match.params.uuid];
+      if (!queue) {
+        return {
+          loading: true
+        };
+      }
+      items = queue.ingestion_queue;
+      target = queue.target;
+      created_media_entries = queue.created_media_entries;
     }
-    const { ingestion_queue, created_media_entries } = queue;
+
     return {
-      items: ingestion_queue,
+      items,
+      target,
       created_media_entries,
       uuid: queue.uuid,
-      target: queue.target,
       options: state.ingest.options,
-      loading: queue && state.ingest.options ? false : true
+      loading: state.ingest.options ? false : true
     };
   },
   (dispatch, ownProps) => {
+    let { items, target } = ownProps.location.state;
+    const isLocalQueue = items && target;
+
     const uuid = ownProps.match.params.uuid;
+
     return {
       loadIngestData: () => {
-        dispatch(fetchIngestionQueue(uuid));
+        if (!isLocalQueue) {
+          dispatch(fetchIngestionQueue(uuid));
+        }
         dispatch(loadIngestOptions());
       },
       onIngestSuccess: (source_id, data) => {
-        dispatch(ingestionSuccess(uuid, source_id, data));
+        uuid && dispatch(ingestionSuccess(uuid, source_id, data));
       },
       deleteIngestItem: source_id => {
-        dispatch(deleteIngestItem(uuid, source_id));
+        uuid && dispatch(deleteIngestItem(uuid, source_id));
       }
     };
   }
 )(IngestQueue);
 
-const SingleIngest = connect(
-  (state, ownProps) => {
-    const searchParams = new URLSearchParams(ownProps.location.search);
-    const source = searchParams.get("source");
-
-    return {
-      items: [source],
-      target: searchParams.get("target"),
-      options: state.ingest.options,
-      loading: state.ingest.options ? false : true
-    };
-  },
-  dispatch => ({
-    loadIngestData: () => dispatch(loadIngestOptions()),
-    onIngestSuccess: () => alert("saved..."),
-    deleteIngestItem: () => alert("deleted")
-  })
-)(IngestQueue);
-
-export { SingleIngest, MultipleIngest };
+export default MultipleIngest;

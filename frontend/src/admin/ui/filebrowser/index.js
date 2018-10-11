@@ -128,7 +128,7 @@ const GGalleryItem = ({
   return (
     <div
       className={classNames("g-gallery-item", {
-        selected: selected,
+        selected,
         "g-gallery-item-file": !directory,
         "g-gallery-directory": directory
       })}

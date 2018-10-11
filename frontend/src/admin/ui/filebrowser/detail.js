@@ -35,39 +35,45 @@ export default class extends React.Component {
     };
 
     return (
-      <div className="container content">
-        <h1>{this.props.name}</h1>
-        <hr />
-        <div>
-          <FallBackImageLoader
-            src={this.props.preview_url}
-            sources={this.props.srcset}
-            mime_type={props.mime_type}
-            alt={props.name}
-          />
+      <div className="container">
+        <div className="columns">
+          <div className="column">
+            <h1 className="title">{this.props.name}</h1>
+
+            <h2>Properties</h2>
+
+            <table className="table is-striped">
+              <thead>
+                <tr>
+                  <th colSpan={2}>Meta</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(tableProps).map(([key, value]) => (
+                  <tr key={key}>
+                    <td>{key}</td>
+                    <td>{value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="field is-grouped">
+              <Button onClick={props.ingest} className="is-primary">
+                Ingest
+              </Button>
+            </div>
+
+            {this.props.meta ? <ExifTable data={this.props.meta} /> : null}
+          </div>
+          <div className="column is-one-third">
+            <FallBackImageLoader
+              src={this.props.preview_url}
+              sources={this.props.srcset}
+              mime_type={props.mime_type}
+              alt={props.name}
+            />
+          </div>
         </div>
-        <h2>Properties</h2>
-        <Button onClick={props.ingest} className="is-primary">
-          Ingest
-        </Button>
-        <hr />
-        <table className="table is-striped">
-          <thead>
-            <tr>
-              <th colSpan={2}>Meta</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(tableProps).map(([key, value]) => (
-              <tr key={key}>
-                <td>{key}</td>
-                <td>{value}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {this.props.meta ? <ExifTable data={this.props.meta} /> : null}
-        {/* <pre>{JSON.stringify(this.props, null, 2)}</pre> */}
       </div>
     );
   }

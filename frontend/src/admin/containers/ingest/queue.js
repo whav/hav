@@ -94,6 +94,8 @@ class IngestQueue extends React.Component {
   ingestItem = (ingestId, data) => {
     this.clearErrors(ingestId);
     let start, end;
+
+    // TODO: don't validate here
     try {
       [start, end] = parseDate(data.date);
     } catch (e) {
@@ -101,6 +103,7 @@ class IngestQueue extends React.Component {
     }
     let response = queueForIngestion(this.props.uuid, {
       source: ingestId,
+      target: this.props.target,
       ...data,
       start,
       end

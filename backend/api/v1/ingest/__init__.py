@@ -93,7 +93,20 @@ class IngestQueueModifier(IncomingBaseMixin, IngestQMixin, APIView):
             }).data)
 
 
+class SingleIngestView(IncomingBaseMixin, APIView):
+    def post(self, request):
+        print(request.data)
+        context = {
+                'request': request,
+                'user': request.user,
+            }
+        serializer = IngestSerializer(
+            data=request.data,
+            context=context
+        )
 
-
+        serializer.is_valid(raise_exception=True)
+        media = serializer.save()
+        return Response(data=SimpleMediaSerializer(instance=media, context=context).data, status=201)
 
 

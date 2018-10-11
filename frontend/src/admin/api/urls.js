@@ -13,11 +13,12 @@ export const prefix = apiPrefix;
 export const file_upload = `${apiPrefix}upload/`;
 export const browser = file_upload;
 export const prepareIngestion = `${apiPrefix}ingestq/`;
-export const ingest = `${apiPrefix}ingest/`;
-export const ingestQueueDetail = uuid => `${apiPrefix}ingest/${uuid}/`;
+export const ingest = `${apiPrefix}/ingest/`;
+export const ingestQueueDetail = uuid => `${apiPrefix}ingest/q/${uuid}/`;
 export const ingestOptions = `${apiPrefix}ingest/options/`;
-
-export const ingestFileEndpoint = uuid => `${ingestQueueDetail(uuid)}ingest/`;
+export const ingestSingle = `${apiPrefix}ingest/single/`;
+export const ingestFileEndpoint = uuid =>
+  uuid ? `${ingestQueueDetail(uuid)}ingest/` : ingestSingle;
 export const ingestQueueModifierEndpoint = uuid =>
   `${ingestQueueDetail(uuid)}modify/`;
 

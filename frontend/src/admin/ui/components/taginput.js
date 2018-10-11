@@ -20,7 +20,7 @@ class TagComponent extends React.Component {
     this.props.onDelete(this.props.tag);
   };
   render() {
-    const { tag, onDelete } = this.props;
+    const { tag } = this.props;
     return (
       <div className="control" style={styles.input}>
         <div className="tags">

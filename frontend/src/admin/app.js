@@ -10,6 +10,7 @@ import Nav from "./containers/nav";
 import { routes, mainNav } from "./routes";
 import ScrollToTop from "./ui/scroll";
 import App from "./ui/index";
+import Websocket from "./containers/websocket";
 
 const logo = require("../assets/logo.png");
 
@@ -24,6 +25,7 @@ const HavAdmin = ({ store }) => {
     <Provider store={store}>
       <Router history={history}>
         <App>
+          <Websocket />
           <div className="hav-admin-main-menu">
             <img src={logo} alt="hav logo" className="main-menu-logo" />
             <nav>

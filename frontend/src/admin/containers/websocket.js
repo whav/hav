@@ -15,13 +15,13 @@ class WebSocketConnection extends React.PureComponent {
   }
 
   onReceive = message => {
-    console.log(message);
+    console.log(JSON.parse(message.data));
   };
 
   onConnect = e => {
     console.log("WS connected.", e);
     // this.pinger && window.clearInterval(this.pinger);
-    // this.pinger = window.setInterval(this.ping, 1000);
+    // this.pinger = window.setInterval(this.ping, 3000);
   };
 
   onClose = e => {

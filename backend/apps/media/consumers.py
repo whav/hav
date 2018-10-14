@@ -1,5 +1,7 @@
-from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from apps.media.models import Media
 
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from channels.db import database_sync_to_async
 
 class MediaEventConsumer(AsyncJsonWebsocketConsumer):
 
@@ -17,3 +19,5 @@ class MediaEventConsumer(AsyncJsonWebsocketConsumer):
     async def media_task_update(self, message):
         print("Media message received.", message)
         await self.send_json(message)
+
+

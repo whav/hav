@@ -1,5 +1,8 @@
 import React from "react";
 import ReconnectingWebSocket from "reconnecting-websocket";
+import { connect } from "react-redux";
+
+import requestFile from "../ducks/browser";
 
 class WebSocketConnection extends React.PureComponent {
   constructor(props) {
@@ -7,7 +10,7 @@ class WebSocketConnection extends React.PureComponent {
     const url = `${window.location.protocol === "https:" ? "wss" : "ws"}://${
       window.location.host
     }/admin/events/media/`;
-    console.warn("Websocket Mounting", url);
+    console.warn("Websocket Mounting", url, this.props);
     this.socket = new ReconnectingWebSocket(url);
     this.socket.addEventListener("open", this.onConnect);
     this.socket.addEventListener("close", this.onClose);
@@ -35,4 +38,7 @@ class WebSocketConnection extends React.PureComponent {
   }
 }
 
-export default WebSocketConnection;
+export default connect(
+  null,
+  dispatch => ({ updateFile: url => dispatch(requestFile) })
+)(WebSocketConnection);

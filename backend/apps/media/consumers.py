@@ -1,7 +1,5 @@
-from apps.media.models import Media
-
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from channels.db import database_sync_to_async
+from django.urls import reverse
 
 class MediaEventConsumer(AsyncJsonWebsocketConsumer):
 
@@ -17,7 +15,8 @@ class MediaEventConsumer(AsyncJsonWebsocketConsumer):
         await self.channel_layer.group_add('media', self.channel_name)
 
     async def media_task_update(self, message):
-        print("Media message received.", message)
-        await self.send_json(message)
+        if 'media_id' in message:
+            message.update({'url': reverse('api:v1:hav_browser:hav_media', kwargs={'pk': message['media_id']})})
+            await self.send_json(message)
 
 

@@ -2,10 +2,11 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.core.exceptions import ObjectDoesNotExist
 from apps.media.models import Media
-
 from logging import getLogger
+from urllib.parse import urljoin
 
 logger = getLogger(__name__)
+
 
 def send_task_status(media):
     channel_layer = get_channel_layer()

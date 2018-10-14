@@ -49,6 +49,7 @@ class IngestQueue extends React.Component {
   };
 
   onError = (source, errors) => {
+    console.log(errors);
     // patch start and end errors to date
     let custom_errors = { ...errors };
     const date_errors = uniq([
@@ -97,7 +98,7 @@ class IngestQueue extends React.Component {
     try {
       [start, end] = parseDate(data.date);
     } catch (e) {
-      this.onError(ingestId, { date: ["Invalid dates."] });
+      // this.onError(ingestId, { date: ["Invalid dates."] });
     }
     let response = queueForIngestion(this.props.uuid, {
       source: ingestId,
@@ -108,10 +109,8 @@ class IngestQueue extends React.Component {
     response
       .then(data => {
         this.props.onIngestSuccess(ingestId, data);
-        // this.props.loadIngestData();
       })
       .catch(err => {
-        console.log(err);
         this.onError(ingestId, err);
       });
   };

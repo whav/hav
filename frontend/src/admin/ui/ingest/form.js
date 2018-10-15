@@ -326,7 +326,7 @@ class IngestForm extends React.Component {
                   className={classnames("input", {
                     "is-danger": errors.media_title
                   })}
-                  value={data.media_title}
+                  value={data.media_title || ""}
                   name="media_title"
                   onChange={this.handleChange}
                 />

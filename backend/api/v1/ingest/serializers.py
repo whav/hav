@@ -96,7 +96,7 @@ class IngestSerializer(serializers.Serializer):
             raise serializers.ValidationError("The file could not be found.")
 
         try:
-            media = Media.objects.get(files__hash=hash)
+            media = Media.objects.get(files__hash=hash_value)
             raise serializers.ValidationError(
                 "A file with the hash '{}' is already archived. Check media {}".format(hash_value, media)
             )
@@ -139,7 +139,6 @@ class IngestSerializer(serializers.Serializer):
             original_media_type=validated_data['media_type'],
             original_media_identifier=validated_data.get('media_identifier', '')
         )
-
 
         # save m2m
         for creator in validated_data['creators']:

@@ -95,7 +95,6 @@ class IngestQueueModifier(IncomingBaseMixin, IngestQMixin, APIView):
 
 class SingleIngestView(IncomingBaseMixin, APIView):
     def post(self, request):
-        print(request.data)
         context = {
                 'request': request,
                 'user': request.user,

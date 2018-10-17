@@ -161,15 +161,6 @@ const ingestionQueues = (state = {}, action) => {
   }
 };
 
-const created_media_entries = (state = [], action = {}) => {
-  switch (action.type) {
-    case INGESTION_SUCCESS:
-      return [...state, action.payload];
-    default:
-      return state;
-  }
-};
-
 const reducer = combineReducers({
   loading,
   entries,
@@ -177,8 +168,7 @@ const reducer = combineReducers({
   queue,
   ingestTo,
   ingestToUrl,
-  ingestionQueues,
-  created_media_entries
+  ingestionQueues
 });
 
 const cleanData = data => {

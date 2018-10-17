@@ -1,14 +1,6 @@
-from django.conf.urls import url
 
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-
-from apps.media.consumers import MediaEventConsumer
+from channels.routing import ProtocolTypeRouter
 
 application = ProtocolTypeRouter({
-    "websocket": AuthMiddlewareStack(
-        URLRouter([
-            url(r"^admin/events/media/$", MediaEventConsumer),
-        ])
-    ),
+    # Empty for now (http->django views is added by default)
 })

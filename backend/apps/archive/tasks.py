@@ -1,6 +1,5 @@
 from __future__ import absolute_import, unicode_literals
 from hav.celery import app
-from api.v1.notifications import archive_finished
 import logging
 from .operations.create import archive_file
 
@@ -14,8 +13,7 @@ def archive(filepath, media_id, user_id):
             filepath, media_id, user_id
         )
     )
-    archive_id = archive_file(filepath, media_id, user_id)
-    archive_finished(archive_id)
-    return archive_id
+    return archive_file(filepath, media_id, user_id)
+
 
 

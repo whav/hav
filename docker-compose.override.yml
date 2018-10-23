@@ -4,8 +4,12 @@ services:
     django:
         ports:
             - "8000:8000"
-        env_file:
-            - ../env_files/docker.env
+        depends_on:
+          - hav_db
+          - whav_db
+#        env_file:
+#            - ../env_files/docker.env
+        command: python manage.py runserver 0.0.0.0:8000
         volumes:
             - ../backend:/hav/backend
     hav_db:

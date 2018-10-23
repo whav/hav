@@ -32,6 +32,7 @@ django-debug-toolbar = "*"
 django-extensions = "*"
 pytest = "*"
 pytest-django = "*"
+uwsgi = "*"
 
 [pipenv]
 keep_outdated = true

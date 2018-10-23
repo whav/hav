@@ -72,6 +72,7 @@ def generate_url(path, operation='crop', **funckwargs):
 
     kwargs['sign'] = secret
     path = '{}?{}'.format(operation, urlencode(kwargs))
+    print(urljoin(URL_PREFIX, path))
     return urljoin(URL_PREFIX, path)
 
 

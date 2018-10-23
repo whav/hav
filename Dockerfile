@@ -30,6 +30,9 @@ COPY ./backend .
 
 RUN ["python", "manage.py", "collectstatic", "--no-input"]
 
+WORKDIR /hav
+
+CMD ["uwsgi", "uwsgi.ini"]
 
 
 

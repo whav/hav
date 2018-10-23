@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 
 services:
     django:
@@ -7,11 +7,10 @@ services:
         depends_on:
           - hav_db
           - whav_db
-#        env_file:
-#            - ../env_files/docker.env
+        working_dir: /hav/backend
         command: python manage.py runserver 0.0.0.0:8000
         volumes:
-            - ../backend:/hav/backend
+            - ./backend:/hav/backend
     hav_db:
         image: postgres
         environment:

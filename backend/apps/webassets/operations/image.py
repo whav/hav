@@ -4,8 +4,11 @@ import requests
 from apps.webassets.imaginary import generate_url
 import logging
 
+logger = logging.getLogger(__name__)
 
-def convert(source, target, archivefile, logger=logging.getLogger(__file__)):
+
+def convert(source, target, archivefile):
+    logger.debug(f'Image convert called with source {source}, target {target} and archivefile {archivefile}')
     # since the source argument is absolute
     # grab the relative path from the database
     # object directly

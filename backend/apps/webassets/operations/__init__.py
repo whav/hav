@@ -39,7 +39,7 @@ def create_video_thumbnail(af):
     logger.info('Video thumbnail webasset {} successfully created.'.format(wa.pk))
 
 
-def create_webassets(archived_file_id, logger=logging.getLogger(__name__)):
+def create_webassets(archived_file_id):
     logger.info('Processing archive file %s' % archived_file_id)
     af = ArchiveFile.objects.get(pk=archived_file_id)
     source_file_name = af.file.path
@@ -75,7 +75,7 @@ def create_webassets(archived_file_id, logger=logging.getLogger(__name__)):
 
     logger.info("Source {}, target {}".format(source_file_name, target_file_name))
 
-    result = convert(source_file_name, target_file_name, af, logger=logger)
+    result = convert(source_file_name, target_file_name, af)
 
     logger.info('Conversion completed.')
     wa.file = os.path.relpath(target_file_name, start=wa.file.storage.location)

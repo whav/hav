@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 FFMPEG = find_executable('ffmpeg')
 
 
-def convert(source, target, *args, logger=logger):
+def convert(source, target, *args):
     logger.info('Converting video. Source file: {}, target file: {}'.format(source, target))
     args = [
             '-i', source,
@@ -22,7 +22,7 @@ def convert(source, target, *args, logger=logger):
             target
         ]
 
-    # try to figurre out if the source is interlaced
+    # try to figure out if the source is interlaced
     interlaced = is_interlaced(source)
     # None is undecided, so try harder
     if interlaced is None:

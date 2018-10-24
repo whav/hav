@@ -229,8 +229,6 @@ CELERY_TASK_ROUTES = {
     }
 }
 
-# CELERY_WORKER_HIJACK_ROOT_LOGGER = False
-
 ASGI_APPLICATION = "hav.routing.application"
 
 RAVEN_CONFIG = {

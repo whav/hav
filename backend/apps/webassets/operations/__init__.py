@@ -75,7 +75,7 @@ def create_webassets(archived_file_id):
 
     logger.info("Source {}, target {}".format(source_file_name, target_file_name))
 
-    result = convert(source_file_name, target_file_name, af)
+    convert(source_file_name, target_file_name, af)
 
     logger.info('Conversion completed.')
     wa.file = os.path.relpath(target_file_name, start=wa.file.storage.location)

@@ -25,6 +25,7 @@ flower = "*"
 pillow = "*"
 redis = "*"
 pyexiftool = {file = "https://github.com/smarnach/pyexiftool/tarball/master"}
+pyvips = "*"
 
 [dev-packages]
 ipdb = "*"

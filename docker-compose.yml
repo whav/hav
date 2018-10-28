@@ -33,7 +33,7 @@ services:
     celery:
         <<: *django
         working_dir: /hav/backend
-        command: celery -A hav worker -Q webassets,archive -E -P solo -c 1
+        command: celery -A hav worker -Q webassets,archive -E -P solo -c 1 -l debug
 
     redis:
         image: redis:4.0

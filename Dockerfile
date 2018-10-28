@@ -32,7 +32,7 @@ RUN ["python", "manage.py", "collectstatic", "--no-input"]
 
 WORKDIR /hav
 
-CMD ["uwsgi", "uwsgi.ini"]
+CMD ["uwsgi", "--hook-master-start", "unix_signal:1 gracefully_kill_them_all", "uwsgi.ini"]
 
 
 

@@ -1,0 +1,51 @@
+version: "3.7"
+
+x-django: &django
+    build:
+        context: .
+    image: hav_django
+    env_file:
+        - ./env_files/docker.env
+    depends_on:
+      - redis
+    volumes:
+        - ./dist/archive:/archive/hav/archive
+        - ./dist/incoming:/archive/hav/incoming
+        - ./dist/webassets:/archive/hav/webassets
+
+
+services:
+    nginx:
+        image: nginx:stable
+        ports:
+            - "80:80"
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./dist/nginx_cache:/tmp/nginx-thumbnails
+        depends_on:
+            - django
+            - imaginary
+
+    django:
+        <<: *django
+
+
+    celery:
+        <<: *django
+        working_dir: /hav/backend
+        command: celery -A hav worker -Q webassets,archive -E -P solo -c 1 -l debug
+
+    redis:
+        image: redis:4.0
+
+    imaginary:
+        build: https://github.com/h2non/imaginary.git
+        env_file:
+          - ./env_files/docker.env
+        volumes:
+            - ./dist/archive:/www/archive:ro
+            - ./dist/incoming:/www/incoming:ro
+            - ./dist/webassets:/www/webassets:ro
+        command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000
+
+

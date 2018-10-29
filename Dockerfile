@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y libpq-dev gcc ffmpeg libimage-exiftool-perl && \
+    apt-get install -y libpq-dev gcc ffmpeg libimage-exiftool-perl libvips-dev && \
     apt-get autoremove && \
     apt-get autoclean
 
@@ -30,9 +30,9 @@ COPY ./backend .
 
 RUN ["python", "manage.py", "collectstatic", "--no-input"]
 
-EXPOSE 8000
+WORKDIR /hav
 
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["uwsgi", "--hook-master-start", "unix_signal:1 gracefully_kill_them_all", "uwsgi.ini"]
 
 
 

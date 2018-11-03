@@ -16,6 +16,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 @signals.setup_logging.connect
 def setup_celery_logging(**kwargs):
+    print('Celery Logging...',kwargs)
     pass
 
 app.log.setup()

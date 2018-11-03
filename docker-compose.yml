@@ -33,7 +33,10 @@ services:
     celery:
         <<: *django
         working_dir: /hav/backend
-        command: celery -A hav worker -Q webassets,archive -E -P solo -c 1 -l debug
+        environment:
+          - LOGLEVE=DEBUG
+
+        command: celery -A hav worker -Q webassets,archive -E -l DEBUG
 
     redis:
         image: redis:4.0

@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from django.db import transaction
+from django.db.models import Q, Count
 from apps.media.models import MediaCreator, MediaCreatorRole, License, Media
 from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin
@@ -29,7 +29,9 @@ class IngestQueueView(IncomingBaseMixin, ListCreateAPIView):
         return SimpleIngestQueueSerializer
 
     def get_queryset(self):
-        return IngestQueue.objects.filter(created_by=self.request.user).order_by('-created_at')
+        return IngestQueue.objects.filter(created_by=self.request.user)\
+            .annotate(media_entries_count=Count('created_media_entries'))\
+            .order_by('-created_at')
 
 
 class IngestQueueDetailView(IncomingBaseMixin, RetrieveAPIView):
@@ -91,7 +93,19 @@ class IngestQueueModifier(IncomingBaseMixin, IngestQMixin, APIView):
             }).data)
 
 
+class SingleIngestView(IncomingBaseMixin, APIView):
+    def post(self, request):
+        context = {
+                'request': request,
+                'user': request.user,
+            }
+        serializer = IngestSerializer(
+            data=request.data,
+            context=context
+        )
 
-
+        serializer.is_valid(raise_exception=True)
+        media = serializer.save()
+        return Response(data=SimpleMediaSerializer(instance=media, context=context).data, status=201)
 
 

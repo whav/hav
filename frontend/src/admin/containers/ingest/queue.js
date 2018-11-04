@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import LoadingIndicator from "../../ui/loading";
 import uniq from "lodash/uniq";
+import isEmpty from "lodash/isEmpty";
 import {
   fetchIngestionQueue,
   loadIngestOptions,
@@ -94,6 +95,8 @@ class IngestQueue extends React.Component {
   ingestItem = (ingestId, data) => {
     this.clearErrors(ingestId);
     let start, end;
+
+    // TODO: don't validate here
     try {
       [start, end] = parseDate(data.date);
     } catch (e) {
@@ -101,6 +104,7 @@ class IngestQueue extends React.Component {
     }
     let response = queueForIngestion(this.props.uuid, {
       source: ingestId,
+      target: this.props.target,
       ...data,
       start,
       end
@@ -111,20 +115,21 @@ class IngestQueue extends React.Component {
         // this.props.loadIngestData();
       })
       .catch(err => {
-        console.log(err);
         this.onError(ingestId, err);
       });
   };
 
   render() {
     const {
-      loading,
       options,
       items = [],
       target,
       created_media_entries = []
     } = this.props;
+
     const { formData, templateData, errors } = this.state;
+
+    const loading = isEmpty(options);
 
     if (loading) {
       return <LoadingIndicator />;
@@ -154,7 +159,9 @@ class IngestQueue extends React.Component {
       return (
         <div>
           <h1 className="title">
-            Ingesting {count === 1 ? "one file" : `${count} files`}
+            {count === 1
+              ? "Single Item Ingestion"
+              : `Ingesting ${count} files.`}
           </h1>
 
           <PreviewFolder source={target} />
@@ -185,37 +192,86 @@ class IngestQueue extends React.Component {
   }
 }
 
-export default connect(
+const MultipleIngest = connect(
   (state, ownProps) => {
-    const queue = state.ingest.ingestionQueues[ownProps.match.params.uuid];
-    if (!queue) {
-      return {
-        loading: true
-      };
+    let queue = {},
+      created_media_entries = [];
+
+    // pick source and target from history state if given (~single item ingest)
+    let { items, target } = ownProps.location.state;
+    const isLocalQueue = items && target;
+
+    // otherwise assume that we have a queue and populate from there
+    if (!isLocalQueue) {
+      queue = state.ingest.ingestionQueues[ownProps.match.params.uuid];
+      if (!queue) {
+        return {
+          loading: true
+        };
+      }
+      items = queue.ingestion_queue;
+      target = queue.target;
+      created_media_entries = queue.created_media_entries;
     }
-    const { ingestion_queue, created_media_entries } = queue;
+
     return {
-      items: ingestion_queue,
+      items,
+      target,
       created_media_entries,
       uuid: queue.uuid,
-      target: queue.target,
       options: state.ingest.options,
-      loading: queue && state.ingest.options ? false : true
+      loading: state.ingest.options ? false : true
     };
   },
   (dispatch, ownProps) => {
+    let { items, target } = ownProps.location.state;
+    const isLocalQueue = items && target;
+
     const uuid = ownProps.match.params.uuid;
+
     return {
       loadIngestData: () => {
-        dispatch(fetchIngestionQueue(uuid));
+        if (!isLocalQueue) {
+          dispatch(fetchIngestionQueue(uuid));
+        }
         dispatch(loadIngestOptions());
       },
       onIngestSuccess: (source_id, data) => {
-        dispatch(ingestionSuccess(uuid, source_id, data));
+        console.warn(data, source_id);
+        uuid && dispatch(ingestionSuccess(uuid, source_id, data));
       },
       deleteIngestItem: source_id => {
-        dispatch(deleteIngestItem(uuid, source_id));
+        uuid && dispatch(deleteIngestItem(uuid, source_id));
       }
     };
   }
 )(IngestQueue);
+
+const SingleIngest = connect(
+  (state, ownProps) => {
+    // pick source and target from history state
+    let { items, target } = ownProps.location.state;
+
+    return {
+      items,
+      target,
+      created_media_entries: [],
+      options: state.ingest.options
+    };
+  },
+  (dispatch, ownProps) => {
+    let { items, target } = ownProps.location.state;
+
+    return {
+      loadIngestData: () => {
+        dispatch(loadIngestOptions());
+      },
+      onIngestSuccess: (source_id, data) => {
+        alert("Success!");
+      },
+      deleteIngestItem: () => ownProps.history.goBack()
+    };
+  }
+)(IngestQueue);
+
+export { MultipleIngest, SingleIngest };

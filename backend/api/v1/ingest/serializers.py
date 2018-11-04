@@ -14,6 +14,7 @@ from apps.archive.tasks import archive
 from apps.webassets.tasks import create as create_webassets
 from apps.ingest.models import IngestQueue
 from apps.hav_collections.models import Collection
+from apps.sets.models import Node
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     InternalIngestHyperlinkField, IngestionReferenceField
@@ -70,6 +71,7 @@ class PrepareIngestSerializer(serializers.Serializer):
 class IngestSerializer(serializers.Serializer):
 
     source = InternalIngestHyperlinkField()
+    target = serializers.HyperlinkedRelatedField(view_name='api:v1:hav_browser:hav_set', queryset=Node.objects.all(), required=False)
     start = serializers.DateTimeField()
     end = serializers.DateTimeField()
 
@@ -82,47 +84,37 @@ class IngestSerializer(serializers.Serializer):
     media_identifier = serializers.CharField(allow_blank=True, required=False)
     media_tags = serializers.ListField(child=serializers.CharField(max_length=255), required=False)
 
-
     @property
-    def target(self):
-        return self.context['target']
-
-    @property
-    def collection(self):
-        try:
-            return self.target.collection
-        except Collection.DoesNotExist:
-            ancestor = self.target.get_ancestors().filter(collection__isnull=False).last()
-            if ancestor is None:
-                return None
-            else:
-                return ancestor.collection
-
-        return None
+    def target_node(self):
+        return self.validated_data.get('target') or self.context['target']
 
 
     def validate_source(self, value):
         try:
-            hash = generate_hash(value)
+            hash_value = generate_hash(value)
         except FileNotFoundError:
             raise serializers.ValidationError("The file could not be found.")
 
         try:
-            media = Media.objects.get(files__hash=hash)
+            media = Media.objects.get(files__hash=hash_value)
             raise serializers.ValidationError(
-                "A file with the hash '{}' is already archived. Check media {}".format(hash, media)
+                "A file with the hash '{}' is already archived. Check media {}".format(hash_value, media)
             )
         except Media.DoesNotExist:
             return value
 
     def validate(self, data):
         user = self.context['user']
-        if not user.is_superuser or user not in self.collection.administrators.all():
-            raise serializers.ValidationError('You do not have the appropriate permissions to ingest into the collection "{}"'.format(self.collection.name))
+        target = data.get('target') or self.context['target']
+        collection = target.get_collection()
+
+        if not user.is_superuser or user not in target.collection.administrators.all():
+            raise serializers.ValidationError('You do not have the appropriate permissions to ingest into the collection "{}"'.format(target.collection.name))
 
         if data['start'] > data['end']:
             raise serializers.ValidationError("Start time must be before end time.")
-        if not self.target.is_descendant_of(self.collection.root_node) and not self.target == self.collection.root_node:
+
+        if not target.is_descendant_of(collection.root_node) and not target == collection.root_node:
             raise serializers.ValidationError("Target set is not a descendant of the specified collection.")
 
         return data
@@ -131,7 +123,6 @@ class IngestSerializer(serializers.Serializer):
     @transaction.atomic
     def create(self, validated_data):
         user = self.context['user']
-        queue = self.context['queue']
         source = self.initial_data['source']
         dt_range = DateTimeTZRange(lower=validated_data['start'], upper=validated_data['end'])
         # actually create the media object
@@ -140,8 +131,8 @@ class IngestSerializer(serializers.Serializer):
             license=validated_data.get('media_license'),
             title=validated_data.get('media_title', ''),
             description=validated_data.get('media_description', ''),
-            set=self.target,
-            collection=self.collection,
+            set=self.target_node,
+            collection=self.target_node.get_collection(),
             created_by=user,
             source=source,
             tags=validated_data.get('media_tags', []),
@@ -156,10 +147,12 @@ class IngestSerializer(serializers.Serializer):
                 media=media
             )
 
-        # update the ingest queue by removing the source
-        queue = IngestQueue.objects.select_for_update().get(pk=queue.pk)
-        queue.link_to_media(media, source)
-        queue.save()
+        # update the ingest queue (if available) by removing the source
+        queue = self.context.get('queue')
+        if (queue):
+            queue = IngestQueue.objects.select_for_update().get(pk=queue.pk)
+            queue.link_to_media(media, source)
+            queue.save()
 
         logger.info(
             "Triggering archiving for file %s, media: %d, user: %d",

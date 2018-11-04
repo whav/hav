@@ -95,6 +95,9 @@ class Media(models.Model):
 
     files = models.ManyToManyField(ArchiveFile)
 
+    def __str__(self):
+        return "Media ID {}".format(self.pk)
+
     @cached_property
     def primary_file(self):
         try:

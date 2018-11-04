@@ -1,0 +1,47 @@
+version: "3.7"
+
+x-user: &user
+    user: "1000:1000"
+
+
+services:
+    django:
+        ports:
+            - "8000:8000"
+        depends_on:
+          - hav_db
+          - whav_db
+        working_dir: /hav/backend
+        command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+            - ./backend:/hav/backend
+        <<: *user
+    celery:
+        <<: *user
+        volumes:
+        - ./backend:/hav/backend
+
+    hav_db:
+        image: postgres
+        environment:
+            - POSTGRES_PASSWORD=opensesame
+            - POSTGRES_USER=hav
+        expose:
+          - 5432
+#        <<: *user
+
+
+    whav_db:
+        image: mdillon/postgis:9.4
+        environment:
+            - POSTGRES_PASSWORD=opensesame
+            - POSTGRES_USER=whav
+        expose:
+          - 5432
+#        <<: *user
+
+
+    imaginary:
+        ports:
+            - "9000:9000"
+        <<: *user

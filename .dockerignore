@@ -7,4 +7,6 @@ designs/
 compose/
 .git
 .idea
+**/*.pyc
+**/__pycache__/**
 

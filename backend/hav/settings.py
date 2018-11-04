@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import environ
+import sys
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
 
@@ -30,7 +31,7 @@ env = environ.Env(
     SECRET_KEY=(str, "VERY_VERY_UNSAFE"),
     ALLOWED_HOSTS=(list, []),
     SENTRY_DSN=(str, ''),
-    LOGLEVEL=(str, 'info'),
+    LOGLEVEL=(str, 'debug'),
     URL_SIGNATURE_KEY=(str, 'quite_unsafe_i_must_say'),
     IMAGESERVER_URL_PREFIX=(str, '/'),
     WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000')
@@ -229,7 +230,8 @@ CELERY_TASK_ROUTES = {
     }
 }
 
-# CELERY_WORKER_HIJACK_ROOT_LOGGER = False
+CELERY_WORKER_HIJACK_ROOT_LOGGER = False
+CELERY_WORKER_REDIRECT_STDOUTS_LEVEL = 'INFO'
 
 ASGI_APPLICATION = "hav.routing.application"
 
@@ -259,8 +261,10 @@ logging.config.dictConfig({
     'handlers': {
         # console logs to stderr
         'console': {
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'default',
+            'stream': sys.stdout
         },
         # Add Handler for Sentry for `warning` and above
         'sentry': {
@@ -277,7 +281,7 @@ logging.config.dictConfig({
                 'console', 'sentry'],
         },
         # Our application code
-        'app': {
+        'apps': {
             'level': LOGLEVEL,
             'handlers': [
                 'console',

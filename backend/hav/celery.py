@@ -1,6 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 import os
-from celery import Celery
+from celery import Celery, signals
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'hav.settings')
@@ -12,6 +12,15 @@ app = Celery('hav')
 # - namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
+
+
+@signals.setup_logging.connect
+def setup_celery_logging(**kwargs):
+    print('Celery Logging...',kwargs)
+    pass
+
+app.log.setup()
+
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()

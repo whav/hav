@@ -104,7 +104,6 @@ class FileDetailSerializer(FileSerializer):
 
 
     def get_meta(self, path):
-        print(path, type(path))
         return get_exif_data(path)
 
     def get_srcset(self, path):

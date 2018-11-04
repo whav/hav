@@ -1,0 +1,1 @@
+[{"model": "hav_collections.collection", "pk": 1, "fields": {"slug": "Testcollection", "name": "Testcollection", "short_name": "Testcollection", "root_node": 1, "administrators": [1]}}]

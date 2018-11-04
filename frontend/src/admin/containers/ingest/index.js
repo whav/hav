@@ -10,14 +10,6 @@ class Ingest extends React.Component {
     this.state = {
       name: ""
     };
-
-    if (props.initialItems.length === 1) {
-      const source = props.initialItems[0];
-      history.replace(`/ingest/single/`, {
-        items: [source],
-        target: props.target
-      });
-    }
   }
 
   saveData = e => {

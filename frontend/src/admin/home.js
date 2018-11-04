@@ -7,7 +7,7 @@ const Welcome = () => {
   return (
     <div>
       <h1>HAV Dashboard</h1>
-      <p>This will eventually be filled with dashboard content.</p>
+      <p>Please use the menu on the left.</p>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import React from "react";
 import { Audio, Video, Image } from "../../components/webassets";
 
 const WebAsset = props => {
+  console.warn(props);
   switch (props.mime_type.split("/")[0].toLowerCase()) {
     case "audio":
       return <Audio {...props} />;
@@ -16,7 +17,6 @@ const WebAsset = props => {
 };
 
 const TableRow = ({ name, value }) => {
-  console.log(name, value);
   return (
     <tr>
       <td>{name}</td>
@@ -43,6 +43,7 @@ const ArchiveFileDetails = props => {
     </table>
   );
 };
+
 class HavMediaDetail extends React.Component {
   render() {
     const { details } = this.props;

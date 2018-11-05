@@ -24,10 +24,9 @@ export default connect(
   (state, props) => {
     const key = buildApiUrl(props.location.pathname);
     const data = state.repositories[key];
-    console.warn(key, data);
     return {
       loading: data == undefined,
-      data: data
+      data
     };
   },
   (dispatch, props) => {

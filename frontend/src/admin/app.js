@@ -25,8 +25,8 @@ const HavAdmin = ({ store }) => {
       <Router history={history}>
         <App>
           <div className="hav-admin-main-menu">
-            <img src={logo} alt="hav logo" className="main-menu-logo" />
             <nav>
+              <img src={logo} alt="hav logo" className="main-menu-logo" />
               <Route component={Navigation} />
             </nav>
           </div>

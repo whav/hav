@@ -3,7 +3,7 @@ import stat
 from mimetypes import guess_type
 from rest_framework import serializers
 
-from apps.webassets.imaginary import generate_url, generate_urls
+from hav_utils.imaginary import generate_url, generate_urls
 from hav_utils.exif import get_exif_data
 import logging
 

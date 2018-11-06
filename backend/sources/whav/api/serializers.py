@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 
 from apps.whav.models import ImageCollection, MediaOrdering
-from apps.webassets.imaginary import generate_urls, generate_url
+from hav_utils.imaginary import generate_urls, generate_url
 
 class WHAVSerializerMixin(object):
 

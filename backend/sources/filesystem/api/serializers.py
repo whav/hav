@@ -4,7 +4,7 @@ from mimetypes import guess_type
 from rest_framework import serializers
 
 from apps.webassets.imaginary import generate_url, generate_urls
-from hav.utils.exif import get_exif_data
+from hav_utils.exif import get_exif_data
 import logging
 
 logger = logging.getLogger(__name__)

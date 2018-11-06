@@ -7,7 +7,6 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage, DefaultStorage
 
 
-
 class ProtectedFileSystemStorage(FileSystemStorage):
 
     def __init__(self, *args, secret_key=settings.IMAGESERVER_CONFIG.get('secret'), **kwargs):
@@ -64,6 +63,7 @@ configured_storages = {}
 for key, storage_config in settings.STORAGES.items():
 
     if 'storage_class' in storage_config:
+        print(storage_config['storage_class'])
         StorageClass = import_string(storage_config['storage_class'])
     else:
         StorageClass = FileSystemStorage

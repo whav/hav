@@ -204,7 +204,7 @@ STORAGES = {
             )
         ),
         'base_url': env('WEBASSET_URL_PREFIX'),
-        'storage_class': 'hav.utils.storages.ProtectedFileSystemStorage'
+        'storage_class': 'hav_utils.storages.ProtectedFileSystemStorage'
     }
 }
 
@@ -298,6 +298,7 @@ logging.config.dictConfig({
         # },
         # Default runserver request logging
         'django.server': DEFAULT_LOGGING['loggers']['django.server'],
+        'django.channels.server': DEFAULT_LOGGING['loggers']['django.server']
     },
 })
 

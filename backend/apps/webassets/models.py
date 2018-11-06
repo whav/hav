@@ -4,7 +4,7 @@ from PIL import Image
 from django.db import models
 
 from apps.archive.models import ArchiveFile
-from hav.utils.storages import getStorage
+from hav_utils.storages import getStorage
 
 storage = getStorage('webassets')
 

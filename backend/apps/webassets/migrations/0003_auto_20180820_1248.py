@@ -2,7 +2,7 @@
 
 import apps.webassets.models
 from django.db import migrations, models
-import hav.utils.storages
+import hav_utils.storages
 
 
 class Migration(migrations.Migration):
@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='webasset',
             name='file',
-            field=models.FileField(storage=hav.utils.storages.ProtectedFileSystemStorage(base_url='http://127.0.0.1:9000', location='/home/sean/src/hav/dist/webassets'), upload_to=apps.webassets.models.upload_to),
+            field=models.FileField(storage=hav_utils.storages.ProtectedFileSystemStorage(base_url='http://127.0.0.1:9000', location='/home/sean/src/hav/dist/webassets'), upload_to=apps.webassets.models.upload_to),
         ),
     ]

@@ -16,8 +16,6 @@ body,
 
 .hav-admin-content {
   flex-grow: 1;
-  overflow: auto;
-  padding: 1.5rem;
 }
 
 .hav-admin-main-menu {

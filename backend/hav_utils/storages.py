@@ -1,6 +1,6 @@
 import hashlib
 import base64
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urljoin
 
 from django.utils.module_loading import import_string
 from django.conf import settings
@@ -36,23 +36,7 @@ class ProtectedFileSystemStorage(FileSystemStorage):
         return super().url(path)
 
     def thumbnail_urls(self, name, operation='crop', **kwargs):
-        default_kwargs = {
-            'width': 300,
-            'height': 300,
-            'type': 'auto'
-        }
-
-        default_kwargs.update(kwargs)
-
-        kwargs = {k: v for k, v in default_kwargs.items() if v is not None}
-
-        kwargs.update({
-            'file': name
-        })
-
-        query = '{}?{}'.format(operation, urlencode(kwargs, safe='/'))
-        # todo: any prefix necessary for nginx reverse proxy?
-        return self.url(query)
+        raise NotImplementedError()
 
 
 
@@ -63,18 +47,18 @@ configured_storages = {}
 for key, storage_config in settings.STORAGES.items():
 
     if 'storage_class' in storage_config:
-        print(storage_config['storage_class'])
         StorageClass = import_string(storage_config['storage_class'])
     else:
         StorageClass = FileSystemStorage
 
     configured_storages[key] = StorageClass(
         location=storage_config.get('location', default_storage.location),
-        base_url=storage_config.get('base_url', default_storage.base_url)
+        base_url=storage_config.get('base_url', default_storage.base_url),
     )
 
 if 'default' not in configured_storages:
     configured_storages['default'] = default_storage
+
 
 
 def getStorage(name='default'):

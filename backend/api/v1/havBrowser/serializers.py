@@ -19,16 +19,21 @@ class HAVArchiveFileSerializer(serializers.ModelSerializer):
 class HAVWebAssetSerializer(serializers.ModelSerializer):
 
     url = serializers.SerializerMethodField()
+    thumbnail_urls = serializers.SerializerMethodField()
 
     def get_url(self, webasset):
         return webasset.file.url
+
+    def get_thumbnail_urls(self, webasset):
+        return webasset.thumbnail_urls()
 
     class Meta:
         model = WebAsset
         fields = [
             'url',
             'mime_type',
-            'id'
+            'id',
+            'thumbnail_urls'
         ]
 
 
@@ -64,7 +69,7 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
             )
             webasset_images = list(webasset_images)
             try:
-                filename =  webasset_images[0].file.name
+                filename = webasset_images[0].file.name
             except IndexError:
                 pass
             else:

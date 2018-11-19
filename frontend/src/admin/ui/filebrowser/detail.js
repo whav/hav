@@ -39,9 +39,21 @@ export default class extends React.Component {
         <div className="columns">
           <div className="column">
             <h1 className="title">{this.props.name}</h1>
-
-            <h2>Properties</h2>
-
+            <FallBackImageLoader
+              src={this.props.preview_url}
+              sources={this.props.srcset}
+              mime_type={props.mime_type}
+              alt={props.name}
+            />
+          </div>
+          <div className="column">
+            {this.props.ingestable ? (
+              <div className="field is-grouped text-right">
+                <Button onClick={props.ingest} className="is-primary">
+                  Ingest
+                </Button>
+              </div>
+            ) : null}
             <table className="table is-striped">
               <thead>
                 <tr>
@@ -57,21 +69,8 @@ export default class extends React.Component {
                 ))}
               </tbody>
             </table>
-            <div className="field is-grouped">
-              <Button onClick={props.ingest} className="is-primary">
-                Ingest
-              </Button>
-            </div>
 
             {this.props.meta ? <ExifTable data={this.props.meta} /> : null}
-          </div>
-          <div className="column is-one-third">
-            <FallBackImageLoader
-              src={this.props.preview_url}
-              sources={this.props.srcset}
-              mime_type={props.mime_type}
-              alt={props.name}
-            />
           </div>
         </div>
       </div>

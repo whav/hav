@@ -6,21 +6,22 @@ from django.db import models
 from apps.archive.models import ArchiveFile
 from hav_utils.storages import getStorage
 
-storage = getStorage('webassets')
 
+webasset_storage = getStorage('webassets')
 
 def upload_to(webasset, original_filename):
     ext = os.path.splitext(original_filename)[1]
     af = webasset.archivefile
     path = os.path.splitext(af.file.name)[0]
-    return storage.get_available_name('%s%s' % (path, ext))
-
+    return webasset_storage.get_available_name('%s%s' % (path, ext))
 
 class WebAsset(models.Model):
 
+    STORAGE = webasset_storage
+
     archivefile = models.ForeignKey(ArchiveFile, on_delete=models.CASCADE)
 
-    file = models.FileField(storage=storage, upload_to=upload_to)
+    file = models.FileField(storage=STORAGE, upload_to=upload_to)
     mime_type = models.CharField(max_length=20)
 
     # these fields are used for images
@@ -30,6 +31,7 @@ class WebAsset(models.Model):
     def __str__(self):
         return '%s %s' % (self.file.name, self.mime_type)
 
+
     def is_image(self):
         return self.mime_type.startswith('image')
 
@@ -37,8 +39,8 @@ class WebAsset(models.Model):
         if not extension.startswith('.'):
             extension = '.%s' % extension
         return os.path.join(
-            storage.location,
-            upload_to(self, 'file%s' % extension)
+            self.file.storage.location,
+            upload_to(self, f'file{extension}')
         )
 
     def save(self, *args, **kwargs):
@@ -50,3 +52,6 @@ class WebAsset(models.Model):
             self.width, self.height = img.size
 
         return super().save(*args, **kwargs)
+
+    def thumbnail_urls(self):
+        return []

@@ -82,7 +82,8 @@ export class FallBackImageLoader extends React.Component {
       sizes = "100vw",
       alt = "image",
       title = "",
-      mime_type = ""
+      mime_type = "",
+      styles = {}
     } = this.props;
     let { hasError } = this.state;
 
@@ -106,6 +107,7 @@ export class FallBackImageLoader extends React.Component {
         title={title}
         alt={alt}
         className="image"
+        styles={styles}
       />
     );
   }

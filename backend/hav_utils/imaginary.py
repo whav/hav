@@ -88,6 +88,7 @@ def generate_urls(file_path):
         )
     return results
 
-
 def generate_info_url(path):
     return generate_url(path, width=None, height=None, type=None, operation='info')
+
+

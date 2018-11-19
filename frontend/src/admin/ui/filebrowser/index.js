@@ -343,7 +343,7 @@ export const FileBrowserInterface = ({
 }) => {
   return (
     <section className="filebrowser">
-      {header ? <header>{header}</header> : null}
+      {header ? header : null}
       <main>{main}</main>
       {footer ? <footer>{footer}</footer> : null}
     </section>

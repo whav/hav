@@ -1,21 +1,22 @@
 /* layout the main file browser div with header, main and footer */
 .filebrowser {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  min-height: 100%;
-  user-select: none;
+  min-height: 100vh;
+  padding: 1.5rem;
+  /* position: relative; */
 }
 
-.filebrowser header {
-  /* position: fixed; */
-  flex-grow: 0;
+.filebrowser h1:first-child {
+  position: sticky;
+  background-color: white;
+  z-index: 10;
+  top: 0;
 }
 
 .filebrowser main {
   margin-top: 0.5rem;
-  flex-grow: 1;
+  /* flex-grow: 1; */
   overflow-y: auto;
+  user-select: none;
 }
 
 /*Gallery Style*/

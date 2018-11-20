@@ -74,7 +74,7 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
                 return None
             else:
                 return generate_url(webasset)
-            
+
 
     def get_ingestable(self, _):
         return False

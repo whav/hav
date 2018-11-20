@@ -35,6 +35,9 @@ def is_image(filename):
 
 
 def get_imaginary_path(obj_or_path):
+    # TODO: this is ugly. But it should be the only place to deal with mapping
+    # database stored file paths to imaginary mounted volumes and such
+
     # import here to avoid circular imports
     from apps.webassets.models import WebAsset
     from apps.archive.models import ArchiveFile

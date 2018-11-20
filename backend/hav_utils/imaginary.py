@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from pathlib import Path
-import re
 
 import base64
 import hmac
@@ -74,19 +73,14 @@ def generate_secret(secret, operation, kwargs):
     secret = base64.urlsafe_b64encode(HMAC.digest()).decode('utf-8')
     return secret.rstrip('=')
 
-def generate_url(obj, operation='crop', **funckwargs):
-    path = get_imaginary_path(obj)
-    if not is_image(path):
-        return None
 
+def generate_imaginary_url(path, operation='crop', **kwargs):
     default_kwargs = {
         'width': 300,
         'height': 300,
         'type': 'auto'
     }
-
-    default_kwargs.update(funckwargs)
-
+    default_kwargs.update(kwargs)
     kwargs = {k: v for k, v in default_kwargs.items() if v is not None}
 
     if is_absolute(path):
@@ -105,7 +99,18 @@ def generate_url(obj, operation='crop', **funckwargs):
     return urljoin(URL_PREFIX, path)
 
 
-def generate_urls(file_path):
+def generate_thumbnail_url(obj, **kwargs):
+    path = get_imaginary_path(obj)
+    thumbnail_kwargs = {
+        'width': 300,
+        'height': 300,
+        'type': 'auto'
+    }
+    thumbnail_kwargs.update(kwargs)
+    return generate_imaginary_url(path, **thumbnail_kwargs)
+
+
+def generate_srcset_urls(file_path):
     path = get_imaginary_path(file_path)
     results = []
     if not is_image(path):
@@ -114,14 +119,14 @@ def generate_urls(file_path):
         results.append(
             (
                 kwargs.get('width'),
-                generate_url(path, operation='thumbnail', **kwargs)
+                generate_imaginary_url(path, operation='thumbnail', **kwargs)
             )
         )
     return results
 
 def generate_info_url(obj):
     path = get_imaginary_path(obj)
-    return generate_url(path, width=None, height=None, type=None, operation='info')
+    return generate_thumbnail_url(path, width=None, height=None, type=None, operation='info')
 
 
 

@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 
 from apps.whav.models import ImageCollection, MediaOrdering
-from hav_utils.imaginary import generate_urls, generate_url
+from hav_utils.imaginary import generate_srcset_urls, generate_thumbnail_url
 
 class WHAVSerializerMixin(object):
 
@@ -70,7 +70,7 @@ class SimpleWHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
 
 
     def get_preview_url(self, mo):
-        return generate_url(self._get_image_url(mo))
+        return generate_thumbnail_url(self._get_image_url(mo))
 
     def get_url(self, mo):
         return self._config.to_url(mo, self.request)
@@ -84,7 +84,7 @@ class WHAVFileSerializer(SimpleWHAVFileSerializer):
     srcset = serializers.SerializerMethodField()
 
     def get_srcset(self, mo):
-        return generate_urls(self._get_image_url(mo))
+        return generate_srcset_urls(self._get_image_url(mo))
 
 
 

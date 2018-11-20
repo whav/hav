@@ -6,7 +6,7 @@ from apps.sets.models import Node
 from apps.media.models import Media
 from apps.archive.models import ArchiveFile
 from apps.webassets.models import WebAsset
-from hav_utils.imaginary import generate_url
+from hav_utils.imaginary import generate_thumbnail_url
 
 
 class HAVArchiveFileSerializer(serializers.ModelSerializer):
@@ -73,7 +73,7 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
             except IndexError:
                 return None
             else:
-                return generate_url(webasset)
+                return generate_thumbnail_url(webasset)
 
 
     def get_ingestable(self, _):

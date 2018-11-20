@@ -3,7 +3,7 @@ import stat
 from mimetypes import guess_type
 from rest_framework import serializers
 
-from hav_utils.imaginary import generate_url, generate_urls
+from hav_utils.imaginary import generate_thumbnail_url, generate_srcset_urls
 from hav_utils.exif import get_exif_data
 import logging
 
@@ -88,7 +88,7 @@ class FileSerializer(FileBrowserBaseSerializer):
 
     def get_preview_url(self, path):
         rel_path = path.relative_to(self.get_root()).as_posix()
-        return generate_url(rel_path)
+        return generate_thumbnail_url(rel_path)
 
     def get_ingestable(self, _):
         return True
@@ -108,7 +108,7 @@ class FileDetailSerializer(FileSerializer):
 
     def get_srcset(self, path):
         rel_path = path.relative_to(self.get_root()).as_posix()
-        return generate_urls(os.path.join('/incoming/', rel_path))
+        return generate_srcset_urls(rel_path)
 
 class BaseDirectorySerializer(FileBrowserBaseSerializer):
 

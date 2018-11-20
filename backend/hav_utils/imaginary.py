@@ -1,4 +1,6 @@
 from collections import OrderedDict
+from pathlib import Path
+import re
 
 import base64
 import hmac
@@ -8,6 +10,7 @@ from urllib.parse import urlencode, urlparse, urljoin
 
 SECRET = settings.IMAGESERVER_CONFIG['secret']
 URL_PREFIX = settings.IMAGESERVER_CONFIG['prefix']
+INCOMING_ROOT = Path(settings.INCOMING_FILES_ROOT)
 
 ALLOWED_MIME_TYPES = [
     'application/pdf',
@@ -31,6 +34,29 @@ def is_image(filename):
     return t.split('/')[0] == 'image'
 
 
+def get_imaginary_path(obj_or_path):
+    # import here to avoid circular imports
+    from apps.webassets.models import WebAsset
+    from apps.archive.models import ArchiveFile
+
+    if isinstance(obj_or_path, WebAsset):
+        # Webassets
+        return Path('webassets/').joinpath(obj_or_path.file.name).as_posix()
+    elif isinstance(obj_or_path, ArchiveFile):
+        # Archivefile
+        return Path('archive/').joinpath(obj_or_path.file.name).as_posix()
+    elif isinstance(obj_or_path, str) and is_absolute(obj_or_path):
+        # url case
+        return obj_or_path
+    elif isinstance(obj_or_path, (str, Path)):
+         path = Path(obj_or_path)
+         if path.is_absolute():
+             path = path.relative_to(INCOMING_ROOT)
+         return Path('incoming/').joinpath(path).as_posix()
+    else:
+        raise NotImplementedError(f'Can not deal with {obj_or_path}')
+
+
 def generate_secret(secret, operation, kwargs):
     # URL Signature is created as described here
     # https://github.com/h2non/imaginary#url-signature
@@ -45,7 +71,8 @@ def generate_secret(secret, operation, kwargs):
     secret = base64.urlsafe_b64encode(HMAC.digest()).decode('utf-8')
     return secret.rstrip('=')
 
-def generate_url(path, operation='crop', **funckwargs):
+def generate_url(obj, operation='crop', **funckwargs):
+    path = get_imaginary_path(obj)
     if not is_image(path):
         return None
 
@@ -76,19 +103,24 @@ def generate_url(path, operation='crop', **funckwargs):
 
 
 def generate_urls(file_path):
+    path = get_imaginary_path(file_path)
     results = []
-    if not is_image(file_path):
+    if not is_image(path):
         return results
     for kwargs in settings.IMAGE_RESOLUTIONS:
         results.append(
             (
                 kwargs.get('width'),
-                generate_url(file_path, operation='thumbnail', **kwargs)
+                generate_url(path, operation='thumbnail', **kwargs)
             )
         )
     return results
 
-def generate_info_url(path):
+def generate_info_url(obj):
+    path = get_imaginary_path(obj)
     return generate_url(path, width=None, height=None, type=None, operation='info')
+
+
+
 
 

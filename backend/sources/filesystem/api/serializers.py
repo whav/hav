@@ -88,7 +88,7 @@ class FileSerializer(FileBrowserBaseSerializer):
 
     def get_preview_url(self, path):
         rel_path = path.relative_to(self.get_root()).as_posix()
-        return generate_url(os.path.join('/incoming/', rel_path))
+        return generate_url(rel_path)
 
     def get_ingestable(self, _):
         return True

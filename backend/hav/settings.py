@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_celery_results',
     'treebeard',
     'channels',
     'apps.whav',
@@ -210,28 +209,6 @@ STORAGES = {
 
 LOGIN_URL = 'admin:login'
 
-CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/1')
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='django-db')
-
-# 10 days expiration for results
-CELERY_RESULT_EXPIRES = 3600 * 24 * 10
-
-# use json format for everything
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-
-CELERY_TASK_ROUTES = {
-    'apps.webassets.tasks.*': {
-        'queue': 'webassets'
-    },
-    'apps.archive.tasks.*': {
-        'queue': 'archive'
-    }
-}
-
-CELERY_WORKER_HIJACK_ROOT_LOGGER = False
-CELERY_WORKER_REDIRECT_STDOUTS_LEVEL = 'INFO'
 
 ASGI_APPLICATION = "hav.routing.application"
 

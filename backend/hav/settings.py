@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'apps.ingest',
     'apps.webassets',
     'apps.hav_collections',
+    'django_rq',
     'raven.contrib.django.raven_compat',
 ]
 
@@ -125,6 +126,10 @@ DATABASES = {
 DATABASE_ROUTERS = [
     'hav.db_router.WhavDBRouter'
 ]
+
+CACHES = {
+    'default': env.cache()
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -304,5 +309,14 @@ INGESTION_SOURCES = {
     "incoming": {
         "engine": "sources.filesystem.FSSource",
         "root": INCOMING_FILES_ROOT
+    }
+}
+
+RQ_QUEUES = {
+    'webassets': {
+        'USE_REDIS_CACHE': 'default',
+    },
+    'archive': {
+        'USE_REDIS_CACHE': 'default',
     }
 }

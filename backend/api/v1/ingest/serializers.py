@@ -163,8 +163,8 @@ class IngestSerializer(serializers.Serializer):
 
         def ingestion_trigger():
             return (
-                archive.s(str(validated_data['source']), media.pk, user.pk) |
-                create_webassets.s()
+                archive.delay(str(validated_data['source']), media.pk, user.pk) |
+                create_webassets.delay()
             )()
 
         # this instructs django to execute the function after any commit

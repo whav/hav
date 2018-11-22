@@ -5,18 +5,18 @@
   /* position: relative; */
 }
 
-.filebrowser h1:first-child {
+/* .filebrowser h1:first-child {
   position: sticky;
   background-color: white;
   z-index: 10;
   top: 0;
-}
+} */
 
 .filebrowser main {
   margin-top: 0.5rem;
   /* flex-grow: 1; */
-  overflow-y: auto;
-  user-select: none;
+  /* overflow-y: auto; */
+  /* user-select: none; */
 }
 
 /*Gallery Style*/

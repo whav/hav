@@ -338,6 +338,15 @@ export default class FileList extends React.Component {
   }
 }
 
+export const Header = ({ title = "", aside = null }) => {
+  return (
+    <div className="columns hav-admin-fb-header">
+      <div className="column is-two-thirds title">{title}</div>
+      {aside ? <div className="column has-text-right">{aside}</div> : null}
+    </div>
+  );
+};
+
 export const FileBrowserInterface = ({
   header = null,
   main = null,

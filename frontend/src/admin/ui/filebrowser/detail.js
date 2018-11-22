@@ -2,6 +2,7 @@ import React from "react";
 import filesize from "filesize";
 import { FallBackImageLoader } from "./index";
 import Button from "../components/buttons";
+import { Header, FileBrowserInterface } from "./index";
 
 const ExifTable = ({ data = {} }) => {
   return (
@@ -25,20 +26,26 @@ const ExifTable = ({ data = {} }) => {
   );
 };
 
-export default class extends React.Component {
+class MediaDetail extends React.Component {
   render() {
     const props = this.props;
+
     const tableProps = {
       Size: filesize(this.props.size),
-      "Mime Type": this.props.mime,
-      Ingestable: this.props.ingestable ? "Yes" : "No"
+      "Mime Type": this.props.mime
+      // Ingestable: this.props.ingestable ? "Yes" : "No"
     };
 
-    return (
-      <div className="container">
+    const aside = this.props.ingestable ? (
+      <Button onClick={props.ingest} className="is-primary">
+        Ingest
+      </Button>
+    ) : null;
+
+    const main = (
+      <React.Fragment>
         <div className="columns">
           <div className="column">
-            <h1 className="title">{this.props.name}</h1>
             <FallBackImageLoader
               src={this.props.preview_url}
               sources={this.props.srcset}
@@ -47,19 +54,12 @@ export default class extends React.Component {
             />
           </div>
           <div className="column">
-            {this.props.ingestable ? (
-              <div className="field is-grouped text-right">
-                <Button onClick={props.ingest} className="is-primary">
-                  Ingest
-                </Button>
-              </div>
-            ) : null}
             <table className="table is-striped">
-              <thead>
+              {/* <thead>
                 <tr>
                   <th colSpan={2}>Meta</th>
                 </tr>
-              </thead>
+              </thead> */}
               <tbody>
                 {Object.entries(tableProps).map(([key, value]) => (
                   <tr key={key}>
@@ -69,11 +69,19 @@ export default class extends React.Component {
                 ))}
               </tbody>
             </table>
-
-            {this.props.meta ? <ExifTable data={this.props.meta} /> : null}
           </div>
         </div>
-      </div>
+        {this.props.meta ? <ExifTable data={this.props.meta} /> : null}
+      </React.Fragment>
+    );
+
+    return (
+      <FileBrowserInterface
+        main={main}
+        header={<Header title={this.props.name} aside={aside} />}
+      />
     );
   }
 }
+
+export default MediaDetail;

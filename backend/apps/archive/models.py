@@ -1,9 +1,10 @@
 from django.db import models
 from django.template.defaultfilters import filesizeformat
+from django.core.exceptions import ValidationError
+
 from .storage import ArchiveStorage
 from mimetypes import guess_type
 from django.conf import settings
-
 import uuid
 
 
@@ -27,3 +28,15 @@ class ArchiveFile(models.Model):
 
     def __str__(self):
         return '{0} ({1})'.format(self.file.path, filesizeformat(self.size))
+
+
+    def validate_file_integrity(self):
+        from .operations.hash import generate_hash
+
+        if not self.hash:
+            raise ValidationError(f"{self.__class__.name} with id {self.pk} does not have a stored hash.")
+        path = self.file.path
+        hash = generate_hash(path)
+        if hash != self.hash:
+            raise ValidationError("Calculated hash does not match stored hash.")
+        return True

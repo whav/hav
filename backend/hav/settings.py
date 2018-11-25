@@ -34,11 +34,13 @@ env = environ.Env(
     LOGLEVEL=(str, 'debug'),
     URL_SIGNATURE_KEY=(str, 'quite_unsafe_i_must_say'),
     IMAGESERVER_URL_PREFIX=(str, '/'),
-    WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000')
+    WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000'),
+    CACHE_URL=(str, 'redis://127.0.0.1:6379/0')
 )
 
 # read the .env file
 environ.Env.read_env(project_root('.env'))
+
 
 DEBUG = env('DEBUG', False)
 
@@ -57,7 +59,6 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_celery_results',
     'treebeard',
     'channels',
     'apps.whav',
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     'apps.ingest',
     'apps.webassets',
     'apps.hav_collections',
+    'django_rq',
     'raven.contrib.django.raven_compat',
 ]
 
@@ -126,6 +128,10 @@ DATABASES = {
 DATABASE_ROUTERS = [
     'hav.db_router.WhavDBRouter'
 ]
+
+CACHES = {
+    'default': env.cache()
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -210,28 +216,6 @@ STORAGES = {
 
 LOGIN_URL = 'admin:login'
 
-CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/1')
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='django-db')
-
-# 10 days expiration for results
-CELERY_RESULT_EXPIRES = 3600 * 24 * 10
-
-# use json format for everything
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-
-CELERY_TASK_ROUTES = {
-    'apps.webassets.tasks.*': {
-        'queue': 'webassets'
-    },
-    'apps.archive.tasks.*': {
-        'queue': 'archive'
-    }
-}
-
-CELERY_WORKER_HIJACK_ROOT_LOGGER = False
-CELERY_WORKER_REDIRECT_STDOUTS_LEVEL = 'INFO'
 
 ASGI_APPLICATION = "hav.routing.application"
 
@@ -327,5 +311,14 @@ INGESTION_SOURCES = {
     "incoming": {
         "engine": "sources.filesystem.FSSource",
         "root": INCOMING_FILES_ROOT
+    }
+}
+
+RQ_QUEUES = {
+    'webassets': {
+        'USE_REDIS_CACHE': 'default',
+    },
+    'archive': {
+        'USE_REDIS_CACHE': 'default',
     }
 }

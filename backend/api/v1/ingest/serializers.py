@@ -19,6 +19,7 @@ from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCrea
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     InternalIngestHyperlinkField, IngestionReferenceField
 
+from .ingest_task import archive_and_create_webassets
 
 logger = logging.getLogger(__name__)
 
@@ -107,9 +108,11 @@ class IngestSerializer(serializers.Serializer):
         user = self.context['user']
         target = data.get('target') or self.context['target']
         collection = target.get_collection()
-
-        if not user.is_superuser or user not in target.collection.administrators.all():
-            raise serializers.ValidationError('You do not have the appropriate permissions to ingest into the collection "{}"'.format(target.collection.name))
+        if not user.is_superuser or user not in collection.administrators.all():
+            raise serializers.ValidationError(
+                'You do not have the appropriate permissions to ingest into the collection "{}"'
+                .format(target.collection.name)
+            )
 
         if data['start'] > data['end']:
             raise serializers.ValidationError("Start time must be before end time.")
@@ -162,10 +165,11 @@ class IngestSerializer(serializers.Serializer):
         )
 
         def ingestion_trigger():
-            return (
-                archive.s(str(validated_data['source']), media.pk, user.pk) |
-                create_webassets.s()
-            )()
+            return archive_and_create_webassets(
+                str(validated_data['source']),
+                media.pk,
+                user.pk
+            )
 
         # this instructs django to execute the function after any commit
         transaction.on_commit(ingestion_trigger)

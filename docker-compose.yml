@@ -29,14 +29,10 @@ services:
     django:
         <<: *django
 
-
-    celery:
+    rq:
         <<: *django
         working_dir: /hav/backend
-        environment:
-          - LOGLEVE=DEBUG
-
-        command: celery -A hav worker -Q webassets,archive -E -l DEBUG
+        command: python manage.py rqworker webassets archive
 
     redis:
         image: redis:4.0

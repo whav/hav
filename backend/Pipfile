@@ -13,18 +13,17 @@ djangorestframework = "==3.7.3"
 django-environ = "==0.4.4"
 raven = "==6.4.0"
 django-treebeard = "==4.3.0"
-celery = "==4.2.1"
-django-celery-results = "==1.0.1"
 uwsgi = "*"
 ipython = "*"
 pylint = "*"
 pip = "*"
 channels = "*"
-flower = "*"
 pillow = "*"
-redis = "*"
+redis = "<3"
 pyexiftool = {file = "https://github.com/smarnach/pyexiftool/tarball/master"}
 pyvips = "*"
+django-rq = "*"
+django-redis = "*"
 
 [dev-packages]
 ipdb = "*"
@@ -38,4 +37,4 @@ uwsgi = "*"
 keep_outdated = true
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"

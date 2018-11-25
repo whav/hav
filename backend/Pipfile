@@ -19,7 +19,7 @@ pylint = "*"
 pip = "*"
 channels = "*"
 pillow = "*"
-redis = "*"
+redis = "<3"
 pyexiftool = {file = "https://github.com/smarnach/pyexiftool/tarball/master"}
 pyvips = "*"
 django-rq = "*"

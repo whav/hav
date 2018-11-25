@@ -25,12 +25,12 @@ def create_webassets_after_archive_task():
     return webasset.pk
 
 
-@job('webassets')
-def debug():
-    print('-' * 50)
-    print('I am being printed.')
-    logger.warning('I am a warning.')
-    logger.info('I am an info message.')
-    logger.error('I am an error.')
+# @job('webassets')
+# def debug_logging():
+#     print('-' * 50)
+#     print('I am being printed.')
+#     logger.warning('I am a warning.')
+#     logger.info('I am an info message.')
+#     logger.error('I am an error.')
 
 

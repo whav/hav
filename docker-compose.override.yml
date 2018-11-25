@@ -16,7 +16,7 @@ services:
         volumes:
             - ./backend:/hav/backend
         <<: *user
-    celery:
+    rq:
         <<: *user
         volumes:
         - ./backend:/hav/backend

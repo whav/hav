@@ -9,7 +9,9 @@ After=hav.service
 [Service]
 Type=forked
 WorkingDirectory=/home/hav/production/hav/backend/
-ExecStart=/home/hav/.local/share/virtualenvs/backend-xltUeC_Q/bin/celery -A hav -Q webassets,archive worker
+
+ExecStart=/home/hav/.local/bin/pipenv --py run python \
+    manage.py rqworker webassets archive
 
 User=archive
 Group=havupload

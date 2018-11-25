@@ -32,8 +32,6 @@ services:
     rq:
         <<: *django
         working_dir: /hav/backend
-        environment:
-          - LOGLEVEL=DEBUG
         command: python manage.py rqworker webassets archive
 
     redis:

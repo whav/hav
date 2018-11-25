@@ -34,11 +34,13 @@ env = environ.Env(
     LOGLEVEL=(str, 'debug'),
     URL_SIGNATURE_KEY=(str, 'quite_unsafe_i_must_say'),
     IMAGESERVER_URL_PREFIX=(str, '/'),
-    WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000')
+    WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000'),
+    CACHE_URL=(str, 'redis://127.0.0.1:6379/0')
 )
 
 # read the .env file
 environ.Env.read_env(project_root('.env'))
+
 
 DEBUG = env('DEBUG', False)
 

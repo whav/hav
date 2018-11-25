@@ -109,7 +109,10 @@ class IngestSerializer(serializers.Serializer):
         target = data.get('target') or self.context['target']
         collection = target.get_collection()
         if not user.is_superuser or user not in collection.administrators.all():
-            raise serializers.ValidationError('You do not have the appropriate permissions to ingest into the collection "{}"'.format(target.collection.name))
+            raise serializers.ValidationError(
+                'You do not have the appropriate permissions to ingest into the collection "{}"'
+                .format(target.collection.name)
+            )
 
         if data['start'] > data['end']:
             raise serializers.ValidationError("Start time must be before end time.")

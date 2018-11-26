@@ -1,7 +1,3 @@
-import hashlib
-import base64
-from urllib.parse import urljoin
-
 from django.utils.module_loading import import_string
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage, DefaultStorage
@@ -23,20 +19,18 @@ class ProtectedFileSystemStorage(FileSystemStorage):
             kwargs.pop('base_url')
         return name, args, kwargs
 
-    def url(self, name):
-        name = name.lstrip('/')
-        name = urljoin('webassets/', name)
-        digested_name = '{}:{}'.format(name, self.secret_key).encode('utf-8')
-        md5_digest = hashlib.md5(digested_name).digest()
-        key = base64.b64encode(md5_digest).decode('utf-8')
-        # Make the key look like Nginx expects.
-        key = key.replace('+', '-').replace('/', '_').rstrip('=')
-        # prepend the key to the name
-        path = urljoin('{}/'.format(key), name)
-        return super().url(path)
+    # def url(self, name):
+    #     name = name.lstrip('/')
+    #     name = urljoin('webassets/', name)
+    #     digested_name = '{}:{}'.format(name, self.secret_key).encode('utf-8')
+    #     md5_digest = hashlib.md5(digested_name).digest()
+    #     key = base64.b64encode(md5_digest).decode('utf-8')
+    #     # Make the key look like Nginx expects.
+    #     key = key.replace('+', '-').replace('/', '_').rstrip('=')
+    #     # prepend the key to the name
+    #     path = urljoin('{}/'.format(key), name)
+    #     return super().url(path)
 
-    def thumbnail_urls(self, name, operation='crop', **kwargs):
-        raise NotImplementedError()
 
 
 

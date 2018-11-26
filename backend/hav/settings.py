@@ -209,7 +209,7 @@ STORAGES = {
                 default='dist/webassets/'
             )
         ),
-        'base_url': env('WEBASSET_URL_PREFIX'),
+        'base_url': '/webassets/',
         'storage_class': 'hav_utils.storages.ProtectedFileSystemStorage'
     }
 }

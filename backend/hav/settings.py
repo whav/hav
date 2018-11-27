@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'treebeard',
     'channels',
+    'channels_redis',
     'apps.whav',
     'apps.sets',
     'apps.archive',
@@ -218,6 +219,17 @@ LOGIN_URL = 'admin:login'
 
 
 ASGI_APPLICATION = "hav.routing.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [env('CACHE_URL')],
+        },
+    },
+}
+
+
 
 RAVEN_CONFIG = {
     'dsn': env('SENTRY_DSN'),

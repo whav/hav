@@ -1,4 +1,5 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from channels.db import database_sync_to_async
 
 
 class IngestUpdatesConsumer(AsyncJsonWebsocketConsumer):
@@ -14,14 +15,26 @@ class IngestUpdatesConsumer(AsyncJsonWebsocketConsumer):
             "ingest",
             self.channel_name
         )
-        await self.send_json({'txt': 'Hello world!'})
+
+    @database_sync_to_async
+    def serialize_media(self, media_id):
+        from apps.media.models import Media
+        from api.v1.havBrowser.serializers import SimpleHAVMediaSerializer
+        media = Media.objects.get(pk=media_id)
+        headers = self.scope['headers']
+        hostname = list(filter(lambda h: h[0] == b'origin', headers))[0][1].decode()
+        serializer = SimpleHAVMediaSerializer(instance=media, context={'hostname': hostname})
+        return serializer.data
 
     @property
     def ingest_queue(self):
         return self.scope['url_route']['kwargs']['uuid']
 
     async def ingest_progress(self, event):
-        print(event)
-        await self.send_json({
-            "msg": event.get('msg', '')
+        media_id = event['media_id']
+        payload = await self.serialize_media(media_id)
+        payload.update({
+            'msg': event.get('msg', '')
         })
+        print(event.get('msg', ''), payload)
+        await self.send_json(payload)

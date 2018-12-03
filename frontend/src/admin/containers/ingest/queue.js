@@ -8,7 +8,8 @@ import {
   fetchIngestionQueue,
   loadIngestOptions,
   ingestionSuccess,
-  deleteIngestItem
+  deleteIngestItem,
+  handleIngestUpdate
 } from "../../ducks/ingest";
 import IngestForm, { TemplateForm, FormSet } from "../../ui/ingest/form";
 
@@ -28,12 +29,11 @@ class WSListener extends React.PureComponent {
     const ws_url = `${url.protocol === "https:" ? "wss" : "ws"}://${url.host}${
       url.pathname
     }`;
-    console.warn(ws_url);
     this.ws = new Sockette(ws_url, {
       timeout: 5e3,
       maxAttempts: 10,
       onopen: e => console.log("Connected!", e),
-      onmessage: e => console.log("Received:", e),
+      onmessage: this.onReceive,
       onreconnect: e => console.log("Reconnecting...", e),
       onmaximum: e => console.log("Stop Attempting!", e),
       onclose: e => console.log("Closed!", e),
@@ -44,6 +44,12 @@ class WSListener extends React.PureComponent {
   componentWillUnmount() {
     this.ws.close();
   }
+
+  onReceive = e => {
+    const data = JSON.parse(e.data);
+    this.props.onReceive(data);
+  };
+
   render() {
     return null;
   }
@@ -188,7 +194,7 @@ class IngestQueue extends React.Component {
 
       return (
         <div>
-          <WSListener />
+          <WSListener onReceive={this.props.onIngestUpdate} />
           <h1 className="title">
             {count === 1
               ? "Single Item Ingestion"
@@ -257,6 +263,9 @@ const Ingest = connect(
       },
       deleteIngestItem: source_id => {
         uuid && dispatch(deleteIngestItem(uuid, source_id));
+      },
+      onIngestUpdate: data => {
+        uuid && dispatch(handleIngestUpdate(uuid, data));
       }
     };
   }

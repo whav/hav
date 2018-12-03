@@ -327,6 +327,9 @@ INGESTION_SOURCES = {
 }
 
 RQ_QUEUES = {
+    'default': {
+        'USE_REDIS_CACHE': 'default',
+    },
     'webassets': {
         'USE_REDIS_CACHE': 'default',
     },

@@ -35,7 +35,10 @@ class IngestQueue(models.Model):
         self.ingestion_queue.remove(item)
 
     def link_to_media(self, media, item):
-        self.delete_item(item)
+        try:
+            self.delete_item(item)
+        except ValueError:
+            pass
         self.created_media_entries.add(media)
 
     def __str__(self):

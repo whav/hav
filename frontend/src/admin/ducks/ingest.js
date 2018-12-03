@@ -1,6 +1,8 @@
 import { history } from "../app";
 import { combineReducers } from "redux";
 
+import { RECEIVE_FILE_INFO } from "./browser";
+
 import {
   fetchDataForIngestionForms,
   saveIngestionQueue,
@@ -317,6 +319,13 @@ export const deleteIngestItem = (uuid, source) => {
     removeItemFromQueue(uuid, source).then(() =>
       dispatch(fetchIngestionQueue(uuid))
     );
+  };
+};
+
+export const handleIngestUpdate = (uuid, data) => {
+  return {
+    type: RECEIVE_FILE_INFO,
+    payload: data
   };
 };
 

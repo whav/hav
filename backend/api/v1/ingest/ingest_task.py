@@ -1,12 +1,13 @@
 from channels.layers import get_channel_layer
-from django_rq import get_queue, job
+from django_rq import get_queue
+from asgiref.sync import async_to_sync
 
 from apps.archive.tasks import archive
 from apps.webassets.tasks import create_webassets_after_archive_task as create_webassets
 
 channel_layer = get_channel_layer()
 
-from asgiref.sync import async_to_sync
+
 
 def send_progress(msg, media_id, channel_group):
     async_to_sync(channel_layer.group_send)(
@@ -16,6 +17,7 @@ def send_progress(msg, media_id, channel_group):
             "msg": msg,
             "media_id": media_id
         })
+
 
 def archive_and_create_webassets(filename, media_id, user_id, channel_group='ingest'):
 

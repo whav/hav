@@ -8,12 +8,8 @@ from django.urls import reverse
 
 from api.v1.havBrowser.serializers import SimpleHAVMediaSerializer
 
-from apps.archive.models import ArchiveFile
 from apps.archive.operations.hash import generate_hash
-from apps.archive.tasks import archive
-from apps.webassets.tasks import create as create_webassets
 from apps.ingest.models import IngestQueue
-from apps.hav_collections.models import Collection
 from apps.sets.models import Node
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
@@ -164,11 +160,17 @@ class IngestSerializer(serializers.Serializer):
             user.pk
         )
 
+        media_url = reverse('api:v1:hav_browser:hav_media', kwargs={'pk': media.pk})
         def ingestion_trigger():
             return archive_and_create_webassets(
                 str(validated_data['source']),
                 media.pk,
-                user.pk
+                user.pk,
+                # these args are for websockets via channels
+                self.context['channel'],
+                {
+                    'media_url': self.context['request'].build_absolute_uri(media_url)
+                }
             )
 
         # this instructs django to execute the function after any commit

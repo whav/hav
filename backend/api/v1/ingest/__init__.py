@@ -63,6 +63,9 @@ class IngestQueueIngestionView(IncomingBaseMixin, IngestQMixin, APIView):
             'user': request.user,
             'queue': queue,
             'target': queue.target,
+            # this signals the serializer archiving
+            # task where to send updates to
+            'channel': str(pk)
         }
         serializer = IngestSerializer(
             data=request.data,

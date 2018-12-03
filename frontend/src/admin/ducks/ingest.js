@@ -1,7 +1,7 @@
 import { history } from "../app";
 import { combineReducers } from "redux";
 
-import { RECEIVE_FILE_INFO } from "./browser";
+import { RECEIVE_MULTIPLE_FILE_INFO, RECEIVE_FILE_INFO } from "./browser";
 
 import {
   fetchDataForIngestionForms,
@@ -290,6 +290,12 @@ export const fetchIngestionQueue = uuid => {
         type: INGESTION_QUEUE_LOADED,
         payload: data
       });
+      // update the main file browser store
+      dispatch({
+        type: RECEIVE_MULTIPLE_FILE_INFO,
+        payload: data.created_media_entries
+      });
+
       dispatch({
         type: LOADING_SUCCESS
       });
@@ -307,6 +313,7 @@ export const loadAllIngestionQueues = () => {
         type: INGESTION_QUEUES_LOADED,
         payload: data
       });
+
       dispatch({
         type: LOADING_SUCCESS
       });

@@ -239,7 +239,12 @@ const Ingest = connect(
     }
     const items = queue.ingestion_queue;
     const target = queue.target;
-    const created_media_entries = queue.created_media_entries;
+    const created_media_entries = queue.created_media_entries
+      .map(ma => {
+        const key = ma.url;
+        return state.repositories[key];
+      })
+      .filter(ma => ma !== undefined);
 
     return {
       items,

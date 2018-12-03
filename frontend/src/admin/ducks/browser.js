@@ -1,9 +1,10 @@
 import { requestDirectory, createDirectory } from "../api/browser";
 import { UPLOAD_COMPLETED } from "./uploads";
+
 export const REQUEST_DIRECTORY = "REQUEST_DIRECTORY";
 export const RECEIVE_DIRECTORY_CONTENT = "RECEIVE_DIRECTORY_CONTENT";
 export const RECEIVE_FILE_INFO = "RECEIVE_FILE_INFO";
-
+export const RECEIVE_MULTIPLE_FILE_INFO = "RECEIVE_MULTIPLE_FILE_INFO";
 export const SELECT_ITEMS = "SELECT_ITEMS";
 
 export const MKDIR = "MKDIR";
@@ -80,7 +81,6 @@ const reducer = (state = {}, action) => {
           selected: action.item_ids
         }
       };
-      return state;
     case RECEIVE_FILE_INFO:
       const data = action.payload;
       return {
@@ -90,6 +90,13 @@ const reducer = (state = {}, action) => {
           isDirectory: false,
           ...data
         }
+      };
+    case RECEIVE_MULTIPLE_FILE_INFO:
+      let new_state = {};
+      action.payload.forEach(f => (new_state[f.url] = f));
+      return {
+        ...state,
+        ...new_state
       };
     case UPLOAD_COMPLETED:
       const folder = state[action.key];

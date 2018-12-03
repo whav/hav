@@ -39,4 +39,8 @@ if settings.DEBUG:
         re_path(r'^__debug__/', include(debug_toolbar.urls)),
     ]
 
+    # serve webassets in development
+    wa_config = settings.STORAGES['webassets']
+    urlpatterns += static(wa_config['base_url'], document_root=wa_config['location'])
+
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

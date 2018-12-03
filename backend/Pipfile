@@ -24,6 +24,7 @@ pyexiftool = {file = "https://github.com/smarnach/pyexiftool/tarball/master"}
 pyvips = "*"
 django-rq = "*"
 django-redis = "*"
+channels-redis = "*"
 
 [dev-packages]
 ipdb = "*"

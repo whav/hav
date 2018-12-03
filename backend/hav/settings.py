@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'treebeard',
     'channels',
+    'channels_redis',
     'apps.whav',
     'apps.sets',
     'apps.archive',
@@ -209,7 +210,7 @@ STORAGES = {
                 default='dist/webassets/'
             )
         ),
-        'base_url': env('WEBASSET_URL_PREFIX'),
+        'base_url': '/webassets/',
         'storage_class': 'hav_utils.storages.ProtectedFileSystemStorage'
     }
 }
@@ -218,6 +219,17 @@ LOGIN_URL = 'admin:login'
 
 
 ASGI_APPLICATION = "hav.routing.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [env('CACHE_URL')],
+        },
+    },
+}
+
+
 
 RAVEN_CONFIG = {
     'dsn': env('SENTRY_DSN'),
@@ -315,6 +327,9 @@ INGESTION_SOURCES = {
 }
 
 RQ_QUEUES = {
+    'default': {
+        'USE_REDIS_CACHE': 'default',
+    },
     'webassets': {
         'USE_REDIS_CACHE': 'default',
     },

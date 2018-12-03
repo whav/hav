@@ -50,16 +50,28 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
         return media.primary_file.mime_type if media.primary_file else ''
 
     def get_url(self, instance):
-        request = self.context['request']
-        match = request.resolver_match
-        url_lookup = '%s:%s' % (':'.join(match.namespaces), 'hav_media')
+        url_lookup = 'api:v1:hav_browser:hav_media'
+
+        try:
+            request = self.context['request']
+            absolute_uri_builder = request.build_absolute_uri
+            match = request.resolver_match
+            url_lookup = '%s:%s' % (':'.join(match.namespaces), 'hav_media')
+        except KeyError as original_error:
+            try:
+                hostname = self.context['hostname']
+                def absolute_uri_builder(url_path):
+                    # TODO: use hostname to build an absolute url
+                    return hostname + url_path
+            except KeyError:
+                raise original_error
+
         url_kwargs = {'pk': instance.pk}
-        return request.build_absolute_uri(
-            reverse(
-                url_lookup,
-                kwargs=url_kwargs
-            )
+        relative_url = reverse(
+            url_lookup,
+            kwargs=url_kwargs
         )
+        return absolute_uri_builder(relative_url)
 
     def get_preview_url(self, media):
         if media.primary_file:

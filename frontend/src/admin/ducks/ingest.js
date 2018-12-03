@@ -1,6 +1,8 @@
 import { history } from "../app";
 import { combineReducers } from "redux";
 
+import { RECEIVE_MULTIPLE_FILE_INFO, RECEIVE_FILE_INFO } from "./browser";
+
 import {
   fetchDataForIngestionForms,
   saveIngestionQueue,
@@ -137,7 +139,10 @@ const ingestionQueues = (state = {}, action) => {
     case INGESTION_QUEUES_LOADED:
       let queues = {};
       action.payload.forEach(queue => {
-        queues[queue.uuid] = queue;
+        queues[queue.uuid] = {
+          ...queue,
+          loaded: null
+        };
       });
       return queues;
     case INGESTION_SUCCESS:
@@ -288,6 +293,12 @@ export const fetchIngestionQueue = uuid => {
         type: INGESTION_QUEUE_LOADED,
         payload: data
       });
+      // update the main file browser store
+      dispatch({
+        type: RECEIVE_MULTIPLE_FILE_INFO,
+        payload: data.created_media_entries
+      });
+
       dispatch({
         type: LOADING_SUCCESS
       });
@@ -305,6 +316,7 @@ export const loadAllIngestionQueues = () => {
         type: INGESTION_QUEUES_LOADED,
         payload: data
       });
+
       dispatch({
         type: LOADING_SUCCESS
       });
@@ -317,6 +329,13 @@ export const deleteIngestItem = (uuid, source) => {
     removeItemFromQueue(uuid, source).then(() =>
       dispatch(fetchIngestionQueue(uuid))
     );
+  };
+};
+
+export const handleIngestUpdate = (uuid, data) => {
+  return {
+    type: RECEIVE_FILE_INFO,
+    payload: data
   };
 };
 

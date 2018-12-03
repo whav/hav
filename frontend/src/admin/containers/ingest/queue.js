@@ -8,7 +8,8 @@ import {
   fetchIngestionQueue,
   loadIngestOptions,
   ingestionSuccess,
-  deleteIngestItem
+  deleteIngestItem,
+  handleIngestUpdate
 } from "../../ducks/ingest";
 import IngestForm, { TemplateForm, FormSet } from "../../ui/ingest/form";
 
@@ -18,6 +19,41 @@ import { queueForIngestion } from "../../api/ingest";
 
 import parseDate from "../../utils/daterange";
 import { PreviouslyIngestedMedia } from "../../ui/ingest";
+
+import Sockette from "sockette";
+
+class WSListener extends React.PureComponent {
+  componentDidMount() {
+    const location = this.props.url || document.location;
+    const url = new URL(location);
+    const ws_url = `${url.protocol === "https:" ? "wss" : "ws"}://${url.host}${
+      url.pathname
+    }`;
+    this.ws = new Sockette(ws_url, {
+      timeout: 5e3,
+      maxAttempts: 10,
+      onopen: e => console.log("Connected!", e),
+      onmessage: this.onReceive,
+      onreconnect: e => console.log("Reconnecting...", e),
+      onmaximum: e => console.log("Stop Attempting!", e),
+      onclose: e => console.log("Closed!", e),
+      onerror: e => console.log("Error:", e)
+    });
+  }
+
+  componentWillUnmount() {
+    this.ws.close(1000);
+  }
+
+  onReceive = e => {
+    const data = JSON.parse(e.data);
+    this.props.onReceive(data);
+  };
+
+  render() {
+    return null;
+  }
+}
 
 class IngestQueue extends React.Component {
   constructor(props) {
@@ -158,6 +194,7 @@ class IngestQueue extends React.Component {
 
       return (
         <div>
+          <WSListener onReceive={this.props.onIngestUpdate} />
           <h1 className="title">
             {count === 1
               ? "Single Item Ingestion"
@@ -195,14 +232,19 @@ class IngestQueue extends React.Component {
 const Ingest = connect(
   (state, ownProps) => {
     const queue = state.ingest.ingestionQueues[ownProps.match.params.uuid];
-    if (!queue) {
+    if (!queue || !queue.loaded) {
       return {
         loading: true
       };
     }
     const items = queue.ingestion_queue;
     const target = queue.target;
-    const created_media_entries = queue.created_media_entries;
+    const created_media_entries = queue.created_media_entries
+      .map(ma => {
+        const key = ma.url;
+        return state.repositories[key];
+      })
+      .filter(ma => ma !== undefined);
 
     return {
       items,
@@ -226,6 +268,9 @@ const Ingest = connect(
       },
       deleteIngestItem: source_id => {
         uuid && dispatch(deleteIngestItem(uuid, source_id));
+      },
+      onIngestUpdate: data => {
+        uuid && dispatch(handleIngestUpdate(uuid, data));
       }
     };
   }

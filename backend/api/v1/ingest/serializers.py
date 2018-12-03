@@ -160,17 +160,13 @@ class IngestSerializer(serializers.Serializer):
             user.pk
         )
 
-        media_url = reverse('api:v1:hav_browser:hav_media', kwargs={'pk': media.pk})
         def ingestion_trigger():
             return archive_and_create_webassets(
                 str(validated_data['source']),
                 media.pk,
                 user.pk,
                 # these args are for websockets via channels
-                self.context['channel'],
-                {
-                    'media_url': self.context['request'].build_absolute_uri(media_url)
-                }
+                self.context['channel']
             )
 
         # this instructs django to execute the function after any commit

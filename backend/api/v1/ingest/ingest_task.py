@@ -8,7 +8,6 @@ from apps.webassets.tasks import create_webassets_after_archive_task as create_w
 channel_layer = get_channel_layer()
 
 
-
 def send_progress(msg, media_id, channel_group):
     async_to_sync(channel_layer.group_send)(
         channel_group,
@@ -19,7 +18,7 @@ def send_progress(msg, media_id, channel_group):
         })
 
 
-def archive_and_create_webassets(filename, media_id, user_id, channel_group='ingest'):
+def archive_and_create_webassets(filename, media_id, user_id, channel_group):
 
     progress_args = [media_id, channel_group]
 

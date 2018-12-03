@@ -43,7 +43,7 @@ export default connect(
       loading: state.ingest.loading
     };
   },
-  (dispatch, ownProps) => {
+  dispatch => {
     return {
       loadIngestionQueues: () => dispatch(loadAllIngestionQueues())
     };

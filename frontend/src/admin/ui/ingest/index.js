@@ -12,11 +12,10 @@ const PreviouslyIngestedMedia = ({ media }) => (
       </figure>
     </div>
     <div className="media-content">
-      <div className="content">
-        <p>
-          <strong>{media.msg || media.name}</strong>
-        </p>
-      </div>
+      <h2>{media.title}</h2>
+      <p>
+        <strong>{media.msg || media.name}</strong>
+      </p>
     </div>
   </div>
 );

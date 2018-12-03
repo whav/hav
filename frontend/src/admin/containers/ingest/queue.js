@@ -42,7 +42,7 @@ class WSListener extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    this.ws.close();
+    this.ws.close(1000);
   }
 
   onReceive = e => {
@@ -232,7 +232,7 @@ class IngestQueue extends React.Component {
 const Ingest = connect(
   (state, ownProps) => {
     const queue = state.ingest.ingestionQueues[ownProps.match.params.uuid];
-    if (!queue) {
+    if (!queue || !queue.loaded) {
       return {
         loading: true
       };

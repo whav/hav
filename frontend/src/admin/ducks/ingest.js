@@ -139,7 +139,10 @@ const ingestionQueues = (state = {}, action) => {
     case INGESTION_QUEUES_LOADED:
       let queues = {};
       action.payload.forEach(queue => {
-        queues[queue.uuid] = queue;
+        queues[queue.uuid] = {
+          ...queue,
+          loaded: null
+        };
       });
       return queues;
     case INGESTION_SUCCESS:

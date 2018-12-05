@@ -132,8 +132,6 @@ DATABASES = {
     'whav': parse_db_url(env('WHAV_DATABASE_URL'))
 }
 
-print(DATABASES)
-
 DATABASE_ROUTERS = [
     'hav.db_router.WhavDBRouter'
 ]

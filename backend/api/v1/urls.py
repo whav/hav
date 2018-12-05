@@ -38,7 +38,7 @@ source_patterns = [
 ]
 
 urlpatterns = [
-    url('^$', start),
+    url('^$', start, name='api_root'),
     url(r'^ingest/', include((ingest_urls, 'ingest'))),
     url(r'^sources/', include(source_patterns)),
     url(r'^hav/', include(

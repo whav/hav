@@ -93,7 +93,15 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Media
-        fields = ['pk', 'name', 'url', 'ingestable', 'preview_url', 'mime_type']
+        fields = [
+            'pk',
+            'name',
+            'title',
+            'url',
+            'ingestable',
+            'preview_url',
+            'mime_type'
+        ]
 
 
 class HAVMediaSerializer(SimpleHAVMediaSerializer):
@@ -106,7 +114,12 @@ class HAVMediaSerializer(SimpleHAVMediaSerializer):
         return HAVWebAssetSerializer(assets, many=True, context=self.context).data
 
     class Meta(SimpleHAVMediaSerializer.Meta):
-        fields = SimpleHAVMediaSerializer.Meta.fields + ['archive_files', 'webassets']
+        fields = SimpleHAVMediaSerializer.Meta.fields + [
+            'archive_files',
+            'webassets',
+            'description',
+            'tags'
+        ]
 
 
 class BaseHAVNodeSerializer(serializers.ModelSerializer):

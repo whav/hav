@@ -25,6 +25,7 @@ pyvips = "*"
 django-rq = "*"
 django-redis = "*"
 channels-redis = "*"
+dj-database-url = "*"
 
 [dev-packages]
 ipdb = "*"

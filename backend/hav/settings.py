@@ -10,10 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import environ
 import sys
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
+
+import environ
+from  dj_database_url import parse as parse_db_url
 
 from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
 
@@ -35,8 +37,12 @@ env = environ.Env(
     URL_SIGNATURE_KEY=(str, 'quite_unsafe_i_must_say'),
     IMAGESERVER_URL_PREFIX=(str, '/'),
     WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000'),
-    CACHE_URL=(str, 'redis://127.0.0.1:6379/0')
+    CACHE_URL=(str, 'redis://127.0.0.1:6379/0'),
+    DATABASE_URL=(str, 'postgres:///hav'),
+    WHAV_DATABASE_URL=(str, 'postgres:///whav')
+
 )
+
 
 # read the .env file
 environ.Env.read_env(project_root('.env'))
@@ -122,9 +128,11 @@ WSGI_APPLICATION = 'hav.wsgi.application'
 
 
 DATABASES = {
-    'default': env.db('DATABASE_URL', 'postgres:///hav'),
-    'whav': env.db('WHAV_DATABASE_URL', 'postgres:///whav')
+    'default': parse_db_url(env('DATABASE_URL')),
+    'whav': parse_db_url(env('WHAV_DATABASE_URL'))
 }
+
+print(DATABASES)
 
 DATABASE_ROUTERS = [
     'hav.db_router.WhavDBRouter'

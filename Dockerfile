@@ -6,7 +6,7 @@ RUN yarn install
 COPY ./frontend ./
 RUN yarn build
 
-FROM python:3.6-stretch
+FROM python:3.7.1-stretch
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && \
@@ -14,6 +14,16 @@ RUN apt-get update && \
     apt-get install -y libpq-dev gcc ffmpeg libimage-exiftool-perl libvips-dev && \
     apt-get autoremove && \
     apt-get autoclean
+
+# Create appropriate directories set env variables pointing to them
+ENV DEBUG=False \
+INCOMING_FILES_ROOT=/archive/incoming \
+HAV_ARCHIVE_PATH=/archive/hav \
+WHAV_ARCHIVE_PATH=/archive/whav \
+WEBASSET_ROOT=/archive/webassets
+
+RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/"]
+
 
 RUN pip install -U pipenv
 
@@ -32,7 +42,5 @@ RUN ["python", "manage.py", "collectstatic", "--no-input"]
 
 WORKDIR /hav
 
+COPY ./uwsgi.ini .
 CMD ["uwsgi", "--hook-master-start", "unix_signal:1 gracefully_kill_them_all", "uwsgi.ini"]
-
-
-

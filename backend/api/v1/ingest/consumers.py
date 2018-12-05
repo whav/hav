@@ -19,11 +19,11 @@ class IngestUpdatesConsumer(AsyncJsonWebsocketConsumer):
     @database_sync_to_async
     def serialize_media(self, media_id):
         from apps.media.models import Media
-        from api.v1.havBrowser.serializers import SimpleHAVMediaSerializer
+        from api.v1.havBrowser.serializers import HAVMediaSerializer
         media = Media.objects.get(pk=media_id)
         headers = self.scope['headers']
         hostname = list(filter(lambda h: h[0] == b'origin', headers))[0][1].decode()
-        serializer = SimpleHAVMediaSerializer(instance=media, context={'hostname': hostname})
+        serializer = HAVMediaSerializer(instance=media, context={'hostname': hostname})
         return serializer.data
 
     @property

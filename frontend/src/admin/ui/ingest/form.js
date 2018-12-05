@@ -426,6 +426,7 @@ class IngestForm extends React.Component {
               <div className="control">
                 <button
                   className="button is-danger"
+                  type="button"
                   onClick={this.props.onDelete}
                 >
                   <i className="delete" />

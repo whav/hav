@@ -8,6 +8,7 @@
     "css-animations": "^1.0.7",
     "dejavu-sans-condensed": "^1.0.0",
     "filesize": "^3.6.1",
+    "formik": "^1.3.2",
     "js-cookie": "^2.1.3",
     "lodash": "^4.17.10",
     "luxon": "^1.3.3",

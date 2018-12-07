@@ -245,7 +245,6 @@ const Ingest = connect(
         return state.repositories[key];
       })
       .filter(ma => ma !== undefined);
-
     return {
       items,
       target,

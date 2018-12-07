@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   MdCheckBoxOutlineBlank as CheckboxBlankIcon,
   MdCheckBox as CheckboxCheckedIcon,
@@ -25,6 +27,8 @@ import {
   FaSpinner as SpinnerIcon
 } from "react-icons/fa";
 
+const LoadingSpinner = () => <SpinnerIcon className="fa-spin" />;
+
 export {
   CheckboxBlankIcon,
   CheckboxCheckedIcon,
@@ -43,5 +47,6 @@ export {
   ArchiveIcon,
   DatabaseIcon,
   IngestPackageIcon,
-  SpinnerIcon
+  SpinnerIcon,
+  LoadingSpinner
 };

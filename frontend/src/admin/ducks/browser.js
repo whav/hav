@@ -19,7 +19,9 @@ const reducer = (state = {}, action) => {
       let { files = [], childrenDirs = [], parentDirs = [] } = action.payload;
       let mapping = {};
       files.forEach(f => {
+        const previous_data = state[f.url] || {};
         mapping[f.url] = {
+          ...previous_data,
           isFile: true,
           isDirectory: false,
           ...f

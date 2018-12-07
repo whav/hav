@@ -6,7 +6,7 @@ from rest_framework import serializers
 from django.urls import reverse
 
 
-from api.v1.havBrowser.serializers import SimpleHAVMediaSerializer
+from api.v1.havBrowser.serializers import SimpleHAVMediaSerializer, HAVMediaSerializer
 
 from apps.archive.operations.hash import generate_hash
 from apps.ingest.models import IngestQueue
@@ -198,7 +198,7 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
         ]
 
 
-class SimpleMediaSerializer(SimpleHAVMediaSerializer):
+class SimpleMediaSerializer(HAVMediaSerializer):
 
     def get_url(self, instance):
         request = self.context.get('request')

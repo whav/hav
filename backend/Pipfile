@@ -26,6 +26,7 @@ django-rq = "*"
 django-redis = "*"
 channels-redis = "*"
 dj-database-url = "*"
+graphene-django = "*"
 
 [dev-packages]
 ipdb = "*"

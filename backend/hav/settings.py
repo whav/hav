@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'apps.hav_collections',
     'django_rq',
     'raven.contrib.django.raven_compat',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -342,4 +343,8 @@ RQ_QUEUES = {
     'archive': {
         'USE_REDIS_CACHE': 'default',
     }
+}
+
+GRAPHENE = {
+    'SCHEMA': 'hav.schema.schema'
 }

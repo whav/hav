@@ -4,6 +4,8 @@ from django.conf import settings
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
 
+from graphene_django.views import GraphQLView
+
 from api.urls import api_urls
 
 hav_admin_patterns = ([
@@ -27,7 +29,9 @@ urlpatterns = [
     ),
     re_path(r'^admin/', include(hav_admin_patterns, namespace='hav_admin')),
     re_path(r'^dbadmin/', django_admin.site.urls),
-    path('django-rq/', include('django_rq.urls'))
+    path('django-rq/', include('django_rq.urls')),
+    path(r'graphql', GraphQLView.as_view(graphiql=True)),
+
 ]
 
 

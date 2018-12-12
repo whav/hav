@@ -32,13 +32,13 @@ services:
     rq:
         <<: *django
         working_dir: /hav/backend
-        command: python manage.py rqworker webassets archive
+        command: python manage.py rqworker default webassets archive
 
     redis:
         image: redis:4.0
 
     imaginary:
-        build: https://github.com/h2non/imaginary.git
+        image: h2non/imaginary:1.0.16
         env_file:
           - ./env_files/docker.env
         volumes:

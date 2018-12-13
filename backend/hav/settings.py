@@ -15,7 +15,7 @@ import logging.config
 from django.utils.log import DEFAULT_LOGGING
 
 import environ
-from  dj_database_url import parse as parse_db_url
+from dj_database_url import parse as parse_db_url
 
 from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
 
@@ -131,6 +131,7 @@ DATABASES = {
     'default': parse_db_url(env('DATABASE_URL')),
     'whav': parse_db_url(env('WHAV_DATABASE_URL'))
 }
+
 
 DATABASE_ROUTERS = [
     'hav.db_router.WhavDBRouter'
@@ -280,7 +281,8 @@ logging.config.dictConfig({
         '': {
             'level': 'WARNING',
             'handlers': [
-                'console', 'sentry'],
+                'console', 'sentry'
+            ],
         },
         # Our application code
         'apps': {

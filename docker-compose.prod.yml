@@ -1,0 +1,51 @@
+version: "3.7"
+
+x-django: &django
+    build:
+        context: .
+    image: hav_django
+    user: "1000:1000"
+    volumes:
+        - ./dist/archive:/archive/hav/archive
+        - ./dist/incoming:/archive/hav/incoming
+        - ./dist/webassets:/archive/hav/webassets
+        - /var/run/postgresql/.s.PGSQL.5432:/run/postgres/.s.PGSQL.5432
+        - /run/redis/redis.sock:/run/redis/redis.sock
+    environment:
+        - DEBUG=True
+        - CACHE_URL=redis:///run/redis/redis.sock?db=1
+        - DATABASE_URL=postgres://sean@%2Frun%2Fpostgres/hav
+        - WHAV_DATABASE_URL=postgres://sean@%2Frun%2Fpostgres/whav
+        - HAV_ARCHIVE_PATH=/archive/hav/archive
+        - INCOMING_FILES_ROOT=/archive/hav/incoming
+        - WEBASSET_ROOT=/archive/hav/webassets
+        - IMAGESERVER_URL_PREFIX=/images/
+    working_dir: /hav/backend
+
+services:
+    django:
+        <<: *django
+        command: python manage.py runserver
+
+    rq-archive:
+        <<: *django
+        working_dir: /hav/backend
+        command: python manage.py rqworker archive
+
+    rq-webassets:
+        <<: *django
+        command: python manage.py rqworker webassets
+
+    rq-default:
+        <<: *django
+        command: python manage.py rqworker default
+
+    imaginary:
+        image: h2non/imaginary:1.0.16
+        volumes:
+            - ./dist/archive:/www/archive:ro
+            - ./dist/incoming:/www/incoming:ro
+            - ./dist/webassets:/www/webassets:ro
+        command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000
+
+

@@ -31,7 +31,7 @@ django_root = environ.Path(__file__) - 2
 env = environ.Env(
     DEBUG=(bool, False),
     SECRET_KEY=(str, "VERY_VERY_UNSAFE"),
-    ALLOWED_HOSTS=(list, []),
+    ALLOWED_HOSTS=(list, ['*']),
     SENTRY_DSN=(str, ''),
     LOGLEVEL=(str, 'debug'),
     URL_SIGNATURE_KEY=(str, 'quite_unsafe_i_must_say'),
@@ -345,3 +345,5 @@ RQ_QUEUES = {
         'USE_REDIS_CACHE': 'default',
     }
 }
+
+USE_X_FORWARDED_HOST = True

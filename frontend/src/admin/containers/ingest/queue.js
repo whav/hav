@@ -16,7 +16,7 @@ import IngestForm, { TemplateForm, FormSet } from "../../ui/ingest/form";
 import PreviewImage from "../filebrowser/image_preview";
 import PreviewFolder from "../filebrowser/folder_preview";
 import { queueForIngestion } from "../../api/ingest";
-
+import { ingestQueueWS } from "../../api/urls";
 import parseDate from "../../utils/daterange";
 import { PreviouslyIngestedMedia } from "../../ui/ingest";
 
@@ -25,6 +25,7 @@ import Sockette from "sockette";
 class WSListener extends React.PureComponent {
   componentDidMount() {
     const location = this.props.url || document.location;
+    console.warn(location, this.props, document.location);
     const url = new URL(location);
     const ws_url = `${url.protocol === "https:" ? "wss" : "ws"}://${url.host}${
       url.pathname
@@ -160,13 +161,14 @@ class IngestQueue extends React.Component {
       options,
       items = [],
       target,
-      created_media_entries = []
+      created_media_entries = [],
+      ws_url
     } = this.props;
 
     const { formData, templateData, errors } = this.state;
 
     const loading = isEmpty(options);
-
+    console.log(this.props);
     if (loading) {
       return <LoadingIndicator />;
     } else {
@@ -194,7 +196,7 @@ class IngestQueue extends React.Component {
 
       return (
         <div>
-          <WSListener onReceive={this.props.onIngestUpdate} />
+          <WSListener url={ws_url} onReceive={this.props.onIngestUpdate} />
           <h1 className="title">
             {count === 1
               ? "Single Item Ingestion"
@@ -251,7 +253,8 @@ const Ingest = connect(
       created_media_entries,
       uuid: queue.uuid,
       options: state.ingest.options,
-      loading: state.ingest.options ? false : true
+      loading: state.ingest.options ? false : true,
+      ws_url: ingestQueueWS(queue.uuid)
     };
   },
   (dispatch, ownProps) => {

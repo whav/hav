@@ -3,7 +3,6 @@ import React from "react";
 import { Audio, Video, Image } from "../../components/webassets";
 
 const WebAsset = props => {
-  console.warn(props);
   switch (props.mime_type.split("/")[0].toLowerCase()) {
     case "audio":
       return <Audio {...props} />;

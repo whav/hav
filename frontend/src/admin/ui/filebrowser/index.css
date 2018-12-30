@@ -5,18 +5,27 @@
   /* position: relative; */
 }
 
-/* .filebrowser h1:first-child {
-  position: sticky;
-  background-color: white;
-  z-index: 10;
-  top: 0;
-} */
-
 .filebrowser main {
   margin-top: 0.5rem;
   /* flex-grow: 1; */
   /* overflow-y: auto; */
   /* user-select: none; */
+}
+
+.filebrowser header,
+.filebrowser footer {
+  position: sticky;
+  background-color: white;
+  z-index: 20;
+}
+
+.filebrowser header {
+  top: 0;
+  padding-bottom: 0.5rem;
+}
+
+.filebrowser footer {
+  bottom: 0;
 }
 
 /*Gallery Style*/
@@ -93,7 +102,7 @@
   font-weight: bolder;
   font-size: 2.3rem;
   color: green;
-  z-index: 20;
+  z-index: 10;
 }
 
 .g-gallery-item-name {

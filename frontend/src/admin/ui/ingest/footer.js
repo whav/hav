@@ -20,14 +20,13 @@ const IngestionFooter = ({
     </Button>
   );
   return (
-    <div>
-      <hr />
+    <footer>
       <Level
         left={clearButton}
         right={ingestHereBtn}
         className="ingestion-footer"
       />
-    </div>
+    </footer>
   );
 };
 

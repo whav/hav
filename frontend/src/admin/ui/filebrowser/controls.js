@@ -37,10 +37,10 @@ UploadControl.propTypes = {
   uploadFile: PropTypes.func.isRequired
 };
 
-const SelectedFilesControls = ({ save }) => {
+const SelectedFilesControls = ({ save, text = "Ingest" }) => {
   return (
     <Button onClick={save} className="is-primary">
-      Ingest
+      {text}
     </Button>
   );
 };

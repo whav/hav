@@ -193,7 +193,7 @@ class IngestQueue extends React.Component {
       });
 
       return (
-        <div>
+        <div className="content">
           <WSListener onReceive={this.props.onIngestUpdate} />
           <h1 className="title">
             {count === 1

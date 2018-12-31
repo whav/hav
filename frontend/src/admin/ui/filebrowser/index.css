@@ -1,12 +1,15 @@
 /* layout the main file browser div with header, main and footer */
 .filebrowser {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .filebrowser main {
   margin-top: 0.5rem;
   user-select: none;
   padding: 2rem;
+  flex-grow: 1;
 }
 
 .filebrowser header,

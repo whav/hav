@@ -12,7 +12,7 @@ import { queueForIngestion } from "../../ducks/ingest";
 import { startFileUpload } from "../../ducks/uploads";
 import LoadingIndicator from "../../ui/loading";
 
-import Level from "../../ui/components/level";
+import Level, { LevelItem } from "../../ui/components/level";
 
 import FileList, {
   DirectoryListingBreadcrumbs,
@@ -122,9 +122,21 @@ class FileBrowserDirectory extends React.Component {
       let footer = this.props.footer;
       if (!footer && selectedItemIds.size > 0) {
         footer = (
-          <footer className="has-background-light">
-            <SelectedFilesControls
-              save={() => saveFileSelection(Array.from(selectedItemIds))}
+          <footer className="box">
+            <Level
+              right={
+                <LevelItem>
+                  {" "}
+                  <SelectedFilesControls
+                    save={() => saveFileSelection(Array.from(selectedItemIds))}
+                    text={
+                      selectedItemIds.size === 1
+                        ? "Ingest one item"
+                        : `Ingest ${selectedItemIds.size} items`
+                    }
+                  />
+                </LevelItem>
+              }
             />
           </footer>
         );

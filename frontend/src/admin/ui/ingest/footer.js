@@ -20,7 +20,7 @@ const IngestionFooter = ({
     </Button>
   );
   return (
-    <footer>
+    <footer className="box">
       <Level
         left={clearButton}
         right={ingestHereBtn}

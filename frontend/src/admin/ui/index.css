@@ -18,6 +18,10 @@ body,
   flex-grow: 1;
 }
 
+.hav-admin-content > .content {
+  padding: 2rem;
+}
+
 .hav-admin-main-menu {
   min-height: 100%;
   background-color: #f8b20c;

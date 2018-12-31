@@ -122,7 +122,7 @@ class FileBrowserDirectory extends React.Component {
       let footer = this.props.footer;
       if (!footer && selectedItemIds.size > 0) {
         footer = (
-          <footer>
+          <footer className="has-background-light">
             <SelectedFilesControls
               save={() => saveFileSelection(Array.from(selectedItemIds))}
             />

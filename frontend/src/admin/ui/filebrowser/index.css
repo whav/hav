@@ -1,15 +1,12 @@
 /* layout the main file browser div with header, main and footer */
 .filebrowser {
   min-height: 100vh;
-  padding: 1.5rem;
-  /* position: relative; */
 }
 
 .filebrowser main {
   margin-top: 0.5rem;
-  /* flex-grow: 1; */
-  /* overflow-y: auto; */
-  /* user-select: none; */
+  user-select: none;
+  padding: 2rem;
 }
 
 .filebrowser header,
@@ -17,6 +14,7 @@
   position: sticky;
   background-color: white;
   z-index: 20;
+  padding: 2rem;
 }
 
 .filebrowser header {

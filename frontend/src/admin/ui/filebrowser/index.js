@@ -356,7 +356,7 @@ export const FileBrowserInterface = ({
     <section className="filebrowser">
       {header ? header : null}
       <main>{main}</main>
-      {footer ? <footer>{footer}</footer> : null}
+      {footer ? footer : null}
     </section>
   );
 };

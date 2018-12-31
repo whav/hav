@@ -21,12 +21,7 @@ class IngestQueueList extends React.Component {
       return <Error>No queues created.</Error>;
     }
 
-    return (
-      <div>
-        <IngestionQueueListing queues={queues} />
-        {/* <Debug {...this.props} /> */}
-      </div>
-    );
+    return <IngestionQueueListing queues={queues} />;
   }
 }
 

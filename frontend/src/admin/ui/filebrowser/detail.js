@@ -43,7 +43,7 @@ class MediaDetail extends React.Component {
     ) : null;
 
     const main = (
-      <React.Fragment>
+      <div className="content">
         <div className="columns">
           <div className="column">
             <FallBackImageLoader
@@ -72,7 +72,7 @@ class MediaDetail extends React.Component {
           </div>
         </div>
         {this.props.meta ? <ExifTable data={this.props.meta} /> : null}
-      </React.Fragment>
+      </div>
     );
 
     return (

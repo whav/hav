@@ -266,6 +266,12 @@ class IngestForm extends React.Component {
     submitting: false
   };
 
+  _is_mounted = true;
+
+  componentWillUnmount() {
+    this._is_mounted = false;
+  }
+
   handleChange = event => {
     let value = event.target.value;
     const name = event.target.name;
@@ -287,7 +293,9 @@ class IngestForm extends React.Component {
     e.preventDefault();
     this.setState({ submitting: true });
     let response = this.props.onSubmit();
-    response.finally(() => this.setState({ submitting: false }));
+    response.finally(
+      () => this._is_mounted && this.setState({ submitting: false })
+    );
   };
 
   render() {

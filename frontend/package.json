@@ -58,7 +58,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.4.2",
     "babel-loader": "^8.0.0",
-    "bulma": "^0.7.1",
+    "bulma": "^0.7.2",
     "css-loader": "^1.0.0",
     "file-loader": "^2.0.0",
     "jest": "^23.4.2",

@@ -196,7 +196,7 @@ class IngestQueue extends React.Component {
       });
 
       return (
-        <div className="content">
+        <div>
           <WSListener url={ws_url} onReceive={this.props.onIngestUpdate} />
           <div className="box">
             <h1 className="title">

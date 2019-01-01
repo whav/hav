@@ -196,15 +196,15 @@ class IngestQueue extends React.Component {
       return (
         <div className="content">
           <WSListener onReceive={this.props.onIngestUpdate} />
-          <h1 className="title">
-            {count === 1
-              ? "Single Item Ingestion"
-              : `Ingesting ${count} files.`}
-          </h1>
+          <div className="box">
+            <h1 className="title">
+              {count === 1
+                ? "Single Item Ingestion"
+                : `Ingesting ${count} files.`}
+            </h1>
 
-          <PreviewFolder source={target} />
-
-          <hr />
+            <PreviewFolder source={target} />
+          </div>
           {/* template form if more than one ingest file */}
           {count > 1 ? (
             <TemplateForm

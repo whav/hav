@@ -141,6 +141,7 @@ CACHES = {
     'default': env.cache()
 }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -233,11 +234,10 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [f'{cache_config["LOCATION"]}?db={cache_config.get("OPTIONS", {}).get("DB", 0)}'],
+            "hosts": [f'{cache_config["LOCATION"]}'],
         },
     },
 }
-
 
 RAVEN_CONFIG = {
     'dsn': env('SENTRY_DSN'),

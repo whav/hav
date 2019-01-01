@@ -24,15 +24,9 @@ import Sockette from "sockette";
 
 class WSListener extends React.PureComponent {
   componentDidMount() {
-    const location = this.props.url || document.location;
-    console.warn(location, this.props, document.location);
-    const url = new URL(location);
-    const ws_url = `${url.protocol === "https:" ? "wss" : "ws"}://${url.host}${
-      url.pathname
-    }`;
-    this.ws = new Sockette(ws_url, {
+    this.ws = new Sockette(this.props.ws_url, {
       timeout: 5e3,
-      maxAttempts: 10,
+      maxAttempts: 2,
       onopen: e => console.log("Connected!", e),
       onmessage: this.onReceive,
       onreconnect: e => console.log("Reconnecting...", e),
@@ -169,7 +163,6 @@ class IngestQueue extends React.Component {
     const { formData, templateData, errors } = this.state;
 
     const loading = isEmpty(options);
-    console.log(this.props);
     if (loading) {
       return <LoadingIndicator />;
     } else {
@@ -197,7 +190,7 @@ class IngestQueue extends React.Component {
 
       return (
         <div className="content">
-          <WSListener url={ws_url} onReceive={this.props.onIngestUpdate} />
+          <WSListener ws_url={ws_url} onReceive={this.props.onIngestUpdate} />
           <div className="box">
             <h1 className="title">
               {count === 1

@@ -6,10 +6,9 @@ from channels.auth import AuthMiddlewareStack
 from api.v1.ingest import consumers
 
 application = ProtocolTypeRouter({
-    # Empty for now (http->django views is added by default)
     "websocket": AuthMiddlewareStack(
         URLRouter([
-            path("<path:prefix>/<uuid:uuid>/", consumers.IngestUpdatesConsumer),
+            path("ws/admin/ingest/<uuid:uuid>/", consumers.IngestUpdatesConsumer),
         ])
     ),
 })

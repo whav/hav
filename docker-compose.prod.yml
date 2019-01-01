@@ -4,7 +4,7 @@ version: "3.7"
 x-django: &django
     build:
         context: .
-    image: hav_django
+    image: mcallis/hav
     user: "1000:1000"
     volumes:
         - ./dist/archive:/archive/hav/archive

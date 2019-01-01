@@ -227,15 +227,16 @@ LOGIN_URL = 'admin:login'
 
 ASGI_APPLICATION = "hav.routing.application"
 
+cache_config = env.cache('CACHE_URL')
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [env('CACHE_URL')],
+            "hosts": [f'{cache_config["LOCATION"]}?db={cache_config.get("OPTIONS", {}).get("DB", 0)}'],
         },
     },
 }
-
 
 
 RAVEN_CONFIG = {
@@ -250,6 +251,7 @@ RAVEN_CONFIG = {
 LOGGING_CONFIG = None
 
 LOGLEVEL = env('LOGLEVEL').upper()
+
 
 logging.config.dictConfig({
     'version': 1,

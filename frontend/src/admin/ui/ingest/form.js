@@ -262,6 +262,10 @@ class IngestForm extends React.Component {
     onDelete: PropTypes.func.isRequired
   };
 
+  state = {
+    submitting: false
+  };
+
   handleChange = event => {
     let value = event.target.value;
     const name = event.target.name;
@@ -281,7 +285,9 @@ class IngestForm extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit();
+    this.setState({ submitting: true });
+    let response = this.props.onSubmit();
+    response.finally(() => this.setState({ submitting: false }));
   };
 
   render() {
@@ -435,7 +441,12 @@ class IngestForm extends React.Component {
               </div>
             </div>
             <div className="column is-half has-text-right">
-              <button className="button is-link" type="submit">
+              <button
+                className={classnames("button is-primary is-active", {
+                  "is-loading": this.state.submitting
+                })}
+                type="submit"
+              >
                 Ingest
               </button>
             </div>

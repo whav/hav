@@ -153,6 +153,7 @@ class IngestQueue extends React.Component {
       .catch(err => {
         this.onError(ingestId, err);
       });
+    return response;
   };
 
   render() {

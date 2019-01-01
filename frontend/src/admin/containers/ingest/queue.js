@@ -196,7 +196,7 @@ class IngestQueue extends React.Component {
       });
 
       return (
-        <div>
+        <div className="content">
           <WSListener url={ws_url} onReceive={this.props.onIngestUpdate} />
           <div className="box">
             <h1 className="title">
@@ -204,7 +204,6 @@ class IngestQueue extends React.Component {
                 ? "Single Item Ingestion"
                 : `Ingesting ${count} files.`}
             </h1>
-
             <PreviewFolder source={target} />
           </div>
           {/* template form if more than one ingest file */}

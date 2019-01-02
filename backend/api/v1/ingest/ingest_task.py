@@ -24,9 +24,9 @@ def archive_and_create_webassets(filename, media_id, user_id, channel_group):
 
     archive_queue = get_queue('archive')
     webasset_queue = get_queue('webassets')
-    default_queue = get_queue('default')
+    notification_queue = get_queue('default')
 
-    default_queue.enqueue(send_progress, "started", *progress_args)
+    notification_queue.enqueue(send_progress, "started", *progress_args)
 
     archive_job = archive_queue.enqueue(
         archive,
@@ -37,7 +37,7 @@ def archive_and_create_webassets(filename, media_id, user_id, channel_group):
         timeout=600
     )
 
-    default_queue.enqueue(send_progress, "archived", *progress_args, depends_on=archive_job)
+    notification_queue.enqueue(send_progress, "archived", *progress_args, depends_on=archive_job)
 
     webasset_job = webasset_queue.enqueue(
         create_webassets,
@@ -45,6 +45,6 @@ def archive_and_create_webassets(filename, media_id, user_id, channel_group):
         timeout=3600 * 5
     )
 
-    default_queue.enqueue(send_progress, "webassets_created", *progress_args, depends_on=webasset_job)
+    notification_queue.enqueue(send_progress, "webassets_created", *progress_args, depends_on=webasset_job)
 
     return archive_job, webasset_job

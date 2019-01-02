@@ -189,7 +189,7 @@ class IngestQueue extends React.Component {
       });
 
       return (
-        <div className="content">
+        <div className="hav-ingest">
           <WSListener ws_url={ws_url} onReceive={this.props.onIngestUpdate} />
           <div className="box">
             <h1 className="title">
@@ -211,8 +211,8 @@ class IngestQueue extends React.Component {
           <FormSet>{forms}</FormSet>
           {created_media_entries.length > 0 ? (
             <React.Fragment>
-              <h2>Previously ingested</h2>
-              <hr />
+              <h2 className="subtitle">Previously ingested</h2>
+              {/* <hr /> */}
               {created_media_entries.map(m => (
                 <PreviouslyIngestedMedia key={m.name} media={m} />
               ))}

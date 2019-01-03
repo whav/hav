@@ -60,7 +60,6 @@ class FileBrowserDirectory extends React.Component {
               link: buildFrontendUrl(d.url)
             };
           })}
-          current_dir={directory.name}
         />
       );
 

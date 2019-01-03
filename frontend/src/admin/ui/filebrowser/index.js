@@ -25,13 +25,14 @@ import Breadcrumbs from "../components/breadcrumbs";
 
 require("./index.css");
 
-export class DirectoryListingBreadcrumbs extends React.Component {
-  render() {
-    let { dirs, current_dir } = this.props;
-    let items = dirs.map(d => <Link to={d.link}>{d.name}</Link>);
-    return <Breadcrumbs items={items} />;
-  }
-}
+const DirectoryListingBreadcrumbs = ({ dirs, current_dir }) => {
+  const create_link = d => <Link to={d.link || "#"}>{d.name}</Link>;
+  let items = dirs.map(create_link);
+  current_dir && items.push(create_link(current_dir));
+  return <Breadcrumbs items={items} />;
+};
+
+export { DirectoryListingBreadcrumbs };
 
 export const FilePlaceHolder = props => {
   let Icon = GenericFallbackIcon;

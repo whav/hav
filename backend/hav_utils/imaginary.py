@@ -104,7 +104,7 @@ def generate_thumbnail_url(obj, **kwargs):
     thumbnail_kwargs = {
         'width': 300,
         'height': 300,
-        'type': 'auto'
+        'type': 'jpeg'
     }
     thumbnail_kwargs.update(kwargs)
     return generate_imaginary_url(path, **thumbnail_kwargs)

@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import sys
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
-
 import environ
 from dj_database_url import parse as parse_db_url
 
@@ -30,12 +29,12 @@ django_root = environ.Path(__file__) - 2
 # set up the environment
 env = environ.Env(
     DEBUG=(bool, False),
-    SECRET_KEY=(str, "VERY_VERY_UNSAFE"),
+    DJANGO_SECRET_KEY=str,
     ALLOWED_HOSTS=(list, ['*']),
     SENTRY_DSN=(str, ''),
     LOGLEVEL=(str, 'debug'),
-    URL_SIGNATURE_KEY=(str, 'quite_unsafe_i_must_say'),
-    IMAGESERVER_URL_PREFIX=(str, '/'),
+    IMAGINARY_SECRET=str,
+    IMAGINARY_URL_PREFIX=(str, '/images/'),
     WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000'),
     CACHE_URL=(str, 'redis://127.0.0.1:6379/0'),
     DATABASE_URL=(str, 'postgres:///hav'),
@@ -43,14 +42,14 @@ env = environ.Env(
 
 )
 
-
 # read the .env file
 environ.Env.read_env(project_root('.env'))
 
 
+
 DEBUG = env('DEBUG', False)
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
@@ -81,6 +80,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -206,6 +206,8 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = project_root(env('STATIC_ROOT', default='dist/static/'))
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = project_root(env('MEDIA_ROOT', default='dist/media/'))
@@ -309,8 +311,8 @@ logging.config.dictConfig({
 })
 
 IMAGESERVER_CONFIG = {
-    'prefix': env('IMAGESERVER_URL_PREFIX'),
-    'secret': env('URL_SIGNATURE_KEY')
+    'prefix': env('IMAGINARY_URL_PREFIX'),
+    'secret': env('IMAGINARY_SECRET')
 }
 
 # These settings will change ....

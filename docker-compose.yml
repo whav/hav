@@ -5,7 +5,7 @@ x-django: &django
         context: .
     image: hav_django
     env_file:
-        - ./env_files/docker.env
+        - ./env_files/docker.local.env
     depends_on:
       - redis
     volumes:
@@ -40,7 +40,7 @@ services:
     imaginary:
         image: h2non/imaginary:1.0.16
         env_file:
-          - ./env_files/docker.env
+          - ./env_files/docker.local.env
         volumes:
             - ./dist/archive:/www/archive:ro
             - ./dist/incoming:/www/incoming:ro

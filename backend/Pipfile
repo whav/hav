@@ -26,6 +26,7 @@ django-redis = "*"
 channels-redis = "*"
 dj-database-url = "*"
 redis = "*"
+whitenoise = "*"
 
 [dev-packages]
 ipdb = "*"

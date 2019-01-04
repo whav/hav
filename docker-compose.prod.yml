@@ -7,17 +7,18 @@ x-django: &django
     image: mcallis/hav
     user: "1000:1000"
     volumes:
-        - ./dist/archive:/archive/hav/archive
-        - ./dist/incoming:/archive/hav/incoming
-        - ./dist/webassets:/archive/hav/webassets
+        - ${ARCHIVE_ROOT}:/archive/hav/archive
+        - ${INCOMING_FILES_ROOT}:/archive/hav/incoming
+        - ${WEBASSETS_ROOT}:/archive/hav/webassets
         - /var/run/postgresql/.s.PGSQL.5432:/run/postgres/.s.PGSQL.5432
         - /run/redis/redis.sock:/run/redis/redis.sock
     environment:
-        - URL_SIGNATURE_KEY=bd!sdomqzg7dq51lsgdooh6li884c6s039ofd7!xd!0zg4wndc
-        - DEBUG=True
+        - IMAGINARY_SECRET=${IMAGINARY_SECRET}
+        - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+        - DEBUG=False
         - CACHE_URL=redis:///run/redis/redis.sock?db=1
-        - DATABASE_URL=postgres://sean@%2Frun%2Fpostgres/hav
-        - WHAV_DATABASE_URL=postgres://sean@%2Frun%2Fpostgres/whav
+        - DATABASE_URL=postgres://${DB_USER}@%2Frun%2Fpostgres/hav
+        - WHAV_DATABASE_URL=postgres://${DB_USER}@%2Frun%2Fpostgres/whav
         - HAV_ARCHIVE_PATH=/archive/hav/archive
         - INCOMING_FILES_ROOT=/archive/hav/incoming
         - WEBASSET_ROOT=/archive/hav/webassets
@@ -28,33 +29,38 @@ services:
     nginx:
         image: nginx:stable
         ports:
-            - "8080:80"
+            - "127.0.0.1:8080:80"
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf:ro
             - ./dist/nginx_cache:/tmp/nginx-thumbnails
+            - ./dist/webassets:/www/webassets:ro
         depends_on:
             - django
             - imaginary
 
     django:
         <<: *django
-        command: python manage.py runserver 0.0.0.0:8000
+        user: ${DJANGO_UID}
+        command: daphne -p 8000 -b 0.0.0.0 hav.asgi:application
 
     rq-archive:
         <<: *django
-        working_dir: /hav/backend
+        user: ${ARCHIVE_UID}
         command: python manage.py rqworker archive
 
     rq-webassets:
         <<: *django
+        user: ${WEBASSETS_UID}
         command: python manage.py rqworker webassets
 
     rq-default:
         <<: *django
+        user: ${DJANGO_UID}
         command: python manage.py rqworker default
 
     imaginary:
         image: h2non/imaginary:1.0.16
+        user: ${DJANGO_UID}
         environment:
             - URL_SIGNATURE_KEY=bd!sdomqzg7dq51lsgdooh6li884c6s039ofd7!xd!0zg4wndc
 

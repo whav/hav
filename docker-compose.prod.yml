@@ -62,7 +62,7 @@ services:
         image: h2non/imaginary:1.0.16
         user: ${DJANGO_UID}
         environment:
-            - URL_SIGNATURE_KEY=bd!sdomqzg7dq51lsgdooh6li884c6s039ofd7!xd!0zg4wndc
+            - URL_SIGNATURE_KEY=${IMAGINARY_SECRET}
 
         volumes:
             - ./dist/archive:/www/archive:ro

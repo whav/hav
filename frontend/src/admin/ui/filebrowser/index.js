@@ -59,13 +59,17 @@ export const FilePlaceHolder = props => {
 
 const FallBackImageLoader = props => {
   const { alt, src, srcSet, styles = {}, title, mime_type } = props;
-  return (
-    <ImageLoader src={src} srcSet={srcSet}>
-      <img title={title} alt={alt} className="image" styles={styles} />
-      <FilePlaceHolder title={title} mime={mime_type} />
-      <FilePlaceHolder title={title} mime={mime_type} />
-    </ImageLoader>
-  );
+  if (src || srcSet) {
+    return (
+      <ImageLoader src={src} srcSet={srcSet}>
+        <img title={title} alt={alt} className="image" styles={styles} />
+        <FilePlaceHolder title={title} mime={mime_type} />
+        <FilePlaceHolder title={title} mime={mime_type} />
+      </ImageLoader>
+    );
+  } else {
+    return <FilePlaceHolder title={title} mime={mime_type} />;
+  }
 };
 
 FallBackImageLoader.propTypes = {

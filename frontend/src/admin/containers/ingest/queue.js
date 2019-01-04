@@ -212,7 +212,6 @@ class IngestQueue extends React.Component {
           {created_media_entries.length > 0 ? (
             <React.Fragment>
               <h2 className="subtitle">Previously ingested</h2>
-              {/* <hr /> */}
               {created_media_entries.map(m => (
                 <PreviouslyIngestedMedia key={m.name} media={m} />
               ))}

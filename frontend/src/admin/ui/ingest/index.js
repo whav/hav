@@ -1,10 +1,46 @@
 import React from "react";
 import { FallBackImageLoader } from "../filebrowser/index";
-import { LoadingSpinner } from "../icons";
+import {
+  LoadingSpinner,
+  CheckIcon,
+  HourglassIcon,
+  QuestionMarkIcon
+} from "../icons";
+
+const IngestionProgressDisplay = ({ msg = [] }) => {
+  const items = msg.map(m => {
+    const { status, task } = m;
+    let icon = null;
+    switch (status) {
+      case "completed":
+        icon = <CheckIcon />;
+        break;
+      case "started":
+        icon = <LoadingSpinner />;
+        break;
+      case "pending":
+        icon = <HourglassIcon />;
+        break;
+      default:
+        icon = <QuestionMarkIcon />;
+    }
+    return (
+      <span>
+        <span className="icon">{icon}</span>
+        {task}
+      </span>
+    );
+  });
+  return (
+    <ul>
+      {items.map((i, index) => (
+        <li key={index}>{i}</li>
+      ))}
+    </ul>
+  );
+};
 
 const PreviouslyIngestedMedia = ({ media }) => {
-  // console.warn(media);
-  // return <pre>{JSON.stringify(media, null, 2)}</pre>;
   return (
     <div className="box media">
       <div className="media-left">
@@ -16,14 +52,9 @@ const PreviouslyIngestedMedia = ({ media }) => {
         </figure>
       </div>
       <div className="media-content">
-        {media.msg ? (
-          <span>
-            <LoadingSpinner />
-            {media.msg}
-          </span>
-        ) : null}
         <h2>{media.title}</h2>
 
+        {media.msg ? <IngestionProgressDisplay msg={media.msg} /> : null}
         {media.description ? <p>{media.description}</p> : null}
         <p>{media.tags.join(", ")}</p>
       </div>

@@ -78,7 +78,7 @@ def generate_imaginary_url(path, operation='crop', **kwargs):
     default_kwargs = {
         'width': 300,
         'height': 300,
-        'type': 'auto'
+        'type': 'jpeg'
     }
     default_kwargs.update(kwargs)
     kwargs = {k: v for k, v in default_kwargs.items() if v is not None}

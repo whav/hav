@@ -33,7 +33,7 @@ services:
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf:ro
             - ./dist/nginx_cache:/tmp/nginx-thumbnails
-            - ./dist/webassets:/www/webassets:ro
+            - ${WEBASSETS_ROOT}:/www/webassets:ro
         depends_on:
             - django
             - imaginary

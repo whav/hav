@@ -63,11 +63,10 @@ services:
         user: ${DJANGO_UID}
         environment:
             - URL_SIGNATURE_KEY=${IMAGINARY_SECRET}
-
         volumes:
-            - ./dist/archive:/www/archive:ro
-            - ./dist/incoming:/www/incoming:ro
-            - ./dist/webassets:/www/webassets:ro
+            - ${ARCHIVE_ROOT}:/www/archive:ro
+            - ${INCOMING_FILES_ROOT}:/www/incoming:ro
+            - ${WEBASSETS_ROOT}:/www/webassets:ro
         command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000
 
 

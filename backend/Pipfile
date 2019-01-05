@@ -27,6 +27,7 @@ channels-redis = "*"
 dj-database-url = "*"
 redis = "*"
 whitenoise = "*"
+pick = "*"
 
 [dev-packages]
 ipdb = "*"

@@ -72,15 +72,17 @@ class IngestTest(APITestCase):
                 'start': start.isoformat(),
                 'end': end.isoformat(),
                 'creators': [self.creator.pk],
-                'license': self.license.pk,
+                'media_license': self.license.pk,
                 'media_type': media_types[0][0],
-                'source': self.source_id
+                'source': self.source_id,
+                'media_title': 'some title'
         }
 
 
     def test_create_permissions(self):
         data = self.generateMediaData()
         response = self.client.post(self.url, data, format='json')
+        print(response.content)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         self.client.force_login(self.user)
@@ -91,6 +93,7 @@ class IngestTest(APITestCase):
         data = self.generateMediaData()
         self.client.force_login(self.user)
         response = self.client.post(self.url, data, format='json')
+        print(response.content)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 

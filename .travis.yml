@@ -15,7 +15,7 @@ install:
   - sudo pip install pipenv
 
 script:
+  - ln -s env_files/local.env .env
   - cd backend/
   - pipenv install
-  - source ../env_files/local.env
   - pipenv run python ./manage.py test

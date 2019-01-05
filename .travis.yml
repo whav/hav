@@ -10,10 +10,12 @@ env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
 install:
-  - curl -sSL https://get.docker.com/ | sudo sh
-  - sudo pip install docker-compose pipenv
+#  - curl -sSL https://get.docker.com/ | sudo sh
+#  - sudo pip install docker-compose
+  - sudo pip install pipenv
 
 script:
   - cd backend/
   - pipenv install
+  - source ../env_files/local.env
   - pipenv run python ./manage.py test

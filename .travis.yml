@@ -9,8 +9,8 @@ services:
   - postgresql
   - redis-server
 
-before_script:
-  - sudo -u postgres createuser `whoami` -s
+#before_script:
+#  - sudo -u postgres createuser `whoami` -s
 
 install:
 #  - curl -sSL https://get.docker.com/ | sudo sh

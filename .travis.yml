@@ -17,5 +17,6 @@ install:
 script:
   - ln -s env_files/local.env .env
   - cd backend/
-  - pipenv install
+  - pipenv install --dev
+#  - pipenv install --dev
   - pipenv run python ./manage.py test

@@ -18,9 +18,7 @@ install:
   - sudo pip install pipenv
 
 env:
-  - DATABASE_URL=postgres://travis:@127.0.0.1:5432/hav
-  - WHAV_DATABASE_URL=postgres://travis:@127.0.0.1:5432/whav
-  - DOCKER_COMPOSE_VERSION=1.23.2
+  - DATABASE_URL=postgres://travis:@127.0.0.1:5432/hav WHAV_DATABASE_URL=postgres://travis:@127.0.0.1:5432/whav DOCKER_COMPOSE_VERSION=1.23.2
 
 
 

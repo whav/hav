@@ -15,7 +15,7 @@ services:
 install:
 #  - curl -sSL https://get.docker.com/ | sudo sh
 #  - sudo pip install docker-compose
-  - sudo apt-get install libvips-dev -y
+  - sudo apt-get install -y libpq-dev gcc ffmpeg libimage-exiftool-perl libvips-dev
   - sudo pip install pipenv
 
 env:

@@ -1,15 +1,13 @@
-language: python
-sudo: required
 dist: xenial
+sudo: required
+
+language: python
 python: "3.7"
 
 services:
   - docker
   - postgresql
   - redis-server
-
-env:
-  - DOCKER_COMPOSE_VERSION=1.23.2
 
 before_script:
   - sudo -u postgres createuser `whoami` -s
@@ -18,6 +16,13 @@ install:
 #  - curl -sSL https://get.docker.com/ | sudo sh
 #  - sudo pip install docker-compose
   - sudo pip install pipenv
+
+env:
+  - DATABASE_URL=postgres://travis:@127.0.0.1:5432/hav
+  - WHAV_DATABASE_URL=postgres://travis:@127.0.0.1:5432/whav
+  - DOCKER_COMPOSE_VERSION=1.23.2
+
+
 
 script:
   - ln -s env_files/local.env .env

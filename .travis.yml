@@ -21,10 +21,9 @@ install:
 env:
   - DATABASE_URL=postgres://travis:@127.0.0.1:5432/hav WHAV_DATABASE_URL=postgres://travis:@127.0.0.1:5432/whav DOCKER_COMPOSE_VERSION=1.23.2
 
-
-
 script:
   - ln -s env_files/local.env .env
+  - mkdir -p dist/incoming dist/archive dist/webassets
   - cd backend/
   - pipenv install --dev
 #  - pipenv install --dev

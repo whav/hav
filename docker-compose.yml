@@ -17,11 +17,10 @@ x-django: &django
         - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
         - DATABASE_URL=${HAV_DATABASE_URL}
         - WHAV_DATABASE_URL=${WHAV_DATABASE_URL}
-        - DEBUG=False
+        - DEBUG=${DJANGO_DEBUG}
         - HAV_ARCHIVE_PATH=/archive/hav/archive
         - INCOMING_FILES_ROOT=/archive/hav/incoming
         - WEBASSET_ROOT=/archive/hav/webassets
-        - IMAGESERVER_URL_PREFIX=/images/
     working_dir: /hav/backend
 
 services:

@@ -5,6 +5,7 @@ language: python
 python: "3.7"
 
 install:
+  - sudo apt-get uninstall -y docker
   - curl -sSL https://get.docker.com/ | sudo sh
   - sudo pip install docker-compose
 
@@ -12,7 +13,6 @@ env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
 script:
-  - ln -s env_files/docker.local.env .env
   - mkdir -p dist/incoming dist/archive dist/webassets
-  - cd backend/
+  - ln -s env_files/docker.env .env
   - docker-compose run django python manage.py test

@@ -5,7 +5,7 @@ language: python
 python: "3.7"
 
 install:
-  - sudo apt-get uninstall -y docker
+  - sudo apt-get remove -y docker
   - curl -sSL https://get.docker.com/ | sudo sh
   - sudo pip install docker-compose
 

@@ -4,27 +4,15 @@ sudo: required
 language: python
 python: "3.7"
 
-services:
-  - docker
-  - postgresql
-  - redis-server
-
-#before_script:
-#  - sudo -u postgres createuser `whoami` -s
-
 install:
-#  - curl -sSL https://get.docker.com/ | sudo sh
-#  - sudo pip install docker-compose
-  - sudo apt-get install -y libpq-dev gcc ffmpeg libimage-exiftool-perl libvips-dev
-  - sudo pip install pipenv
+  - curl -sSL https://get.docker.com/ | sudo sh
+  - sudo pip install docker-compose
 
 env:
-  - DATABASE_URL=postgres://travis:@127.0.0.1:5432/hav WHAV_DATABASE_URL=postgres://travis:@127.0.0.1:5432/whav DOCKER_COMPOSE_VERSION=1.23.2
+  - DOCKER_COMPOSE_VERSION=1.23.2
 
 script:
-  - ln -s env_files/local.env .env
+  - ln -s env_files/docker.local.env .env
   - mkdir -p dist/incoming dist/archive dist/webassets
   - cd backend/
-  - pipenv install --dev
-#  - pipenv install --dev
-  - pipenv run python ./manage.py test
+  - docker-compose run django python manage.py test

@@ -12,7 +12,7 @@ env:
 
 script:
   - mkdir -p dist/incoming dist/archive dist/webassets
-  - ln -s env_files/docker.travis.env .env
-  - cat .env && whoami && id
+  - UG_IDS=`id -u`:`id -g` sed s/1000:1000/$UG_IDS/g <./env_files/docker.env >.env
+  - cat .env
   - docker-compose config
   - docker-compose run django python manage.py test

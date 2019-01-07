@@ -15,6 +15,6 @@ script:
   - mkdir -p dist/incoming dist/archive dist/webassets
   - ln -s env_files/docker.travis.env .env
   - cat .env && whoami && id
-  - ls -lRah dist/
-#  - docker-compose run django python manage.py test
+  - docker-compose config
+  - docker-compose run django ls -lahR /archive
   - ls -lRah dist/

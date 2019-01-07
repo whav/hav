@@ -11,10 +11,8 @@ env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
 script:
-  - pwd
   - mkdir -p dist/incoming dist/archive dist/webassets
   - ln -s env_files/docker.travis.env .env
   - cat .env && whoami && id
-  - docker-compose config
-  - docker-compose run django ls -lahR /archive
-  - ls -lRah dist/
+  - docker-compose -f docker-compose.yml config
+  - docker-compose -f docker-compose.yml run django python manage.py test

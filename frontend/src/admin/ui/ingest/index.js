@@ -6,6 +6,8 @@ import {
   HourglassIcon,
   QuestionMarkIcon
 } from "../icons";
+import { Link } from "react-router-dom";
+import { buildFrontendUrl } from "../../api/urls";
 
 const IngestionProgressDisplay = ({ msg = [] }) => {
   const items = msg.map(m => {
@@ -57,6 +59,11 @@ const PreviouslyIngestedMedia = ({ media }) => {
         {media.msg ? <IngestionProgressDisplay msg={media.msg} /> : null}
         {media.description ? <p>{media.description}</p> : null}
         <p>{media.tags.join(", ")}</p>
+        <p>
+          <Link to={buildFrontendUrl(media.url)} className="button is-small">
+            View on site
+          </Link>
+        </p>
       </div>
     </div>
   );

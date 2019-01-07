@@ -11,9 +11,10 @@ env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
 script:
+  - pwd
   - mkdir -p dist/incoming dist/archive dist/webassets
   - ln -s env_files/docker.travis.env .env
   - cat .env && whoami && id
   - ls -lRah dist/
-  - docker-compose run django python manage.py test
+#  - docker-compose run django python manage.py test
   - ls -lRah dist/

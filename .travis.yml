@@ -5,8 +5,6 @@ language: python
 python: "3.7"
 
 install:
-  - sudo apt-get remove -y docker
-  - curl -sSL https://get.docker.com/ | sudo sh
   - sudo pip install docker-compose
 
 env:
@@ -14,6 +12,5 @@ env:
 
 script:
   - mkdir -p dist/incoming dist/archive dist/webassets
-  - ln -s env_files/docker.env .env
-#  - docker-compose run django python manage.py test
-  - whoami && id
+  - ln -s env_files/docker.travis.env .env
+  - docker-compose run django python manage.py test

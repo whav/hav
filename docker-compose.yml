@@ -5,7 +5,7 @@ x-django: &django
     build:
         context: .
     image: mcallis/hav
-    user: "1000:1000"
+    user: ${DJANGO_UID}
     volumes:
         - ${ARCHIVE_ROOT}:/archive/hav/archive
         - ${INCOMING_FILES_ROOT}:/archive/hav/incoming
@@ -38,7 +38,6 @@ services:
 
     django:
         <<: *django
-        user: ${DJANGO_UID}
         command: daphne -p 8000 -b 0.0.0.0 hav.asgi:application
 
     rq-archive:
@@ -67,4 +66,23 @@ services:
             - ${WEBASSETS_ROOT}:/www/webassets:ro
         command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000
 
+    hav_db:
+        image: postgres
+        environment:
+            - POSTGRES_PASSWORD=opensesame
+            - POSTGRES_USER=hav
+        expose:
+            - 5432
 
+    whav_db:
+        image: mdillon/postgis:9.4
+        environment:
+            - POSTGRES_PASSWORD=opensesame
+            - POSTGRES_USER=whav
+        expose:
+            - 5432
+
+    redis:
+        image: redis
+        expose:
+            - 6379

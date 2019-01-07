@@ -15,4 +15,5 @@ env:
 script:
   - mkdir -p dist/incoming dist/archive dist/webassets
   - ln -s env_files/docker.env .env
-  - docker-compose run django python manage.py test
+#  - docker-compose run django python manage.py test
+  - whoami && id

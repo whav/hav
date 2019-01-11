@@ -13,9 +13,9 @@ env:
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
       docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
-      echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      docker push whav/hav:latest
-      docker push whav/hav:latest whav/hav:$TRAVIS_COMMIT
+      echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin ;
+      docker push whav/hav:latest ;
+      docker push whav/hav:latest whav/hav:$TRAVIS_COMMIT ;
     fi
 
 script:

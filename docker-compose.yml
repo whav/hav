@@ -3,7 +3,7 @@ version: "3.7"
 x-django: &django
     build:
         context: .
-    image: mcallis/hav
+    image: whav/hav
     user: ${DJANGO_UID}
     volumes:
         - ${ARCHIVE_ROOT}:/archive/hav/archive

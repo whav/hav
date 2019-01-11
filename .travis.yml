@@ -10,6 +10,12 @@ install:
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
+after_success:
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+      docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
+      echo `pwd`;
+    fi
+
 script:
   - mkdir -p dist/incoming dist/archive dist/webassets
   - UG_IDS=`id -u`:`id -g` sed s/1000:1000/$UG_IDS/g <./env_files/docker.env >.env

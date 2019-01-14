@@ -6,7 +6,7 @@ x-django: &django
     image: whav/hav
     user: ${DJANGO_UID}
     volumes:
-        - ${ARCHIVE_ROOT}:/archive/hav/archive
+        - ${HAV_ARCHIVE_ROOT}:/archive/hav/archive
         - ${INCOMING_FILES_ROOT}:/archive/hav/incoming
         - ${WEBASSETS_ROOT}:/archive/hav/webassets
         - /var/run/postgresql/.s.PGSQL.5432:/run/postgres/.s.PGSQL.5432
@@ -60,7 +60,7 @@ services:
         environment:
             - URL_SIGNATURE_KEY=${IMAGINARY_SECRET}
         volumes:
-            - ${ARCHIVE_ROOT}:/www/archive:ro
+            - ${HAV_ARCHIVE_ROOT}:/www/archive:ro
             - ${INCOMING_FILES_ROOT}:/www/incoming:ro
             - ${WEBASSETS_ROOT}:/www/webassets:ro
         command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000

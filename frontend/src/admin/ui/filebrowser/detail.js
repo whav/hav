@@ -28,8 +28,6 @@ const ExifTable = ({ data = {} }) => {
 
 class MediaDetail extends React.Component {
   render() {
-    const props = this.props;
-
     const tableProps = {
       Size: filesize(this.props.size),
       "Mime Type": this.props.mime
@@ -37,7 +35,7 @@ class MediaDetail extends React.Component {
     };
 
     const aside = this.props.ingestable ? (
-      <Button onClick={props.ingest} className="is-primary">
+      <Button onClick={this.props.ingest} className="is-primary">
         Ingest
       </Button>
     ) : null;
@@ -48,9 +46,9 @@ class MediaDetail extends React.Component {
           <div className="column">
             <FallBackImageLoader
               src={this.props.preview_url}
-              sources={this.props.srcset}
-              mime_type={props.mime_type}
-              alt={props.name}
+              srcSet={this.props.srcset}
+              mime_type={this.props.mime_type}
+              alt={this.props.name}
             />
           </div>
           <div className="column">

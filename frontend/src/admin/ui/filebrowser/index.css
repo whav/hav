@@ -140,3 +140,13 @@ footer {
 .directory-controls li {
   display: inline-block;
 }
+
+.imageloader-failed > svg,
+.imageloader-loading > svg {
+  min-height: 10rem;
+  min-width: 10rem;
+  padding: 2rem;
+  border: 2px solid rgb(179, 172, 172);
+  border-radius: 3%;
+  fill: rgb(179, 172, 172);
+}

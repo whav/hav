@@ -12,7 +12,6 @@ import {
 import {
   GoHome as HomeIcon,
   GoFileDirectory as DirectoryIcon,
-  GoFileMedia as GenericFallbackIcon,
   GoCheck as SelectFileCheckboxIcon,
   GoDatabase as DatabaseIcon,
   GoPackage as IngestPackageIcon
@@ -22,6 +21,7 @@ import {
   FaFileImage as ImageFallbackIcon,
   FaFileVideo as VideoFallbackIcon,
   FaFileAudio as AudioFallbackIcon,
+  FaFile as GenericFallbackIcon,
   FaHourglass as HourglassIcon,
   FaArchive as ArchiveIcon,
   FaSpinner as SpinnerIcon,

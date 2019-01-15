@@ -141,12 +141,25 @@ footer {
   display: inline-block;
 }
 
-.imageloader-failed > svg,
-.imageloader-loading > svg {
+.g-gallery-item .imageloader > svg {
   min-height: 10rem;
   min-width: 10rem;
   padding: 2rem;
   border: 2px solid rgb(179, 172, 172);
-  border-radius: 3%;
+  fill: black;
+}
+
+.g-gallery-directory > svg {
+  height: 4rem;
+  width: 4rem;
+}
+
+.g-gallery-item .imageloader.imageloader-loading > svg,
+.g-gallery-item .imageloader.imageloader-pending > svg {
   fill: rgb(179, 172, 172);
+}
+
+.g-gallery-item svg,
+.g-gallery-item img {
+  border-radius: 2%;
 }

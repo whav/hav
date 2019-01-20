@@ -16,7 +16,7 @@ import IngestForm, { TemplateForm, FormSet } from "../../ui/ingest/form";
 import PreviewImage from "../filebrowser/image_preview";
 import PreviewFolder from "../filebrowser/folder_preview";
 import { queueForIngestion } from "../../api/ingest";
-
+import { ingestQueueWS } from "../../api/urls";
 import parseDate from "../../utils/daterange";
 import { PreviouslyIngestedMedia } from "../../ui/ingest";
 
@@ -24,14 +24,9 @@ import Sockette from "sockette";
 
 class WSListener extends React.PureComponent {
   componentDidMount() {
-    const location = this.props.url || document.location;
-    const url = new URL(location);
-    const ws_url = `${url.protocol === "https:" ? "wss" : "ws"}://${url.host}${
-      url.pathname
-    }`;
-    this.ws = new Sockette(ws_url, {
+    this.ws = new Sockette(this.props.ws_url, {
       timeout: 5e3,
-      maxAttempts: 10,
+      maxAttempts: 2,
       onopen: e => console.log("Connected!", e),
       onmessage: this.onReceive,
       onreconnect: e => console.log("Reconnecting...", e),
@@ -153,6 +148,7 @@ class IngestQueue extends React.Component {
       .catch(err => {
         this.onError(ingestId, err);
       });
+    return response;
   };
 
   render() {
@@ -160,13 +156,13 @@ class IngestQueue extends React.Component {
       options,
       items = [],
       target,
-      created_media_entries = []
+      created_media_entries = [],
+      ws_url
     } = this.props;
 
     const { formData, templateData, errors } = this.state;
 
     const loading = isEmpty(options);
-
     if (loading) {
       return <LoadingIndicator />;
     } else {
@@ -193,17 +189,16 @@ class IngestQueue extends React.Component {
       });
 
       return (
-        <div>
-          <WSListener onReceive={this.props.onIngestUpdate} />
-          <h1 className="title">
-            {count === 1
-              ? "Single Item Ingestion"
-              : `Ingesting ${count} files.`}
-          </h1>
-
-          <PreviewFolder source={target} />
-
-          <hr />
+        <div className="hav-ingest">
+          <WSListener ws_url={ws_url} onReceive={this.props.onIngestUpdate} />
+          <div className="box">
+            <h1 className="title">
+              {count === 1
+                ? "Single Item Ingestion"
+                : `Ingesting ${count} files.`}
+            </h1>
+            <PreviewFolder source={target} />
+          </div>
           {/* template form if more than one ingest file */}
           {count > 1 ? (
             <TemplateForm
@@ -216,8 +211,7 @@ class IngestQueue extends React.Component {
           <FormSet>{forms}</FormSet>
           {created_media_entries.length > 0 ? (
             <React.Fragment>
-              <h2>Previously ingested</h2>
-              <hr />
+              <h2 className="subtitle">Previously ingested</h2>
               {created_media_entries.map(m => (
                 <PreviouslyIngestedMedia key={m.name} media={m} />
               ))}
@@ -251,7 +245,8 @@ const Ingest = connect(
       created_media_entries,
       uuid: queue.uuid,
       options: state.ingest.options,
-      loading: state.ingest.options ? false : true
+      loading: state.ingest.options ? false : true,
+      ws_url: ingestQueueWS(queue.uuid)
     };
   },
   (dispatch, ownProps) => {

@@ -4,6 +4,7 @@
 
 import { history } from "../../app";
 import React from "react";
+import ImageLoader from "react-load-image";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import uniq from "lodash/uniq";
@@ -24,13 +25,14 @@ import Breadcrumbs from "../components/breadcrumbs";
 
 require("./index.css");
 
-export class DirectoryListingBreadcrumbs extends React.Component {
-  render() {
-    let { dirs, current_dir } = this.props;
-    let items = dirs.map((d, index) => <Link to={d.link}>{d.name}</Link>);
-    return <Breadcrumbs items={items} />;
-  }
-}
+const DirectoryListingBreadcrumbs = ({ dirs, current_dir }) => {
+  const create_link = d => <Link to={d.link || "#"}>{d.name}</Link>;
+  let items = dirs.map(create_link);
+  current_dir && items.push(create_link(current_dir));
+  return <Breadcrumbs items={items} />;
+};
+
+export { DirectoryListingBreadcrumbs };
 
 export const FilePlaceHolder = props => {
   let Icon = GenericFallbackIcon;
@@ -55,69 +57,32 @@ export const FilePlaceHolder = props => {
   return <Icon className={className} />;
 };
 
-export class FallBackImageLoader extends React.Component {
-  state = {
-    hasError: false
-  };
-
-  constructor(props) {
-    super(props);
+const FallBackImageLoader = props => {
+  let { alt, src, srcSet, styles = {}, title, mime_type } = props;
+  if (srcSet && Array.isArray(srcSet)) {
+    srcSet = srcSet.map(([width, url]) => `${url} ${width}w`).join(", ");
+    // src = "";
   }
-
-  handleImageLoadError = e => {
-    this.setState({
-      hasError: true
-    });
-  };
-
-  handleImageLoad = e => {
-    this.setState({
-      hasLoaded: true
-    });
-  };
-  render() {
-    const {
-      src,
-      sources = [],
-      sizes = "100vw",
-      alt = "image",
-      title = "",
-      mime_type = "",
-      styles = {}
-    } = this.props;
-    let { hasError } = this.state;
-
-    if (hasError || (!src && sources.length === 0)) {
-      return <FilePlaceHolder title={title} mime={mime_type} />;
-    }
-
-    let srcSetProps = {};
-    if (sources) {
-      srcSetProps["srcSet"] = sources
-        .map(([width, url]) => `${url} ${width}w`)
-        .join(", ");
-      // TODO: do something proper with the width
-      srcSetProps["sizes"] = sizes;
-    }
+  if (src || srcSet) {
     return (
-      <img
-        src={src}
-        {...srcSetProps}
-        onError={this.handleImageLoadError}
-        title={title}
-        alt={alt}
-        className="image"
-        styles={styles}
-      />
+      <ImageLoader src={src} srcSet={srcSet}>
+        <img title={title} alt={alt} className="image" styles={styles} />
+        <FilePlaceHolder title={title} mime={mime_type} />
+        <FilePlaceHolder title={title} mime={mime_type} />
+      </ImageLoader>
     );
+  } else {
+    return <FilePlaceHolder title={title} mime={mime_type} />;
   }
-}
+};
 
 FallBackImageLoader.propTypes = {
   src: PropTypes.string,
   sources: PropTypes.array,
   mime_type: PropTypes.string
 };
+
+export { FallBackImageLoader };
 
 const GGalleryItem = ({
   name,
@@ -184,7 +149,7 @@ export const GGalleryFile = ({ file, toggleSelect, size, ...props }) => {
         sizes={size}
         title={`${file.name} (${file.mime_type})`}
         alt="preview image"
-        mime_type={file.mime_type}
+        mime_type={file.mime}
       />
     );
   }
@@ -340,10 +305,12 @@ export default class FileList extends React.Component {
 
 export const Header = ({ title = "", aside = null }) => {
   return (
-    <div className="columns hav-admin-fb-header">
-      <div className="column is-two-thirds title">{title}</div>
-      {aside ? <div className="column has-text-right">{aside}</div> : null}
-    </div>
+    <header>
+      <div className="columns hav-admin-fb-header">
+        <div className="column is-two-thirds title">{title}</div>
+        {aside ? <div className="column has-text-right">{aside}</div> : null}
+      </div>
+    </header>
   );
 };
 
@@ -356,7 +323,7 @@ export const FileBrowserInterface = ({
     <section className="filebrowser">
       {header ? header : null}
       <main>{main}</main>
-      {footer ? <footer>{footer}</footer> : null}
+      {footer ? footer : null}
     </section>
   );
 };

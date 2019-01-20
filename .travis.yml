@@ -1,0 +1,26 @@
+dist: xenial
+sudo: required
+
+language: python
+python: "3.7"
+
+install:
+  - sudo pip install docker-compose
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.23.2
+
+after_success:
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+      echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin ;
+      docker push whav/hav:latest ;
+      docker tag whav/hav:latest whav/hav:$TRAVIS_COMMIT ;
+      docker push whav/hav:$TRAVIS_COMMIT ;
+    fi
+
+script:
+  - mkdir -p dist/incoming dist/archive dist/webassets
+  - UG_IDS=`id -u`:`id -g` sed s/1000:1000/$UG_IDS/g <./env_files/docker.env >.env
+  - cat .env
+  - docker-compose config
+  - docker-compose run django python manage.py test

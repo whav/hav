@@ -37,10 +37,10 @@ UploadControl.propTypes = {
   uploadFile: PropTypes.func.isRequired
 };
 
-const SelectedFilesControls = ({ save }) => {
+const SelectedFilesControls = ({ save, text = "Ingest" }) => {
   return (
     <Button onClick={save} className="is-primary">
-      Ingest
+      {text}
     </Button>
   );
 };
@@ -97,19 +97,11 @@ class FileBrowserMenu extends React.Component {
   };
 
   render() {
-    const {
-      saveFileSelection,
-      selectedItemIds,
-      allowUpload,
-      uploadFile
-    } = this.props;
+    const { saveFileSelection, allowUpload, uploadFile } = this.props;
 
     const controls = [
       allowUpload ? (
         <UploadControl key="upload" uploadFile={uploadFile} />
-      ) : null,
-      selectedItemIds.length > 0 ? (
-        <SelectedFilesControls key="ingest" save={saveFileSelection} />
       ) : null,
       <Button key="selectall" onClick={this.selectAll}>
         <CheckboxCheckedIcon title="Check all" />
@@ -141,4 +133,9 @@ FileBrowserMenu.propTypes = {
   saveFileSelection: PropTypes.func.isRequired
 };
 
-export { FilebrowserViewControl, UploadControl, FileBrowserMenu };
+export {
+  FilebrowserViewControl,
+  UploadControl,
+  FileBrowserMenu,
+  SelectedFilesControls
+};

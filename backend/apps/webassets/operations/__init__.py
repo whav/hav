@@ -2,7 +2,7 @@ import mimetypes
 import os
 
 from apps.archive.models import ArchiveFile
-from ..models import WebAsset
+from apps.webassets.models import WebAsset
 
 from .image import convert as image_convert
 from .audio import convert as audio_convert, create_waveform

@@ -1,22 +1,32 @@
 /* layout the main file browser div with header, main and footer */
 .filebrowser {
   min-height: 100vh;
-  padding: 1.5rem;
-  /* position: relative; */
+  display: flex;
+  flex-direction: column;
 }
-
-/* .filebrowser h1:first-child {
-  position: sticky;
-  background-color: white;
-  z-index: 10;
-  top: 0;
-} */
 
 .filebrowser main {
   margin-top: 0.5rem;
-  /* flex-grow: 1; */
-  /* overflow-y: auto; */
-  /* user-select: none; */
+  user-select: none;
+  padding: 2rem;
+  flex-grow: 1;
+}
+
+.filebrowser header,
+.filebrowser footer {
+  position: sticky;
+  background-color: white;
+  z-index: 20;
+  padding: 2rem;
+}
+
+.filebrowser header {
+  top: 0;
+  padding-bottom: 0.5rem;
+}
+
+.filebrowser footer {
+  bottom: 0;
 }
 
 /*Gallery Style*/
@@ -93,7 +103,7 @@
   font-weight: bolder;
   font-size: 2.3rem;
   color: green;
-  z-index: 20;
+  z-index: 10;
 }
 
 .g-gallery-item-name {
@@ -129,4 +139,27 @@ footer {
 
 .directory-controls li {
   display: inline-block;
+}
+
+.g-gallery-item .imageloader > svg {
+  min-height: 10rem;
+  min-width: 10rem;
+  padding: 2rem;
+  border: 2px solid rgb(179, 172, 172);
+  fill: black;
+}
+
+.g-gallery-directory > svg {
+  height: 4rem;
+  width: 4rem;
+}
+
+.g-gallery-item .imageloader.imageloader-loading > svg,
+.g-gallery-item .imageloader.imageloader-pending > svg {
+  fill: rgb(179, 172, 172);
+}
+
+.g-gallery-item svg,
+.g-gallery-item img {
+  border-radius: 2%;
 }

@@ -12,7 +12,6 @@ import {
 import {
   GoHome as HomeIcon,
   GoFileDirectory as DirectoryIcon,
-  GoFileMedia as GenericFallbackIcon,
   GoCheck as SelectFileCheckboxIcon,
   GoDatabase as DatabaseIcon,
   GoPackage as IngestPackageIcon
@@ -22,12 +21,17 @@ import {
   FaFileImage as ImageFallbackIcon,
   FaFileVideo as VideoFallbackIcon,
   FaFileAudio as AudioFallbackIcon,
+  FaFile as GenericFallbackIcon,
   FaHourglass as HourglassIcon,
   FaArchive as ArchiveIcon,
-  FaSpinner as SpinnerIcon
+  FaSpinner as SpinnerIcon,
+  FaCheck as CheckIcon,
+  FaQuestion as QuestionMarkIcon
 } from "react-icons/fa";
 
-const LoadingSpinner = () => <SpinnerIcon className="fa-spin" />;
+import "./icons.css";
+
+const LoadingSpinner = () => <SpinnerIcon className="spinning-ckw" />;
 
 export {
   CheckboxBlankIcon,
@@ -48,5 +52,7 @@ export {
   DatabaseIcon,
   IngestPackageIcon,
   SpinnerIcon,
-  LoadingSpinner
+  LoadingSpinner,
+  CheckIcon,
+  QuestionMarkIcon
 };

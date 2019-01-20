@@ -6,30 +6,24 @@ import { Header, FileBrowserInterface } from "./index";
 
 const ExifTable = ({ data = {} }) => {
   return (
-    <table className="table is-striped">
-      <thead>
-        <tr>
-          <th colSpan={2}>EXIF Data</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.entries(data).map(([key, value], index) => {
-          return (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{value}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <React.Fragment>
+      <tr>
+        <th colSpan={2}>EXIF Data</th>
+      </tr>
+      {Object.entries(data).map(([key, value], index) => {
+        return (
+          <tr key={key}>
+            <td>{key}</td>
+            <td>{value}</td>
+          </tr>
+        );
+      })}
+    </React.Fragment>
   );
 };
 
 class MediaDetail extends React.Component {
   render() {
-    const props = this.props;
-
     const tableProps = {
       Size: filesize(this.props.size),
       "Mime Type": this.props.mime
@@ -37,42 +31,35 @@ class MediaDetail extends React.Component {
     };
 
     const aside = this.props.ingestable ? (
-      <Button onClick={props.ingest} className="is-primary">
+      <Button onClick={this.props.ingest} className="is-primary">
         Ingest
       </Button>
     ) : null;
 
     const main = (
-      <React.Fragment>
-        <div className="columns">
-          <div className="column">
-            <FallBackImageLoader
-              src={this.props.preview_url}
-              sources={this.props.srcset}
-              mime_type={props.mime_type}
-              alt={props.name}
-            />
-          </div>
-          <div className="column">
-            <table className="table is-striped">
-              {/* <thead>
-                <tr>
-                  <th colSpan={2}>Meta</th>
-                </tr>
-              </thead> */}
-              <tbody>
-                {Object.entries(tableProps).map(([key, value]) => (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>{value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        {this.props.meta ? <ExifTable data={this.props.meta} /> : null}
-      </React.Fragment>
+      <div className="content">
+        <FallBackImageLoader
+          src={this.props.preview_url}
+          srcSet={this.props.srcset}
+          mime_type={this.props.mime_type}
+          alt={this.props.name}
+        />
+
+        <table className="table is-striped">
+          <tbody>
+            <tr>
+              <th colSpan={2}>File Information</th>
+            </tr>
+            {Object.entries(tableProps).map(([key, value]) => (
+              <tr key={key}>
+                <td>{key}</td>
+                <td>{value}</td>
+              </tr>
+            ))}
+            {this.props.meta ? <ExifTable data={this.props.meta} /> : null}
+          </tbody>
+        </table>
+      </div>
     );
 
     return (

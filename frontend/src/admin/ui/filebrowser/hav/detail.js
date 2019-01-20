@@ -2,16 +2,25 @@ import React from "react";
 
 import { Audio, Video, Image } from "../../components/webassets";
 
-const WebAsset = props => {
-  switch (props.mime_type.split("/")[0].toLowerCase()) {
+const WebAsset = ({ assets = [], archive_mime_type = "image" }) => {
+  archive_mime_type = archive_mime_type.split("/")[0];
+  let primary_asset = assets.find(a =>
+    a.mime_type.startsWith(archive_mime_type)
+  );
+  // secondary asset should always be an image
+  let secondary_asset = assets.find(a => a.mime_type.startsWith("image")) || {
+    url: ""
+  };
+  const wa = primary_asset || secondary_asset;
+  switch (wa.mime_type.split("/")[0].toLowerCase()) {
     case "audio":
-      return <Audio {...props} />;
+      return <Audio {...wa} poster={secondary_asset.url} />;
     case "image":
-      return <Image {...props} />;
+      return <Image {...wa} />;
     case "video":
-      return <Video {...props} />;
+      return <Video {...wa} poster={secondary_asset.url} />;
     default:
-      return <pre>{JSON.stringify(props, null, 2)}</pre>;
+      return <div>Unknown media type: {wa.mime_type}</div>;
   }
 };
 
@@ -46,14 +55,11 @@ const ArchiveFileDetails = props => {
 class HavMediaDetail extends React.Component {
   render() {
     const { details } = this.props;
-    const { webassets = [], archive_files = [] } = details;
+    const { webassets = [], archive_files = [], mime_type } = details;
     return (
       <div className="content">
         <h1>#{details.name}</h1>
-
-        {webassets.map((wa, index) => (
-          <WebAsset key={index} {...wa} />
-        ))}
+        <WebAsset assets={webassets} archive_mime_type={mime_type} />
 
         {archive_files.map((af, index) => (
           <ArchiveFileDetails key={index} {...af} />

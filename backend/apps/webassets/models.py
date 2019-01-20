@@ -31,7 +31,6 @@ class WebAsset(models.Model):
     def __str__(self):
         return '%s %s' % (self.file.name, self.mime_type)
 
-
     def is_image(self):
         return self.mime_type.startswith('image')
 

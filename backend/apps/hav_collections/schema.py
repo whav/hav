@@ -12,5 +12,5 @@ class Query(object):
     all_collections = graphene.List(CollectionType)
 
     def resolve_all_collections(self, info, **kwargs):
-        return Collection.objects.all()
+        return Collection.objects.all().order_by('root_node__numchild')
 

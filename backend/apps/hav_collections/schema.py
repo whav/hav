@@ -9,8 +9,8 @@ class CollectionType(DjangoObjectType):
         model = Collection
 
 class Query(object):
-    all_collections = graphene.List(CollectionType)
+    collections = graphene.List(CollectionType)
 
-    def resolve_all_collections(self, info, **kwargs):
+    def resolve_collections(self, info, **kwargs):
         return Collection.objects.all().order_by('root_node__numchild')
 

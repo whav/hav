@@ -352,7 +352,7 @@ RQ_QUEUES = {
 }
 
 GRAPHENE = {
-    'SCHEMA': 'hav.schema.schema'
+    'SCHEMA': 'api.graphql.schema'
 }
 
 USE_X_FORWARDED_HOST = True

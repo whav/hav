@@ -12,9 +12,10 @@ class CollectionSerializer(serializers.ModelSerializer):
             'slug'
         ]
 
+
 class CollectionListView(ListAPIView):
     serializer_class = CollectionSerializer
 
     def get_queryset(self):
-        return Collection.objects.all()
+        return Collection.objects.all().order_by('root_node__numchild')
 

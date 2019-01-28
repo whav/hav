@@ -3,8 +3,7 @@ from django.contrib import admin as django_admin
 from django.conf import settings
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
-from django.views.decorators.csrf import csrf_exempt
-from graphene_django.views import GraphQLView
+
 
 from api.urls import api_urls
 
@@ -30,7 +29,6 @@ urlpatterns = [
     re_path(r'^admin/', include(hav_admin_patterns, namespace='hav_admin')),
     re_path(r'^dbadmin/', django_admin.site.urls),
     path('django-rq/', include('django_rq.urls')),
-    path(r'graphql', csrf_exempt(GraphQLView.as_view(graphiql=True))),
 
 ]
 

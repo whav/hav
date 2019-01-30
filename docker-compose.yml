@@ -20,6 +20,7 @@ x-django: &django
         - HAV_ARCHIVE_PATH=/archive/hav/archive
         - INCOMING_FILES_ROOT=/archive/hav/incoming
         - WEBASSET_ROOT=/archive/hav/webassets
+        - CACHE_URL=${CACHE_URL}
     working_dir: /hav/backend
 
 services:

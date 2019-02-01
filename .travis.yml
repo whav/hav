@@ -14,7 +14,8 @@ after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
       echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin ;
       docker push whav/hav:latest ;
-      docker tag whav/hav:latest whav/hav:$TRAVIS_COMMIT whav/hav:$TRAVIS_BUILD_NUMBER;
+      docker tag whav/hav:latest whav/hav:$TRAVIS_COMMIT ;
+      docker tag whav/hav:latest whav/hav:$TRAVIS_BUILD_NUMBER
       docker push whav/hav:$TRAVIS_COMMIT ;
       docker push whav/hav:$TRAVIS_BUILD_NUMBER ;
 

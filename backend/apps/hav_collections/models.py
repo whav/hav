@@ -18,6 +18,8 @@ class Collection(models.Model):
 
     administrators = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
+    public = models.BooleanField(default=True)
+
     root_node = models.OneToOneField(
         Node,
         null=True,

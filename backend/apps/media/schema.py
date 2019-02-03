@@ -30,9 +30,10 @@ class LicenseType(DjangoObjectType):
 
 class Query(object):
 
-    media = graphene.Field(MediaType, id=graphene.Int(), name=graphene.String())
+    media = graphene.Field(MediaType, id=graphene.String(), name=graphene.String())
 
     def resolve_media(self, info, **kwargs):
+        print(info)
         id = kwargs.get('id')
         return Media.objects.get(pk=id)
 

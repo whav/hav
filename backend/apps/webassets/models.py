@@ -51,6 +51,4 @@ class WebAsset(models.Model):
             self.width, self.height = img.size
 
         return super().save(*args, **kwargs)
-
-    def thumbnail_urls(self):
-        return []
+    

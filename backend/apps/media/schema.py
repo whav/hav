@@ -5,10 +5,28 @@ from graphene_django.types import DjangoObjectType
 from .models import Media, MediaCreator, License
 from apps.sets.schema import SetType
 
+from hav_utils.imaginary import generate_thumbnail_url
+
 
 class MediaType(DjangoObjectType):
 
     ancestors = graphene.List(SetType)
+    thumbnail_url = graphene.Field(graphene.String)
+
+    def resolve_thumbnail_url(self, info):
+        if self.primary_file:
+            webasset_images = filter(
+                lambda x: x.mime_type.startswith('image'),
+                self.primary_file.webasset_set.all()
+            )
+            webasset_images = list(webasset_images)
+            try:
+                webasset = webasset_images[0]
+            except IndexError:
+                return None
+            else:
+                return generate_thumbnail_url(webasset)
+        return ''
 
     def resolve_ancestors(self, info):
         root = self.set.get_collection()
@@ -34,5 +52,5 @@ class Query(object):
 
     def resolve_media(self, info, **kwargs):
         id = kwargs.get('id')
-        return Media.objects.get(pk=id)
+        return Media.objects.prefetch_related('files__webasset_set').get(pk=id)
 

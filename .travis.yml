@@ -15,7 +15,7 @@ after_success:
       echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin ;
       docker tag whav/hav whav/hav:$TRAVIS_BUILD_NUMBER ;
       docker tag whav/hav whav/hav:$TRAVIS_COMMIT ;
-      echo 
+      echo "Pushing images"
       docker push whav/hav:latest ;
       docker push whav/hav:$TRAVIS_BUILD_NUMBER ;
       docker push whav/hav:$TRAVIS_COMMIT ;

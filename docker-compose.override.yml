@@ -5,6 +5,11 @@ services:
         depends_on:
           - hav_db
           - whav_db
+        environment:
+          - DEBUG=True
+        volumes:
+          - ./backend:/hav/backend
+        command: ./manage.py runserver 0.0.0.0:8000
 
     imaginary:
         ports:

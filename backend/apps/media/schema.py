@@ -12,7 +12,8 @@ class MediaType(DjangoObjectType):
 
     ancestors = graphene.List(SetType)
     thumbnail_url = graphene.Field(graphene.String)
-    srcset =graphene.List(graphene.String)
+    srcset = graphene.List(graphene.String)
+    type = graphene.Field(graphene.String)
 
     def resolve_srcset(self, info):
         if self.primary_file:
@@ -29,6 +30,10 @@ class MediaType(DjangoObjectType):
         return []
 
 
+    def resolve_type(self, info):
+        if self.primary_file:
+            return self.primary_file.mime_type
+        return None
 
     def resolve_thumbnail_url(self, info):
         if self.primary_file:

@@ -38,7 +38,7 @@ env = environ.Env(
     WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000'),
     CACHE_URL=(str, 'redis://127.0.0.1:6379/0'),
     DATABASE_URL=(str, 'postgres:///hav'),
-    WHAV_DATABASE_URL=(str, 'postgres:///whav')
+    WHAV_DATABASE_URL=(str, 'postgres:///whav'),
 
 )
 
@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     'apps.webassets',
     'apps.hav_collections',
     'django_rq',
-    'raven.contrib.django.raven_compat',
     'graphene_django',
 ]
 
@@ -242,13 +241,14 @@ CHANNEL_LAYERS = {
     },
 }
 
-RAVEN_CONFIG = {
-    'dsn': env('SENTRY_DSN'),
-    # If you are using git, you can also automatically configure the
-    # release based on the git info.
-    # 'release': raven.fetch_git_sha(project_root()),
-}
 
+if env('SENTRY_DSN'):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+    sentry_sdk.init(
+        env('SENTRY_DSN'),
+        integrations=[DjangoIntegration()]
+    )
 
 # Disable Django's logging setup
 LOGGING_CONFIG = None
@@ -274,11 +274,6 @@ logging.config.dictConfig({
             'formatter': 'default',
             'stream': sys.stdout
         },
-        # Add Handler for Sentry for `warning` and above
-        'sentry': {
-            'level': 'WARNING',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-        },
         'django.server': DEFAULT_LOGGING['handlers']['django.server'],
     },
     'loggers': {
@@ -286,7 +281,7 @@ logging.config.dictConfig({
         '': {
             'level': 'WARNING',
             'handlers': [
-                'console', 'sentry'
+                'console',
             ],
         },
         # Our application code
@@ -294,12 +289,11 @@ logging.config.dictConfig({
             'level': LOGLEVEL,
             'handlers': [
                 'console',
-                'sentry'
             ],
             # Avoid double logging because of root logger
             'propagate': False,
         },
-        # Prevent noisy modules from logging to Sentry
+        # Prevent noisy modules from logging
         # 'noisy_module': {
         #     'level': 'ERROR',
         #     'handlers': ['console'],

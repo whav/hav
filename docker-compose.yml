@@ -21,6 +21,7 @@ x-django: &django
         - INCOMING_FILES_ROOT=/archive/hav/incoming
         - WEBASSET_ROOT=/archive/hav/webassets
         - CACHE_URL=${CACHE_URL}
+        - SENTRY_DSN=${SENTRY_DSN}
     working_dir: /hav/backend
 
 services:

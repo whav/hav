@@ -242,14 +242,6 @@ CHANNEL_LAYERS = {
 }
 
 
-if env('SENTRY_DSN'):
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-    sentry_sdk.init(
-        env('SENTRY_DSN'),
-        integrations=[DjangoIntegration()]
-    )
-
 # Disable Django's logging setup
 LOGGING_CONFIG = None
 
@@ -349,5 +341,14 @@ GRAPHENE = {
     'SCHEMA': 'api.graphql.schema'
 }
 
+if env('SENTRY_DSN'):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+    sentry_sdk.init(
+        env('SENTRY_DSN'),
+        integrations=[DjangoIntegration()]
+    )
+
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+

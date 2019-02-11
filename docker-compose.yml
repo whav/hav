@@ -26,12 +26,14 @@ x-django: &django
 
 services:
     nginx:
-        image: nginx:stable
+        build:
+            context: .
+            dockerfile: ./Dockerfile.nginx
+        image: whav/hav-nginx:${TAG}
         ports:
             - "${NGINX_PORT}:80"
         volumes:
-            - ./nginx.conf:/etc/nginx/nginx.conf:ro
-            - ./dist/nginx_cache:/tmp/nginx-thumbnails
+            - ${WEBASSETS_CACHE_ROOT}:/www/cache
             - ${WEBASSETS_ROOT}:/www/webassets:ro
         depends_on:
             - django

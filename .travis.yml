@@ -18,7 +18,6 @@ after_success:
       docker push whav/hav:$TRAVIS_BUILD_NUMBER ;
       docker tag whav/hav whav/hav:$TRAVIS_COMMIT ;
       docker push whav/hav:$TRAVIS_COMMIT ;
-      # also push nginx
       docker push whav/hav-nginx ;
       docker tag whav/hav-nginx whav/hav-nginx:$TRAVIS_BUILD_NUMBER ;
       docker push whav/hav-nginx:$TRAVIS_BUILD_NUMBER ;

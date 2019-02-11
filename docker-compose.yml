@@ -39,7 +39,6 @@ services:
 
     django:
         <<: *django
-        command: daphne -p 8000 -b 0.0.0.0 hav.asgi:application
 
     rq-archive:
         <<: *django

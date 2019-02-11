@@ -44,5 +44,4 @@ RUN ["python", "manage.py", "collectstatic", "--no-input"]
 
 WORKDIR /hav
 
-COPY ./uwsgi.ini .
-CMD ["uwsgi", "--hook-master-start", "unix_signal:1 gracefully_kill_them_all", "uwsgi.ini"]
+CMD ["daphne", "-p", "8000",  "-b", "0.0.0.0",  "hav.asgi:application"]

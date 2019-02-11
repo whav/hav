@@ -12,7 +12,5 @@
 {% block webpackEntryPoint %}
     {% render_bundle 'havAdmin' %}
 {% endblock %}
-<script src="https://cdn.ravenjs.com/3.20.1/raven.min.js" crossorigin="anonymous"></script>
-<script>Raven.config('{% sentry_public_dsn %}').install()</script>
 </body>
 </html>

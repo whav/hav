@@ -28,7 +28,7 @@ services:
     nginx:
         image: nginx:stable
         ports:
-            - "127.0.0.1:8080:80"
+            - "${NGINX_PORT}:80"
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf:ro
             - ./dist/nginx_cache:/tmp/nginx-thumbnails

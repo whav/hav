@@ -344,9 +344,10 @@ GRAPHENE = {
 if env('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.rq import RqIntegration
     sentry_sdk.init(
         env('SENTRY_DSN'),
-        integrations=[DjangoIntegration()]
+        integrations=[DjangoIntegration(), RqIntegration()]
     )
 
 USE_X_FORWARDED_HOST = True

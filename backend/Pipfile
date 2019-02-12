@@ -4,12 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
+django = "==2.1.7"
 django-webpack-loader = "==0.5.0"
 django-model-utils = "==2.6.1"
 "psycopg2" = "==2.7.3.1"
 python-dotenv = "==0.7.1"
-djangorestframework = "==3.7.3"
+djangorestframework = "==3.9.1"
 django-environ = "==0.4.4"
 django-treebeard = "==4.3.0"
 uwsgi = "*"
@@ -29,6 +29,7 @@ redis = "*"
 whitenoise = "*"
 pick = "*"
 sentry-sdk = "*"
+django-extensions = "==2.1.5"
 
 [dev-packages]
 ipdb = "*"

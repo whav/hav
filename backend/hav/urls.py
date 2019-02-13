@@ -28,7 +28,7 @@ urlpatterns = [
     ),
     re_path(r'^admin/', include(hav_admin_patterns, namespace='hav_admin')),
     re_path(r'^dbadmin/', django_admin.site.urls),
-    path('django-rq/', include('django_rq.urls')),
+    path('rq/', include('django_rq.urls')),
 
 ]
 

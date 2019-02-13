@@ -23,6 +23,8 @@ x-django: &django
         - CACHE_URL=${CACHE_URL}
         - SENTRY_DSN=${SENTRY_DSN}
     working_dir: /hav/backend
+    depends_on:
+        - redis
 
 services:
     nginx:
@@ -68,4 +70,12 @@ services:
             - ${WEBASSETS_ROOT}:/www/webassets:ro
         command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000
 
+    redis:
+        image: redis
+        volumes:
+            - redis:/data
+        expose:
+            - 6379
 
+volumes:
+    redis:

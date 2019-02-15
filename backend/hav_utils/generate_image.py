@@ -1,4 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
+import os
+
+font_path = os.path.join(os.path.dirname(__file__), 'font.ttf')
 
 def generate_image(text, width=800, height=600, output=None, margin=80):
     img = Image.new('RGB', (width, height))
@@ -8,7 +11,7 @@ def generate_image(text, width=800, height=600, output=None, margin=80):
     text_height = 1
     desired_text_size = (img.width - margin * 2, img.height - margin * 2)
     while (text_width, text_height) < desired_text_size:
-        fnt = ImageFont.truetype('./font.ttf', size=size)
+        fnt = ImageFont.truetype(font_path, size=size)
         text_width, text_height = draw.textsize(text, font=fnt)
         size += 10
 

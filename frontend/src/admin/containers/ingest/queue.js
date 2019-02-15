@@ -57,7 +57,8 @@ class IngestQueue extends React.Component {
     this.state = {
       formData: {},
       templateData: {},
-      errors: {}
+      errors: {},
+      previously_ingested: []
     };
   }
 
@@ -143,7 +144,9 @@ class IngestQueue extends React.Component {
     response
       .then(data => {
         this.props.onIngestSuccess(ingestId, data);
-        // this.props.loadIngestData();
+        this.setState(state => ({
+          previously_ingested: [...state.previously_ingested, ingestId]
+        }));
       })
       .catch(err => {
         this.onError(ingestId, err);
@@ -160,34 +163,45 @@ class IngestQueue extends React.Component {
       ws_url
     } = this.props;
 
-    const { formData, templateData, errors } = this.state;
-
+    const { formData, templateData, errors, previously_ingested } = this.state;
     const loading = isEmpty(options);
     if (loading) {
       return <LoadingIndicator />;
     } else {
       const count = items.length;
+      const media_entries = created_media_entries.filter(
+        ma => previously_ingested.indexOf(ma.source_id) === -1
+      );
       const forms = items.map((source, index) => {
-        return (
-          <IngestForm
-            key={source}
-            source={source}
-            {...options}
-            onChange={this.onChange}
-            data={formData[source] || {}}
-            errors={errors[source] || {}}
-            onSubmit={() => this.ingestItem(source, formData[source] || {})}
-            onError={this.onError}
-            onDelete={() => {
-              this.props.deleteIngestItem(source);
-            }}
-          >
-            {/* <span>Asset #{index + 1}</span> */}
-            <PreviewImage source={source} />
-          </IngestForm>
-        );
+        if (previously_ingested.indexOf(source) === -1) {
+          return (
+            <IngestForm
+              key={source}
+              source={source}
+              {...options}
+              onChange={this.onChange}
+              data={formData[source] || {}}
+              errors={errors[source] || {}}
+              onSubmit={() => this.ingestItem(source, formData[source] || {})}
+              onError={this.onError}
+              onDelete={() => {
+                this.props.deleteIngestItem(source);
+              }}
+            >
+              {/* <span>Asset #{index + 1}</span> */}
+              <PreviewImage source={source} />
+            </IngestForm>
+          );
+        } else {
+          const media = created_media_entries.find(
+            ma => ma.source_id === source
+          );
+          if (media === undefined) {
+            return null;
+          }
+          return <PreviouslyIngestedMedia key={source} media={media} />;
+        }
       });
-
       return (
         <div className="hav-ingest">
           <WSListener ws_url={ws_url} onReceive={this.props.onIngestUpdate} />
@@ -209,14 +223,10 @@ class IngestQueue extends React.Component {
             />
           ) : null}
           <FormSet>{forms}</FormSet>
-          {created_media_entries.length > 0 ? (
-            <React.Fragment>
-              <h2 className="subtitle">Previously ingested</h2>
-              {created_media_entries.map(m => (
-                <PreviouslyIngestedMedia key={m.name} media={m} />
-              ))}
-            </React.Fragment>
-          ) : null}
+          <hr />
+          {media_entries.map(m => (
+            <PreviouslyIngestedMedia key={m.name} media={m} />
+          ))}
         </div>
       );
     }
@@ -236,7 +246,10 @@ const Ingest = connect(
     const created_media_entries = queue.created_media_entries
       .map(ma => {
         const key = ma.url;
-        return state.repositories[key];
+        return {
+          ...ma,
+          ...(state.repositories[key] || {})
+        };
       })
       .filter(ma => ma !== undefined);
     return {

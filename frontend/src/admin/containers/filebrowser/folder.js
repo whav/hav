@@ -12,14 +12,17 @@ import { queueForIngestion } from "../../ducks/ingest";
 import { startFileUpload } from "../../ducks/uploads";
 import LoadingIndicator from "../../ui/loading";
 
-import Level from "../../ui/components/level";
+import Level, { LevelItem } from "../../ui/components/level";
 
 import FileList, {
   DirectoryListingBreadcrumbs,
   FileBrowserInterface
 } from "../../ui/filebrowser";
 
-import { FileBrowserMenu } from "../../ui/filebrowser/controls";
+import {
+  FileBrowserMenu,
+  SelectedFilesControls
+} from "../../ui/filebrowser/controls";
 import { buildFrontendUrl, buildApiUrl } from "../../api/urls";
 
 class FileBrowserDirectory extends React.Component {
@@ -57,7 +60,6 @@ class FileBrowserDirectory extends React.Component {
               link: buildFrontendUrl(d.url)
             };
           })}
-          current_dir={directory.name}
         />
       );
 
@@ -75,30 +77,32 @@ class FileBrowserDirectory extends React.Component {
         childrenDirectories.length + files.length + uploads.length === 0;
 
       const selectedItemIds = new Set(directory.selected);
-      const header_items = [
-        <h1 key="title" className="title">
-          {directory.name}
-        </h1>,
-        <Level
-          key="fb-menu"
-          left={breadcrumbs}
-          right={
-            <FileBrowserMenu
-              switchDisplayType={switchDisplayStyle}
-              selectedDisplayType={settings.selectedDisplayType}
-              addDirectory={allowCreate ? createDirectory : false}
-              selectedItemIds={Array.from(ingestable)}
-              allItemIds={directory.content}
-              handleSelect={selectItems}
-              saveFileSelection={() =>
-                saveFileSelection(Array.from(ingestable))
-              }
-              allowUpload={allowUpload}
-              uploadFile={uploadFile}
-            />
-          }
-        />
-      ];
+      const header = (
+        <header>
+          <h1 key="title" className="title">
+            {directory.name}
+          </h1>
+          <Level
+            key="fb-menu"
+            left={breadcrumbs}
+            right={
+              <FileBrowserMenu
+                switchDisplayType={switchDisplayStyle}
+                selectedDisplayType={settings.selectedDisplayType}
+                addDirectory={allowCreate ? createDirectory : false}
+                selectedItemIds={Array.from(ingestable)}
+                allItemIds={directory.content}
+                handleSelect={selectItems}
+                saveFileSelection={() =>
+                  saveFileSelection(Array.from(ingestable))
+                }
+                allowUpload={allowUpload}
+                uploadFile={uploadFile}
+              />
+            }
+          />
+        </header>
+      );
 
       const main = isEmpty ? (
         <h2>This directory is empty.</h2>
@@ -114,14 +118,31 @@ class FileBrowserDirectory extends React.Component {
         />
       );
 
-      const footer = this.props.footer || null;
+      let footer = this.props.footer;
+      if (!footer && selectedItemIds.size > 0) {
+        footer = (
+          <footer className="box">
+            <Level
+              right={
+                <LevelItem>
+                  {" "}
+                  <SelectedFilesControls
+                    save={() => saveFileSelection(Array.from(selectedItemIds))}
+                    text={
+                      selectedItemIds.size === 1
+                        ? "Ingest one item"
+                        : `Ingest ${selectedItemIds.size} items`
+                    }
+                  />
+                </LevelItem>
+              }
+            />
+          </footer>
+        );
+      }
 
       return (
-        <FileBrowserInterface
-          header={header_items}
-          main={main}
-          footer={footer}
-        />
+        <FileBrowserInterface header={header} main={main} footer={footer} />
       );
     }
   }

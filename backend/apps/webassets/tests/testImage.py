@@ -1,4 +1,4 @@
-from ..operations import create_webassets
+from apps.webassets.operations import create_webassets
 from PIL import Image
 from . import WebAssetTestCase
 

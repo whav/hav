@@ -5,7 +5,7 @@ import React from "react";
 
 const Welcome = () => {
   return (
-    <div>
+    <div className="content">
       <h1>HAV Dashboard</h1>
       <p>Please use the menu on the left.</p>
     </div>

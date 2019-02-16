@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Breadcrumbs from "../../ui/components/breadcrumbs";
 import { requestDirectoryAction } from "../../ducks/browser";
+import { Link } from "react-router-dom";
+import { buildFrontendUrl } from "../../api/urls";
 
 class PreviewFolder extends React.Component {
   constructor(props) {
@@ -13,12 +15,18 @@ class PreviewFolder extends React.Component {
   }
 
   render() {
-    const { source, loading, folder, parent_folders = [] } = this.props;
+    const { loading, folder, parent_folders = [] } = this.props;
     if (loading) {
       return null;
     }
 
-    return <Breadcrumbs items={[...parent_folders, folder].map(f => f.name)} />;
+    return (
+      <Breadcrumbs
+        items={[...parent_folders, folder].map(f => (
+          <Link to={buildFrontendUrl(f.url)}>{f.name}</Link>
+        ))}
+      />
+    );
   }
 }
 

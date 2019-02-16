@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-{% load static raven %}
 {% load render_bundle from webpack_loader %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
     <title>{% block title %}HAV Admin{% endblock %}</title>
 </head>
 <body>
@@ -13,7 +11,5 @@
 {% block webpackEntryPoint %}
     {% render_bundle 'havAdmin' %}
 {% endblock %}
-<script src="https://cdn.ravenjs.com/3.20.1/raven.min.js" crossorigin="anonymous"></script>
-<script>Raven.config('{% sentry_public_dsn %}').install()</script>
 </body>
 </html>

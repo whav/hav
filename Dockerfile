@@ -20,7 +20,9 @@ ENV DEBUG=False \
 INCOMING_FILES_ROOT=/archive/incoming \
 HAV_ARCHIVE_PATH=/archive/hav \
 WHAV_ARCHIVE_PATH=/archive/whav \
-WEBASSET_ROOT=/archive/webassets
+WEBASSET_ROOT=/archive/webassets \
+DJANGO_SECRET_KEY=I_AM_VERY_UNSAFE \
+IMAGINARY_SECRET=UNSAFE
 
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/"]
 
@@ -42,5 +44,4 @@ RUN ["python", "manage.py", "collectstatic", "--no-input"]
 
 WORKDIR /hav
 
-COPY ./uwsgi.ini .
-CMD ["uwsgi", "--hook-master-start", "unix_signal:1 gracefully_kill_them_all", "uwsgi.ini"]
+CMD ["daphne", "-p", "8000",  "-b", "0.0.0.0",  "hav.asgi:application"]

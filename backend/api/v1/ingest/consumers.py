@@ -36,5 +36,4 @@ class IngestUpdatesConsumer(AsyncJsonWebsocketConsumer):
         payload.update({
             'msg': event.get('msg', '')
         })
-        print(event.get('msg', ''), payload)
         await self.send_json(payload)

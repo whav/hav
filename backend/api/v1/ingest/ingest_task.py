@@ -19,14 +19,31 @@ def send_progress(msg, media_id, channel_group):
 
 
 def archive_and_create_webassets(filename, media_id, user_id, channel_group):
+    # TODO: untangle task updates from processing logic
+    # perhaps using a closure or similar
 
     progress_args = [media_id, channel_group]
 
     archive_queue = get_queue('archive')
     webasset_queue = get_queue('webassets')
-    default_queue = get_queue('default')
+    notification_queue = get_queue('default')
 
-    default_queue.enqueue(send_progress, "started", *progress_args)
+    task_status = [
+        {
+            "task": "archiving",
+            "status": "pending"
+        },
+        {
+            "task": "webassets",
+            "status": "pending"
+        }
+    ]
+
+    notification_queue.enqueue(
+        send_progress,
+        task_status.copy(),
+        *progress_args
+    )
 
     archive_job = archive_queue.enqueue(
         archive,
@@ -37,7 +54,21 @@ def archive_and_create_webassets(filename, media_id, user_id, channel_group):
         timeout=600
     )
 
-    default_queue.enqueue(send_progress, "archived", *progress_args, depends_on=archive_job)
+    task_status[0]["status"] = 'started'
+    notification_queue.enqueue(
+        send_progress,
+        task_status.copy(),
+        *progress_args
+    )
+
+    task_status[0]["status"] = 'completed'
+
+    notification_queue.enqueue(
+        send_progress,
+        task_status.copy(),
+        *progress_args,
+        depends_on=archive_job
+    )
 
     webasset_job = webasset_queue.enqueue(
         create_webassets,
@@ -45,6 +76,19 @@ def archive_and_create_webassets(filename, media_id, user_id, channel_group):
         timeout=3600 * 5
     )
 
-    default_queue.enqueue(send_progress, "webassets_created", *progress_args, depends_on=webasset_job)
+    task_status[1]['status'] = 'started'
+    notification_queue.enqueue(
+        send_progress,
+        task_status.copy(),
+        *progress_args
+    )
+
+    task_status[1]['status'] = 'completed'
+    notification_queue.enqueue(
+        send_progress,
+        task_status.copy(),
+        *progress_args,
+        depends_on=webasset_job
+    )
 
     return archive_job, webasset_job

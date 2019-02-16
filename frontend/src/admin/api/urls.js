@@ -22,6 +22,13 @@ export const ingestFileEndpoint = uuid =>
 export const ingestQueueModifierEndpoint = uuid =>
   `${ingestQueueDetail(uuid)}modify/`;
 
+export const ingestQueueWS = uuid => {
+  const url = new URL(document.location);
+  return `${url.protocol === "https:" ? "wss" : "ws"}://${
+    url.host
+  }/ws/admin/ingest/${uuid}/`;
+};
+
 const buildFrontendUrl = url => {
   return url.startsWith(apiPrefix) ? url.slice(apiPrefix.length - 1) : url;
 };

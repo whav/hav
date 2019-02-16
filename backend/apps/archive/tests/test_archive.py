@@ -3,11 +3,11 @@ import os
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from ..operations import archive_file
+from apps.archive.operations import archive_file
 from .test_hash import file_hash, file_path
 
 from apps.media import utils, models
-from ..models import ArchiveFile
+from apps.archive.models import ArchiveFile
 
 class ArchiveTest(TestCase):
 

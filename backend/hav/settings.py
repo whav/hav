@@ -13,9 +13,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import sys
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
-
 import environ
-from  dj_database_url import parse as parse_db_url
+from dj_database_url import parse as parse_db_url
 
 from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
 
@@ -30,27 +29,27 @@ django_root = environ.Path(__file__) - 2
 # set up the environment
 env = environ.Env(
     DEBUG=(bool, False),
-    SECRET_KEY=(str, "VERY_VERY_UNSAFE"),
-    ALLOWED_HOSTS=(list, []),
+    DJANGO_SECRET_KEY=str,
+    ALLOWED_HOSTS=(list, ['*']),
     SENTRY_DSN=(str, ''),
     LOGLEVEL=(str, 'debug'),
-    URL_SIGNATURE_KEY=(str, 'quite_unsafe_i_must_say'),
-    IMAGESERVER_URL_PREFIX=(str, '/'),
+    IMAGINARY_SECRET=str,
+    IMAGINARY_URL_PREFIX=(str, '/images/'),
     WEBASSET_URL_PREFIX=(str, 'http://127.0.0.1:9000'),
     CACHE_URL=(str, 'redis://127.0.0.1:6379/0'),
     DATABASE_URL=(str, 'postgres:///hav'),
-    WHAV_DATABASE_URL=(str, 'postgres:///whav')
+    WHAV_DATABASE_URL=(str, 'postgres:///whav'),
 
 )
-
 
 # read the .env file
 environ.Env.read_env(project_root('.env'))
 
 
+
 DEBUG = env('DEBUG', False)
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
@@ -76,11 +75,12 @@ INSTALLED_APPS = [
     'apps.webassets',
     'apps.hav_collections',
     'django_rq',
-    'raven.contrib.django.raven_compat',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -132,6 +132,7 @@ DATABASES = {
     'whav': parse_db_url(env('WHAV_DATABASE_URL'))
 }
 
+
 DATABASE_ROUTERS = [
     'hav.db_router.WhavDBRouter'
 ]
@@ -139,6 +140,7 @@ DATABASE_ROUTERS = [
 CACHES = {
     'default': env.cache()
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -204,6 +206,8 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = project_root(env('STATIC_ROOT', default='dist/static/'))
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = project_root(env('MEDIA_ROOT', default='dist/media/'))
@@ -226,22 +230,15 @@ LOGIN_URL = 'admin:login'
 
 ASGI_APPLICATION = "hav.routing.application"
 
+cache_config = env.cache('CACHE_URL')
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [env('CACHE_URL')],
+            "hosts": [f'{cache_config["LOCATION"]}'],
         },
     },
-}
-
-
-
-RAVEN_CONFIG = {
-    'dsn': env('SENTRY_DSN'),
-    # If you are using git, you can also automatically configure the
-    # release based on the git info.
-    # 'release': raven.fetch_git_sha(project_root()),
 }
 
 
@@ -249,6 +246,7 @@ RAVEN_CONFIG = {
 LOGGING_CONFIG = None
 
 LOGLEVEL = env('LOGLEVEL').upper()
+
 
 logging.config.dictConfig({
     'version': 1,
@@ -268,11 +266,6 @@ logging.config.dictConfig({
             'formatter': 'default',
             'stream': sys.stdout
         },
-        # Add Handler for Sentry for `warning` and above
-        'sentry': {
-            'level': 'WARNING',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-        },
         'django.server': DEFAULT_LOGGING['handlers']['django.server'],
     },
     'loggers': {
@@ -280,19 +273,19 @@ logging.config.dictConfig({
         '': {
             'level': 'WARNING',
             'handlers': [
-                'console', 'sentry'],
+                'console',
+            ],
         },
         # Our application code
         'apps': {
             'level': LOGLEVEL,
             'handlers': [
                 'console',
-                'sentry'
             ],
             # Avoid double logging because of root logger
             'propagate': False,
         },
-        # Prevent noisy modules from logging to Sentry
+        # Prevent noisy modules from logging
         # 'noisy_module': {
         #     'level': 'ERROR',
         #     'handlers': ['console'],
@@ -305,8 +298,8 @@ logging.config.dictConfig({
 })
 
 IMAGESERVER_CONFIG = {
-    'prefix': env('IMAGESERVER_URL_PREFIX'),
-    'secret': env('URL_SIGNATURE_KEY')
+    'prefix': env('IMAGINARY_URL_PREFIX'),
+    'secret': env('IMAGINARY_SECRET')
 }
 
 # These settings will change ....
@@ -343,3 +336,20 @@ RQ_QUEUES = {
         'USE_REDIS_CACHE': 'default',
     }
 }
+
+GRAPHENE = {
+    'SCHEMA': 'api.graphql.schema'
+}
+
+if env('SENTRY_DSN'):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.rq import RqIntegration
+    sentry_sdk.init(
+        env('SENTRY_DSN'),
+        integrations=[DjangoIntegration(), RqIntegration()]
+    )
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+

@@ -85,9 +85,11 @@ const reducer = (state = {}, action) => {
       };
     case RECEIVE_FILE_INFO:
       const data = action.payload;
+      const previousState = state[data.url] || {};
       return {
         ...state,
         [data.url]: {
+          ...previousState,
           isFile: true,
           isDirectory: false,
           ...data

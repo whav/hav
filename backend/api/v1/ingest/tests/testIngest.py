@@ -7,25 +7,26 @@ from django.conf import settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-
+import random
 from apps.media.models import License, MediaCreator, media_types
 from apps.sets.models import Node
 from apps.ingest.models import IngestQueue
 from apps.hav_collections.models import Collection
+from hav_utils.generate_image import generate_image
 
-# from sources.filesystem.api.serializers import
 
 def create_image(target):
-    from PIL import Image, ImageDraw
+    from PIL import ImageDraw
+    img = generate_image(os.path.basename(target))
 
     def point():
-        return random.randint(1, 254), random.randint(1, 254)
-    points = point(), point(), point()
+        return random.randint(1, img.width), random.randint(1, img.height)
 
-    im = Image.new('RGB', (255, 255))
-    draw = ImageDraw.Draw(im)
+    points = [point() for _ in range(random.randint(3, 10))]
+
+    draw = ImageDraw.Draw(img)
     draw.polygon(points)  # outline='red', fill='blue'
-    im.save(target)
+    img.save(target)
 
 
 class IngestTest(APITestCase):
@@ -72,15 +73,17 @@ class IngestTest(APITestCase):
                 'start': start.isoformat(),
                 'end': end.isoformat(),
                 'creators': [self.creator.pk],
-                'license': self.license.pk,
+                'media_license': self.license.pk,
                 'media_type': media_types[0][0],
-                'source': self.source_id
+                'source': self.source_id,
+                'media_title': 'some title'
         }
 
 
     def test_create_permissions(self):
         data = self.generateMediaData()
         response = self.client.post(self.url, data, format='json')
+        print(response.content)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         self.client.force_login(self.user)
@@ -91,6 +94,7 @@ class IngestTest(APITestCase):
         data = self.generateMediaData()
         self.client.force_login(self.user)
         response = self.client.post(self.url, data, format='json')
+        print(response.content)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 

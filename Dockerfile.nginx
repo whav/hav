@@ -1,0 +1,5 @@
+FROM nginx:stable
+RUN ["mkdir", "-p", "/www/webassets", "/www/cache"]
+
+COPY ./nginx.conf /etc/nginx/nginx.conf
+

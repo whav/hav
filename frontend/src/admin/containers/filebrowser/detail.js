@@ -5,17 +5,18 @@ import { clearIngestionQueue, queueForIngestion } from "../../ducks/ingest";
 
 class MediaDetail extends React.Component {
   render() {
-    const ingest = () => this.props.queueForIngestion(this.props.data.url);
-    return <DetailView {...this.props.data} ingest={ingest} />;
+    return <DetailView {...this.props.data} ingest={this.props.ingest} />;
   }
 }
 
 export default connect(
   null,
-  (dispatch, props) => ({
-    queueForIngestion: ingest_id => {
-      dispatch(clearIngestionQueue());
-      dispatch(queueForIngestion([ingest_id]));
-    }
-  })
+  (dispatch, props) => {
+    return {
+      ingest: () => {
+        dispatch(clearIngestionQueue());
+        dispatch(queueForIngestion([props.data.url]));
+      }
+    };
+  }
 )(MediaDetail);

@@ -12,7 +12,7 @@ import {
   handleIngestUpdate
 } from "../../ducks/ingest";
 import IngestForm, { TemplateForm, FormSet } from "../../ui/ingest/form";
-
+import FormikIngestForm from "./form";
 import PreviewImage from "../filebrowser/image_preview";
 import PreviewFolder from "../filebrowser/folder_preview";
 import { queueForIngestion } from "../../api/ingest";
@@ -174,6 +174,7 @@ class IngestQueue extends React.Component {
       );
       const forms = items.map((source, index) => {
         if (previously_ingested.indexOf(source) === -1) {
+          return <FormikIngestForm key={source} />;
           return (
             <IngestForm
               key={source}

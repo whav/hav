@@ -163,3 +163,9 @@ footer {
 .g-gallery-item img {
   border-radius: 2%;
 }
+
+.detail-preview .imageloader-failed svg {
+  height: 8rem;
+  width: auto;
+  margin-bottom: 2rem;
+}

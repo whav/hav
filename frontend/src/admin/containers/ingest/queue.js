@@ -57,7 +57,7 @@ class IngestQueue extends React.Component {
       formData: {},
       templateData: {},
       errors: {},
-      previously_ingested: [],
+      previously_ingested: {},
       sources: [...props.items]
     };
   }
@@ -145,7 +145,10 @@ class IngestQueue extends React.Component {
       .then(data => {
         this.props.onIngestSuccess(ingestId, data);
         this.setState(state => ({
-          previously_ingested: [...state.previously_ingested, ingestId]
+          previously_ingested: {
+            ...state.previously_ingested,
+            [ingestId]: data.url
+          }
         }));
       })
       .catch(err => {
@@ -173,12 +176,17 @@ class IngestQueue extends React.Component {
 
     const count = items.length;
 
+    // gather list of previously (before this component mounted) created media entries
+    // this is necessary to show some media entries inline and some at the end of the page
+    const previouslyIngestedMediaUrls = new Set(
+      Object.values(previously_ingested)
+    );
     const previouslyIngestedMediaEntries = created_media_entries.filter(
-      ma => items.indexOf(ma.source_id) === -1
+      ma => !previouslyIngestedMediaUrls.has(ma.url)
     );
 
     const forms = sources.map((source, index) => {
-      if (previously_ingested.indexOf(source) === -1) {
+      if (Object.keys(previously_ingested).indexOf(source) === -1) {
         return (
           <IngestForm
             key={source}
@@ -193,13 +201,19 @@ class IngestQueue extends React.Component {
               this.props.deleteIngestItem(source);
             }}
           >
-            {/* <span>Asset #{index + 1}</span> */}
             <PreviewImage source={source} />
           </IngestForm>
         );
       } else {
-        const media = created_media_entries.find(ma => ma.source_id === source);
+        const media = created_media_entries.find(
+          ma => ma.url === previously_ingested[source]
+        );
         if (media === undefined) {
+          console.log(
+            media,
+            created_media_entries,
+            previouslyIngestedMediaEntries
+          );
           return null;
         }
         return <PreviouslyIngestedMedia key={source} media={media} />;
@@ -242,7 +256,7 @@ class IngestQueueLoader extends React.Component {
   }
   render() {
     const { options, items } = this.props;
-    const loading = isEmpty(options) || isEmpty(items);
+    const loading = isEmpty(options) || !Array.isArray(items);
     return loading ? <LoadingIndicator /> : <IngestQueue {...this.props} />;
   }
 }

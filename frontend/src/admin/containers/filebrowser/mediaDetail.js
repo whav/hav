@@ -7,15 +7,21 @@ import { requestFile } from "../../ducks/browser";
 import { buildApiUrl } from "../../api/urls";
 
 class HavMediaDetail extends React.Component {
+  state = {
+    loading: true
+  };
+
   constructor(props) {
     super(props);
-    this.props.loadData();
+    this.props.loadData().then(() => this.setState({ loading: false }));
   }
   render() {
-    const { loading, data } = this.props;
+    const { loading } = this.state;
     if (loading) {
       return <Loading />;
     }
+    const { data } = this.props;
+
     return <MediaDetail details={data} />;
   }
 }
@@ -25,7 +31,6 @@ export default connect(
     const key = buildApiUrl(props.location.pathname);
     const data = state.repositories[key];
     return {
-      loading: data == undefined,
       data
     };
   },

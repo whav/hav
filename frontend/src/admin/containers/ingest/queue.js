@@ -58,7 +58,8 @@ class IngestQueue extends React.Component {
       templateData: {},
       errors: {},
       previously_ingested: {},
-      sources: [...props.items]
+      sources: [...props.items],
+      deletedSources: []
     };
   }
 
@@ -171,7 +172,8 @@ class IngestQueue extends React.Component {
       templateData,
       errors,
       previously_ingested,
-      sources
+      sources,
+      deletedSources
     } = this.state;
 
     const count = items.length;
@@ -186,6 +188,10 @@ class IngestQueue extends React.Component {
     );
 
     const forms = sources.map((source, index) => {
+      // filter out deleted
+      if (deletedSources.indexOf(source) !== -1) {
+        return <div key={source} />;
+      }
       if (Object.keys(previously_ingested).indexOf(source) === -1) {
         return (
           <IngestForm
@@ -199,6 +205,9 @@ class IngestQueue extends React.Component {
             onError={this.onError}
             onDelete={() => {
               this.props.deleteIngestItem(source);
+              this.setState(state => ({
+                deletedSources: [...state.deletedSources, source]
+              }));
             }}
           >
             <PreviewImage source={source} />

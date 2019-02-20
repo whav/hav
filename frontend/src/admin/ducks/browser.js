@@ -136,7 +136,7 @@ export const requestDirectoryAction = url => {
 
 export const requestFile = url => {
   return dispatch => {
-    requestDirectory(url).then(data => {
+    return requestDirectory(url).then(data => {
       dispatch({
         type: RECEIVE_FILE_INFO,
         payload: data

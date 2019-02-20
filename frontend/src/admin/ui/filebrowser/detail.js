@@ -38,13 +38,17 @@ class MediaDetail extends React.Component {
 
     const main = (
       <div className="content">
-        <div className="detail-preview">
-          <FallBackImageLoader
-            src={this.props.preview_url}
-            srcSet={this.props.srcset}
-            mime_type={this.props.mime_type}
-            alt={this.props.name}
-          />
+        <div className="columns">
+          <div className="column is-two-thirds">
+            <div className="detail-preview">
+              <FallBackImageLoader
+                src={this.props.preview_url}
+                srcSet={this.props.srcset}
+                mime_type={this.props.mime_type}
+                alt={this.props.name}
+              />
+            </div>
+          </div>
         </div>
         <table className="table is-striped">
           <tbody>

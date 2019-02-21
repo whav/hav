@@ -23,7 +23,7 @@ import { PreviouslyIngestedMedia } from "../../ui/ingest";
 import Sockette from "sockette";
 
 const initialFormValues = {
-  title: "",
+  media_title: "",
   description: "",
   creators: [],
   media_license: "",
@@ -144,23 +144,12 @@ class IngestQueue extends React.Component {
   };
 
   ingestItem = (ingestId, data) => {
-    console.log(data);
-    return;
-    this.clearErrors(ingestId);
-    let start, end;
+    console.log("Ingesting...", data);
 
-    // TODO: don't validate here
-    try {
-      [start, end] = parseDate(data.date);
-    } catch (e) {
-      this.onError(ingestId, { date: ["Invalid dates."] });
-    }
     let response = queueForIngestion(this.props.uuid, {
       source: ingestId,
       target: this.props.target,
-      ...data,
-      start,
-      end
+      ...data
     });
     response
       .then(data => {
@@ -186,7 +175,6 @@ class IngestQueue extends React.Component {
       created_media_entries = [],
       ws_url
     } = this.props;
-    console.log(options);
     const {
       formData,
       templateData,

@@ -76,8 +76,12 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
       <div className="columns">
         <div className="column">
           <BField label="License">
-            <Field component={SelectField} name="license" options={licenses} />
-            <ErrorMessage name="license" component="div" />
+            <Field
+              component={SelectField}
+              name="media_license"
+              options={licenses}
+            />
+            <ErrorMessage name="media_license" component="div" />
           </BField>
         </div>
         <div className="column">
@@ -142,14 +146,22 @@ const IngestForm = ({
     <Formik
       initialValues={initialValues}
       enableReinitialize={true}
-      onSubmit={onSubmit}
+      onSubmit={(data, actions) => {
+        onSubmit(data)
+          .catch(errors => {
+            console.warn(errors);
+            actions.setErrors(errors);
+          })
+          .finally(() => actions.setSubmitting(false));
+      }}
       render={({ errors, status, touched, isSubmitting }) => {
+        console.log(isSubmitting);
         return (
           <Form className="ingest-form">
-            <Persist name={persistName} />
+            {/* <Persist name={persistName} /> */}
             <BField label="Title">
-              <Field className="input" name="title" />
-              <ErrorMessage name="email" component="div" />
+              <Field className="input" name="media_title" />
+              <ErrorMessage name="media_title" component="div" />
             </BField>
             <BField label="Tags">
               <Field className="input" name="tags" />

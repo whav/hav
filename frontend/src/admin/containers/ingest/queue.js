@@ -11,7 +11,7 @@ import {
   deleteIngestItem,
   handleIngestUpdate
 } from "../../ducks/ingest";
-import { FormSet } from "../../ui/ingest/form";
+import FormSet from "../../ui/ingest/form";
 import IngestForm, { TemplateForm } from "./form";
 import PreviewImage from "../filebrowser/image_preview";
 import PreviewFolder from "../filebrowser/folder_preview";
@@ -144,6 +144,8 @@ class IngestQueue extends React.Component {
   };
 
   ingestItem = (ingestId, data) => {
+    console.log(data);
+    return;
     this.clearErrors(ingestId);
     let start, end;
 
@@ -184,7 +186,7 @@ class IngestQueue extends React.Component {
       created_media_entries = [],
       ws_url
     } = this.props;
-
+    console.log(options);
     const {
       formData,
       templateData,
@@ -214,18 +216,16 @@ class IngestQueue extends React.Component {
             key={source}
             source={source}
             persistName={source}
-            {...options}
-            // onChange={this.onChange}
-            // data={formData[source] || {}}
+            options={options}
             // errors={errors[source] || {}}
-            // onSubmit={() => this.ingestItem(source, formData[source] || {})}
             // onError={this.onError}
-            // onDelete={() => {
-            //   this.props.deleteIngestItem(source);
-            //   this.setState(state => ({
-            //     deletedSources: [...state.deletedSources, source]
-            //   }));
-            // }}
+            onSubmit={data => this.ingestItem(source, data)}
+            onDelete={() => {
+              this.props.deleteIngestItem(source);
+              this.setState(state => ({
+                deletedSources: [...state.deletedSources, source]
+              }));
+            }}
             initialValues={formData[source]}
           >
             <PreviewImage source={source} />
@@ -261,7 +261,7 @@ class IngestQueue extends React.Component {
         {/* template form if more than one ingest file */}
         {count > 1 ? (
           <TemplateForm
-            {...options}
+            options={options}
             data={templateData}
             apply={this.applyTemplate}
             onChange={this.onTemplateChange}

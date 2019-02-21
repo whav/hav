@@ -21,18 +21,77 @@ const SelectField = ({ options = [], multiple = false, field, form }) => {
       return { value: o.id, label: o.name };
     }
   });
+  const selectedValues = new Set(
+    Array.isArray(field.value) ? field.value : [field.value]
+  );
+  const selectedOptions = selectOptions.filter(o =>
+    selectedValues.has(o.value)
+  );
 
   return (
     <Select
       options={selectOptions}
       isMulti={multiple}
       name={field.name}
-      value={field.value}
+      value={selectedOptions}
       onChange={option => {
-        form.setFieldValue(field.name, option);
+        let value = option.value;
+        if (Array.isArray(option)) {
+          value = option.map(o => o.value);
+        }
+        form.setFieldValue(field.name, value);
       }}
       onBlur={field.onBlur}
     />
+  );
+};
+
+const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
+  return (
+    <React.Fragment>
+      <div className="columns">
+        <div className="column">
+          <BField label="Date">
+            <Field
+              className="input"
+              name="date"
+              placeholder="YYYY-MM-DD"
+              autoComplete="off"
+            />
+            <ErrorMessage name="date" component="div" />
+          </BField>
+        </div>
+        <div className="column">
+          <BField label="Creators">
+            <Field
+              component={SelectField}
+              name="creators"
+              multiple={true}
+              options={creators}
+            />
+            <ErrorMessage name="creators" component="div" />
+          </BField>
+        </div>
+      </div>
+      <div className="columns">
+        <div className="column">
+          <BField label="License">
+            <Field component={SelectField} name="license" options={licenses} />
+            <ErrorMessage name="license" component="div" />
+          </BField>
+        </div>
+        <div className="column">
+          <BField label="Original Media Type">
+            <Field
+              component={SelectField}
+              name="media_type"
+              options={media_types}
+            />
+            <ErrorMessage name="media_type" component="div" />
+          </BField>
+        </div>
+      </div>
+    </React.Fragment>
   );
 };
 
@@ -45,13 +104,7 @@ class TemplateForm extends React.Component {
   };
 
   render() {
-    const {
-      creators = [],
-      licenses = [],
-      media_types = [],
-      persistName = "template-form",
-      apply
-    } = this.props;
+    const { options, persistName = "template-form", apply } = this.props;
     return (
       <Formik
         initialValues={this.initialValues}
@@ -61,53 +114,7 @@ class TemplateForm extends React.Component {
         render={() => (
           <Form className="box ingest-template-form">
             <Persist name={persistName} />
-            <div className="columns">
-              <div className="column">
-                <BField label="Date">
-                  <Field
-                    className="input"
-                    name="date"
-                    placeholder="YYYY-MM-DD"
-                    autoComplete="off"
-                  />
-                  <ErrorMessage name="date" component="div" />
-                </BField>
-              </div>
-
-              <div className="column">
-                <BField label="Creators">
-                  <Field
-                    component={SelectField}
-                    name="creators"
-                    multiple={true}
-                    options={creators}
-                  />
-                  <ErrorMessage name="creators" component="div" />
-                </BField>
-              </div>
-
-              <div className="column">
-                <BField label="License">
-                  <Field
-                    component={SelectField}
-                    name="license"
-                    options={licenses}
-                  />
-                  <ErrorMessage name="creators" component="div" />
-                </BField>
-              </div>
-
-              <div className="column">
-                <BField label="Media Type">
-                  <Field
-                    component={SelectField}
-                    name="media_type"
-                    options={media_types}
-                  />
-                  <ErrorMessage name="creators" component="div" />
-                </BField>
-              </div>
-            </div>
+            <SharedFields {...options} />
             <div>
               <div className="field is-grouped is-grouped-right">
                 <p className="control">
@@ -125,16 +132,17 @@ class TemplateForm extends React.Component {
 }
 
 const IngestForm = ({
-  creators = [],
-  licenses = [],
-  media_types = [],
+  options,
   initialValues = {},
-  persistName = ""
+  persistName = "",
+  onSubmit,
+  onDelete
 }) => {
   return (
     <Formik
       initialValues={initialValues}
       enableReinitialize={true}
+      onSubmit={onSubmit}
       render={({ errors, status, touched, isSubmitting }) => {
         return (
           <Form className="ingest-form">
@@ -165,50 +173,29 @@ const IngestForm = ({
                 </BField>
               </div>
             </div>
-            <div className="columns">
+            <SharedFields {...options} />
+            <div className="columns is-desktop">
               <div className="column">
-                <BField label="Date">
-                  <Field
-                    className="input"
-                    name="date"
-                    placeholder="YYYY-MM-DD"
-                    autoComplete="off"
-                  />
-                  <ErrorMessage name="date" component="div" />
-                </BField>
+                <div className="control">
+                  <button
+                    className="button is-danger"
+                    type="button"
+                    onClick={onDelete}
+                  >
+                    <i className="delete" />
+                    Remove
+                  </button>
+                </div>
               </div>
-              <div className="column">
-                <BField label="Creators">
-                  <Field
-                    component={SelectField}
-                    name="creators"
-                    multiple={true}
-                    options={creators}
-                  />
-                  <ErrorMessage name="creators" component="div" />
-                </BField>
-              </div>
-            </div>
-            <div className="columns">
-              <div className="column">
-                <BField label="License">
-                  <Field
-                    component={SelectField}
-                    name="license"
-                    options={licenses}
-                  />
-                  <ErrorMessage name="license" component="div" />
-                </BField>
-              </div>
-              <div className="column">
-                <BField label="Original Media Type">
-                  <Field
-                    component={SelectField}
-                    name="media_type"
-                    options={media_types}
-                  />
-                  <ErrorMessage name="media_type" component="div" />
-                </BField>
+              <div className="column is-half has-text-right">
+                <button
+                  className={classnames("button is-primary is-active", {
+                    "is-loading": isSubmitting
+                  })}
+                  type="submit"
+                >
+                  Ingest
+                </button>
               </div>
             </div>
           </Form>

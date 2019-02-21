@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { saveIngestionData } from "../../ducks/ingest";
+import uuid from "uuid/v4";
 
 class Ingest extends React.Component {
   constructor(props) {
@@ -9,10 +10,19 @@ class Ingest extends React.Component {
     this.state = {
       name: ""
     };
+    this.inputRef = React.createRef();
+  }
+
+  componentDidMount() {
+    this.inputRef.current.focus();
+    // auto fill single ingest
+    if (this.props.initialItems.length === 1) {
+      this.setState({ name: uuid() }, () => this.saveData());
+    }
   }
 
   saveData = e => {
-    e.preventDefault();
+    e && e.preventDefault();
     this.props.saveIngestionData(
       this.props.target,
       this.props.initialItems,
@@ -39,6 +49,7 @@ class Ingest extends React.Component {
                 type="text"
                 onChange={e => this.setState({ name: e.target.value })}
                 value={this.state.name}
+                ref={this.inputRef}
                 required
               />
             </div>

@@ -11,8 +11,8 @@ import {
   deleteIngestItem,
   handleIngestUpdate
 } from "../../ducks/ingest";
-import IngestForm, { TemplateForm, FormSet } from "../../ui/ingest/form";
-import FormikIngestForm from "./form";
+import { FormSet } from "../../ui/ingest/form";
+import IngestForm, { TemplateForm } from "./form";
 import PreviewImage from "../filebrowser/image_preview";
 import PreviewFolder from "../filebrowser/folder_preview";
 import { queueForIngestion } from "../../api/ingest";
@@ -21,6 +21,16 @@ import parseDate from "../../utils/daterange";
 import { PreviouslyIngestedMedia } from "../../ui/ingest";
 
 import Sockette from "sockette";
+
+const initialFormValues = {
+  title: "",
+  description: "",
+  creators: [],
+  media_license: "",
+  tags: [],
+  date: "",
+  media_identifier: ""
+};
 
 class WSListener extends React.PureComponent {
   componentDidMount() {
@@ -53,24 +63,33 @@ class WSListener extends React.PureComponent {
 class IngestQueue extends React.Component {
   constructor(props) {
     super(props);
-    props.loadIngestData();
+    const formData = {};
+    props.items.forEach(k => (formData[k] = { ...initialFormValues }));
     this.state = {
-      formData: {},
+      formData,
       templateData: {},
       errors: {},
-      previously_ingested: []
+      previously_ingested: {},
+      sources: [...props.items],
+      deletedSources: []
     };
   }
 
-  applyTemplate = () => {
-    const data = this.state.templateData;
-
+  applyTemplate = data => {
+    const formData = {};
     this.props.items.forEach(k => {
-      this.onChange(k, { ...this.state.formData[k], ...data });
+      const fd = this.state.formData[k];
+      formData[k] = {
+        ...fd,
+        ...data
+      };
     });
+    console.log(formData);
+    this.setState({ formData });
   };
 
   onTemplateChange = data => {
+    console.log("Template:", data);
     this.setState(state => {
       return {
         templateData: {
@@ -145,7 +164,10 @@ class IngestQueue extends React.Component {
       .then(data => {
         this.props.onIngestSuccess(ingestId, data);
         this.setState(state => ({
-          previously_ingested: [...state.previously_ingested, ingestId]
+          previously_ingested: {
+            ...state.previously_ingested,
+            [ingestId]: data.url
+          }
         }));
       })
       .catch(err => {
@@ -163,74 +185,107 @@ class IngestQueue extends React.Component {
       ws_url
     } = this.props;
 
-    const { formData, templateData, errors, previously_ingested } = this.state;
-    const loading = isEmpty(options);
-    if (loading) {
-      return <LoadingIndicator />;
-    } else {
-      const count = items.length;
-      const media_entries = created_media_entries.filter(
-        ma => previously_ingested.indexOf(ma.source_id) === -1
-      );
-      const forms = items.map((source, index) => {
-        if (previously_ingested.indexOf(source) === -1) {
-          return <FormikIngestForm key={source} />;
-          return (
-            <IngestForm
-              key={source}
-              source={source}
-              {...options}
-              onChange={this.onChange}
-              data={formData[source] || {}}
-              errors={errors[source] || {}}
-              onSubmit={() => this.ingestItem(source, formData[source] || {})}
-              onError={this.onError}
-              onDelete={() => {
-                this.props.deleteIngestItem(source);
-              }}
-            >
-              {/* <span>Asset #{index + 1}</span> */}
-              <PreviewImage source={source} />
-            </IngestForm>
+    const {
+      formData,
+      templateData,
+      previously_ingested,
+      sources,
+      deletedSources
+    } = this.state;
+
+    const count = items.length;
+
+    // gather list of previously (before this component mounted) created media entries
+    // this is necessary to show some media entries inline and some at the end of the page
+    const previouslyIngestedMediaUrls = new Set(
+      Object.values(previously_ingested)
+    );
+    const previouslyIngestedMediaEntries = created_media_entries.filter(
+      ma => !previouslyIngestedMediaUrls.has(ma.url)
+    );
+    const forms = sources.map((source, index) => {
+      // filter out deleted
+      if (deletedSources.indexOf(source) !== -1) {
+        return <div key={source} />;
+      }
+      if (Object.keys(previously_ingested).indexOf(source) === -1) {
+        return (
+          <IngestForm
+            key={source}
+            source={source}
+            persistName={source}
+            {...options}
+            // onChange={this.onChange}
+            // data={formData[source] || {}}
+            // errors={errors[source] || {}}
+            // onSubmit={() => this.ingestItem(source, formData[source] || {})}
+            // onError={this.onError}
+            // onDelete={() => {
+            //   this.props.deleteIngestItem(source);
+            //   this.setState(state => ({
+            //     deletedSources: [...state.deletedSources, source]
+            //   }));
+            // }}
+            initialValues={formData[source]}
+          >
+            <PreviewImage source={source} />
+          </IngestForm>
+        );
+      } else {
+        const media = created_media_entries.find(
+          ma => ma.url === previously_ingested[source]
+        );
+        if (media === undefined) {
+          console.error(
+            "Media not found",
+            media,
+            created_media_entries,
+            previouslyIngestedMediaEntries
           );
-        } else {
-          const media = created_media_entries.find(
-            ma => ma.source_id === source
-          );
-          if (media === undefined) {
-            return null;
-          }
-          return <PreviouslyIngestedMedia key={source} media={media} />;
+          return null;
         }
-      });
-      return (
-        <div className="hav-ingest">
-          <WSListener ws_url={ws_url} onReceive={this.props.onIngestUpdate} />
-          <div className="box">
-            <h1 className="title">
-              {count === 1
-                ? "Single Item Ingestion"
-                : `Ingesting ${count} files.`}
-            </h1>
-            <PreviewFolder source={target} />
-          </div>
-          {/* template form if more than one ingest file */}
-          {count > 1 ? (
-            <TemplateForm
-              {...options}
-              data={templateData}
-              apply={this.applyTemplate}
-              onChange={this.onTemplateChange}
-            />
-          ) : null}
-          <FormSet>{forms}</FormSet>
-          <hr />
-          {media_entries.map(m => (
-            <PreviouslyIngestedMedia key={m.name} media={m} />
-          ))}
+        return <PreviouslyIngestedMedia key={source} media={media} />;
+      }
+    });
+    return (
+      <div className="hav-ingest">
+        <WSListener ws_url={ws_url} onReceive={this.props.onIngestUpdate} />
+        <div className="box">
+          <h1 className="title">
+            {count === 1
+              ? "Single Item Ingestion"
+              : `Ingesting ${count} files.`}
+          </h1>
+          <PreviewFolder source={target} />
         </div>
-      );
-    }
+        {/* template form if more than one ingest file */}
+        {count > 1 ? (
+          <TemplateForm
+            {...options}
+            data={templateData}
+            apply={this.applyTemplate}
+            onChange={this.onTemplateChange}
+          />
+        ) : null}
+        <FormSet>{forms}</FormSet>
+        <hr />
+        {previouslyIngestedMediaEntries.map(m => (
+          <PreviouslyIngestedMedia key={m.name} media={m} />
+        ))}
+      </div>
+    );
+  }
+}
+
+class IngestQueueLoader extends React.Component {
+  constructor(props) {
+    super(props);
+    props.loadIngestData();
+  }
+  render() {
+    const { options, items } = this.props;
+    const loading = isEmpty(options) || !Array.isArray(items);
+    return loading ? <LoadingIndicator /> : <IngestQueue {...this.props} />;
   }
 }
 
@@ -282,6 +337,6 @@ const Ingest = connect(
       }
     };
   }
-)(IngestQueue);
+)(IngestQueueLoader);
 
 export default Ingest;

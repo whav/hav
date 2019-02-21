@@ -59,8 +59,11 @@ const PreviouslyIngestedMedia = ({ media }) => {
         {media.msg ? <IngestionProgressDisplay msg={media.msg} /> : null}
         {media.description ? <p>{media.description}</p> : null}
         <p>{media.tags.join(", ")}</p>
-        <p>
-          <Link to={buildFrontendUrl(media.url)} className="button is-small">
+        <p className="has-text-right">
+          <Link
+            to={buildFrontendUrl(media.url)}
+            className="button is-small is-secondary"
+          >
             View on site
           </Link>
         </p>

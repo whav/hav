@@ -10,6 +10,7 @@ import Nav from "./containers/nav";
 import { routes, mainNav } from "./routes";
 import ScrollToTop from "./ui/scroll";
 import App from "./ui/index";
+import ErrorBoundary from "./ui/errors";
 
 const logo = require("../assets/logo.png");
 
@@ -31,21 +32,23 @@ const HavAdmin = ({ store }) => {
             </nav>
           </div>
           <div className="hav-admin-content">
-            <Route component={ScrollToTop} />
-            <Switch>
-              {routes.map((rc, index) => {
-                let { path, main, ...extra } = rc;
-                return (
-                  <Route
-                    key={index}
-                    exact={true}
-                    path={path}
-                    component={main}
-                    {...extra}
-                  />
-                );
-              })}
-            </Switch>
+            <ErrorBoundary>
+              <Route component={ScrollToTop} />
+              <Switch>
+                {routes.map((rc, index) => {
+                  let { path, main, ...extra } = rc;
+                  return (
+                    <Route
+                      key={index}
+                      exact={true}
+                      path={path}
+                      component={main}
+                      {...extra}
+                    />
+                  );
+                })}
+              </Switch>
+            </ErrorBoundary>
           </div>
         </App>
       </Router>

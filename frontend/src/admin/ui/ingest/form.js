@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 
 import Select from "react-select";
-import "react-select/dist/react-select.css";
 
 import "./ingest.css";
 
@@ -76,6 +75,7 @@ class CreatorSelect extends React.Component {
     return (
       <Field label="Creators" errors={errors}>
         <Select
+          isMulti={true}
           name={name || "creators"}
           className={classnames({ "is-danger": errors })}
           value={selectedOptions}

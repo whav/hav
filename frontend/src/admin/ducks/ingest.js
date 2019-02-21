@@ -152,9 +152,9 @@ const ingestionQueues = (state = {}, action) => {
         ...state,
         [uuid]: {
           ...state[uuid],
-          // ingestion_queue: state[uuid].ingestion_queue.filter(
-          //   s => s !== source_id
-          // ),
+          ingestion_queue: state[uuid].ingestion_queue.filter(
+            s => s !== source_id
+          ),
           created_media_entries: [
             {
               ...payload,

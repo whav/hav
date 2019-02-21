@@ -5,6 +5,7 @@
 form.ingest-template-form {
   background-color: rgba(128, 128, 128, 0.178);
 }
+
 form.ingest-form {
   margin-top: 1rem;
 }
@@ -17,7 +18,7 @@ div.Select.is-danger > .Select-control {
   opacity: 1;
 }
 
-.ingest-form svg {
+.ingest-form-preview > svg {
   display: block;
   width: 5em;
   height: auto;

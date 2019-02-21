@@ -59,7 +59,15 @@ class HavMediaDetail extends React.Component {
     return (
       <div className="content">
         <h1>#{details.name}</h1>
-        <WebAsset assets={webassets} archive_mime_type={mime_type} />
+        <div className="columns">
+          <div className="column is-two-thirds">
+            {webassets.length > 0 ? (
+              <WebAsset assets={webassets} archive_mime_type={mime_type} />
+            ) : (
+              <div>No webassets available...</div>
+            )}
+          </div>
+        </div>
 
         {archive_files.map((af, index) => (
           <ArchiveFileDetails key={index} {...af} />

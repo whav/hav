@@ -24,6 +24,7 @@ const reducer = (state = {}, action) => {
           ...previous_data,
           isFile: true,
           isDirectory: false,
+          selectable: f.ingestable || false,
           ...f
         };
       });
@@ -32,6 +33,7 @@ const reducer = (state = {}, action) => {
         mapping[directory.url] = {
           isFile: false,
           isDirectory: true,
+          selectable: directory.ingestable || false,
           ...directory
         };
       });
@@ -44,6 +46,7 @@ const reducer = (state = {}, action) => {
           ...(state[directory.url] || {}),
           isFile: false,
           isDirectory: true,
+          selectable: directory.ingestable || false,
           ...directory
         };
       });
@@ -76,11 +79,15 @@ const reducer = (state = {}, action) => {
         ...mapping
       };
     case SELECT_ITEMS:
+      const toBeSelectedIDS = action.item_ids.filter(
+        id => state[id] && state[id].selectable
+      );
+
       return {
         ...state,
         [action.container_id]: {
           ...state[action.container_id],
-          selected: action.item_ids
+          selected: toBeSelectedIDS
         }
       };
     case RECEIVE_FILE_INFO:
@@ -136,7 +143,7 @@ export const requestDirectoryAction = url => {
 
 export const requestFile = url => {
   return dispatch => {
-    requestDirectory(url).then(data => {
+    return requestDirectory(url).then(data => {
       dispatch({
         type: RECEIVE_FILE_INFO,
         payload: data

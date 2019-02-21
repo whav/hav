@@ -121,7 +121,7 @@ class BaseDirectorySerializer(FileBrowserBaseSerializer):
         return self.get_url_for_path(path)
 
     def get_ingestable(self, _):
-        return True
+        return False
 
     def get_isFile(self, _):
         return False

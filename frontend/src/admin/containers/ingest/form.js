@@ -95,6 +95,7 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
               name="date"
               placeholder="YYYY-MM-DD"
               autoComplete="off"
+              required
             />
             <ErrorMessage name="date" component="div" />
           </BField>
@@ -106,6 +107,7 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
               name="creators"
               multiple={true}
               options={creators}
+              required
             />
             <ErrorMessage name="creators" component="div" />
           </BField>
@@ -118,6 +120,7 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
               component={SelectField}
               name="media_license"
               options={licenses}
+              required
             />
             <ErrorMessage name="media_license" component="div" />
           </BField>

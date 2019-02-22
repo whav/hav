@@ -56,7 +56,7 @@ def create_thumbnail(source, target):
     duration = FFProbe(source).duration
     args = [
         "-y",
-        "-ss", str(int(duration / 2)),
+        # "-ss", str(int(duration / 2)),
         "-i", source,
         "-f", "mjpeg",
         "-vframes", "1",

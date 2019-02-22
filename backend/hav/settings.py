@@ -21,6 +21,8 @@ from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
 # this is needed to let daphne install the twisted reactor
 import daphne.server # noqa
 
+# register custom mimetypes
+import hav_utils.mimetypes # noqa
 
 project_root = environ.Path(__file__) - 3
 django_root = environ.Path(__file__) - 2

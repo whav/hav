@@ -17,7 +17,7 @@ class ArchiveFile(models.Model):
     source_id = models.CharField(max_length=200, blank=True)
 
     hash = models.CharField(max_length=40, unique=True, db_index=True)
-    size = models.IntegerField()
+    size = models.BigIntegerField()
 
     archived_at = models.DateTimeField(auto_now_add=True)
     archived_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)

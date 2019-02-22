@@ -28,7 +28,6 @@ module.exports = opts => {
   return {
     context: PROJECT_ROOT,
     entry: {
-      hav: ["./src/hav/index"],
       havAdmin: ["./src/admin/index"]
     },
     output: {

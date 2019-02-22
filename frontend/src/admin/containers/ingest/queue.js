@@ -21,15 +21,19 @@ import parseDate from "../../utils/daterange";
 import { PreviouslyIngestedMedia } from "../../ui/ingest";
 
 import Sockette from "sockette";
+import parseDateToRange from "../../utils/daterange";
 
 const initialFormValues = {
   media_title: "",
-  description: "",
-  creators: [],
+  media_description: "",
+  media_identifier: "",
   media_license: "",
-  tags: [],
+  media_tags: [],
+  media_type: "",
+  creators: [],
   date: "",
-  media_identifier: ""
+  start: "",
+  end: ""
 };
 
 class WSListener extends React.PureComponent {
@@ -84,72 +88,21 @@ class IngestQueue extends React.Component {
         ...data
       };
     });
-    console.log(formData);
     this.setState({ formData });
   };
 
-  onTemplateChange = data => {
-    console.log("Template:", data);
-    this.setState(state => {
-      return {
-        templateData: {
-          ...state.templateData,
-          ...data
-        }
-      };
-    });
-  };
-
-  onError = (source, errors) => {
-    // patch start and end errors to date
-    let custom_errors = { ...errors };
-    const date_errors = uniq([
-      ...(errors.start || []),
-      ...(errors.end || []),
-      ...(errors.date || [])
-    ]);
-    delete custom_errors.start;
-    delete custom_errors.end;
-    custom_errors.date = date_errors;
-    this.setState({
-      errors: {
-        ...this.state.errors,
-
-        [source]: custom_errors
-      }
-    });
-  };
-
-  clearErrors = source => {
-    this.setState({
-      errors: {
-        ...this.state.errors,
-        [source]: {}
-      }
-    });
-  };
-
-  onChange = (source, data) => {
-    this.setState(state => {
-      return {
-        formData: {
-          ...state.formData,
-          [source]: {
-            ...state.formData[source],
-            ...data
-          }
-        }
-      };
-    });
-  };
-
   ingestItem = (ingestId, data) => {
-    console.log("Ingesting...", data);
+    console.group("Ingest");
+    console.log(data);
+    console.groupEnd();
+    const [start, end] = parseDateToRange(data.date);
 
     let response = queueForIngestion(this.props.uuid, {
       source: ingestId,
       target: this.props.target,
-      ...data
+      ...data,
+      start: start.toISOString(),
+      end: end.toISOString()
     });
     response
       .then(data => {
@@ -203,10 +156,8 @@ class IngestQueue extends React.Component {
           <IngestForm
             key={source}
             source={source}
-            persistName={source}
+            // persistName={source}
             options={options}
-            // errors={errors[source] || {}}
-            // onError={this.onError}
             onSubmit={data => this.ingestItem(source, data)}
             onDelete={() => {
               this.props.deleteIngestItem(source);
@@ -253,6 +204,7 @@ class IngestQueue extends React.Component {
             data={templateData}
             apply={this.applyTemplate}
             onChange={this.onTemplateChange}
+            initialValues={{ ...initialFormValues }}
           />
         ) : null}
         <FormSet>{forms}</FormSet>

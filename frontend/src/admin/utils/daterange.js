@@ -16,7 +16,7 @@ const resolutions = [
 const parseDateToRange = date_string => {
   let m = date_string.match(ISO_8601);
   if (m === null) {
-    throw "invalid date";
+    throw new Error("invalid date");
   }
 
   let partial_matches = Object.keys(m)
@@ -26,15 +26,14 @@ const parseDateToRange = date_string => {
 
   const resolution = resolutions[partial_matches.length - 1];
 
-  console.warn(`specifity for ${partial_matches[0]} is ${resolution}`);
+  // console.warn(`specifity for ${partial_matches[0]} is ${resolution}`);
 
   const dt = DateTime.fromISO(date_string);
 
   if (dt.invalid) {
-    throw dt.invalidReason || dt.invalid;
+    throw new Error(dt.invalidReason || dt.invalid);
   }
-
-  return [dt, dt.endOf(resolution)];
+  return [dt.toJSDate(), dt.endOf(resolution).toJSDate()];
 };
 
 export default parseDateToRange;

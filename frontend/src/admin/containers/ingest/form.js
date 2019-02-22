@@ -1,8 +1,14 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import {
+  Formik,
+  Form,
+  Field,
+  ErrorMessage as FormikErrorMessage
+} from "formik";
 import classnames from "classnames";
 import Select from "react-select";
 import { Persist } from "formik-persist";
+import parseDateToRange from "../../utils/daterange";
 
 const BField = ({ label = "", children }) => {
   return (
@@ -10,6 +16,37 @@ const BField = ({ label = "", children }) => {
       {label ? <label className="label">{label}</label> : null}
       <div className={classnames("control")}>{children}</div>
     </div>
+  );
+};
+
+const ErrorMessage = props => (
+  <FormikErrorMessage
+    {...props}
+    render={msg => <p className="help is-danger">{msg}</p>}
+  />
+);
+
+const DateField = ({ field, form, ...props }) => {
+  console.log("Date value...", field.value);
+  return (
+    <input
+      {...props}
+      value={field.value}
+      name={field.name}
+      onBlur={() => form.setFieldTouched(field.name, true)}
+      onChange={e => {
+        const value = e.target.value;
+        try {
+          const [start, end] = parseDateToRange(value);
+          console.log(start, end);
+        } catch (e) {
+          console.error(e);
+          form.setFieldError(field.name, "Invalid date format.");
+        } finally {
+          form.setFieldValue(field.name, value);
+        }
+      }}
+    />
   );
 };
 
@@ -54,6 +91,7 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
           <BField label="Date">
             <Field
               className="input"
+              component={DateField}
               name="date"
               placeholder="YYYY-MM-DD"
               autoComplete="off"
@@ -135,87 +173,93 @@ class TemplateForm extends React.Component {
   }
 }
 
-const IngestForm = ({
-  options,
-  initialValues = {},
-  persistName = "",
-  onSubmit,
-  onDelete
-}) => {
-  return (
-    <Formik
-      initialValues={initialValues}
-      enableReinitialize={true}
-      onSubmit={(data, actions) => {
-        onSubmit(data)
-          .catch(errors => {
-            console.warn(errors);
-            actions.setErrors(errors);
-          })
-          .finally(() => actions.setSubmitting(false));
-      }}
-      render={({ errors, status, touched, isSubmitting }) => {
-        console.log(isSubmitting);
-        return (
-          <Form className="ingest-form">
-            {/* <Persist name={persistName} /> */}
-            <BField label="Title">
-              <Field className="input" name="media_title" />
-              <ErrorMessage name="media_title" component="div" />
-            </BField>
-            <BField label="Tags">
-              <Field className="input" name="tags" />
-              <ErrorMessage name="tags" component="div" />
-            </BField>
-            <div className="columns">
-              <div className="column">
-                <BField label="Description">
-                  <Field
-                    component="textarea"
-                    className="textarea"
-                    name="media_description"
-                  />
-                  <ErrorMessage name="description" component="div" />
-                </BField>
+class IngestForm extends React.Component {
+  submit = (data, actions) => {
+    console.log("Submitting");
+    // throw new Error("NotImplementedYet");
+    this.props
+      .onSubmit(data)
+      .catch(errors => {
+        let formikErrors = {};
+        Object.entries(errors).forEach(
+          ([key, errs]) => (formikErrors[key] = errs.join(" "))
+        );
+        console.warn(errors, formikErrors);
+
+        actions.setErrors(formikErrors);
+      })
+      .finally(() => actions.setSubmitting(false));
+  };
+
+  render() {
+    const { options, initialValues = {}, persistName, onDelete } = this.props;
+    return (
+      <Formik
+        initialValues={initialValues}
+        enableReinitialize={true}
+        onSubmit={this.submit}
+        render={({ errors, status, touched, isSubmitting }) => {
+          return (
+            <Form className="ingest-form">
+              {persistName && <Persist name={persistName} />}
+              <BField label="Title">
+                <Field className="input" name="media_title" />
+                <ErrorMessage name="media_title" component="div" />
+              </BField>
+              <BField label="Tags">
+                <Field className="input" name="tags" />
+                <ErrorMessage name="tags" component="div" />
+              </BField>
+              <div className="columns">
+                <div className="column">
+                  <BField label="Description">
+                    <Field
+                      component="textarea"
+                      className="textarea"
+                      name="media_description"
+                    />
+                    <ErrorMessage name="description" component="div" />
+                  </BField>
+                </div>
+                <div className="column">
+                  <BField label="Identifier">
+                    <Field className="input" name="media_identifier" />
+                    <ErrorMessage name="description" component="div" />
+                  </BField>
+                </div>
               </div>
-              <div className="column">
-                <BField label="Identifier">
-                  <Field className="input" name="media_identifier" />
-                  <ErrorMessage name="description" component="div" />
-                </BField>
-              </div>
-            </div>
-            <SharedFields {...options} />
-            <div className="columns is-desktop">
-              <div className="column">
-                <div className="control">
+              <SharedFields {...options} />
+              <div className="columns is-desktop">
+                <div className="column">
+                  <div className="control">
+                    <button
+                      className="button is-danger"
+                      type="button"
+                      onClick={onDelete}
+                    >
+                      <i className="delete" />
+                      Remove
+                    </button>
+                  </div>
+                </div>
+                <div className="column is-half has-text-right">
                   <button
-                    className="button is-danger"
-                    type="button"
-                    onClick={onDelete}
+                    className={classnames("button is-primary is-active", {
+                      "is-loading": isSubmitting
+                    })}
+                    type="submit"
                   >
-                    <i className="delete" />
-                    Remove
+                    Ingest
                   </button>
                 </div>
               </div>
-              <div className="column is-half has-text-right">
-                <button
-                  className={classnames("button is-primary is-active", {
-                    "is-loading": isSubmitting
-                  })}
-                  type="submit"
-                >
-                  Ingest
-                </button>
-              </div>
-            </div>
-          </Form>
-        );
-      }}
-    />
-  );
-};
+            </Form>
+          );
+        }}
+      />
+    );
+  }
+}
 
 export default ({ children, ...props }) => (
   <div className="box is-outlined">

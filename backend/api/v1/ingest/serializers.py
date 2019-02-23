@@ -11,7 +11,7 @@ from api.v1.havBrowser.serializers import SimpleHAVMediaSerializer, HAVMediaSeri
 from apps.archive.operations.hash import generate_hash
 from apps.ingest.models import IngestQueue
 from apps.sets.models import Node
-from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License
+from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License, MediaType
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     InternalIngestHyperlinkField, IngestionReferenceField
 
@@ -76,7 +76,7 @@ class IngestSerializer(serializers.Serializer):
 
     media_license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
     media_title = serializers.CharField(max_length=255)
-    media_type = serializers.ChoiceField(choices=Media.MEDIA_TYPE_CHOICES)
+    media_type = serializers.PrimaryKeyRelatedField(queryset=MediaType.objects.all())
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
     media_tags = serializers.ListField(child=serializers.CharField(max_length=255), required=False)

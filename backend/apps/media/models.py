@@ -7,8 +7,6 @@ from apps.sets.models import Node
 from apps.archive.models import ArchiveFile
 from apps.hav_collections.models import Collection
 
-from .types import media_types
-
 
 class MediaType(models.Model):
     TYPE_CHOICES = [
@@ -79,8 +77,6 @@ class MediaManager(models.Manager):
 
 
 class Media(models.Model):
-
-    MEDIA_TYPE_CHOICES = media_types
 
     title = models.CharField('title', max_length=255, blank=True)
     description = models.TextField('description', blank=True)

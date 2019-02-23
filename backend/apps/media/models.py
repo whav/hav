@@ -10,6 +10,18 @@ from apps.hav_collections.models import Collection
 from .types import media_types
 
 
+class MediaType(models.Model):
+    TYPE_CHOICES = [
+        (1, 'analog'),
+        (2, 'digital')
+    ]
+    type = models.IntegerField(choices=TYPE_CHOICES)
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.get_type_display()}/{self.name}'
+
+
 class MediaCreator(models.Model):
     first_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100)
@@ -83,7 +95,7 @@ class Media(models.Model):
 
     source = models.CharField(max_length=255, blank=True)
 
-    original_media_type = models.IntegerField(choices=MEDIA_TYPE_CHOICES, default=1)
+    original_media_type = models.ForeignKey(MediaType, on_delete=models.PROTECT)
     original_media_description = models.TextField(blank=True)
     original_media_identifier = models.CharField(blank=True, max_length=200)
 

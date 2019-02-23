@@ -3,25 +3,8 @@ import filesize from "filesize";
 import { FallBackImageLoader } from "./index";
 import Button from "../components/buttons";
 import { Header, FileBrowserInterface } from "./index";
-import { MdRecentActors } from "react-icons/md";
 
-const ExifTable = ({ data = {} }) => {
-  return (
-    <React.Fragment>
-      <tr>
-        <th colSpan={2}>EXIF Data</th>
-      </tr>
-      {Object.entries(data).map(([key, value], index) => {
-        return (
-          <tr key={key}>
-            <td>{key}</td>
-            <td>{value}</td>
-          </tr>
-        );
-      })}
-    </React.Fragment>
-  );
-};
+const Title = ({ children }) => <h3 className="title is-4">{children}</h3>;
 
 const Table = ({ rows = [] }) => (
   <div className="table-container">
@@ -68,11 +51,11 @@ class MediaDetail extends React.Component {
           </div>
         </div>
         {/* <div style={{ height: "5em", border: "2px solid black" }} /> */}
-        <h3>File Information</h3>
+        <Title>File Information</Title>
         <Table rows={Object.entries(tableProps)} />
         {this.props.meta ? (
           <React.Fragment>
-            <h3>EXIF Data</h3>
+            <Title>EXIF Data</Title>
 
             <Table rows={Object.entries(this.props.meta)} />
           </React.Fragment>

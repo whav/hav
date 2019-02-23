@@ -46,8 +46,9 @@ class MediaToCreator(models.Model):
 
 
 class License(models.Model):
-    name = models.CharField(max_length=100)
-    short_name = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
+    short_name = models.CharField(max_length=40, unique=True)
+    href = models.URLField(blank=True)
 
     def __str__(self):
         return self.short_name

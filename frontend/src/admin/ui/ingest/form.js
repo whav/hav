@@ -106,8 +106,8 @@ class MediaTypeSelect extends React.Component {
           >
             <option value="" />
             {types.map(t => (
-              <option key={t[0]} value={t[0]}>
-                {t[1]}
+              <option key={t.id} value={t.id}>
+                {t.name}
               </option>
             ))}
           </select>

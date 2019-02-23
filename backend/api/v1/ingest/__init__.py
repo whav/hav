@@ -3,12 +3,12 @@ from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Count
-from apps.media.models import MediaCreator, MediaCreatorRole, License, Media
+from apps.media.models import MediaCreator, MediaCreatorRole, License, Media, MediaType
 from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin
 from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, \
     PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, \
-    SimpleIngestQueueSerializer, IngestSerializer, SimpleMediaSerializer
+    SimpleIngestQueueSerializer, IngestSerializer, SimpleMediaSerializer, MediaTypeSerializer
 
 
 class IngestOptionsView(IncomingBaseMixin, APIView):
@@ -17,7 +17,7 @@ class IngestOptionsView(IncomingBaseMixin, APIView):
             "creators": [{'id': mc.pk, 'name': str(mc)} for mc in MediaCreator.objects.all()],
             "roles": MediaCreatorRoleSerializer(MediaCreatorRole.objects.all(), many=True).data,
             "licenses": MediaLicenseSerializer(License.objects.all(), many=True).data,
-            "media_types": Media.MEDIA_TYPE_CHOICES
+            "media_types": MediaTypeSerializer(MediaType.objects.all(), many=True).data
         })
 
 

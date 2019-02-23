@@ -44,7 +44,7 @@ class MediaDetail extends React.Component {
               <FallBackImageLoader
                 src={this.props.preview_url}
                 srcSet={this.props.srcset}
-                mime_type={this.props.mime_type}
+                mime_type={this.props.mime}
                 alt={this.props.name}
               />
             </div>

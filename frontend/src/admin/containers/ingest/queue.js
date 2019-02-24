@@ -33,7 +33,8 @@ const initialFormValues = {
   creators: [],
   date: "",
   start: "",
-  end: ""
+  end: "",
+  tags: []
 };
 
 class WSListener extends React.PureComponent {

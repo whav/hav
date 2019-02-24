@@ -6,9 +6,10 @@ import {
   ErrorMessage as FormikErrorMessage
 } from "formik";
 import classnames from "classnames";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import { Persist } from "formik-persist";
 import parseDateToRange from "../../utils/daterange";
+import TagInput from "../../ui/components/taginput";
 
 const BField = ({ label = "", children }) => {
   return (
@@ -76,6 +77,20 @@ const SelectField = ({ options = [], multiple = false, field, form }) => {
         if (Array.isArray(option)) {
           value = option.map(o => o.value);
         }
+        form.setFieldValue(field.name, value);
+      }}
+      onBlur={field.onBlur}
+    />
+  );
+};
+
+const TagField = ({ field, form, ...props }) => {
+  return (
+    <TagInput
+      {...props}
+      name={field.name}
+      value={field.value}
+      onChange={value => {
         form.setFieldValue(field.name, value);
       }}
       onBlur={field.onBlur}
@@ -210,7 +225,7 @@ class IngestForm extends React.Component {
                 <ErrorMessage name="media_title" component="div" />
               </BField>
               <BField label="Tags">
-                <Field className="input" name="tags" />
+                <Field component={TagField} className="input" name="tags" />
                 <ErrorMessage name="tags" component="div" />
               </BField>
               <div className="columns">

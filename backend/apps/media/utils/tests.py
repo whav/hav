@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.contrib.auth.models import User
 
-from apps.media.models import Media, MediaCreator, License
+from apps.media.models import Media, MediaCreator, License, MediaType
 from apps.sets.models import Node
 
 
@@ -11,7 +11,7 @@ def generate_test_media():
     creator, _ = MediaCreator.objects.get_or_create(first_name='Tester', last_name='Testeroo')
     user, _ = User.objects.get_or_create(username='tester', email='tester@example.com')
     license, _ = License.objects.get_or_create(short_name='WTFPL')
-
+    media_type = MediaType.objects.create(type=1, name='testtype')
     node = Node.add_root(name='TestingCollection')
 
 
@@ -23,7 +23,8 @@ def generate_test_media():
             timezone.now() - timedelta(hours=2)
         ),
         set=node,
-        creators=[creator]
+        creators=[creator],
+        original_media_type=media_type
     )
 
 

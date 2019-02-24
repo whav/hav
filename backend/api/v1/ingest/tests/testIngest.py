@@ -1,14 +1,13 @@
 from datetime import datetime, timedelta
 from uuid import uuid4
 import os
-import random
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 import random
-from apps.media.models import License, MediaCreator, media_types
+from apps.media.models import License, MediaCreator, MediaType
 from apps.sets.models import Node
 from apps.ingest.models import IngestQueue
 from apps.hav_collections.models import Collection
@@ -42,6 +41,7 @@ class IngestTest(APITestCase):
             name='Testcollection',
             root_node=self.target,
         )
+        self.media_type = MediaType.objects.create(type=1, name='testtype')
         self.collection.administrators.set([self.user])
         self.source_id = self.generate_source_id()
         self.queue = IngestQueue.objects.create(target=self.target, created_by=self.user, ingestion_queue=[self.source_id])
@@ -74,7 +74,7 @@ class IngestTest(APITestCase):
                 'end': end.isoformat(),
                 'creators': [self.creator.pk],
                 'media_license': self.license.pk,
-                'media_type': media_types[0][0],
+                'media_type': self.media_type.pk,
                 'source': self.source_id,
                 'media_title': 'some title'
         }

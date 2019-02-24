@@ -11,7 +11,7 @@ def generate_test_media():
     creator, _ = MediaCreator.objects.get_or_create(first_name='Tester', last_name='Testeroo')
     user, _ = User.objects.get_or_create(username='tester', email='tester@example.com')
     license, _ = License.objects.get_or_create(short_name='WTFPL')
-    media_type = MediaType.objects.create(type=1, name='testtype')
+    media_type, _ = MediaType.objects.get_or_create(type=1, name='testtype')
     node = Node.add_root(name='TestingCollection')
 
 

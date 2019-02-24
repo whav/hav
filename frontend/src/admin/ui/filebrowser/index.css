@@ -29,6 +29,13 @@
   bottom: 0;
 }
 
+.filebrowser table {
+  table-layout: fixed;
+  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
 /*Gallery Style*/
 .g-gallery {
   display: flex;

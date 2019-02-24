@@ -4,23 +4,23 @@ import { FallBackImageLoader } from "./index";
 import Button from "../components/buttons";
 import { Header, FileBrowserInterface } from "./index";
 
-const ExifTable = ({ data = {} }) => {
-  return (
-    <React.Fragment>
-      <tr>
-        <th colSpan={2}>EXIF Data</th>
-      </tr>
-      {Object.entries(data).map(([key, value], index) => {
-        return (
-          <tr key={key}>
-            <td>{key}</td>
-            <td>{value}</td>
+const Title = ({ children }) => <h3 className="title is-4">{children}</h3>;
+
+const Table = ({ rows = [] }) => (
+  <div className="table-container">
+    <table className="table is-striped is-bordered is-narrow is-hoverable">
+      <tbody>
+        {rows.map((row_items, index) => (
+          <tr key="index">
+            {row_items.map((r, i) => (
+              <td key={i}>{r}</td>
+            ))}
           </tr>
-        );
-      })}
-    </React.Fragment>
-  );
-};
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
 
 class MediaDetail extends React.Component {
   render() {
@@ -37,7 +37,7 @@ class MediaDetail extends React.Component {
     ) : null;
 
     const main = (
-      <div className="content">
+      <React.Fragment>
         <div className="columns">
           <div className="column is-two-thirds">
             <div className="detail-preview">
@@ -50,21 +50,18 @@ class MediaDetail extends React.Component {
             </div>
           </div>
         </div>
-        <table className="table is-striped">
-          <tbody>
-            <tr>
-              <th colSpan={2}>File Information</th>
-            </tr>
-            {Object.entries(tableProps).map(([key, value]) => (
-              <tr key={key}>
-                <td>{key}</td>
-                <td>{value}</td>
-              </tr>
-            ))}
-            {this.props.meta ? <ExifTable data={this.props.meta} /> : null}
-          </tbody>
-        </table>
-      </div>
+        {/* <div style={{ height: "5em", border: "2px solid black" }} /> */}
+        <Title>File Information</Title>
+        <Table rows={Object.entries(tableProps)} />
+        {this.props.meta ? (
+          <React.Fragment>
+            <Title>EXIF Data</Title>
+
+            <Table rows={Object.entries(this.props.meta)} />
+          </React.Fragment>
+        ) : null}
+        {/* {this.props.meta ? <ExifTable data={this.props.meta} /> : null} */}
+      </React.Fragment>
     );
 
     return (

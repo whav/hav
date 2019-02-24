@@ -7,7 +7,17 @@ from apps.sets.models import Node
 from apps.archive.models import ArchiveFile
 from apps.hav_collections.models import Collection
 
-from .types import media_types
+
+class MediaType(models.Model):
+    TYPE_CHOICES = [
+        (1, 'analog'),
+        (2, 'digital')
+    ]
+    type = models.IntegerField(choices=TYPE_CHOICES)
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.get_type_display()}/{self.name}'
 
 
 class MediaCreator(models.Model):
@@ -46,8 +56,9 @@ class MediaToCreator(models.Model):
 
 
 class License(models.Model):
-    name = models.CharField(max_length=100)
-    short_name = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200)
+    short_name = models.CharField(max_length=40, unique=True)
+    href = models.URLField(blank=True)
 
     def __str__(self):
         return self.short_name
@@ -67,8 +78,6 @@ class MediaManager(models.Manager):
 
 class Media(models.Model):
 
-    MEDIA_TYPE_CHOICES = media_types
-
     title = models.CharField('title', max_length=255, blank=True)
     description = models.TextField('description', blank=True)
 
@@ -82,7 +91,7 @@ class Media(models.Model):
 
     source = models.CharField(max_length=255, blank=True)
 
-    original_media_type = models.IntegerField(choices=MEDIA_TYPE_CHOICES, default=1)
+    original_media_type = models.ForeignKey(MediaType, on_delete=models.PROTECT)
     original_media_description = models.TextField(blank=True)
     original_media_identifier = models.CharField(blank=True, max_length=200)
 

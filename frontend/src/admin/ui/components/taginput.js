@@ -19,12 +19,14 @@ export default class TagInput extends React.Component {
   };
 
   handleChange = selected => {
+    // always map to a list of strings
     this.props.onChange(selected.map(optToString));
   };
 
   handleInputChange = inputValue => {
     this.setState({ inputValue });
   };
+
   handleKeyDown = event => {
     const { inputValue } = this.state;
     if (!inputValue) return;
@@ -40,9 +42,11 @@ export default class TagInput extends React.Component {
         event.preventDefault();
     }
   };
+
   render() {
     const { inputValue } = this.state;
-    const { value, onChange, placeholder = "" } = this.props;
+    const { value, placeholder = "" } = this.props;
+    // map values to the expected format for react-select
     const internalValue = value.map(stringToOpt);
     return (
       <CreatableSelect

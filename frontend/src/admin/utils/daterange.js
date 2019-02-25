@@ -4,13 +4,13 @@ import { DateTime } from "luxon";
 const ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d(:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?)?$/i;
 
 const resolutions = [
-  "year",
-  "month",
-  "day",
-  "hour",
-  "minute",
-  "second",
-  "millisecond"
+  "years",
+  "months",
+  "days",
+  "hours",
+  "minutes",
+  "seconds",
+  "milliseconds"
 ];
 
 const parseDateToRange = date_string => {
@@ -25,15 +25,20 @@ const parseDateToRange = date_string => {
     .filter(x => x !== undefined);
 
   const resolution = resolutions[partial_matches.length - 1];
-
   // console.warn(`specifity for ${partial_matches[0]} is ${resolution}`);
 
   const dt = DateTime.fromISO(date_string);
-
   if (dt.invalid) {
     throw new Error(dt.invalidReason || dt.invalid);
   }
-  return [dt.toJSDate(), dt.endOf(resolution).toJSDate()];
+  const opts = {
+    includeOffset: false
+  };
+  let end = dt;
+  if (resolution && resolution !== "milliseconds") {
+    end = dt.plus({ [resolution]: 1 });
+  }
+  return [dt.toISO(opts), end.toISO(opts)];
 };
 
 export default parseDateToRange;

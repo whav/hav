@@ -5,19 +5,21 @@ const components = {
   DropdownIndicator: null
 };
 
-const createOption = label => ({
-  label,
-  value: label
-});
+const stringToOpt = value => ({ value, label: value });
+const optToString = objOrString => {
+  if (typeof objOrString === "string") {
+    return objOrString;
+  }
+  return objOrString.value;
+};
 
-export default class CreatableInputOnly extends React.Component {
+export default class TagInput extends React.Component {
   state = {
-    inputValue: "",
-    value: []
+    inputValue: ""
   };
 
-  handleValueChange = value => {
-    this.props.onChange(value);
+  handleChange = selected => {
+    this.props.onChange(selected.map(optToString));
   };
 
   handleInputChange = inputValue => {
@@ -33,7 +35,7 @@ export default class CreatableInputOnly extends React.Component {
           inputValue: ""
         });
         if (this.props.value.indexOf(inputValue) === -1) {
-          this.handleValueChange([...this.props.value, inputValue]);
+          this.handleChange([...this.props.value, inputValue]);
         }
         event.preventDefault();
     }
@@ -41,7 +43,7 @@ export default class CreatableInputOnly extends React.Component {
   render() {
     const { inputValue } = this.state;
     const { value, onChange, placeholder = "" } = this.props;
-    const internalValue = value.map(createOption);
+    const internalValue = value.map(stringToOpt);
     return (
       <CreatableSelect
         components={components}
@@ -49,7 +51,7 @@ export default class CreatableInputOnly extends React.Component {
         isClearable
         isMulti
         menuIsOpen={false}
-        onChange={onChange}
+        onChange={this.handleChange}
         onInputChange={this.handleInputChange}
         onKeyDown={this.handleKeyDown}
         placeholder={placeholder}

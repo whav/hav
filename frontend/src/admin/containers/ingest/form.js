@@ -28,7 +28,7 @@ const ErrorMessage = props => (
 );
 
 const DateField = ({ field, form, ...props }) => {
-  console.log("Date value...", field.value);
+  // console.log("Date value...", field.value);
   return (
     <input
       {...props}
@@ -39,9 +39,9 @@ const DateField = ({ field, form, ...props }) => {
         const value = e.target.value;
         try {
           const [start, end] = parseDateToRange(value);
-          console.log(start, end);
+          // console.log(start, end);
         } catch (e) {
-          console.error(e);
+          // console.error(e);
           form.setFieldError(field.name, "Invalid date format.");
         } finally {
           form.setFieldValue(field.name, value);
@@ -194,6 +194,7 @@ class TemplateForm extends React.Component {
 class IngestForm extends React.Component {
   submit = (data, actions) => {
     console.log("Submitting");
+    console.log(data);
     // throw new Error("NotImplementedYet");
     this.props
       .onSubmit(data)

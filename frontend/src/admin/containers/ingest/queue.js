@@ -33,8 +33,7 @@ const initialFormValues = {
   creators: [],
   date: "",
   start: "",
-  end: "",
-  tags: []
+  end: ""
 };
 
 class WSListener extends React.PureComponent {
@@ -97,14 +96,17 @@ class IngestQueue extends React.Component {
     console.log(data);
     console.groupEnd();
     const [start, end] = parseDateToRange(data.date);
-
-    let response = queueForIngestion(this.props.uuid, {
+    const finalData = {
       source: ingestId,
       target: this.props.target,
       ...data,
       start: start.toISOString(),
       end: end.toISOString()
-    });
+    };
+    console.warn(JSON.stringify(finalData, null, 2));
+    // throw new Error("Not there yet.");
+    let response = queueForIngestion(this.props.uuid, finalData);
+
     response
       .then(data => {
         this.props.onIngestSuccess(ingestId, data);
@@ -160,6 +162,7 @@ class IngestQueue extends React.Component {
             // persistName={source}
             options={options}
             onSubmit={data => this.ingestItem(source, data)}
+            persistName={`${window.location.href}||${source}`}
             onDelete={() => {
               this.props.deleteIngestItem(source);
               this.setState(state => ({

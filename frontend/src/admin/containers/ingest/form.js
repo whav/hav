@@ -193,9 +193,6 @@ class TemplateForm extends React.Component {
 
 class IngestForm extends React.Component {
   submit = (data, actions) => {
-    console.log("Submitting");
-    console.log(data);
-    // throw new Error("NotImplementedYet");
     this.props
       .onSubmit(data)
       .catch(errors => {
@@ -226,8 +223,12 @@ class IngestForm extends React.Component {
                 <ErrorMessage name="media_title" component="div" />
               </BField>
               <BField label="Tags">
-                <Field component={TagField} className="input" name="tags" />
-                <ErrorMessage name="tags" component="div" />
+                <Field
+                  component={TagField}
+                  className="input"
+                  name="media_tags"
+                />
+                <ErrorMessage name="media_tags" component="div" />
               </BField>
               <div className="columns">
                 <div className="column">

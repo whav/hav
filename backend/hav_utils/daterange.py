@@ -16,9 +16,9 @@ def parse(dt_string):
     time_part = d.get("time")
     start, end = parse_date(date_part)
     if time_part:
-        d = start.date
+        d = start.date()
         tMin, tMax = parse_time(time_part)
-        start, end = datetime.combine(d, tMin), datetime.combine(d, t.Max)
+        start, end = datetime.combine(d, tMin), datetime.combine(d, tMax)
 
     return start, end
 

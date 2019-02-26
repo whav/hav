@@ -84,7 +84,7 @@ class IngestSerializer(serializers.Serializer):
     target = serializers.HyperlinkedRelatedField(view_name='api:v1:hav_browser:hav_set', queryset=Node.objects.all(), required=False)
     date = serializers.CharField()
 
-    creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
+    creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True, required=True)
 
     media_license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
     media_title = serializers.CharField(max_length=255)

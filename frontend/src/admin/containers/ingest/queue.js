@@ -95,13 +95,13 @@ class IngestQueue extends React.Component {
     console.group("Ingest");
     console.log(data);
     console.groupEnd();
-    const [start, end] = parseDateToRange(data.date);
+    // const [start, end] = parseDateToRange(data.date);
     const finalData = {
       source: ingestId,
       target: this.props.target,
-      ...data,
-      start: start.toISOString(),
-      end: end.toISOString()
+      ...data
+      // start: start.toISOString(),
+      // end: end.toISOString()
     };
     console.warn(JSON.stringify(finalData, null, 2));
     // throw new Error("Not there yet.");

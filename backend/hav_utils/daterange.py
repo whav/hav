@@ -4,11 +4,14 @@ from datetime import datetime, time
 import calendar
 import re
 
-split_date_time = re.compile(r"(?P<date>[\d\-]+)[\ T](?P<time>.*)")
+split_date_time = re.compile(r"(?P<date>[\d\-]+)[\ T]?(?P<time>.*)?")
 
 
 def parse(dt_string):
-    d = split_date_time.match(dt_string).groupdict()
+    match = split_date_time.match(dt_string)
+    if match is None:
+        raise ValueError(f'Unable to parse {dt_string}.')
+    d = match.groupdict()
     date_part = d.get("date")
     time_part = d.get("time")
     start, end = parse_date(date_part)

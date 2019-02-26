@@ -14,7 +14,7 @@ from apps.sets.models import Node
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License, MediaType
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     InternalIngestHyperlinkField, IngestionReferenceField
-
+from hav_utils.daterange import parse
 from .ingest_task import archive_and_create_webassets
 
 logger = logging.getLogger(__name__)
@@ -82,8 +82,7 @@ class IngestSerializer(serializers.Serializer):
 
     source = InternalIngestHyperlinkField()
     target = serializers.HyperlinkedRelatedField(view_name='api:v1:hav_browser:hav_set', queryset=Node.objects.all(), required=False)
-    start = serializers.DateTimeField()
-    end = serializers.DateTimeField()
+    date = serializers.CharField()
 
     creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True)
 
@@ -98,6 +97,14 @@ class IngestSerializer(serializers.Serializer):
     def target_node(self):
         return self.validated_data.get('target') or self.context['target']
 
+    def validate_date(self, value):
+        try:
+            parse(value)
+        except ValueError as e:
+            print(e)
+            raise serializers.ValidationError('Unable to parse value.')
+        else:
+            return value
 
     def validate_source(self, value):
         try:
@@ -123,9 +130,6 @@ class IngestSerializer(serializers.Serializer):
                 .format(target.collection.name)
             )
 
-        if data['start'] > data['end']:
-            raise serializers.ValidationError("Start time must be before end time.")
-
         if not target.is_descendant_of(collection.root_node) and not target == collection.root_node:
             raise serializers.ValidationError("Target set is not a descendant of the specified collection.")
 
@@ -136,7 +140,8 @@ class IngestSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context['user']
         source = self.initial_data['source']
-        dt_range = DateTimeTZRange(lower=validated_data['start'], upper=validated_data['end'])
+        start, end = parse(validated_data['date'])
+        dt_range = DateTimeTZRange(lower=start, upper=end)
         # actually create the media object
         media = Media.objects.create(
             creation_date=dt_range,

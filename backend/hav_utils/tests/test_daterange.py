@@ -59,5 +59,16 @@ class TestTimeParsing(unittest.TestCase):
         self.assertEqual(parse_time("14:42:05.123"), (t, t))
 
 
+class TestTopLevelParser(unittest.TestCase):
+
+    def test_year(self):
+        self.assertEqual(
+            parse('2008'),
+            (
+                datetime.combine(date(2008, 1, 1), time.min),
+                datetime.combine(date(2008, 12, 31), time.max),
+            ),
+        )
+
 if __name__ == "__main__":
     unittest.main()

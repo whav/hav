@@ -6,10 +6,36 @@ import {
   ErrorMessage as FormikErrorMessage
 } from "formik";
 import classnames from "classnames";
-import Select, { components } from "react-select";
+import ReactSelect from "react-select";
 import { Persist } from "formik-persist";
 import parseDateToRange from "../../utils/daterange";
 import TagInput from "../../ui/components/taginput";
+
+const customStyles = {
+  control: provided => ({
+    ...provided
+  })
+};
+
+const Select = ({ className = "", ...props }) => {
+  return (
+    <ReactSelect
+      // className={classnames(className, "select")}
+      styles={customStyles}
+      {...props}
+    />
+  );
+};
+
+const CombiField = ({ label = "", name, props }) => {
+  return (
+    <div className="field">
+      {label ? <label className="label">{label}</label> : null}
+      <div className={classnames("control")}>{children}</div>
+      <ErrorMessage name={name} />
+    </div>
+  );
+};
 
 const BField = ({ label = "", children }) => {
   return (
@@ -118,6 +144,7 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
           <BField label="Creators">
             <Field
               component={SelectField}
+              className="input"
               name="creators"
               multiple={true}
               options={creators}
@@ -198,7 +225,7 @@ class IngestForm extends React.Component {
           ([key, errs]) => (formikErrors[key] = errs.join(" "))
         );
         // console.warn(errors, formikErrors);
-        console.warn(Object.keys(errors));
+        // console.warn(Object.keys(errors));
         actions.setErrors(formikErrors);
       })
       .finally(() => actions.setSubmitting(false));

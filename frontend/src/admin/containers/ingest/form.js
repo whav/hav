@@ -179,6 +179,26 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
   );
 };
 
+const GlobalErrors = ({ errors }) => {
+  const keys = ["source", "target", "non_field_errors"];
+  const error_keys = Object.keys(errors).filter(k => keys.indexOf(k) > -1);
+  // console.log(error_keys)
+  // console.warn("Global errors..", errors, error_keys);
+
+  if (error_keys.length) {
+    return (
+      <div className="notification is-danger">
+        <ul>
+          {error_keys.map(k => (
+            <li key={k}>{errors[k]}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+  return null;
+};
+
 class TemplateForm extends React.Component {
   initialValues = {
     creators: [],
@@ -224,7 +244,7 @@ class IngestForm extends React.Component {
         Object.entries(errors).forEach(
           ([key, errs]) => (formikErrors[key] = errs.join(" "))
         );
-        // console.warn(errors, formikErrors);
+        console.warn(formikErrors);
         // console.warn(Object.keys(errors));
         actions.setErrors(formikErrors);
       })
@@ -238,10 +258,12 @@ class IngestForm extends React.Component {
         initialValues={initialValues}
         enableReinitialize={true}
         onSubmit={this.submit}
-        render={({ isSubmitting }) => {
+        render={({ isSubmitting, errors }) => {
+          console.warn(errors);
           return (
             <Form className="ingest-form">
               {persistName && <Persist name={persistName} />}
+              <GlobalErrors errors={errors} />
               <BField label="Title">
                 <Field className="input" name="media_title" />
                 <ErrorMessage name="media_title" component="div" />

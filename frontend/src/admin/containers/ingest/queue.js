@@ -99,7 +99,6 @@ class IngestQueue extends React.Component {
       // start: start.toISOString(),
       // end: end.toISOString()
     };
-    console.warn(JSON.stringify(finalData, null, 2));
     // throw new Error("Not there yet.");
     let response = queueForIngestion(this.props.uuid, finalData);
 
@@ -114,7 +113,7 @@ class IngestQueue extends React.Component {
         }));
       })
       .catch(err => {
-        this.onError(ingestId, err);
+        console.error(err);
       });
     return response;
   };

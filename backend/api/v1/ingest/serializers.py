@@ -101,7 +101,6 @@ class IngestSerializer(serializers.Serializer):
         try:
             parse(value)
         except ValueError as e:
-            print(e)
             raise serializers.ValidationError('Unable to parse value.')
         else:
             return value
@@ -111,7 +110,6 @@ class IngestSerializer(serializers.Serializer):
             hash_value = generate_hash(value)
         except FileNotFoundError:
             raise serializers.ValidationError("The file could not be found.")
-
         try:
             media = Media.objects.get(files__hash=hash_value)
             raise serializers.ValidationError(

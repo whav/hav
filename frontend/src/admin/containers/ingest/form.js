@@ -211,7 +211,7 @@ class IngestForm extends React.Component {
         initialValues={initialValues}
         enableReinitialize={true}
         onSubmit={this.submit}
-        render={({ errors, status, touched, isSubmitting }) => {
+        render={({ isSubmitting }) => {
           return (
             <Form className="ingest-form">
               {persistName && <Persist name={persistName} />}

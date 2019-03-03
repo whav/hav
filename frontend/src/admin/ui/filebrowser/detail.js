@@ -11,7 +11,7 @@ const Table = ({ rows = [] }) => (
     <table className="table is-striped is-bordered is-narrow is-hoverable">
       <tbody>
         {rows.map((row_items, index) => (
-          <tr key="index">
+          <tr key={index}>
             {row_items.map((r, i) => (
               <td key={i}>{r}</td>
             ))}

@@ -3,8 +3,39 @@ import filesize from "filesize";
 import { FallBackImageLoader } from "./index";
 import Button from "../components/buttons";
 import { Header, FileBrowserInterface } from "./index";
-
+import { buildFrontendUrl } from "../../api/urls";
+import { Link } from "react-router-dom";
 const Title = ({ children }) => <h3 className="title is-4">{children}</h3>;
+
+const RelatedFiles = ({ files }) => {
+  return (
+    <React.Fragment>
+      <Title>Possibly related files</Title>
+      {files.map(f => {
+        const rows = {
+          name: <Link to={buildFrontendUrl(f.url)}>{f.name}</Link>,
+          size: filesize(f.size),
+          mime: f.mime
+        };
+        return (
+          <div key={f.url} className="columns">
+            <div className="column">
+              <FallBackImageLoader
+                src={f.preview_url}
+                srcSet={f.srcset}
+                mime_type={f.mime}
+                alt={f.name}
+              />
+            </div>
+            <div className="column is-two-thirds">
+              <Table key={f.url} rows={Object.entries(rows)} />
+            </div>
+          </div>
+        );
+      })}
+    </React.Fragment>
+  );
+};
 
 const Table = ({ rows = [] }) => (
   <div className="table-container">
@@ -24,10 +55,10 @@ const Table = ({ rows = [] }) => (
 
 class MediaDetail extends React.Component {
   render() {
+    const { related_files = [], url } = this.props;
     const tableProps = {
       Size: filesize(this.props.size),
       "Mime Type": this.props.mime
-      // Ingestable: this.props.ingestable ? "Yes" : "No"
     };
 
     const aside = this.props.ingestable ? (
@@ -53,14 +84,13 @@ class MediaDetail extends React.Component {
         {/* <div style={{ height: "5em", border: "2px solid black" }} /> */}
         <Title>File Information</Title>
         <Table rows={Object.entries(tableProps)} />
+        {related_files.length ? <RelatedFiles files={related_files} /> : null}
         {this.props.meta ? (
           <React.Fragment>
             <Title>EXIF Data</Title>
-
             <Table rows={Object.entries(this.props.meta)} />
           </React.Fragment>
         ) : null}
-        {/* {this.props.meta ? <ExifTable data={this.props.meta} /> : null} */}
       </React.Fragment>
     );
 

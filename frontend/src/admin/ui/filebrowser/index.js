@@ -133,7 +133,7 @@ class GGalleryDirectory extends React.Component {
   }
 }
 
-export const GGalleryFile = ({ file, toggleSelect, size, ...props }) => {
+export const GGalleryFile = ({ name, file, toggleSelect, size, ...props }) => {
   let preview = <FilePlaceHolder mime={file.mime_type} />;
   if (file.preview_url) {
     let sources = [];
@@ -156,13 +156,22 @@ export const GGalleryFile = ({ file, toggleSelect, size, ...props }) => {
   return (
     <GGalleryItem
       onClick={toggleSelect}
-      name={file.name}
+      name={name || file.name}
       size={size}
       {...props}
     >
       {preview}
     </GGalleryItem>
   );
+};
+
+export const GGalleryMultiFile = ({ files, ...props }) => {
+  const file = files[0];
+  let name = file.name;
+  if (files.length > 1) {
+    name = `${props.name} (${files.length} Files)`;
+  }
+  return <GGalleryFile file={file} {...props} name={name} />;
 };
 
 const GGalleryUpload = ({ upload }) => {
@@ -200,7 +209,9 @@ export default class FileList extends React.Component {
     this.handleFileSelectEvent = this.handleFileSelectEvent.bind(this);
   }
 
-  handleClick = (file, event) => {
+  handleClick = (files, event) => {
+    console.log(files, event);
+    const file = files[0];
     let { ctrlKey, shiftKey } = event;
     if (!ctrlKey && !shiftKey && file.url) {
       history.push(buildFrontendUrl(file.url));
@@ -247,6 +258,7 @@ export default class FileList extends React.Component {
     let {
       directories = [],
       files = [],
+      groupedFiles = {},
       uploads = [],
       displayType,
       selectedItemIds,
@@ -279,15 +291,36 @@ export default class FileList extends React.Component {
       );
     });
 
-    let rendererFiles = files.map((file, index) => {
-      let props = {
-        file,
-        toggleSelect: this.handleClick.bind(this, file),
-        selected: selectedItemIds.has(file.url),
-        size
-      };
-      return <GGalleryFile key={index} {...props} />;
-    });
+    // renderedFile need to respect the grouped settings
+    // and render differently depending on it
+    // displayGrouped is currently always true
+    let rendererFiles = [];
+    if (settings.displayGrouped) {
+      rendererFiles = Object.entries(groupedFiles).map(
+        ([group, files], index) => {
+          console.log(index, group, files, files.length);
+          const selected = files.every(f => selectedItemIds.has(f.url));
+          const props = {
+            name: group,
+            files,
+            toggleSelect: this.handleClick.bind(this, files),
+            selected,
+            size
+          };
+          return <GGalleryMultiFile key={index} {...props} />;
+        }
+      );
+    } else {
+      rendererFiles = files.map((file, index) => {
+        let props = {
+          file,
+          toggleSelect: this.handleClick.bind(this, [file]),
+          selected: selectedItemIds.has(file.url),
+          size
+        };
+        return <GGalleryFile key={index} {...props} />;
+      });
+    }
 
     // let renderedUploads = Object.values(uploads).map((upload, index) => {
     //   return <GGalleryUpload upload={upload} key={index} />;

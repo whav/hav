@@ -74,8 +74,9 @@ class FileSerializer(FileBrowserBaseSerializer):
     mime = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
-
     isFile = serializers.SerializerMethodField()
+
+    grouping = serializers.SerializerMethodField()
 
     def get_path(self, path):
         return self._config.to_url_path(path)
@@ -96,12 +97,18 @@ class FileSerializer(FileBrowserBaseSerializer):
     def get_isFile(self, _):
         return True
 
+    def get_grouping(self, path):
+        return path.stem
+
+
+
 
 class FileDetailSerializer(FileSerializer):
 
     meta = serializers.SerializerMethodField()
     srcset = serializers.SerializerMethodField()
 
+    related_files = serializers.SerializerMethodField()
 
     def get_meta(self, path):
         return get_exif_data(path)
@@ -109,6 +116,14 @@ class FileDetailSerializer(FileSerializer):
     def get_srcset(self, path):
         rel_path = path.relative_to(self.get_root()).as_posix()
         return generate_srcset_urls(rel_path)
+
+    def get_related_files(self, path):
+        base_name = path.stem
+        related_files = list(path.parent.glob(f'{base_name}.*'))
+        related_files.remove(path)
+        return [
+            FileSerializer(p, context=self.context).data for p in related_files
+        ]
 
 class BaseDirectorySerializer(FileBrowserBaseSerializer):
 

@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { createDirectoryAction, selectItems } from "../../ducks/browser";
-
 import { switchFilebrowserDisplayType } from "../../ducks/settings";
 import { queueForIngestion } from "../../ducks/ingest";
 import { startFileUpload } from "../../ducks/uploads";
@@ -24,6 +23,7 @@ import {
   SelectedFilesControls
 } from "../../ui/filebrowser/controls";
 import { buildFrontendUrl, buildApiUrl } from "../../api/urls";
+import groupFiles from "./grouping";
 
 class FileBrowserDirectory extends React.Component {
   constructor(props) {
@@ -39,6 +39,7 @@ class FileBrowserDirectory extends React.Component {
         parentDirectories,
         childrenDirectories,
         files,
+        groupedFiles,
         settings,
         switchDisplayStyle,
         allowUpload,
@@ -110,6 +111,7 @@ class FileBrowserDirectory extends React.Component {
         <FileList
           directories={directories}
           files={files}
+          groupedFiles={groupedFiles}
           uploads={uploads}
           displayType={settings.selectedDisplayType}
           handleSelect={selectItems}
@@ -184,7 +186,8 @@ const FileBrowserDirectoryView = connect(
     // populate children dirs and files from state
     const childrenDirectories = allChildren.filter(c => c.isDirectory);
     const files = allChildren.filter(c => c.isFile);
-
+    // optionally group files
+    const groupedFiles = settings.displayGrouped ? groupFiles(files) : {};
     // get a list of all ingestable and selected items
     const selected = new Set(directory.selected);
     const ingestable = allChildren
@@ -204,6 +207,7 @@ const FileBrowserDirectoryView = connect(
       childrenDirectories,
       parentDirectories,
       files,
+      groupedFiles,
       ingestable,
       allowUpload: directory.allowUpload || false,
       allowCreate: directory.allowCreate || false

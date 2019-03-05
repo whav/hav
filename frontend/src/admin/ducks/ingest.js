@@ -37,6 +37,7 @@ export const RECEIVE_INGEST_OPTIONS = "RECEIVE_INGEST_OPTIONS";
 const queue = (state = [], action) => {
   switch (action.type) {
     case QUEUE_FOR_INGESTION:
+      console.warn(action.ingestionIds);
       return action.ingestionIds;
     case CLEAR_INGESTION_QUEUE:
       return [];

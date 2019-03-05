@@ -9,7 +9,8 @@ const reducer = (
   state = {
     selectedDisplayType: fileListDisplayValues[0],
     availableDisplayTypes: fileListDisplayValues,
-    gallerySize: "20vw"
+    gallerySize: "20vw",
+    displayGrouped: true
   },
   action
 ) => {

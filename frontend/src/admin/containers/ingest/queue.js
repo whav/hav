@@ -140,6 +140,8 @@ class IngestQueue extends React.Component {
     const previouslyIngestedMediaEntries = created_media_entries.filter(
       ma => !previouslyIngestedMediaUrls.has(ma.url)
     );
+
+    // create the forms
     const forms = sources.map((source, index) => {
       // filter out deleted
       if (deletedSources.indexOf(source) !== -1) {
@@ -220,6 +222,7 @@ class IngestQueueLoader extends React.Component {
   render() {
     const { options, items } = this.props;
     const loading = isEmpty(options) || !Array.isArray(items);
+    console.log(items);
     return loading ? <LoadingIndicator /> : <IngestQueue {...this.props} />;
   }
 }

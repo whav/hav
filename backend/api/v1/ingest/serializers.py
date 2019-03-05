@@ -204,6 +204,8 @@ class SimpleIngestQueueSerializer(serializers.ModelSerializer):
     def get_ingested_item_count(self, obj):
         return obj.created_media_entries.count()
 
+
+
     class Meta:
         model = IngestQueue
         fields = [
@@ -238,6 +240,19 @@ class IngestQueueSerializer(serializers.ModelSerializer):
 
     created_media_entries = serializers.SerializerMethodField()
 
+    related_files = serializers.SerializerMethodField()
+    initial_data = serializers.SerializerMethodField()
+
+    def get_initial_data(self, obj):
+        return {
+            item: {} for item in obj.ingestion_queue
+        }
+
+    def get_related_files(self, obj):
+        return {
+            item: [] for item in obj.ingestion_queue
+        }
+
     def get_created_media_entries(self, queue):
         return SimpleMediaSerializer(queue.created_media_entries.all(), many=True, context=self.context).data
 
@@ -262,5 +277,7 @@ class IngestQueueSerializer(serializers.ModelSerializer):
             'target',
             'selection',
             'ingestion_queue',
+            'initial_data',
+            'related_files',
             'created_media_entries'
         ]

@@ -182,8 +182,6 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
 const GlobalErrors = ({ errors }) => {
   const keys = ["sources", "target", "non_field_errors"];
   const error_keys = Object.keys(errors).filter(k => keys.indexOf(k) > -1);
-  // console.log(error_keys)
-  // console.warn("Global errors..", errors, error_keys);
 
   if (error_keys.length) {
     return (

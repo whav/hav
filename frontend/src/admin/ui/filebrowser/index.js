@@ -169,7 +169,12 @@ export const GGalleryMultiFile = ({ files, ...props }) => {
   const file = files[0];
   let name = file.name;
   if (files.length > 1) {
-    name = `${props.name} (${files.length} Files)`;
+    name = (
+      <span>
+        {props.name}
+        <sup>{files.length}</sup>
+      </span>
+    );
   }
   return <GGalleryFile file={file} {...props} name={name} />;
 };
@@ -210,7 +215,6 @@ export default class FileList extends React.Component {
   }
 
   handleClick = (files, event) => {
-    console.log(files, event);
     const file = files[0];
     let { ctrlKey, shiftKey } = event;
     if (!ctrlKey && !shiftKey && file.url) {
@@ -262,7 +266,6 @@ export default class FileList extends React.Component {
       uploads = [],
       displayType,
       selectedItemIds,
-      handleSelect,
       settings
     } = this.props;
 
@@ -298,12 +301,12 @@ export default class FileList extends React.Component {
     if (settings.displayGrouped) {
       rendererFiles = Object.entries(groupedFiles).map(
         ([group, files], index) => {
-          console.log(index, group, files, files.length);
-          const selected = files.every(f => selectedItemIds.has(f.url));
+          const file = files[0];
+          const selected = selectedItemIds.has(file.url);
           const props = {
-            name: group,
+            name: file.name,
             files,
-            toggleSelect: this.handleClick.bind(this, files),
+            toggleSelect: this.handleClick.bind(this, [file]),
             selected,
             size
           };

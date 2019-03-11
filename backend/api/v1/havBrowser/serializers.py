@@ -33,13 +33,15 @@ class HAVWebAssetSerializer(serializers.ModelSerializer):
 
 
 class SimpleHAVMediaSerializer(serializers.ModelSerializer):
-    name = serializers.IntegerField(source='pk')
+    name = serializers.CharField(source='title')
     url = serializers.SerializerMethodField()
     preview_url = serializers.SerializerMethodField()
 
     ingestable = serializers.SerializerMethodField()
 
     mime_type = serializers.SerializerMethodField()
+
+    grouping = serializers.SerializerMethodField()
 
     def get_mime_type(self, media):
         return media.primary_file.mime_type if media.primary_file else ''
@@ -86,6 +88,9 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
     def get_ingestable(self, _):
         return False
 
+    def get_grouping(self, media):
+        return media.pk
+
     class Meta:
         model = Media
         fields = [
@@ -95,7 +100,8 @@ class SimpleHAVMediaSerializer(serializers.ModelSerializer):
             'url',
             'ingestable',
             'preview_url',
-            'mime_type'
+            'mime_type',
+            'grouping'
         ]
 
 

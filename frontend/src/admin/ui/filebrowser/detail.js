@@ -5,6 +5,7 @@ import Button from "../components/buttons";
 import { Header, FileBrowserInterface } from "./index";
 import { buildFrontendUrl } from "../../api/urls";
 import { Link } from "react-router-dom";
+
 const Title = ({ children }) => <h3 className="title is-4">{children}</h3>;
 
 const RelatedFiles = ({ files }) => {

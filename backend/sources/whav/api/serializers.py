@@ -38,8 +38,6 @@ class SimpleWHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
 
     size = serializers.SerializerMethodField()
 
-    grouping = serializers.SerializerMethodField()
-
     def get_size(self, mo):
         media = mo.media
         return media.basefile.size
@@ -80,8 +78,6 @@ class SimpleWHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
     def get_ingestable(self, _):
         return True
 
-    def get_grouping(self, media):
-        return media.pk
 
 
 class WHAVFileSerializer(SimpleWHAVFileSerializer):

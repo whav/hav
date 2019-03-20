@@ -12,7 +12,8 @@ import {
   AddIcon,
   GalleryIcon,
   ListIcon,
-  UploadIcon
+  UploadIcon,
+  BurgerIcon
 } from "../icons";
 
 import Button, { ButtonGroup } from "../components/buttons";
@@ -65,6 +66,27 @@ const FilebrowserViewControl = ({ selectedDisplayType, switchDisplayType }) => {
     </div>
   );
 };
+
+class FileBrowserSettingsDropdown extends React.Component {
+  render() {
+    return (
+      <div className="dropdown is-right is-hoverable">
+        <div className="dropdown-trigger">
+          <Button basic>
+            <BurgerIcon />
+          </Button>
+        </div>
+        <div className="dropdown-menu">
+          <div className="dropdown-content">
+            <a href="#" className="dropdown-item">
+              Dropdown item
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
 
 class FileBrowserMenu extends React.Component {
   constructor(props) {
@@ -120,7 +142,8 @@ class FileBrowserMenu extends React.Component {
         <Button key="create-directory" onClick={this.createDirectory}>
           <AddIcon /> Add Folder
         </Button>
-      ) : null
+      ) : null,
+      <FileBrowserSettingsDropdown key="fb-settings" />
     ];
     return <ButtonGroup>{controls}</ButtonGroup>;
   }

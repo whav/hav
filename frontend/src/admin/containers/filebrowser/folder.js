@@ -80,12 +80,13 @@ class FileBrowserDirectory extends React.Component {
       const selectedItemIds = new Set(directory.selected);
       const header = (
         <header>
-          <h1 key="title" className="title">
-            {directory.name}
-          </h1>
           <Level
             key="fb-menu"
-            left={breadcrumbs}
+            left={
+              <h1 key="title" className="title">
+                {directory.name}
+              </h1>
+            }
             right={
               <FileBrowserMenu
                 switchDisplayType={switchDisplayStyle}
@@ -108,16 +109,19 @@ class FileBrowserDirectory extends React.Component {
       const main = isEmpty ? (
         <h2>This directory is empty.</h2>
       ) : (
-        <FileList
-          directories={directories}
-          files={files}
-          groupedFiles={groupedFiles}
-          uploads={uploads}
-          displayType={settings.selectedDisplayType}
-          handleSelect={selectItems}
-          selectedItemIds={selectedItemIds}
-          settings={settings}
-        />
+        <React.Fragment>
+          {breadcrumbs}
+
+          <FileList
+            directories={directories}
+            files={files}
+            uploads={uploads}
+            displayType={settings.selectedDisplayType}
+            handleSelect={selectItems}
+            selectedItemIds={selectedItemIds}
+            settings={settings}
+          />
+        </React.Fragment>
       );
 
       let footer = this.props.footer;

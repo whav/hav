@@ -14,7 +14,8 @@ import {
   GoFileDirectory as DirectoryIcon,
   GoCheck as SelectFileCheckboxIcon,
   GoDatabase as DatabaseIcon,
-  GoPackage as IngestPackageIcon
+  GoPackage as IngestPackageIcon,
+  GoThreeBars as BurgerIcon
 } from "react-icons/go";
 
 import {
@@ -54,5 +55,6 @@ export {
   SpinnerIcon,
   LoadingSpinner,
   CheckIcon,
-  QuestionMarkIcon
+  QuestionMarkIcon,
+  BurgerIcon
 };

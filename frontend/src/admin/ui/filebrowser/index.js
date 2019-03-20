@@ -59,6 +59,7 @@ export const FilePlaceHolder = props => {
 
 const FallBackImageLoader = props => {
   let { alt, src, srcSet, styles = {}, title, mime_type } = props;
+  console.log(src, srcSet);
   if (srcSet && Array.isArray(srcSet)) {
     srcSet = srcSet.map(([width, url]) => `${url} ${width}w`).join(", ");
     // src = "";

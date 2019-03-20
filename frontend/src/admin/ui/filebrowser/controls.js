@@ -69,18 +69,27 @@ const FilebrowserViewControl = ({ selectedDisplayType, switchDisplayType }) => {
 
 class FileBrowserSettingsDropdown extends React.Component {
   render() {
+    const { isGrouped, toggleGrouped } = this.props;
+    console.log(isGrouped, toggleGrouped);
     return (
       <div className="dropdown is-right is-hoverable">
         <div className="dropdown-trigger">
-          <Button basic>
+          <Button>
             <BurgerIcon />
           </Button>
         </div>
         <div className="dropdown-menu">
           <div className="dropdown-content">
-            <a href="#" className="dropdown-item">
-              Dropdown item
-            </a>
+            <div className="dropdown-item field">
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  checked={isGrouped}
+                  onChange={toggleGrouped}
+                />
+                Display grouped
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -119,7 +128,7 @@ class FileBrowserMenu extends React.Component {
   };
 
   render() {
-    const { saveFileSelection, allowUpload, uploadFile } = this.props;
+    const { allowUpload, uploadFile, toggleGrouped, isGrouped } = this.props;
 
     const controls = [
       allowUpload ? (
@@ -143,7 +152,11 @@ class FileBrowserMenu extends React.Component {
           <AddIcon /> Add Folder
         </Button>
       ) : null,
-      <FileBrowserSettingsDropdown key="fb-settings" />
+      <FileBrowserSettingsDropdown
+        key="fb-settings"
+        isGrouped={isGrouped}
+        toggleGrouped={toggleGrouped}
+      />
     ];
     return <ButtonGroup>{controls}</ButtonGroup>;
   }

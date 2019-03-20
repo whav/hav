@@ -134,7 +134,14 @@ class GGalleryDirectory extends React.Component {
   }
 }
 
-export const GGalleryFile = ({ name, file, toggleSelect, size, ...props }) => {
+export const GGalleryFile = ({
+  name,
+  file,
+  toggleSelect,
+  size,
+  children = null,
+  ...props
+}) => {
   let preview = <FilePlaceHolder mime={file.mime_type} />;
   if (file.preview_url) {
     let sources = [];
@@ -162,22 +169,22 @@ export const GGalleryFile = ({ name, file, toggleSelect, size, ...props }) => {
       {...props}
     >
       {preview}
+      {children}
     </GGalleryItem>
   );
 };
 
 export const GGalleryMultiFile = ({ files, ...props }) => {
   const file = files[0];
-  let name = file.name;
-  if (files.length > 1) {
-    name = (
-      <span>
-        {props.name}
-        <sup>{files.length}</sup>
-      </span>
-    );
-  }
-  return <GGalleryFile file={file} {...props} name={name} />;
+  return (
+    <GGalleryFile file={file} {...props}>
+      {files.length > 1 ? (
+        <span className="g-gallery-item-count has-text-grey-light">
+          {files.length}
+        </span>
+      ) : null}
+    </GGalleryFile>
+  );
 };
 
 const GGalleryUpload = ({ upload }) => {
@@ -297,7 +304,6 @@ export default class FileList extends React.Component {
 
     // renderedFile need to respect the grouped settings
     // and render differently depending on it
-    // displayGrouped is currently always true
     let rendererFiles = [];
     if (settings.displayGrouped) {
       rendererFiles = Object.entries(groupedFiles).map(

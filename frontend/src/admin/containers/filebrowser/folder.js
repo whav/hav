@@ -6,7 +6,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { createDirectoryAction, selectItems } from "../../ducks/browser";
-import { switchFilebrowserDisplayType } from "../../ducks/settings";
+import {
+  switchFilebrowserDisplayType,
+  switchGrouped
+} from "../../ducks/settings";
 import { queueForIngestion } from "../../ducks/ingest";
 import { startFileUpload } from "../../ducks/uploads";
 import LoadingIndicator from "../../ui/loading";
@@ -48,7 +51,8 @@ class FileBrowserDirectory extends React.Component {
         saveFileSelection,
         createDirectory,
         selectItems,
-        ingestable
+        ingestable,
+        toggleGrouped
       } = this.props;
 
       let uploads = this.props.uploads;
@@ -100,6 +104,8 @@ class FileBrowserDirectory extends React.Component {
                 }
                 allowUpload={allowUpload}
                 uploadFile={uploadFile}
+                toggleGrouped={toggleGrouped}
+                isGrouped={settings.displayGrouped}
               />
             }
           />
@@ -115,6 +121,7 @@ class FileBrowserDirectory extends React.Component {
           <FileList
             directories={directories}
             files={files}
+            groupedFiles={groupedFiles}
             uploads={uploads}
             displayType={settings.selectedDisplayType}
             handleSelect={selectItems}
@@ -228,6 +235,7 @@ const FileBrowserDirectoryView = connect(
       uploadFile: file => dispatch(startFileUpload(file, apiURL)),
       switchDisplayStyle: style =>
         dispatch(switchFilebrowserDisplayType(style)),
+      toggleGrouped: () => dispatch(switchGrouped()),
       createDirectory: name => dispatch(createDirectoryAction(name, apiURL)),
       selectItems: (items = []) => dispatch(selectItems(apiURL, items))
     };

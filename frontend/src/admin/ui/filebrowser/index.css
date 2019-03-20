@@ -86,16 +86,13 @@
 
 .g-gallery-select {
   position: absolute;
-  bottom: 1rem;
-  right: 0;
+  left: 0.5rem;
+  top: 0.5rem;
   width: 2.5rem;
   height: 2.5rem;
   font-size: 2rem;
   text-align: center;
-}
-
-/*hidden per default*/
-.g-gallery-select {
+  /*hidden per default*/
   display: none;
 }
 
@@ -111,6 +108,13 @@
   font-size: 2.3rem;
   color: green;
   z-index: 10;
+}
+
+.g-gallery-item-count {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  font-size: 1rem;
 }
 
 .g-gallery-item-name {

@@ -60,10 +60,11 @@ services:
         command: python manage.py rqworker default
 
     imaginary:
-        image: h2non/imaginary:1.0.16
+        image: h2non/imaginary:1.0.18
         user: ${DJANGO_UID}
         environment:
             - URL_SIGNATURE_KEY=${IMAGINARY_SECRET}
+            - VIPS_DISC_TRESHOLD=1g
         volumes:
             - ${HAV_ARCHIVE_ROOT}:/www/archive:ro
             - ${INCOMING_FILES_ROOT}:/www/incoming:ro

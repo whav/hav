@@ -80,7 +80,7 @@ class PrepareIngestSerializer(serializers.Serializer):
 
 class IngestSerializer(serializers.Serializer):
 
-    source = InternalIngestHyperlinkField()
+    sources = serializers.ListField(child=InternalIngestHyperlinkField(), min_length=1)
     target = serializers.HyperlinkedRelatedField(view_name='api:v1:hav_browser:hav_set', queryset=Node.objects.all(), required=False)
     date = serializers.CharField()
 
@@ -118,6 +118,7 @@ class IngestSerializer(serializers.Serializer):
         except Media.DoesNotExist:
             return value
 
+
     def validate(self, data):
         user = self.context['user']
         target = data.get('target') or self.context['target']
@@ -137,7 +138,7 @@ class IngestSerializer(serializers.Serializer):
     @transaction.atomic
     def create(self, validated_data):
         user = self.context['user']
-        source = self.initial_data['source']
+        sources = self.initial_data['sources']
         start, end = parse(validated_data['date'])
         dt_range = DateTimeTZRange(lower=start, upper=end)
         # actually create the media object
@@ -149,7 +150,6 @@ class IngestSerializer(serializers.Serializer):
             set=self.target_node,
             collection=self.target_node.get_collection(),
             created_by=user,
-            source=source,
             tags=validated_data.get('media_tags', []),
             original_media_type=validated_data['media_type'],
             original_media_identifier=validated_data.get('media_identifier', '')
@@ -166,19 +166,21 @@ class IngestSerializer(serializers.Serializer):
         queue = self.context.get('queue')
         if (queue):
             queue = IngestQueue.objects.select_for_update().get(pk=queue.pk)
-            queue.link_to_media(media, source)
+            for source in sources:
+                queue.link_to_media(media, source)
             queue.save()
 
         logger.info(
-            "Triggering archiving for file %s, media: %d, user: %d",
-            str(validated_data['source']),
+            "Triggering archiving for %d file(s) %s; media: %d; user: %d",
+            len(validated_data['sources']),
+            ', '.join([str(s) for s in validated_data['sources']]),
             media.pk,
             user.pk
         )
 
         def ingestion_trigger():
             return archive_and_create_webassets(
-                str(validated_data['source']),
+                [str(s) for s in validated_data['sources']],
                 media.pk,
                 user.pk,
                 # these args are for websockets via channels

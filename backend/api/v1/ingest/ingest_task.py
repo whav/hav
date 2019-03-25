@@ -18,7 +18,7 @@ def send_progress(msg, media_id, channel_group):
         })
 
 
-def archive_and_create_webassets(filename, media_id, user_id, channel_group):
+def archive_and_create_webassets(filenames, media_id, user_id, channel_group):
     # TODO: untangle task updates from processing logic
     # perhaps using a closure or similar
 
@@ -45,14 +45,17 @@ def archive_and_create_webassets(filename, media_id, user_id, channel_group):
         *progress_args
     )
 
-    archive_job = archive_queue.enqueue(
-        archive,
-        filename,
-        media_id,
-        user_id,
-        result_ttl=3600*72,
-        timeout=600
-    )
+    archive_jobs = []
+    for index, filename in enumerate(filenames):
+        job = archive_queue.enqueue(
+            archive,
+            filename,
+            media_id,
+            user_id,
+            result_ttl=3600*72,
+            timeout=600
+        )
+        archive_jobs.append(job)
 
     task_status[0]["status"] = 'started'
     notification_queue.enqueue(
@@ -67,14 +70,17 @@ def archive_and_create_webassets(filename, media_id, user_id, channel_group):
         send_progress,
         task_status.copy(),
         *progress_args,
-        depends_on=archive_job
+        depends_on=archive_jobs[-1]
     )
 
-    webasset_job = webasset_queue.enqueue(
-        create_webassets,
-        depends_on=archive_job,
-        timeout=3600 * 5
-    )
+    webasset_jobs = []
+    for archive_job in archive_jobs:
+        job = webasset_queue.enqueue(
+            create_webassets,
+            depends_on=archive_job,
+            timeout=3600 * 5
+        )
+        webasset_jobs.append(job)
 
     task_status[1]['status'] = 'started'
     notification_queue.enqueue(
@@ -88,7 +94,7 @@ def archive_and_create_webassets(filename, media_id, user_id, channel_group):
         send_progress,
         task_status.copy(),
         *progress_args,
-        depends_on=webasset_job
+        depends_on=webasset_jobs[-1]
     )
 
-    return archive_job, webasset_job
+    return archive_jobs, webasset_jobs

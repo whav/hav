@@ -88,12 +88,8 @@ class IngestQueue extends React.Component {
   };
 
   ingestItem = (ingestId, data) => {
-    console.group("Ingest");
-    console.log(data);
-    console.groupEnd();
-    // const [start, end] = parseDateToRange(data.date);
     const finalData = {
-      source: ingestId,
+      sources: [ingestId],
       target: this.props.target,
       ...data
       // start: start.toISOString(),

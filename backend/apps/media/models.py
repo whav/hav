@@ -89,8 +89,6 @@ class Media(models.Model):
 
     tags = ArrayField(models.CharField(max_length=255), default=list)
 
-    source = models.CharField(max_length=255, blank=True)
-
     original_media_type = models.ForeignKey(MediaType, on_delete=models.PROTECT)
     original_media_description = models.TextField(blank=True)
     original_media_identifier = models.CharField(blank=True, max_length=200)

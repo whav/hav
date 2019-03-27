@@ -108,12 +108,12 @@ class Media(models.Model):
     def __str__(self):
         return "Media ID {}".format(self.pk)
 
-    # @cached_property
-    # def primary_file(self):
-    #     try:
-    #         return self.files.all()[0]
-    #     except IndexError:
-    #         return None
+    @cached_property
+    def primary_file(self):
+        try:
+            return self.files.all()[0]
+        except IndexError:
+            return None
 
     objects = MediaManager()
 

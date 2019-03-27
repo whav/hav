@@ -115,5 +115,6 @@ class Media(models.Model):
 
     objects = MediaManager()
 
-
+    class Meta:
+        ordering = ('created_at',)
 

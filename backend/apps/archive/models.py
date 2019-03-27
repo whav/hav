@@ -41,6 +41,8 @@ class ArchiveFile(models.Model):
             raise ValidationError("Calculated hash does not match stored hash.")
         return True
 
+    class Meta:
+        ordering = ('archived_at',)
 
 class AttachmentFile(ArchiveFile):
 

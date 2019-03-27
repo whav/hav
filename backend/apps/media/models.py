@@ -4,7 +4,7 @@ from django.conf import settings
 from django.utils.functional import cached_property
 
 from apps.sets.models import Node
-from apps.archive.models import ArchiveFile
+from apps.archive.models import ArchiveFile, AttachmentFile
 from apps.hav_collections.models import Collection
 
 
@@ -102,17 +102,18 @@ class Media(models.Model):
     modified_at = models.DateTimeField(auto_now=True, null=True)
     modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name='modified_media')
 
-    files = models.ManyToManyField(ArchiveFile)
+    files = models.ManyToManyField(ArchiveFile, blank=False)
+    attachments = models.ManyToManyField(AttachmentFile, blank=True, related_name='is_attachment_for')
 
     def __str__(self):
         return "Media ID {}".format(self.pk)
 
-    @cached_property
-    def primary_file(self):
-        try:
-            return self.files.all()[0]
-        except IndexError:
-            return None
+    # @cached_property
+    # def primary_file(self):
+    #     try:
+    #         return self.files.all()[0]
+    #     except IndexError:
+    #         return None
 
     objects = MediaManager()
 

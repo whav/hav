@@ -40,3 +40,9 @@ class ArchiveFile(models.Model):
         if hash != self.hash:
             raise ValidationError("Calculated hash does not match stored hash.")
         return True
+
+
+class AttachmentFile(ArchiveFile):
+
+    class Meta:
+        proxy = True

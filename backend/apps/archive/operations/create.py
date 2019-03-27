@@ -32,7 +32,7 @@ def _get_archive_file_name(filepath, uuid):
 
 
 
-def archive_file(filepath, media_id, user_id):
+def archive_file(filepath, media_id, user_id, is_attachment=False):
     media = Media.objects.get(pk=media_id)
     user = User.objects.get(pk=user_id)
     path = os.path.normpath(filepath)
@@ -64,8 +64,10 @@ def archive_file(filepath, media_id, user_id):
         af.file.save(filename, File(f))
 
     af.save()
-
-    af.media_set.add(media)
+    if is_attachment:
+        media.attachments.add(af)
+    else:
+        media.files.add(af)
 
     return af.pk
 

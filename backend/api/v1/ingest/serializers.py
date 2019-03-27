@@ -6,7 +6,7 @@ from rest_framework import serializers
 from django.urls import reverse
 
 
-from api.v1.havBrowser.serializers import SimpleHAVMediaSerializer, HAVMediaSerializer
+from api.v1.havBrowser.serializers import HAVMediaSerializer
 
 from apps.archive.operations.hash import generate_hash
 from apps.ingest.models import IngestQueue
@@ -100,7 +100,7 @@ class IngestSerializer(serializers.Serializer):
     def validate_date(self, value):
         try:
             parse(value)
-        except ValueError as e:
+        except ValueError:
             raise serializers.ValidationError('Unable to parse value.')
         else:
             return value

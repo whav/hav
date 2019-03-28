@@ -152,12 +152,16 @@ class FileBrowserMenu extends React.Component {
           <AddIcon /> Add Folder
         </Button>
       ) : null,
-      <FileBrowserSettingsDropdown
-        key="fb-settings"
-        isGrouped={isGrouped}
-        toggleGrouped={toggleGrouped}
-      />
+      // hide this for now
+      true ? null : (
+        <FileBrowserSettingsDropdown
+          key="fb-settings"
+          isGrouped={isGrouped}
+          toggleGrouped={toggleGrouped}
+        />
+      )
     ];
+
     return <ButtonGroup>{controls}</ButtonGroup>;
   }
 }

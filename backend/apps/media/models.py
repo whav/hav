@@ -25,6 +25,8 @@ class MediaCreator(models.Model):
     last_name = models.CharField(max_length=100)
     display_name = models.CharField(max_length=200, blank=True)
 
+    email = models.EmailField(blank=True)
+
     def __str__(self):
 
         if self.display_name:

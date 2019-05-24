@@ -22,6 +22,7 @@ x-django: &django
         - WEBASSET_ROOT=/archive/hav/webassets
         - CACHE_URL=${CACHE_URL}
         - SENTRY_DSN=${SENTRY_DSN}
+        - RQ_SENTRY_DSN=${SENTRY_DSN}
     working_dir: /hav/backend
     depends_on:
         - redis

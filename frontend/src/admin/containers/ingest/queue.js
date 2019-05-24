@@ -222,7 +222,7 @@ class IngestQueueLoader extends React.Component {
   render() {
     const { options, items } = this.props;
     const loading = isEmpty(options) || !Array.isArray(items);
-    console.log(items);
+    // console.log(items);
     return loading ? <LoadingIndicator /> : <IngestQueue {...this.props} />;
   }
 }

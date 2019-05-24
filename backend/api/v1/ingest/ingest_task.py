@@ -53,7 +53,7 @@ def archive_and_create_webassets(filenames, media_id, user_id, channel_group):
             media_id,
             user_id,
             result_ttl=3600*72,
-            timeout=600
+            job_timeout=600
         )
         archive_jobs.append(job)
 
@@ -78,7 +78,7 @@ def archive_and_create_webassets(filenames, media_id, user_id, channel_group):
         job = webasset_queue.enqueue(
             create_webassets,
             depends_on=archive_job,
-            timeout=3600 * 5
+            job_timeout=3600 * 5
         )
         webasset_jobs.append(job)
 

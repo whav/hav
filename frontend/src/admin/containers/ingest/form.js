@@ -242,7 +242,7 @@ class IngestForm extends React.Component {
         Object.entries(errors).forEach(
           ([key, errs]) => (formikErrors[key] = errs.join(" "))
         );
-        console.warn(formikErrors);
+        // console.warn(formikErrors);
         // console.warn(Object.keys(errors));
         actions.setErrors(formikErrors);
       })
@@ -257,7 +257,7 @@ class IngestForm extends React.Component {
         enableReinitialize={true}
         onSubmit={this.submit}
         render={({ isSubmitting, errors }) => {
-          console.warn(errors);
+          // console.warn(errors);
           return (
             <Form className="ingest-form">
               {persistName && <Persist name={persistName} />}

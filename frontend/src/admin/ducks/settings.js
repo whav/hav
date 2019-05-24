@@ -15,7 +15,6 @@ const reducer = (
   },
   action
 ) => {
-  console.log(action);
   switch (action.type) {
     case CHANGE_FILE_BROWSER_SETTINGS:
       return {

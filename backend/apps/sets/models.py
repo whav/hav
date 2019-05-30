@@ -6,6 +6,10 @@ class Node(MP_Node):
 
     name = models.CharField(max_length=200)
 
+    @property
+    def children(self):
+        return self.get_children()
+
     def get_collection(self):
         from apps.hav_collections.models import Collection
         try:

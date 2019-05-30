@@ -3,14 +3,15 @@ import graphene
 from graphene_django.types import DjangoObjectType
 
 from .models import Media, MediaCreator, License
-from apps.sets.schema import SetType
+from apps.sets.schema import NodeType
+from apps.sets.models import Node
 
 from hav_utils.imaginary import generate_thumbnail_url, generate_srcset_urls
 
 
 class MediaType(DjangoObjectType):
 
-    ancestors = graphene.List(SetType)
+    ancestors = graphene.List(NodeType)
     thumbnail_url = graphene.Field(graphene.String)
     srcset = graphene.List(graphene.String)
     type = graphene.Field(graphene.String)
@@ -28,7 +29,6 @@ class MediaType(DjangoObjectType):
             else:
                 return [f'{src[1]} {src[0]}w' for src in generate_srcset_urls(webasset)]
         return []
-
 
     def resolve_type(self, info):
         if self.primary_file:
@@ -57,22 +57,34 @@ class MediaType(DjangoObjectType):
 
         return self.set.get_ancestors()
 
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        print("Filtering QS", queryset)
+        return queryset
+
     class Meta:
         model = Media
+
 
 class CreatorType(DjangoObjectType):
     class Meta:
         model = MediaCreator
 
+
 class LicenseType(DjangoObjectType):
     class Meta:
         model = License
 
+
 class Query(object):
 
-    media = graphene.Field(MediaType, id=graphene.String(), name=graphene.String())
+    media = graphene.Field(MediaType, id=graphene.String(required=True))
+    media_entries = graphene.List(MediaType, node_id=graphene.String(required=True))
 
     def resolve_media(self, info, **kwargs):
         id = kwargs.get('id')
         return Media.objects.prefetch_related('files__webasset_set').get(pk=id)
 
+    def resolve_media_entries(self, info, node_id):
+        node = Node.objects.get(pk=node_id)
+        return Media.objects.prefetch_related('files__webasset_set').filter(set=node)

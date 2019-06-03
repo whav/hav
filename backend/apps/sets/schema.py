@@ -24,11 +24,13 @@ class NodeType(DjangoObjectType):
         return self.get_ancestors()
 
 class Query(object):
-    node = graphene.Field(NodeType, node_id=graphene.Int())
+    node = graphene.Field(NodeType, node_id=graphene.String(), collection_slug=graphene.String())
 
-    def resolve_node(self, info, node_id):
-        return Node.objects.get(pk=node_id)
-
+    def resolve_node(self, info, node_id, collection_slug):
+        if node_id:
+            return Node.objects.get(pk=node_id)
+        if collection_slug:
+            return Node.objects
 
 
 

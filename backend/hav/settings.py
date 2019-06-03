@@ -47,8 +47,6 @@ env = environ.Env(
 # read the .env file
 environ.Env.read_env(project_root('.env'))
 
-
-
 DEBUG = env('DEBUG', False)
 
 SECRET_KEY = env("DJANGO_SECRET_KEY")

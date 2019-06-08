@@ -79,12 +79,12 @@ class LicenseType(DjangoObjectType):
 class Query(object):
 
     media = graphene.Field(MediaType, id=graphene.String(required=True))
-    media_entries = graphene.List(MediaType, node_id=graphene.String(required=True))
+    media_entries = graphene.List(MediaType, nodeID=graphene.String(required=True))
 
     def resolve_media(self, info, **kwargs):
         id = kwargs.get('id')
         return Media.objects.prefetch_related('files__webasset_set').get(pk=id)
 
-    def resolve_media_entries(self, info, node_id):
-        node = Node.objects.get(pk=node_id)
+    def resolve_media_entries(self, info, nodeID):
+        node = Node.objects.get(pk=nodeID)
         return Media.objects.prefetch_related('files__webasset_set').filter(set=node)

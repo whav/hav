@@ -5,8 +5,16 @@ from graphene_django.types import DjangoObjectType
 from .models import Collection
 
 class CollectionType(DjangoObjectType):
+
+    browseable = graphene.Boolean(required=True)
+
+    def resolve_browseable(self, *args, **kwargs):
+        return self.root_node is not None
+
     class Meta:
         model = Collection
+        only_fields = ('name', 'short_name', 'slug', 'root_node', 'id')
+
 
 class Query(object):
     collections = graphene.List(CollectionType)

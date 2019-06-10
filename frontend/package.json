@@ -94,5 +94,8 @@
       "\\.(css|less|sass|scss)$": "<rootDir>/__mocks__/styleMock.js"
     },
     "testURL": "https://hav.univie.ac.at/"
-  }
+  },
+  "browserslist": [
+    "defaults"
+  ]
 }

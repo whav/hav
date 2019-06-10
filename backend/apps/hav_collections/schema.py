@@ -7,9 +7,14 @@ from .models import Collection
 class CollectionType(DjangoObjectType):
 
     browseable = graphene.Boolean(required=True)
+    searchable = graphene.Boolean()
 
     def resolve_browseable(self, *args, **kwargs):
         return self.root_node is not None
+
+    def resolve_searchable(self, info, *args, **kwargs):
+        from django.conf import settings
+        return settings.DEBUG
 
     class Meta:
         model = Collection

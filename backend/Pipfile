@@ -30,6 +30,7 @@ whitenoise = "*"
 pick = "*"
 sentry-sdk = "*"
 django-extensions = "==2.1.5"
+django-cors-headers = "*"
 
 [dev-packages]
 ipdb = "*"

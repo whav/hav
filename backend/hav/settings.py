@@ -67,6 +67,9 @@ INSTALLED_APPS = [
     'treebeard',
     'channels',
     'channels_redis',
+    'corsheaders',
+    'django_rq',
+    'graphene_django',
     'apps.whav',
     'apps.sets',
     'apps.archive',
@@ -74,12 +77,13 @@ INSTALLED_APPS = [
     'apps.ingest',
     'apps.webassets',
     'apps.hav_collections',
-    'django_rq',
-    'graphene_django',
+    'sources.uploads',
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -322,6 +326,10 @@ INGESTION_SOURCES = {
     "incoming": {
         "engine": "sources.filesystem.FSSource",
         "root": INCOMING_FILES_ROOT
+    },
+    "uploads": {
+        "engine": "source.uploads.UploadSource",
+        "root": MEDIA_ROOT
     }
 }
 
@@ -353,3 +361,17 @@ if env('SENTRY_DSN'):
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# allow all CORS in debug mode
+# CORS_ORIGIN_ALLOW_ALL = DEBUG
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:8001",
+    "http://127.0.0.1:8001",
+    "https://hav-preview.netlify.com"
+]
+
+# CORS_ORIGIN_REGEX_WHITELIST = [
+#     r"^https://\w+\.netlify\.com$",
+# ]

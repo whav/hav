@@ -25,7 +25,7 @@ after_success:
     fi
 
 script:
-  - mkdir -p dist/incoming dist/archive dist/webassets
+  - mkdir -p dist/incoming dist/archive dist/webassets dist/media
   - UG_IDS=`id -u`:`id -g` sed s/1000:1000/$UG_IDS/g <./env_files/docker.env >.env
   - cat .env
   - docker-compose config

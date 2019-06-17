@@ -13,6 +13,7 @@ x-django: &django
         - /run/redis/redis.sock:/run/redis/redis.sock
     environment:
         - IMAGINARY_SECRET=${IMAGINARY_SECRET}
+        - IMAGINARY_URL_PREFIX=${IMAGINARY_URL_PREFIX}
         - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
         - DATABASE_URL=${HAV_DATABASE_URL}
         - WHAV_DATABASE_URL=${WHAV_DATABASE_URL}

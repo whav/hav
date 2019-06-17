@@ -41,7 +41,6 @@ env = environ.Env(
     CACHE_URL=(str, 'redis://127.0.0.1:6379/0'),
     DATABASE_URL=(str, 'postgres:///hav'),
     WHAV_DATABASE_URL=(str, 'postgres:///whav'),
-
 )
 
 # read the .env file
@@ -214,7 +213,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = project_root(env('MEDIA_ROOT', default='dist/media/'))
+MEDIA_ROOT = project_root(env('DJANGO_MEDIA_ROOT', default='dist/media/'))
 
 STORAGES = {
     'webassets': {
@@ -329,7 +328,7 @@ INGESTION_SOURCES = {
     },
     "uploads": {
         "engine": "source.uploads.UploadSource",
-        "root": MEDIA_ROOT
+        "root": project_root(env('UPLOADS_ROOT', default=MEDIA_ROOT))
     }
 }
 
@@ -375,3 +374,4 @@ CORS_ORIGIN_WHITELIST = [
 # CORS_ORIGIN_REGEX_WHITELIST = [
 #     r"^https://\w+\.netlify\.com$",
 # ]
+

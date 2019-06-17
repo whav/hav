@@ -21,10 +21,12 @@ INCOMING_FILES_ROOT=/archive/incoming \
 HAV_ARCHIVE_PATH=/archive/hav \
 WHAV_ARCHIVE_PATH=/archive/whav \
 WEBASSET_ROOT=/archive/webassets \
+UPLOADS_ROOT=/archive/uploads \
+DJANGO_MEDIA_ROOT=/archive/uploads \
 DJANGO_SECRET_KEY=I_AM_VERY_UNSAFE \
 IMAGINARY_SECRET=UNSAFE
 
-RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/"]
+RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads"]
 
 
 RUN pip install -U pipenv

@@ -9,6 +9,7 @@ x-django: &django
         - ${HAV_ARCHIVE_ROOT}:/archive/hav/archive
         - ${INCOMING_FILES_ROOT}:/archive/hav/incoming
         - ${WEBASSETS_ROOT}:/archive/hav/webassets
+        - ${UPLOADS_ROOT}:/archive/hav/media
         - /var/run/postgresql/.s.PGSQL.5432:/run/postgres/.s.PGSQL.5432
         - /run/redis/redis.sock:/run/redis/redis.sock
     environment:
@@ -21,6 +22,8 @@ x-django: &django
         - HAV_ARCHIVE_PATH=/archive/hav/archive
         - INCOMING_FILES_ROOT=/archive/hav/incoming
         - WEBASSET_ROOT=/archive/hav/webassets
+        - UPLOADS_ROOT=/archive/hav/media
+        - DJANGO_MEDIA_ROOT=/archive/hav/media
         - CACHE_URL=${CACHE_URL}
         - SENTRY_DSN=${SENTRY_DSN}
         - RQ_SENTRY_DSN=${SENTRY_DSN}

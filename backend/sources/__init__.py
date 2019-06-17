@@ -1,2 +1,3 @@
 class Source(object):
-    pass
+
+    source_config = None

@@ -6,11 +6,14 @@ from rest_framework.reverse import reverse
 
 from sources.filesystem import FSSource
 from sources.whav import WHAVSource
+from sources.uploads import UploadSource
+
 from .havBrowser.urls import hav_urls
 from .ingest.urls import ingest_urls
 
 incoming_fss_source = FSSource(settings.INCOMING_FILES_ROOT, source_id='incoming')
 whav_source = WHAVSource()
+upload_source = UploadSource(settings.MEDIA_ROOT, source_id='upload')
 
 app_name = 'api'
 
@@ -21,12 +24,17 @@ def start(request):
             "hav": reverse('api:v1:hav_browser:hav_root', request=request),
             "sources": [
                 {
-                "name": "Incoming",
-                "url": reverse('api:v1:filebrowser_root', request=request)
+                    "name": "Incoming",
+                    "url": reverse('api:v1:filebrowser_root', request=request)
                 },
                 {
                     "name": "WHAV",
                     "url": reverse("api:v1:whav_root", request=request)
+                },
+                {
+                    "name": "Uploads",
+                    "url": reverse("api:v1:fileupload", request=request)
+
                 }
             ]
         }
@@ -34,7 +42,8 @@ def start(request):
 
 source_patterns = [
     url(r'^incoming/', include(incoming_fss_source.urls)),
-    url(r'^whav/', include(whav_source.urls))
+    url(r'^whav/', include(whav_source.urls)),
+    url(r'^upload/', include(upload_source.urls))
 ]
 
 urlpatterns = [

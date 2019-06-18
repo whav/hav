@@ -1,7 +1,10 @@
 version: "3.7"
 
 services:
-    django:
+    nginx:
+        ports:
+            - "8000:80"
+    django-asgi:
         depends_on:
           - hav_db
           - whav_db
@@ -10,6 +13,15 @@ services:
         volumes:
           - ./backend:/hav/backend
         command: ./manage.py runserver 0.0.0.0:8000
+
+    django-wsgi:
+        depends_on:
+        - hav_db
+        - whav_db
+        environment:
+        - DEBUG=True
+        volumes:
+        - ./backend:/hav/backend
 
     imaginary:
         ports:

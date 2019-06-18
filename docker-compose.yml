@@ -40,11 +40,21 @@ services:
             - thumbnail-cache:/www/cache
             - ${WEBASSETS_ROOT}:/www/webassets:ro
         depends_on:
-            - django
+            - django-asgi
+            - django-wsgi
             - imaginary
 
-    django:
+    django-asgi:
         <<: *django
+
+    django-wsgi:
+        <<: *django
+        command: [
+          "uwsgi",
+          "--module=hav.wsgi:application",
+          "--master",
+          "--socket=:8000"
+          ]
 
     rq-archive:
         <<: *django

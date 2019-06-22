@@ -105,18 +105,23 @@ class IngestSerializer(serializers.Serializer):
         else:
             return value
 
-    def validate_source(self, value):
-        try:
-            hash_value = generate_hash(value)
-        except FileNotFoundError:
-            raise serializers.ValidationError("The file could not be found.")
-        try:
-            media = Media.objects.get(files__hash=hash_value)
-            raise serializers.ValidationError(
-                "A file with the hash '{}' is already archived. Check media {}".format(hash_value, media)
-            )
-        except Media.DoesNotExist:
-            return value
+    def validate_sources(self, sources):
+        errors = []
+        for source in sources:
+            try:
+                hash_value = generate_hash(source)
+            except FileNotFoundError:
+                errors.append(f"The file {source} could not be found.")
+            try:
+                media = Media.objects.get(files__hash=hash_value)
+                errors.append(
+                    f"A file with the hash '{hash_value}' is already archived. Check media {media}"
+                )
+            except Media.DoesNotExist:
+                pass
+        if errors:
+            raise serializers.ValidationError(errors)
+        return sources
 
 
     def validate(self, data):

@@ -53,8 +53,9 @@ services:
           "uwsgi",
           "--module=hav.wsgi:application",
           "--master",
-          "--socket=:8000"
-          ]
+          "--http-socket=:8000",
+          "--log-master"
+        ]
 
     rq-archive:
         <<: *django

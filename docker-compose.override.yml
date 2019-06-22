@@ -21,7 +21,8 @@ services:
         environment:
         - DEBUG=True
         volumes:
-        - ./backend:/hav/backend
+            - ./backend:/hav/backend
+        command: ./manage.py runserver --noasgi 0.0.0.0:8000
 
     imaginary:
         ports:

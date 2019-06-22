@@ -20,6 +20,7 @@ def send_progress(msg, media_id, channel_group):
 
 def archive_and_create_webassets(filenames, media_id, user_id, channel_group):
     # TODO: untangle task updates from processing logic
+    # TODO: error handling?
     # perhaps using a closure or similar
 
     progress_args = [media_id, channel_group]

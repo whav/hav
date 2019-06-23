@@ -106,17 +106,18 @@ class IngestSerializer(serializers.Serializer):
             return value
 
     def validate_sources(self, sources):
-        errors = []
+        errors = {}
         for source in sources:
+            key = str(source)
             try:
                 hash_value = generate_hash(source)
             except FileNotFoundError:
-                errors.append(f"The file {source} could not be found.")
+                errors.update({key: f"The file {source} could not be found."})
             try:
                 media = Media.objects.get(files__hash=hash_value)
-                errors.append(
-                    f"A file with the hash '{hash_value}' is already archived. Check media {media}"
-                )
+                errors.update({
+                    key: f"A file with the hash '{hash_value}' is already archived. Check media {media}"
+                })
             except Media.DoesNotExist:
                 pass
         if errors:

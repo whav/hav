@@ -16,6 +16,15 @@ class MediaType(DjangoObjectType):
     srcset = graphene.List(graphene.String)
     type = graphene.Field(graphene.String)
 
+    creation_timeframe = graphene.List(graphene.DateTime)
+
+    def resolve_creation_timeframe(self, info):
+        # print(self.creation_date)
+        return [
+            self.creation_date.lower,
+            self.creation_date.upper
+        ]
+
     def resolve_srcset(self, info):
         if self.primary_file:
             webasset_images = filter(
@@ -64,6 +73,9 @@ class MediaType(DjangoObjectType):
 
     class Meta:
         model = Media
+        exclude = [
+            'creation_date'
+        ]
 
 
 class CreatorType(DjangoObjectType):

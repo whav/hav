@@ -107,12 +107,12 @@ class IngestSerializer(serializers.Serializer):
 
     def validate_sources(self, sources):
         errors = {}
-        for source in sources:
-            key = str(source)
+        print(sources, self.initial_data)
+        for key, path in zip(self.initial_data['sources'], sources):
             try:
-                hash_value = generate_hash(source)
+                hash_value = generate_hash(path)
             except FileNotFoundError:
-                errors.update({key: f"The file {source} could not be found."})
+                errors.update({key: f"The file {path} could not be found."})
             try:
                 media = Media.objects.get(files__hash=hash_value)
                 errors.update({
@@ -121,7 +121,9 @@ class IngestSerializer(serializers.Serializer):
             except Media.DoesNotExist:
                 pass
         if errors:
-            raise serializers.ValidationError(errors)
+            # TODO: we could raise this dict directly, but the frontend has no idea what to do with it
+            # raise serializers.ValidationError(errors)
+            raise serializers.ValidationError(' '.join(errors.values()))
         return sources
 
 

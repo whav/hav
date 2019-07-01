@@ -18,7 +18,7 @@ def send_progress(msg, media_id, channel_group):
         })
 
 
-def archive_and_create_webassets(filenames, media_id, user_id, channel_group):
+def archive_and_create_webassets(archive_files, media_id, user_id, channel_group, attachments=[],):
     # TODO: untangle task updates from processing logic
     # TODO: error handling?
     # perhaps using a closure or similar
@@ -47,7 +47,19 @@ def archive_and_create_webassets(filenames, media_id, user_id, channel_group):
     )
 
     archive_jobs = []
-    for index, filename in enumerate(filenames):
+    for filename in archive_files:
+        job = archive_queue.enqueue(
+            archive,
+            filename,
+            media_id,
+            user_id,
+            is_attachment=True,
+            result_ttl=3600*72,
+            job_timeout=600
+        )
+        archive_jobs.append(job)
+
+    for filename in attachments:
         job = archive_queue.enqueue(
             archive,
             filename,
@@ -57,6 +69,7 @@ def archive_and_create_webassets(filenames, media_id, user_id, channel_group):
             job_timeout=600
         )
         archive_jobs.append(job)
+
 
     task_status[0]["status"] = 'started'
     notification_queue.enqueue(

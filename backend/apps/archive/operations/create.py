@@ -4,7 +4,7 @@ import logging
 
 from django.contrib.auth.models import User
 from django.core.files import File
-from apps.archive.models import ArchiveFile
+from apps.archive.models import ArchiveFile, AttachmentFile
 from apps.media.models import Media
 
 from .hash import generate_hash
@@ -53,7 +53,12 @@ def archive_file(filepath, media_id, user_id, is_attachment=False):
     }
 
     filename = _get_archive_file_name(path, uid)
-    af = ArchiveFile(**archive_fields)
+
+    FileModel = ArchiveFile
+    if is_attachment:
+        FileModel = AttachmentFile
+
+    af = FileModel(**archive_fields)
 
     # check if everything looks good up to now
     af.full_clean(exclude=['file'])

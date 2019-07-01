@@ -81,6 +81,7 @@ class PrepareIngestSerializer(serializers.Serializer):
 class IngestSerializer(serializers.Serializer):
 
     sources = serializers.ListField(child=InternalIngestHyperlinkField(), min_length=1)
+    attachments = serializers.ListField(child=InternalIngestHyperlinkField(), required=False)
     target = serializers.HyperlinkedRelatedField(view_name='api:v1:hav_browser:hav_set', queryset=Node.objects.all(), required=False)
     date = serializers.CharField()
 
@@ -105,27 +106,41 @@ class IngestSerializer(serializers.Serializer):
         else:
             return value
 
+    def validate_source_path(self, source_path):
+        try:
+            hash_value = generate_hash(source_path)
+        except FileNotFoundError:
+            raise serializers.ValidationError(f"The file {path} could not be found.")
+
+        try:
+            media = Media.objects.get(files__hash=hash_value)
+            raise serializers.ValidationError(f"A file with the hash '{hash_value}' is already archived. Check media {media}.")
+        except Media.DoesNotExist:
+            pass
+
     def validate_sources(self, sources):
         errors = {}
-        print(sources, self.initial_data)
         for key, path in zip(self.initial_data['sources'], sources):
             try:
-                hash_value = generate_hash(path)
-            except FileNotFoundError:
-                errors.update({key: f"The file {path} could not be found."})
-            try:
-                media = Media.objects.get(files__hash=hash_value)
-                errors.update({
-                    key: f"A file with the hash '{hash_value}' is already archived. Check media {media}"
-                })
-            except Media.DoesNotExist:
-                pass
+                self.validate_source_path(path)
+            except serializers.ValidationError as e:
+                errors.update({key: e.detail})
         if errors:
             # TODO: we could raise this dict directly, but the frontend has no idea what to do with it
-            # raise serializers.ValidationError(errors)
             raise serializers.ValidationError(' '.join(errors.values()))
         return sources
 
+    def validate_attachments(self, attachments):
+        errors = {}
+        for key, path in zip(self.initial_data['attachments'], attachments):
+            try:
+                self.validate_source_path(path)
+            except serializers.ValidationError as e:
+                errors.update({key: e.detail})
+        if errors:
+            # TODO: we could raise this dict directly, but the frontend has no idea what to do with it
+            raise serializers.ValidationError(' '.join(errors.values()))
+        return attachments
 
     def validate(self, data):
         user = self.context['user']
@@ -147,6 +162,8 @@ class IngestSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context['user']
         sources = self.initial_data['sources']
+        attachments = self.initial_data.get('attachments', [])
+
         start, end = parse(validated_data['date'])
         dt_range = DateTimeTZRange(lower=start, upper=end)
         # actually create the media object

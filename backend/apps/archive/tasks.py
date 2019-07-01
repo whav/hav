@@ -6,12 +6,9 @@ from django_rq import job
 logger = logging.getLogger(__name__)
 
 @job('archive')
-def archive(filepath, media_id, user_id, **kwargs):
+def archive(filepath, media_id, user_id, is_attachment=False, **kwargs):
     logger.info(
-        'Calling archive task with args: Filepath: %s, Media_id %d, user_id %d' % (
-            filepath, media_id, user_id
-        )
-    )
-    return archive_file(filepath, media_id, user_id, **kwargs)
+        f'Calling archive task with args: Filepath: {filepath}, Media_id {media_id}, user_id {user_id}, attachment: {is_attachment}')
+    return archive_file(filepath, media_id, user_id, is_attachment=is_attachment, **kwargs)
 
 

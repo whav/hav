@@ -3,8 +3,7 @@
  */
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
-import createBrowserHistory from "history/createBrowserHistory";
-
+import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
 import Nav from "./containers/nav";
 import { routes, mainNav } from "./routes";

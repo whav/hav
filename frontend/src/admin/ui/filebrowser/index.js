@@ -332,15 +332,15 @@ export default class FileList extends React.Component {
       });
     }
 
-    // let renderedUploads = Object.values(uploads).map((upload, index) => {
-    //   return <GGalleryUpload upload={upload} key={index} />;
-    // });
+    let renderedUploads = Object.values(uploads).map((upload, index) => {
+      return <GGalleryUpload upload={upload} key={index} />;
+    });
 
     return (
       <div className="g-gallery">
         {renderedDirectories}
+        {renderedUploads}
         {rendererFiles}
-        {/*{renderedUploads}*/}
       </div>
     );
   }

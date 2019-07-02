@@ -209,6 +209,7 @@ const FileBrowserDirectoryView = connect(
     let directoryUploads = Object.values(uploadState[key] || []).filter(
       u => !u.finished
     );
+    console.log(directoryUploads);
     return {
       ...mappedProps,
       loading: false,

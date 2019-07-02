@@ -33,7 +33,7 @@ export const Uploads = connect(state => {
   let unknownUploads = [];
   let uploads = Object.entries(state.uploads)
     .map(([path, uploads]) => {
-      let dirInfo = state.filebrowser[path];
+      let dirInfo = state.repositories[path];
       return {
         directory: dirInfo,
         uploads: Object.values(uploads)

@@ -1,0 +1,7 @@
+progress.upload-failure::-moz-progress-bar {
+  background-color: red;
+}
+
+progress::-moz-progress-bar {
+  background-color: aqua;
+}

@@ -4,6 +4,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+import "@babel/polyfill";
+
 // AppContainer is a necessary wrapper component for HMR
 import { AppContainer } from "react-hot-loader";
 import configureStore from "./store";

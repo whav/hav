@@ -1,8 +1,10 @@
 import React from "react";
 import upload from "../api/upload";
 import { UploadControl } from "../ui/filebrowser/controls";
-import { Upload } from "../ui/filebrowser/uploads";
+import { SingleUpload } from "../ui/filebrowser/uploads";
 import { file_upload } from "../api/urls";
+import { listRecentUploads } from "../api/upload";
+
 import uuid from "uuid/v4";
 
 class UploadContainer extends React.Component {
@@ -58,7 +60,7 @@ class UploadContainer extends React.Component {
     return (
       <div>
         {Object.entries(this.state.uploads).map(([key, props]) => (
-          <Upload key={key} {...props} />
+          <SingleUpload key={key} {...props} />
         ))}
         <UploadControl uploadFile={this.uploadFile} />
       </div>
@@ -66,4 +68,32 @@ class UploadContainer extends React.Component {
   };
 }
 
-export default UploadContainer;
+class RecentUploads extends React.Component {
+  state = {
+    recentUploads: []
+  };
+
+  componentDidMount() {
+    listRecentUploads().then(data => this.setState({ recentUploads: data }));
+  }
+  render() {
+    return (
+      <div>
+        <h1>Recent Uploads</h1>
+        <pre>{JSON.stringify(this.state.recentUploads, null, 2)}</pre>
+      </div>
+    );
+  }
+}
+
+const Uploads = () => {
+  return (
+    <div className="filebrowser">
+      <UploadContainer />
+      <hr />
+      <RecentUploads />
+    </div>
+  );
+};
+
+export default Uploads;

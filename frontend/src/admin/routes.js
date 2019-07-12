@@ -18,7 +18,7 @@ import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
 import HAVFileBrowser from "./containers/filebrowser/hav";
 import HAVMediaDetail from "./containers/filebrowser/mediaDetail";
-import { Uploads } from "./containers/uploads";
+import Uploads from "./containers/simpleUpload";
 import IngestionQueueList from "./containers/ingest/queues";
 import Ingest from "./containers/ingest/queue";
 import SaveIngestionQueue from "./containers/ingest/index";

@@ -9,9 +9,16 @@ from rest_framework.response import Response
 from ...permissions import IncomingBaseMixin
 from sources.uploads.models import FileUpload
 
-class FileSerializer(serializers.ModelSerializer):
+class BaseFileSerializer(serializers.ModelSerializer):
+
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, upload):
+        return upload.file.url
+
     class Meta:
         model = FileUpload
+        fields = ('created_at','url')
 
 
 class FileUploadView(IncomingBaseMixin, APIView):
@@ -32,17 +39,14 @@ class FileUploadView(IncomingBaseMixin, APIView):
                 for chunk in file.chunks():
                     destination.write(chunk)
         except OSError as err:
-            raise FileOperationException(
-                detail='{0} {1}'.format(
-                    FileOperationException.default_detail,
-                    err
-                )
+            raise serializers.ValidationError(
+                detail=err.detail
             )
 
         return path
 
     def get(self, request):
-        serializer = FileSerializer(FileUpload.objects.filter(created_by=self.request.user), many=True)
+        serializer = BaseFileSerializer(FileUpload.objects.filter(created_by=self.request.user), many=True)
         return Response(data=serializer.data)
 
     def put(self, request, path=None, filename=None, **kwargs):
@@ -50,7 +54,7 @@ class FileUploadView(IncomingBaseMixin, APIView):
         # get an absolute path to the file to be created
         path = self.resolve_directory(path).joinpath(filename)
         self.save_file(file, path)
-        serializer = FileSerializer(
+        serializer = BaseFileSerializer(
             instance=path,
             context=self.context
         )

@@ -11,6 +11,7 @@ from sources.uploads import UploadSource
 from .havBrowser.urls import hav_urls
 from .ingest.urls import ingest_urls
 
+# TODO: this is a duplication of the sources defined in settings.py
 incoming_fss_source = FSSource(settings.INCOMING_FILES_ROOT, source_id='incoming')
 whav_source = WHAVSource()
 upload_source = UploadSource(settings.MEDIA_ROOT, source_id='upload')

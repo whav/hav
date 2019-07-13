@@ -5,6 +5,7 @@
   "dependencies": {
     "caniuse-db": "^1.0.30000874",
     "classnames": "^2.2.6",
+    "core-js": "3",
     "css-animations": "^1.0.7",
     "dejavu-sans-condensed": "^1.0.0",
     "filesize": "^3.6.1",

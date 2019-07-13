@@ -2,7 +2,7 @@ import React from "react";
 import upload from "../api/upload";
 import { UploadControl } from "../ui/filebrowser/controls";
 import { SingleUpload } from "../ui/filebrowser/uploads";
-import { file_upload } from "../api/urls";
+import { file_upload, uploadURL } from "../api/urls";
 import { listRecentUploads } from "../api/upload";
 
 import uuid from "uuid/v4";
@@ -49,11 +49,13 @@ class UploadContainer extends React.Component {
     // build progress functions
     const update = s => this.setUploadState(key, s);
     const onProgress = p => update({ progress: p });
-    const onSuccess = resp => update({ success: true, error: false });
+    const onSuccess = resp => {
+      update({ success: true, error: false });
+    };
     const onError = () => update({ error: true, success: false });
 
     // finally start the upload
-    upload(file, file_upload, onSuccess, onProgress, onError);
+    upload(file, uploadURL, onSuccess, onProgress, onError);
   };
 
   render = () => {

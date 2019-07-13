@@ -32,4 +32,5 @@ class UploadSource(Source):
         from .api.views import FileUploadView
         return [
             path('', FileUploadView.as_view(**kwargs), name='fileupload'),
+            path('<str:filename>', FileUploadView.as_view(**kwargs), name='fileupload_detail')
         ]

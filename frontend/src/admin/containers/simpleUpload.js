@@ -1,11 +1,78 @@
 import React from "react";
+import Dropzone from "react-dropzone";
+import uuid from "uuid/v4";
+import { Link } from "react-router-dom";
 import upload from "../api/upload";
-import { UploadControl } from "../ui/filebrowser/controls";
-import { SingleUpload } from "../ui/filebrowser/uploads";
-import { file_upload, uploadURL } from "../api/urls";
+import { uploadURL } from "../api/urls";
 import { listRecentUploads } from "../api/upload";
 
-import uuid from "uuid/v4";
+import { UploadIcon } from "../ui/icons";
+
+import "./simpleUpload.css";
+
+const buildDetailURL = pk => `/sources/upload/${pk}/`;
+
+class UploadControl extends React.Component {
+  handleDrop = (acceptedFiles, rejectedFiles) => {
+    if (rejectedFiles.length) {
+      const multiple = rejectedFiles.length > 1;
+      alert(
+        `The file${multiple ? "s" : ""} ${rejectedFiles.join(", ")} ${
+          multiple ? "were" : "was"
+        } rejected.`
+      );
+    } else {
+      acceptedFiles.forEach(f => this.props.uploadFile(f));
+    }
+  };
+
+  render() {
+    return (
+      <Dropzone style={{}} onDrop={this.handleDrop}>
+        <div className="simple-upload-trigger">
+          <UploadIcon /> Add files
+        </div>
+      </Dropzone>
+    );
+  }
+}
+
+const SingleUpload = ({
+  file,
+  success,
+  error,
+  progress,
+  preview,
+  ...props
+}) => {
+  const preview_url = preview || file.preview || file.preview_url;
+  const title = file.path ? (
+    <Link to={buildDetailURL(file.path)}>{file.name}</Link>
+  ) : (
+    file.name
+  );
+  return (
+    <div className="simple-upload">
+      <div className="preview-container">
+        {preview_url ? <img src={preview_url} alt="preview image" /> : null}
+      </div>
+      <div className="progress-container">
+        <h3>{title}</h3>
+        {/* display progress bar  */}
+        {!success && progress < 100 ? (
+          <progress max={100} value={progress}>
+            {progress}
+          </progress>
+        ) : null}
+        {error ? (
+          <span className="simple-upload-error">
+            There was an error uploading this file.
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+};
 
 class UploadContainer extends React.Component {
   state = {
@@ -35,13 +102,13 @@ class UploadContainer extends React.Component {
     this.setState(state => {
       return {
         uploads: {
-          ...state.uploads,
           [key]: {
             file,
             progress: 0,
             success: false,
             error: false
-          }
+          },
+          ...state.uploads
         }
       };
     });
@@ -50,7 +117,7 @@ class UploadContainer extends React.Component {
     const update = s => this.setUploadState(key, s);
     const onProgress = p => update({ progress: p });
     const onSuccess = resp => {
-      update({ success: true, error: false });
+      update({ success: true, error: false, file: resp });
     };
     const onError = () => update({ error: true, success: false });
 
@@ -60,12 +127,13 @@ class UploadContainer extends React.Component {
 
   render = () => {
     return (
-      <div>
+      <>
+        <UploadControl uploadFile={this.uploadFile} />
+
         {Object.entries(this.state.uploads).map(([key, props]) => (
           <SingleUpload key={key} {...props} />
         ))}
-        <UploadControl uploadFile={this.uploadFile} />
-      </div>
+      </>
     );
   };
 }
@@ -80,10 +148,18 @@ class RecentUploads extends React.Component {
   }
   render() {
     return (
-      <div>
-        <h1>Recent Uploads</h1>
-        <pre>{JSON.stringify(this.state.recentUploads, null, 2)}</pre>
-      </div>
+      <>
+        {this.state.recentUploads.map(upload => {
+          return (
+            <SingleUpload
+              key={upload.preview_url}
+              file={upload}
+              success={true}
+              preview={upload.preview_url}
+            />
+          );
+        })}
+      </>
     );
   }
 }
@@ -92,7 +168,6 @@ const Uploads = () => {
   return (
     <div className="filebrowser">
       <UploadContainer />
-      <hr />
       <RecentUploads />
     </div>
   );

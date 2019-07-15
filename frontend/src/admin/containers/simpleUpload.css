@@ -1,0 +1,33 @@
+.simple-upload-trigger {
+  width: 100%;
+  min-height: 2rem;
+  margin: 1rem;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.simple-upload {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.simple-upload .preview-container img {
+  display: block;
+  max-width: 200px;
+  min-width: 150px;
+  height: auto;
+}
+
+.simple-upload .progress-container {
+  padding-left: 2rem;
+}
+
+.simple-upload-error {
+  display: block;
+  padding: 0.5rem;
+  background-color: red;
+  font-size: 1.2rem;
+}

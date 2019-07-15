@@ -3,11 +3,12 @@
  */
 import React from "react";
 
-const SingleUpload = ({ file, success, error, progress }) => {
+const SingleUpload = ({ file, success, error, progress, ...props }) => {
+  const preview = props.preview || file.preview;
   return (
     <div>
       <h3>{file.name}</h3>
-      {file.preview ? <img src={file.preview} alt="preview image" /> : null}
+      {preview ? <img src={preview} alt="preview image" /> : null}
       {success ? (
         <span>Finished</span>
       ) : (

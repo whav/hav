@@ -29,12 +29,12 @@ const routes = [
     main: Welcome
   },
   {
-    path: "/sources/:repository/:path*/",
-    main: FileBrowser
+    path: "/sources/upload/",
+    main: Uploads
   },
   {
-    path: "/uploads/",
-    main: Uploads
+    path: "/sources/:repository/:path*/",
+    main: FileBrowser
   },
   {
     path: "/ingest/",
@@ -53,7 +53,7 @@ const routes = [
     main: HAVFileBrowser
   },
   {
-    path: "/:respository(hav)/media/:media_id/",
+    path: "/:repository(hav)/media/:media_id/",
     main: HAVMediaDetail
   }
 ];
@@ -91,14 +91,14 @@ const mainNav = [
         icon: DatabaseIcon,
         title: "WHAV",
         menuExact: false
+      },
+      {
+        icon: UploadIcon,
+        title: "Uploads",
+        menuExact: true,
+        link: "/sources/upload/"
       }
     ]
-  },
-  {
-    icon: UploadIcon,
-    title: "Uploads",
-    menuExact: true,
-    link: "/uploads/"
   }
 ];
 

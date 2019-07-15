@@ -40,6 +40,7 @@ def get_imaginary_path(obj_or_path):
     # import here to avoid circular imports
     from apps.webassets.models import WebAsset
     from apps.archive.models import ArchiveFile
+    from sources.uploads.models import FileUpload
 
     if isinstance(obj_or_path, WebAsset):
         # Webassets
@@ -50,6 +51,8 @@ def get_imaginary_path(obj_or_path):
     elif isinstance(obj_or_path, str) and is_absolute(obj_or_path):
         # url case
         return obj_or_path
+    elif isinstance(obj_or_path, FileUpload):
+        return Path('uploads/').joinpath(obj_or_path.file.name).as_posix()
     elif isinstance(obj_or_path, (str, Path)):
          path = Path(obj_or_path)
          if path.is_absolute():

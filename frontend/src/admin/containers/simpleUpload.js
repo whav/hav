@@ -7,7 +7,8 @@ import { uploadURL } from "../api/urls";
 import { listRecentUploads } from "../api/upload";
 
 import { UploadIcon } from "../ui/icons";
-
+import ProgressBar from "../ui/components/progress";
+import Error from "../ui/components/errors";
 import "./simpleUpload.css";
 
 const buildDetailURL = pk => `/sources/upload/${pk}/`;
@@ -29,7 +30,7 @@ class UploadControl extends React.Component {
   render() {
     return (
       <Dropzone style={{}} onDrop={this.handleDrop}>
-        <div className="simple-upload-trigger">
+        <div className="upload-trigger button is-large is-fullwidth is-outlined">
           <UploadIcon /> Add files
         </div>
       </Dropzone>
@@ -52,22 +53,25 @@ const SingleUpload = ({
     file.name
   );
   return (
-    <div className="simple-upload">
-      <div className="preview-container">
-        {preview_url ? <img src={preview_url} alt="preview image" /> : null}
+    <div className="media box">
+      <div className="media-left">
+        {preview_url ? (
+          <img className="image" src={preview_url} alt="preview image" />
+        ) : null}
       </div>
-      <div className="progress-container">
-        <h3>{title}</h3>
+      <div className="media-content">
+        {error ? <Error>There was an error uploading this file.</Error> : null}
+
+        <h3 className="subtitle is-5">{title}</h3>
+
         {/* display progress bar  */}
         {!success && progress < 100 ? (
-          <progress max={100} value={progress}>
-            {progress}
-          </progress>
-        ) : null}
-        {error ? (
-          <span className="simple-upload-error">
-            There was an error uploading this file.
-          </span>
+          <ProgressBar
+            max={100}
+            progress={progress}
+            error={error}
+            success={success}
+          />
         ) : null}
       </div>
     </div>
@@ -166,7 +170,7 @@ class RecentUploads extends React.Component {
 
 const Uploads = () => {
   return (
-    <div className="filebrowser">
+    <div className="upload-container">
       <UploadContainer />
       <RecentUploads />
     </div>

@@ -95,7 +95,7 @@ const mainNav = [
       {
         icon: UploadIcon,
         title: "Uploads",
-        menuExact: true,
+        menuExact: false,
         link: "/sources/upload/"
       }
     ]

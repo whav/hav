@@ -1,6 +1,7 @@
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.shortcuts import get_object_or_404
+
 
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
@@ -73,10 +74,6 @@ class FileDetailSerializer(FSFileDetailSerializer):
         )
 
 
-
-
-
-
 class CreateFileSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -98,9 +95,12 @@ class FileUploadBaseView(IncomingBaseMixin, APIView):
 class FileUploadView(FileUploadBaseView):
 
     def get(self, request):
-        date_cutoff = datetime.now() - timedelta(hours=24)
+        date_cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
         serializer = BaseFileSerializer(
-            FileUpload.objects.filter(created_by=self.request.user, created_at__gt=date_cutoff).order_by('-created_at'),
+            FileUpload.objects.filter(
+                created_by=self.request.user,
+                created_at__gt=date_cutoff
+            ).order_by('-created_at'),
             many=True,
             context=self.context
         )

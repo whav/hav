@@ -78,6 +78,10 @@ class PrepareIngestSerializer(serializers.Serializer):
     )
 
 
+def _transform_error_dict(errors):
+    values = errors.values()
+    return ' '.join(map(lambda x: ' '.join([str(e) for e in x]), values))
+
 class IngestSerializer(serializers.Serializer):
 
     sources = serializers.ListField(child=InternalIngestHyperlinkField(), min_length=1)
@@ -127,7 +131,7 @@ class IngestSerializer(serializers.Serializer):
                 errors.update({key: e.detail})
         if errors:
             # TODO: we could raise this dict directly, but the frontend has no idea what to do with it
-            raise serializers.ValidationError(' '.join(errors.values()))
+            raise serializers.ValidationError(_transform_error_dict(errors))
         return sources
 
     def validate_attachments(self, attachments):
@@ -139,7 +143,7 @@ class IngestSerializer(serializers.Serializer):
                 errors.update({key: e.detail})
         if errors:
             # TODO: we could raise this dict directly, but the frontend has no idea what to do with it
-            raise serializers.ValidationError(' '.join(errors.values()))
+            raise serializers.ValidationError(_transform_error_dict(errors))
         return attachments
 
     def validate(self, data):

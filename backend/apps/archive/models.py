@@ -5,7 +5,14 @@ from django.core.exceptions import ValidationError
 from .storage import ArchiveStorage
 from mimetypes import guess_type
 from django.conf import settings
+
+from ..media.models import CreatorBase, MediaCreator
+
 import uuid
+
+
+class FileCreator(CreatorBase):
+    file = models.ForeignKey('ArchiveFile', on_delete=models.CASCADE)
 
 
 class ArchiveFile(models.Model):
@@ -21,6 +28,8 @@ class ArchiveFile(models.Model):
 
     archived_at = models.DateTimeField(auto_now_add=True)
     archived_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+
+    creators = models.ManyToManyField(MediaCreator, through=FileCreator, verbose_name='creators')
 
     @property
     def mime_type(self):

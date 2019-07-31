@@ -4,7 +4,7 @@ from django.conf import settings
 from django.utils.functional import cached_property
 
 from apps.sets.models import Node
-from apps.archive.models import ArchiveFile, AttachmentFile
+# from apps.archive.models import ArchiveFile, AttachmentFile
 from apps.hav_collections.models import Collection
 
 
@@ -46,9 +46,16 @@ class MediaCreatorRole(models.Model):
         return self.role_name
 
 
-class MediaToCreator(models.Model):
+class CreatorBase(models.Model):
     creator = models.ForeignKey(MediaCreator, on_delete=models.CASCADE)
     role = models.ForeignKey(MediaCreatorRole, null=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        abstract = True
+
+
+class MediaToCreator(CreatorBase):
+
     media = models.ForeignKey('Media', on_delete=models.CASCADE)
 
     class Meta:
@@ -102,8 +109,8 @@ class Media(models.Model):
     modified_at = models.DateTimeField(auto_now=True, null=True)
     modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name='modified_media')
 
-    files = models.ManyToManyField(ArchiveFile, blank=False)
-    attachments = models.ManyToManyField(AttachmentFile, blank=True, related_name='is_attachment_for')
+    files = models.ManyToManyField('archive.ArchiveFile', blank=False)
+    attachments = models.ManyToManyField('archive.AttachmentFile', blank=True, related_name='is_attachment_for')
 
     def __str__(self):
         return "Media ID {}".format(self.pk)

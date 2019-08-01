@@ -3,13 +3,15 @@ import {
   Formik,
   Form,
   Field,
-  ErrorMessage as FormikErrorMessage
+  ErrorMessage as FormikErrorMessage,
+  FieldArray
 } from "formik";
 import classnames from "classnames";
 import ReactSelect from "react-select";
 import { Persist } from "formik-persist";
 import parseDateToRange from "../../utils/daterange";
 import TagInput from "../../ui/components/taginput";
+import Button from "../../ui/components/buttons";
 
 const customStyles = {
   control: provided => ({
@@ -129,6 +131,16 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
     <React.Fragment>
       <div className="columns">
         <div className="column">
+          <BField label="Media Type">
+            <Field
+              component={SelectField}
+              name="media_type"
+              options={media_types}
+            />
+            <ErrorMessage name="media_type" component="div" />
+          </BField>
+        </div>
+        <div className="column">
           <BField label="Date">
             <Field
               className="input"
@@ -141,20 +153,6 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
           </BField>
         </div>
         <div className="column">
-          <BField label="Creators">
-            <Field
-              component={SelectField}
-              className="input"
-              name="creators"
-              multiple={true}
-              options={creators}
-            />
-            <ErrorMessage name="creators" component="div" />
-          </BField>
-        </div>
-      </div>
-      <div className="columns">
-        <div className="column">
           <BField label="License">
             <Field
               component={SelectField}
@@ -164,20 +162,50 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
             <ErrorMessage name="media_license" component="div" />
           </BField>
         </div>
-        <div className="column">
-          <BField label="Original Media Type">
-            <Field
-              component={SelectField}
-              name="media_type"
-              options={media_types}
-            />
-            <ErrorMessage name="media_type" component="div" />
-          </BField>
-        </div>
       </div>
     </React.Fragment>
   );
 };
+
+const CreatorRoleForm = ({
+  deleteRow,
+  index = 0,
+  creators = [],
+  creator_roles = []
+}) => (
+  <tr>
+    <td>
+      <Field
+        component={SelectField}
+        className="input"
+        name={`creators.${index}.creator`}
+        multiple={false}
+        options={creators}
+      />
+      <ErrorMessage name={`creators.${index}.creator`} component="div" />
+    </td>
+    <td>
+      <Field
+        component={SelectField}
+        className="input"
+        name={`creators.${index}.role`}
+        multiple={false}
+        options={creator_roles}
+      />
+      <ErrorMessage name={`creators.${index}.role`} component="div" />
+    </td>
+    <td>
+      <Button
+        onClick={e => {
+          e.preventDefault();
+          deleteRow();
+        }}
+      >
+        Delete
+      </Button>
+    </td>
+  </tr>
+);
 
 const GlobalErrors = ({ errors }) => {
   const keys = ["sources", "target", "non_field_errors"];
@@ -233,6 +261,11 @@ class TemplateForm extends React.Component {
   }
 }
 
+const Columns = ({ children }) => <div className="columns">{children}</div>;
+const Column = ({ children, className }) => (
+  <div className={classnames("column", className)}>{children}</div>
+);
+
 class IngestForm extends React.Component {
   submit = (data, actions) => {
     this.props
@@ -242,8 +275,6 @@ class IngestForm extends React.Component {
         Object.entries(errors).forEach(
           ([key, errs]) => (formikErrors[key] = errs.join(" "))
         );
-        // console.warn(formikErrors);
-        // console.warn(Object.keys(errors));
         actions.setErrors(formikErrors);
       })
       .finally(() => actions.setSubmitting(false));
@@ -251,16 +282,16 @@ class IngestForm extends React.Component {
 
   render() {
     const { options, initialValues = {}, persistName, onDelete } = this.props;
+    console.warn(initialValues);
     return (
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
         onSubmit={this.submit}
-        render={({ isSubmitting, errors }) => {
-          // console.warn(errors);
+        render={({ isSubmitting, errors, values }) => {
           return (
             <Form className="ingest-form">
-              {persistName && <Persist name={persistName} />}
+              {/* {persistName && <Persist name={persistName} />} */}
               <GlobalErrors errors={errors} />
               <BField label="Title">
                 <Field className="input" name="media_title" />
@@ -274,8 +305,9 @@ class IngestForm extends React.Component {
                 />
                 <ErrorMessage name="media_tags" component="div" />
               </BField>
-              <div className="columns">
-                <div className="column">
+
+              <Columns>
+                <Column>
                   <BField label="Description">
                     <Field
                       component="textarea"
@@ -284,17 +316,56 @@ class IngestForm extends React.Component {
                     />
                     <ErrorMessage name="description" component="div" />
                   </BField>
-                </div>
-                <div className="column">
+                </Column>
+                <Column>
                   <BField label="Identifier">
                     <Field className="input" name="media_identifier" />
                     <ErrorMessage name="description" component="div" />
                   </BField>
-                </div>
-              </div>
+                </Column>
+              </Columns>
+
+              <FieldArray
+                name="creators"
+                render={arrayhelpers => {
+                  return (
+                    <table className="table is-fullwidth">
+                      <thead>
+                        <th>Creator</th>
+                        <th>Role</th>
+                        <th />
+                      </thead>
+                      <tbody>
+                        {values.creators.map((_, index) => (
+                          <CreatorRoleForm
+                            {...options}
+                            index={index}
+                            key={index}
+                            deleteRow={() => arrayhelpers.remove(index)}
+                          />
+                        ))}
+                        <tr>
+                          <td colSpan={3} className="has-text-right">
+                            <Button
+                              onClick={e => {
+                                e.preventDefault();
+                                arrayhelpers.push({ creator: "", role: "" });
+                              }}
+                            >
+                              Add Creator
+                            </Button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  );
+                }}
+              />
+
               <SharedFields {...options} />
-              <div className="columns is-desktop">
-                <div className="column">
+
+              <Columns>
+                <Column>
                   <div className="control">
                     <button
                       className="button is-danger"
@@ -305,8 +376,8 @@ class IngestForm extends React.Component {
                       Remove
                     </button>
                   </div>
-                </div>
-                <div className="column is-half has-text-right">
+                </Column>
+                <Column>
                   <button
                     className={classnames("button is-primary is-active", {
                       "is-loading": isSubmitting
@@ -315,8 +386,8 @@ class IngestForm extends React.Component {
                   >
                     Ingest
                   </button>
-                </div>
-              </div>
+                </Column>
+              </Columns>
             </Form>
           );
         }}

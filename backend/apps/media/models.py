@@ -4,7 +4,6 @@ from django.conf import settings
 from django.utils.functional import cached_property
 
 from apps.sets.models import Node
-# from apps.archive.models import ArchiveFile, AttachmentFile
 from apps.hav_collections.models import Collection
 
 

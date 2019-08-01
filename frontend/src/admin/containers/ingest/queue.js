@@ -26,7 +26,12 @@ const initialFormValues = {
   media_license: "",
   media_tags: [],
   media_type: "",
-  creators: [],
+  creators: [
+    {
+      creator: "",
+      role: ""
+    }
+  ],
   date: "",
   start: "",
   end: ""

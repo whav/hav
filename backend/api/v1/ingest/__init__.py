@@ -15,9 +15,10 @@ class IngestOptionsView(IncomingBaseMixin, APIView):
     def get(self, request):
         return Response({
             "creators": [{'id': mc.pk, 'name': str(mc)} for mc in MediaCreator.objects.all()],
+            "creator_roles": [{'id': r.pk, "name": str(r)} for r in MediaCreatorRole.objects.all()],
             "roles": MediaCreatorRoleSerializer(MediaCreatorRole.objects.all(), many=True).data,
             "licenses": MediaLicenseSerializer(License.objects.all(), many=True).data,
-            "media_types": MediaTypeSerializer(MediaType.objects.all(), many=True).data
+            "media_types": MediaTypeSerializer(MediaType.objects.all(), many=True).data,
         })
 
 

@@ -167,44 +167,89 @@ const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
   );
 };
 
-const CreatorRoleForm = ({
-  deleteRow,
-  index = 0,
+const CreatorRoleTable = ({
+  instances,
+  accessor,
   creators = [],
   creator_roles = []
 }) => (
-  <tr>
-    <td>
-      <Field
-        component={SelectField}
-        className="input"
-        name={`creators.${index}.creator`}
-        multiple={false}
-        options={creators}
-      />
-      <ErrorMessage name={`creators.${index}.creator`} component="div" />
-    </td>
-    <td>
-      <Field
-        component={SelectField}
-        className="input"
-        name={`creators.${index}.role`}
-        multiple={false}
-        options={creator_roles}
-      />
-      <ErrorMessage name={`creators.${index}.role`} component="div" />
-    </td>
-    <td>
-      <Button
-        onClick={e => {
-          e.preventDefault();
-          deleteRow();
-        }}
-      >
-        Delete
-      </Button>
-    </td>
-  </tr>
+  <FieldArray
+    name={accessor}
+    render={arrayhelpers => {
+      return (
+        <table className="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Creator</th>
+              <th>Role</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {instances.map((_, index) => {
+              const field_accessor = `${accessor}.${index}`;
+              return (
+                <tr key={index}>
+                  <td>
+                    <Field
+                      component={SelectField}
+                      className="input"
+                      name={`${field_accessor}.creator`}
+                      multiple={false}
+                      options={creators}
+                    />
+                    <ErrorMessage
+                      name={`${field_accessor}.creator`}
+                      component="div"
+                    />
+                  </td>
+                  <td>
+                    <Field
+                      component={SelectField}
+                      className="input"
+                      name={`${field_accessor}.role`}
+                      multiple={false}
+                      options={creator_roles}
+                    />
+                    <ErrorMessage
+                      name={`${field_accessor}.role`}
+                      component="div"
+                    />
+                  </td>
+                  <td className="has-text-right">
+                    {index === 0 ? null : (
+                      <a
+                        className="delete is-small"
+                        onClick={e => {
+                          e.preventDefault();
+                          arrayhelpers.remove(index);
+                        }}
+                      >
+                        Delete
+                      </a>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+            <tr>
+              <td colSpan={3} className="has-text-right">
+                <Button
+                  className="is-small"
+                  onClick={e => {
+                    e.preventDefault();
+                    arrayhelpers.push({ creator: "", role: "" });
+                  }}
+                >
+                  Add Creator
+                </Button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+    }}
+  />
 );
 
 const GlobalErrors = ({ errors }) => {
@@ -282,7 +327,6 @@ class IngestForm extends React.Component {
 
   render() {
     const { options, initialValues = {}, persistName, onDelete } = this.props;
-    console.warn(initialValues);
     return (
       <Formik
         initialValues={initialValues}
@@ -324,44 +368,11 @@ class IngestForm extends React.Component {
                   </BField>
                 </Column>
               </Columns>
-
-              <FieldArray
-                name="creators"
-                render={arrayhelpers => {
-                  return (
-                    <table className="table is-fullwidth">
-                      <thead>
-                        <th>Creator</th>
-                        <th>Role</th>
-                        <th />
-                      </thead>
-                      <tbody>
-                        {values.creators.map((_, index) => (
-                          <CreatorRoleForm
-                            {...options}
-                            index={index}
-                            key={index}
-                            deleteRow={() => arrayhelpers.remove(index)}
-                          />
-                        ))}
-                        <tr>
-                          <td colSpan={3} className="has-text-right">
-                            <Button
-                              onClick={e => {
-                                e.preventDefault();
-                                arrayhelpers.push({ creator: "", role: "" });
-                              }}
-                            >
-                              Add Creator
-                            </Button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  );
-                }}
+              <CreatorRoleTable
+                {...options}
+                accessor="creators"
+                instances={values.creators}
               />
-
               <SharedFields {...options} />
 
               <Columns>

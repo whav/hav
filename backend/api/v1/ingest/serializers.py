@@ -89,7 +89,7 @@ class IngestSerializer(serializers.Serializer):
     target = serializers.HyperlinkedRelatedField(view_name='api:v1:hav_browser:hav_set', queryset=Node.objects.all(), required=False)
     date = serializers.CharField()
 
-    creators = serializers.PrimaryKeyRelatedField(queryset=MediaCreator.objects.all(), many=True, allow_empty=False)
+    creators = MediaCreatorSerializer(many=True, allow_empty=False)
 
     media_license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
     media_title = serializers.CharField(max_length=255)
@@ -185,11 +185,8 @@ class IngestSerializer(serializers.Serializer):
         )
 
         # save m2m
-        for creator in validated_data['creators']:
-            MediaToCreator.objects.create(
-                creator=creator,
-                media=media
-            )
+        for media2creator in validated_data['creators']:
+            MediaToCreator.objects.create(media=media, **media2creator)
 
         # update the ingest queue (if available) by removing the source
         queue = self.context.get('queue')

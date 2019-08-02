@@ -7,7 +7,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 import random
-from apps.media.models import License, MediaCreator, MediaType
+from apps.media.models import License, MediaCreator, MediaType, MediaCreatorRole
 from apps.sets.models import Node
 from apps.ingest.models import IngestQueue
 from apps.hav_collections.models import Collection
@@ -35,6 +35,7 @@ class IngestTest(APITestCase):
         self.target = self.root.add_child(name='testchild')
         self.user = User.objects.create_superuser('tester', 'test@example.com', uuid4())
         self.creator = MediaCreator.objects.create(first_name='Tester', last_name='Testeroo')
+        self.role = MediaCreatorRole.objects.create(role_name='testrole')
         self.license = License.objects.create(short_name='WTFPL')
 
         self.collection = Collection.objects.create(
@@ -69,7 +70,12 @@ class IngestTest(APITestCase):
 
         return {
                 'date': '2018-02-01T15:30',
-                'creators': [self.creator.pk],
+                'creators': [
+                    {
+                        'creator': self.creator.pk,
+                        'role': self.role.pk
+                    }
+                ],
                 'media_license': self.license.pk,
                 'media_type': self.media_type.pk,
                 'sources': [self.source_id],

@@ -12,6 +12,8 @@ import { Persist } from "formik-persist";
 import parseDateToRange from "../../utils/daterange";
 import TagInput from "../../ui/components/taginput";
 import Button from "../../ui/components/buttons";
+import { UploadContainer, SingleUpload } from "../simpleUpload";
+import SourcePreview from "./sources";
 
 const customStyles = {
   control: provided => ({
@@ -252,6 +254,53 @@ const CreatorRoleTable = ({
   />
 );
 
+const UploadComponent = props =>
+  props.success ? null : <SingleUpload {...props} />;
+
+const Attachments = ({ attachments, ...props }) => {
+  // console.log("Attachments:", attachments);
+  return (
+    <FieldArray
+      name="attachments"
+      render={arrayhelpers => (
+        <React.Fragment>
+          {attachments.map((a, index) => {
+            const field_accessor = `attachments.${index}`;
+            return (
+              <div className="media box" key={index}>
+                <div className="media-left">
+                  <SourcePreview url={a.source} />
+                </div>
+                <div className="media-content">
+                  <Field type="hidden" name={`${field_accessor}.source`} />
+                  <BField label="Description">
+                    <Field
+                      className="input"
+                      name={`${field_accessor}.description`}
+                    />
+                  </BField>
+                </div>
+              </div>
+            );
+          })}
+          <UploadContainer
+            onSuccess={resp => {
+              console.log("Success...", resp);
+              arrayhelpers.push({
+                source: resp.url,
+                description: "",
+                creators: []
+              });
+            }}
+            trigger_text="Add attachment"
+            component={UploadComponent}
+          />
+        </React.Fragment>
+      )}
+    />
+  );
+};
+
 const GlobalErrors = ({ errors }) => {
   const keys = ["sources", "target", "non_field_errors"];
   const error_keys = Object.keys(errors).filter(k => keys.indexOf(k) > -1);
@@ -326,7 +375,13 @@ class IngestForm extends React.Component {
   };
 
   render() {
-    const { options, initialValues = {}, persistName, onDelete } = this.props;
+    const {
+      options,
+      initialValues = {},
+      persistName,
+      onDelete,
+      source
+    } = this.props;
     return (
       <Formik
         initialValues={initialValues}
@@ -335,45 +390,53 @@ class IngestForm extends React.Component {
         render={({ isSubmitting, errors, values }) => {
           return (
             <Form className="ingest-form">
-              {/* {persistName && <Persist name={persistName} />} */}
+              {persistName && <Persist name={persistName} />}
               <GlobalErrors errors={errors} />
-              <BField label="Title">
-                <Field className="input" name="media_title" />
-                <ErrorMessage name="media_title" component="div" />
-              </BField>
-              <BField label="Tags">
-                <Field
-                  component={TagField}
-                  className="input"
-                  name="media_tags"
-                />
-                <ErrorMessage name="media_tags" component="div" />
-              </BField>
-
               <Columns>
-                <Column>
-                  <BField label="Description">
-                    <Field
-                      component="textarea"
-                      className="textarea"
-                      name="media_description"
-                    />
-                    <ErrorMessage name="description" component="div" />
-                  </BField>
+                <Column className="is-one-third is-clipped ingest-form-preview">
+                  <SourcePreview url={source} />
                 </Column>
                 <Column>
+                  <BField label="Title">
+                    <Field className="input" name="media_title" />
+                    <ErrorMessage name="media_title" component="div" />
+                  </BField>
+                  <BField label="Tags">
+                    <Field
+                      component={TagField}
+                      className="input"
+                      name="media_tags"
+                    />
+                    <ErrorMessage name="media_tags" component="div" />
+                  </BField>
                   <BField label="Identifier">
                     <Field className="input" name="media_identifier" />
-                    <ErrorMessage name="description" component="div" />
+                    <ErrorMessage name="media_identifier" component="div" />
                   </BField>
+                  <CreatorRoleTable
+                    {...options}
+                    accessor="creators"
+                    instances={values.creators}
+                  />
                 </Column>
               </Columns>
-              <CreatorRoleTable
-                {...options}
-                accessor="creators"
-                instances={values.creators}
-              />
+              <BField label="Description">
+                <Field
+                  component="textarea"
+                  className="textarea"
+                  name="media_description"
+                />
+                <ErrorMessage name="description" component="div" />
+              </BField>
+
               <SharedFields {...options} />
+
+              {/* Attachments */}
+              <Columns>
+                <Column>
+                  <Attachments attachments={values.attachments} {...options} />
+                </Column>
+              </Columns>
 
               <Columns>
                 <Column>
@@ -388,7 +451,7 @@ class IngestForm extends React.Component {
                     </button>
                   </div>
                 </Column>
-                <Column>
+                <Column className="has-text-right">
                   <button
                     className={classnames("button is-primary is-active", {
                       "is-loading": isSubmitting
@@ -407,17 +470,12 @@ class IngestForm extends React.Component {
   }
 }
 
-export default ({ children, ...props }) => (
-  <div className="box is-outlined">
-    <div className="columns is-desktop">
-      <div className="column is-one-third is-clipped ingest-form-preview">
-        {children}
-      </div>
-      <div className="column is-two-thirds">
-        <IngestForm {...props} />
-      </div>
+export default props => {
+  return (
+    <div className="box is-outlined">
+      <IngestForm {...props} />
     </div>
-  </div>
-);
+  );
+};
 
 export { TemplateForm };

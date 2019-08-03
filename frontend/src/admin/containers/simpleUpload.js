@@ -28,10 +28,15 @@ class UploadControl extends React.Component {
   };
 
   render() {
+    const { children, text = "Add files" } = this.props;
     return (
       <Dropzone style={{}} onDrop={this.handleDrop}>
         <div className="upload-trigger button is-large is-fullwidth is-outlined">
-          <UploadIcon /> Add files
+          {children || (
+            <>
+              <UploadIcon /> {text}
+            </>
+          )}
         </div>
       </Dropzone>
     );
@@ -121,6 +126,9 @@ class UploadContainer extends React.Component {
     const update = s => this.setUploadState(key, s);
     const onProgress = p => update({ progress: p });
     const onSuccess = resp => {
+      // console.log("upload success");
+      // callback if given
+      this.props.onSuccess && this.props.onSuccess(resp);
       update({ success: true, error: false, file: resp });
     };
     const onError = () => update({ error: true, success: false });
@@ -130,12 +138,13 @@ class UploadContainer extends React.Component {
   };
 
   render = () => {
+    const { component, trigger_text = "Add files" } = this.props;
+    const UploadDisplay = component || SingleUpload;
     return (
       <>
-        <UploadControl uploadFile={this.uploadFile} />
-
+        <UploadControl uploadFile={this.uploadFile} text={trigger_text} />
         {Object.entries(this.state.uploads).map(([key, props]) => (
-          <SingleUpload key={key} {...props} />
+          <UploadDisplay key={key} {...props} />
         ))}
       </>
     );
@@ -178,3 +187,4 @@ const Uploads = () => {
 };
 
 export default Uploads;
+export { UploadContainer, SingleUpload };

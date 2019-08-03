@@ -34,7 +34,8 @@ const initialFormValues = {
   ],
   date: "",
   start: "",
-  end: ""
+  end: "",
+  attachments: []
 };
 
 class WSListener extends React.PureComponent {
@@ -69,7 +70,9 @@ class IngestQueue extends React.Component {
   constructor(props) {
     super(props);
     const formData = {};
-    props.items.forEach(k => (formData[k] = { ...initialFormValues }));
+    props.items.forEach(k => {
+      formData[k] = { ...initialFormValues };
+    });
     this.state = {
       formData,
       templateData: {},
@@ -157,7 +160,7 @@ class IngestQueue extends React.Component {
           <IngestForm
             key={source}
             source={source}
-            // persistName={source}
+            persistName={source}
             options={options}
             onSubmit={data => this.ingestItem(source, data)}
             persistName={`${window.location.href}||${source}`}

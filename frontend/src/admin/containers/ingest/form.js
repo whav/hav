@@ -258,7 +258,6 @@ const UploadComponent = props =>
   props.success ? null : <SingleUpload {...props} />;
 
 const Attachments = ({ attachments, ...props }) => {
-  // console.log("Attachments:", attachments);
   return (
     <FieldArray
       name="attachments"
@@ -273,12 +272,11 @@ const Attachments = ({ attachments, ...props }) => {
                 </div>
                 <div className="media-content">
                   <Field type="hidden" name={`${field_accessor}.source`} />
-                  <BField label="Description">
-                    <Field
-                      className="input"
-                      name={`${field_accessor}.description`}
-                    />
-                  </BField>
+                  <CreatorRoleTable
+                    {...props}
+                    accessor={`${field_accessor}.creators`}
+                    instances={a.creators}
+                  />
                 </div>
               </div>
             );
@@ -409,10 +407,6 @@ class IngestForm extends React.Component {
                     />
                     <ErrorMessage name="media_tags" component="div" />
                   </BField>
-                  <BField label="Identifier">
-                    <Field className="input" name="media_identifier" />
-                    <ErrorMessage name="media_identifier" component="div" />
-                  </BField>
                   <CreatorRoleTable
                     {...options}
                     accessor="creators"
@@ -420,6 +414,12 @@ class IngestForm extends React.Component {
                   />
                 </Column>
               </Columns>
+
+              <BField label="Identifier">
+                <Field className="input" name="media_identifier" />
+                <ErrorMessage name="media_identifier" component="div" />
+              </BField>
+
               <BField label="Description">
                 <Field
                   component="textarea"

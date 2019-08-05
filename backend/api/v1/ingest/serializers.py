@@ -17,6 +17,7 @@ from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkFi
     InternalIngestHyperlinkField, IngestionReferenceField
 from hav_utils.daterange import parse
 from .ingest_task import archive_and_create_webassets
+from .fields import resolveURLtoFilePath
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +85,8 @@ def _transform_error_dict(errors):
     return ' '.join(map(lambda x: ' '.join([str(e) for e in x]), values))
 
 
-def validate_source_path(source_path):
+def validate_source(url):
+    source_path = resolveURLtoFilePath(url)
     try:
         hash_value = generate_hash(source_path)
     except FileNotFoundError:
@@ -101,10 +103,9 @@ class AttachmentSerializer(serializers.ModelSerializer):
     source = IngestionReferenceField()
     creators = MediaCreatorSerializer(many=True, allow_empty=False)
 
-    # def validate_source(self, path):
-    #     print(path)
-    #     validate_source_path(path)
-    #     return path
+    def validate_source(self, source_id):
+        validate_source(source_id)
+        return source_id
 
     class Meta:
         model = AttachmentFile
@@ -114,7 +115,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
 class IngestSerializer(serializers.Serializer):
 
-    sources = serializers.ListField(child=IngestionReferenceField(), min_length=1)
+    source = IngestionReferenceField()
     target = serializers.HyperlinkedRelatedField(view_name='api:v1:hav_browser:hav_set', queryset=Node.objects.all(), required=False)
 
     date = serializers.CharField()
@@ -142,18 +143,9 @@ class IngestSerializer(serializers.Serializer):
         else:
             return value
 
-
-    # def validate_sources(self, sources):
-    #     errors = {}
-    #     for key, path in zip(self.initial_data['sources'], sources):
-    #         try:
-    #             validate_source_path(path)
-    #         except serializers.ValidationError as e:
-    #             errors.update({key: e.detail})
-    #     if errors:
-    #         # TODO: we could raise this dict directly, but the frontend has no idea what to do with it
-    #         raise serializers.ValidationError(_transform_error_dict(errors))
-    #     return sources
+    def validate_source(self, source):
+        validate_source(source)
+        return source
 
     def validate(self, data):
         user = self.context['user']
@@ -196,16 +188,14 @@ class IngestSerializer(serializers.Serializer):
         for media2creator in validated_data['creators']:
             MediaToCreator.objects.create(media=media, **media2creator)
 
-        archived_files = []
-        for source_id in validated_data['sources']:
-            af = ArchiveFile.objects.create(
-                source_id=source_id,
-                created_by=user,
-                media=media
-            )
-            archived_files.append(af)
+        source_id = validated_data['source']
+        af = ArchiveFile.objects.create(
+            source_id=source_id,
+            created_by=user,
+            media=media
+        )
 
-        media.files.set(archived_files)
+        media.files.set([af])
 
         attachments = []
         for attachment in validated_data['attachments']:
@@ -236,7 +226,7 @@ class IngestSerializer(serializers.Serializer):
             user.pk
         )
 
-        archive_ids = [a.pk for a in chain(archived_files, attachments)]
+        archive_ids = [a.pk for a in chain([af], attachments)]
 
         def ingestion_trigger():
             return archive_and_create_webassets(

@@ -55,7 +55,6 @@ const ErrorMessage = props => (
   <FormikErrorMessage
     {...props}
     render={msg => {
-      console.error(msg);
       return <p className="help is-danger">{msg}</p>;
     }}
   />
@@ -262,7 +261,7 @@ const CreatorRoleTable = ({
 const UploadComponent = props =>
   props.success ? null : <SingleUpload {...props} />;
 
-const Attachments = ({ attachments, ...props }) => {
+const Attachments = ({ attachments, errors, ...props }) => {
   return (
     <FieldArray
       name="attachments"
@@ -270,12 +269,19 @@ const Attachments = ({ attachments, ...props }) => {
         <React.Fragment>
           {attachments.map((a, index) => {
             const field_accessor = `attachments.${index}`;
+
             return (
               <div className="media box" key={index}>
                 <div className="media-left">
                   <SourcePreview url={a.source} />
                 </div>
                 <div className="media-content">
+                  <GlobalErrors
+                    keys={[
+                      `${field_accessor}.source`,
+                      `${field_accessor}.non_field_errors`
+                    ]}
+                  />
                   <Field type="hidden" name={`${field_accessor}.source`} />
                   <CreatorRoleTable
                     {...props}
@@ -288,7 +294,6 @@ const Attachments = ({ attachments, ...props }) => {
           })}
           <UploadContainer
             onSuccess={resp => {
-              console.log("Success...", resp);
               arrayhelpers.push({
                 source: resp.url,
                 description: "",
@@ -304,23 +309,14 @@ const Attachments = ({ attachments, ...props }) => {
   );
 };
 
-const GlobalErrors = ({ errors }) => {
-  console.warn(JSON.stringify(errors, null, 2));
-  const keys = ["sources", "target", "non_field_errors"];
-  const error_keys = Object.keys(errors).filter(k => keys.indexOf(k) > -1);
-
-  if (error_keys.length) {
-    return (
-      <div className="notification is-danger">
-        <ul>
-          {error_keys.map(k => (
-            <li key={k}>{errors[k]}</li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-  return null;
+const GlobalErrors = ({ keys = ["sources", "target", "non_field_errors"] }) => {
+  return (
+    <>
+      {keys.map((k, i) => (
+        <ErrorMessage key={`i-${k}`} name={k} />
+      ))}
+    </>
+  );
 };
 
 class TemplateForm extends React.Component {
@@ -402,7 +398,10 @@ class IngestForm extends React.Component {
           return (
             <Form className="ingest-form">
               {persistName && <Persist name={persistName} />}
-              <GlobalErrors errors={errors} />
+              <GlobalErrors keys={["source", "target", "non_field_errors"]} />
+              <Field type="hidden" name="source" />
+              <Field type="hidden" name="target" />
+
               <Columns>
                 <Column className="is-one-third is-clipped ingest-form-preview">
                   <SourcePreview url={source} />
@@ -447,7 +446,11 @@ class IngestForm extends React.Component {
               {/* Attachments */}
               <Columns>
                 <Column>
-                  <Attachments attachments={values.attachments} {...options} />
+                  <Attachments
+                    attachments={values.attachments}
+                    errors={errors.attachments || []}
+                    {...options}
+                  />
                 </Column>
               </Columns>
 

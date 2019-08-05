@@ -71,7 +71,11 @@ class IngestQueue extends React.Component {
     super(props);
     const formData = {};
     props.items.forEach(k => {
-      formData[k] = { ...initialFormValues };
+      formData[k] = {
+        ...initialFormValues,
+        source: k,
+        target: this.props.target
+      };
     });
     this.state = {
       formData,
@@ -96,13 +100,7 @@ class IngestQueue extends React.Component {
   };
 
   ingestItem = (ingestId, data) => {
-    const finalData = {
-      sources: [ingestId],
-      target: this.props.target,
-      ...data
-      // start: start.toISOString(),
-      // end: end.toISOString()
-    };
+    const finalData = { ...data };
     // throw new Error("Not there yet.");
     let response = queueForIngestion(this.props.uuid, finalData);
 

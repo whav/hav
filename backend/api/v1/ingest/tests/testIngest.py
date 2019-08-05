@@ -77,8 +77,9 @@ class IngestTest(APITestCase):
                 ],
                 'media_license': self.license.pk,
                 'media_type': self.media_type.pk,
-                'sources': [self.source_id],
-                'media_title': 'some title'
+                'source': self.source_id,
+                'media_title': 'some title',
+                'attachments': []
         }
 
 
@@ -95,18 +96,20 @@ class IngestTest(APITestCase):
         data = self.generateMediaData()
         self.client.force_login(self.user)
         response = self.client.post(self.url, data, format='json')
+        print(response.content)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_multiple_sources(self):
-        data = self.generateMediaData()
-        self.client.force_login(self.user)
-        # another source
-        source = self.generate_source_id()
-        data.update({'sources': data['sources'] + [source]})
-        self.client.force_login(self.user)
-        response = self.client.post(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
+    # def test_multiple_sources(self):
+    #     data = self.generateMediaData()
+    #     self.client.force_login(self.user)
+    #     # another source
+    #     source = self.generate_source_id()
+    #     data.update({'sources': data['sources'] + [source]})
+    #     self.client.force_login(self.user)
+    #     response = self.client.post(self.url, data, format='json')
+    #     print(response)
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #
 
 
 

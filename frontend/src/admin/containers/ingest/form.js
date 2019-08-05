@@ -15,6 +15,7 @@ import TagInput from "../../ui/components/taginput";
 import Button from "../../ui/components/buttons";
 import { UploadContainer, SingleUpload } from "../simpleUpload";
 import SourcePreview from "./sources";
+import "./form.css";
 
 const customStyles = {
   control: provided => ({
@@ -313,7 +314,9 @@ const GlobalErrors = ({ keys = ["sources", "target", "non_field_errors"] }) => {
   return (
     <>
       {keys.map((k, i) => (
-        <ErrorMessage key={`i-${k}`} name={k} />
+        <div className="notification is-danger" key={`i-${k}`}>
+          <FormikErrorMessage name={k} />
+        </div>
       ))}
     </>
   );

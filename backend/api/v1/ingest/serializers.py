@@ -166,7 +166,7 @@ class IngestSerializer(serializers.Serializer):
     @transaction.atomic
     def create(self, validated_data):
         user = self.context['user']
-        sources = self.initial_data['sources']
+        source = validated_data['source']
 
         start, end = parse(validated_data['date'])
         dt_range = DateTimeTZRange(lower=start, upper=end)
@@ -188,9 +188,8 @@ class IngestSerializer(serializers.Serializer):
         for media2creator in validated_data['creators']:
             MediaToCreator.objects.create(media=media, **media2creator)
 
-        source_id = validated_data['source']
         af = ArchiveFile.objects.create(
-            source_id=source_id,
+            source_id=source,
             created_by=user,
             media=media
         )
@@ -214,19 +213,18 @@ class IngestSerializer(serializers.Serializer):
         queue = self.context.get('queue')
         if (queue):
             queue = IngestQueue.objects.select_for_update().get(pk=queue.pk)
-            for source in sources:
-                queue.link_to_media(media, source)
+            queue.link_to_media(media, source)
             queue.save()
 
+        archive_ids = [a.pk for a in chain([af], attachments)]
+
         logger.info(
-            "Triggering archiving for %d file(s) %s; media: %d; user: %d",
-            len(validated_data['sources']),
-            ', '.join([str(s) for s in validated_data['sources']]),
+            "Triggering archiving for %d file(s); media: %d; user: %d",
+            len(archive_ids),
             media.pk,
             user.pk
         )
 
-        archive_ids = [a.pk for a in chain([af], attachments)]
 
         def ingestion_trigger():
             return archive_and_create_webassets(

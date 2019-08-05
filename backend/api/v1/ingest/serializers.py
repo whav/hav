@@ -1,5 +1,5 @@
 import logging
-
+from itertools import chain
 from django.db import transaction
 from psycopg2.extras import DateTimeTZRange
 from rest_framework import serializers
@@ -11,7 +11,8 @@ from api.v1.havBrowser.serializers import HAVMediaSerializer
 from apps.archive.operations.hash import generate_hash
 from apps.ingest.models import IngestQueue
 from apps.sets.models import Node
-from apps.media.models import MediaToCreator, MediaCreatorRole, Media, MediaCreator, License, MediaType
+from apps.archive.models import AttachmentFile, ArchiveFile, FileCreator
+from apps.media.models import MediaToCreator, MediaCreatorRole, Media, License, MediaType
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     InternalIngestHyperlinkField, IngestionReferenceField
 from hav_utils.daterange import parse
@@ -82,11 +83,40 @@ def _transform_error_dict(errors):
     values = errors.values()
     return ' '.join(map(lambda x: ' '.join([str(e) for e in x]), values))
 
+
+def validate_source_path(source_path):
+    try:
+        hash_value = generate_hash(source_path)
+    except FileNotFoundError:
+        raise serializers.ValidationError(f"The file {path} could not be found.")
+
+    try:
+        media = Media.objects.get(files__hash=hash_value)
+        raise serializers.ValidationError(f"A file with the hash '{hash_value}' is already archived. Check media {media}.")
+    except Media.DoesNotExist:
+        pass
+
+
+class AttachmentSerializer(serializers.ModelSerializer):
+    source = IngestionReferenceField()
+    creators = MediaCreatorSerializer(many=True, allow_empty=False)
+
+    # def validate_source(self, path):
+    #     print(path)
+    #     validate_source_path(path)
+    #     return path
+
+    class Meta:
+        model = AttachmentFile
+        fields = ('source', 'creators')
+
+
+
 class IngestSerializer(serializers.Serializer):
 
-    sources = serializers.ListField(child=InternalIngestHyperlinkField(), min_length=1)
-    attachments = serializers.ListField(child=InternalIngestHyperlinkField(), required=False)
+    sources = serializers.ListField(child=IngestionReferenceField(), min_length=1)
     target = serializers.HyperlinkedRelatedField(view_name='api:v1:hav_browser:hav_set', queryset=Node.objects.all(), required=False)
+
     date = serializers.CharField()
 
     creators = MediaCreatorSerializer(many=True, allow_empty=False)
@@ -97,6 +127,8 @@ class IngestSerializer(serializers.Serializer):
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
     media_tags = serializers.ListField(child=serializers.CharField(max_length=255), required=False)
+
+    attachments = AttachmentSerializer(many=True, allow_empty=True)
 
     @property
     def target_node(self):
@@ -110,41 +142,18 @@ class IngestSerializer(serializers.Serializer):
         else:
             return value
 
-    def validate_source_path(self, source_path):
-        try:
-            hash_value = generate_hash(source_path)
-        except FileNotFoundError:
-            raise serializers.ValidationError(f"The file {path} could not be found.")
 
-        try:
-            media = Media.objects.get(files__hash=hash_value)
-            raise serializers.ValidationError(f"A file with the hash '{hash_value}' is already archived. Check media {media}.")
-        except Media.DoesNotExist:
-            pass
-
-    def validate_sources(self, sources):
-        errors = {}
-        for key, path in zip(self.initial_data['sources'], sources):
-            try:
-                self.validate_source_path(path)
-            except serializers.ValidationError as e:
-                errors.update({key: e.detail})
-        if errors:
-            # TODO: we could raise this dict directly, but the frontend has no idea what to do with it
-            raise serializers.ValidationError(_transform_error_dict(errors))
-        return sources
-
-    def validate_attachments(self, attachments):
-        errors = {}
-        for key, path in zip(self.initial_data['attachments'], attachments):
-            try:
-                self.validate_source_path(path)
-            except serializers.ValidationError as e:
-                errors.update({key: e.detail})
-        if errors:
-            # TODO: we could raise this dict directly, but the frontend has no idea what to do with it
-            raise serializers.ValidationError(_transform_error_dict(errors))
-        return attachments
+    # def validate_sources(self, sources):
+    #     errors = {}
+    #     for key, path in zip(self.initial_data['sources'], sources):
+    #         try:
+    #             validate_source_path(path)
+    #         except serializers.ValidationError as e:
+    #             errors.update({key: e.detail})
+    #     if errors:
+    #         # TODO: we could raise this dict directly, but the frontend has no idea what to do with it
+    #         raise serializers.ValidationError(_transform_error_dict(errors))
+    #     return sources
 
     def validate(self, data):
         user = self.context['user']
@@ -166,7 +175,6 @@ class IngestSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context['user']
         sources = self.initial_data['sources']
-        attachments = self.initial_data.get('attachments', [])
 
         start, end = parse(validated_data['date'])
         dt_range = DateTimeTZRange(lower=start, upper=end)
@@ -188,6 +196,30 @@ class IngestSerializer(serializers.Serializer):
         for media2creator in validated_data['creators']:
             MediaToCreator.objects.create(media=media, **media2creator)
 
+        archived_files = []
+        for source_id in validated_data['sources']:
+            af = ArchiveFile.objects.create(
+                source_id=source_id,
+                created_by=user,
+                media=media
+            )
+            archived_files.append(af)
+
+        media.files.set(archived_files)
+
+        attachments = []
+        for attachment in validated_data['attachments']:
+            af = AttachmentFile.objects.create(
+                source_id=attachment['source'],
+                created_by=user
+            )
+            for creator in attachment['creators']:
+                FileCreator.objects.create(file=af, **creator)
+
+            attachments.append(af)
+
+        media.attachments.set(attachments)
+
         # update the ingest queue (if available) by removing the source
         queue = self.context.get('queue')
         if (queue):
@@ -204,11 +236,12 @@ class IngestSerializer(serializers.Serializer):
             user.pk
         )
 
+        archive_ids = [a.pk for a in chain(archived_files, attachments)]
+
         def ingestion_trigger():
             return archive_and_create_webassets(
-                [str(s) for s in validated_data['sources']],
+                archive_ids,
                 media.pk,
-                user.pk,
                 # these args are for websockets via channels
                 self.context['channel']
             )

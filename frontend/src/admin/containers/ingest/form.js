@@ -6,6 +6,7 @@ import {
   ErrorMessage as FormikErrorMessage,
   FieldArray
 } from "formik";
+import isString from "lodash/isString";
 import classnames from "classnames";
 import ReactSelect from "react-select";
 import { Persist } from "formik-persist";
@@ -53,7 +54,10 @@ const BField = ({ label = "", children }) => {
 const ErrorMessage = props => (
   <FormikErrorMessage
     {...props}
-    render={msg => <p className="help is-danger">{msg}</p>}
+    render={msg => {
+      console.error(msg);
+      return <p className="help is-danger">{msg}</p>;
+    }}
   />
 );
 
@@ -190,6 +194,7 @@ const CreatorRoleTable = ({
           <tbody>
             {instances.map((_, index) => {
               const field_accessor = `${accessor}.${index}`;
+              console.log(`${field_accessor}.creator`);
               return (
                 <tr key={index}>
                   <td>
@@ -300,6 +305,7 @@ const Attachments = ({ attachments, ...props }) => {
 };
 
 const GlobalErrors = ({ errors }) => {
+  console.warn(JSON.stringify(errors, null, 2));
   const keys = ["sources", "target", "non_field_errors"];
   const error_keys = Object.keys(errors).filter(k => keys.indexOf(k) > -1);
 
@@ -319,7 +325,12 @@ const GlobalErrors = ({ errors }) => {
 
 class TemplateForm extends React.Component {
   initialValues = {
-    creators: [],
+    creators: [
+      {
+        creator: "",
+        role: ""
+      }
+    ],
     license: "",
     media_type: "",
     date: ""
@@ -333,10 +344,15 @@ class TemplateForm extends React.Component {
         onSubmit={(values, actions) => {
           apply(values);
         }}
-        render={() => (
+        render={({ values }) => (
           <Form className="box ingest-template-form">
             <Persist name={persistName} />
             <SharedFields {...options} />
+            <CreatorRoleTable
+              instances={values.creators}
+              accessor="creators"
+              {...options}
+            />
             <div>
               <div className="field is-grouped is-grouped-right">
                 <p className="control">
@@ -363,11 +379,8 @@ class IngestForm extends React.Component {
     this.props
       .onSubmit(data)
       .catch(errors => {
-        let formikErrors = {};
-        Object.entries(errors).forEach(
-          ([key, errs]) => (formikErrors[key] = errs.join(" "))
-        );
-        actions.setErrors(formikErrors);
+        // TODO: I think the error component can not deal with arrays of errors
+        actions.setErrors({ ...errors });
       })
       .finally(() => actions.setSubmitting(false));
   };
@@ -385,7 +398,7 @@ class IngestForm extends React.Component {
         initialValues={initialValues}
         enableReinitialize={true}
         onSubmit={this.submit}
-        render={({ isSubmitting, errors, values }) => {
+        render={({ isSubmitting, errors, values, setSubmitting }) => {
           return (
             <Form className="ingest-form">
               {persistName && <Persist name={persistName} />}
@@ -452,6 +465,9 @@ class IngestForm extends React.Component {
                   </div>
                 </Column>
                 <Column className="has-text-right">
+                  {isSubmitting ? (
+                    <a onClick={() => setSubmitting(false)}>Cancel</a>
+                  ) : null}
                   <button
                     className={classnames("button is-primary is-active", {
                       "is-loading": isSubmitting

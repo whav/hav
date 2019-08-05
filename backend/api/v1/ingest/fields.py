@@ -84,6 +84,9 @@ class IngestHyperlinkField(serializers.Field):
         # deal with filebrowsers
         elif match.view_name in ['api:v1:filebrowser_file', 'api:v1:filebrowser']:
             return Path(settings.INCOMING_FILES_ROOT).joinpath(match.kwargs['path'])
+        elif match.view_name == 'api:v1:fileupload_detail':
+            from sources.uploads.models import FileUpload
+            return FileUpload.objects.get(match.kwargs['pk'])
         return self.fail('no_match')
 
     def to_internal_value(self, url):
@@ -112,7 +115,10 @@ class IngestionReferenceField(serializers.Field):
 
     def to_internal_value(self, data):
         # TODO: Error handling
-        # p = self.get_file_path(data)
+        try:
+            p = self.get_file_path(data)
+        except Exception as e:
+            raise serializers.ValidationError(e.detail)
         return data
 
 
@@ -155,7 +161,10 @@ class HAVTargetField(serializers.HyperlinkedRelatedField):
     queryset = Node.objects.all()
 
 
-ingestField = IngestHyperlinkField()
+ingestField = IngestionReferenceField()
 
 def resolveUrlToObject(url):
     return ingestField.get_object(url)
+
+def resolveURLtoFilePath(url):
+    return ingestField.get_file_path(url)

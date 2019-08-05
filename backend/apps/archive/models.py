@@ -1,14 +1,14 @@
+import uuid
+from pathlib import Path
+from mimetypes import guess_type
+
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import filesizeformat
-from django.core.exceptions import ValidationError
 
 from .storage import ArchiveStorage
-from mimetypes import guess_type
-from django.conf import settings
-
 from ..media.models import CreatorBase, MediaCreator
-
-import uuid
 
 
 class FileCreator(CreatorBase):
@@ -18,16 +18,18 @@ class FileCreator(CreatorBase):
 class ArchiveFile(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(storage=ArchiveStorage(), upload_to='%Y/%m/%d', editable=False)
+
+    file = models.FileField(storage=ArchiveStorage(), upload_to='%Y/%m/%d', editable=False, null=True)
 
     original_filename = models.CharField(max_length=200, editable=False, blank=True)
     source_id = models.CharField(max_length=200, blank=True)
 
-    hash = models.CharField(max_length=40, unique=True, db_index=True)
-    size = models.BigIntegerField()
+    hash = models.CharField(max_length=40, unique=True, db_index=True, null=True, default=None)
+    size = models.BigIntegerField(default=0)
+    archived_at = models.DateTimeField(null=True)
 
-    archived_at = models.DateTimeField(auto_now_add=True)
-    archived_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(null=True)
 
     creators = models.ManyToManyField(MediaCreator, through=FileCreator, verbose_name='creators')
 
@@ -38,6 +40,9 @@ class ArchiveFile(models.Model):
     def __str__(self):
         return '{0} ({1})'.format(self.file.path, filesizeformat(self.size))
 
+    def resolve_source(self):
+        from api.v1.ingest.fields import resolveURLtoFilePath
+        return Path(resolveURLtoFilePath(self.source_id))
 
     def validate_file_integrity(self):
         from .operations.hash import generate_hash
@@ -57,3 +62,5 @@ class AttachmentFile(ArchiveFile):
 
     class Meta:
         proxy = True
+
+

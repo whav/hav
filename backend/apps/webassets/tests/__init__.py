@@ -24,7 +24,7 @@ class WebAssetTestCase(TestCase):
     def create_archive_file(self, file):
         file = Path(file).resolve()
         af = ArchiveFile(
-            archived_by=self.user,
+            created_by=self.user,
             size=file.stat().st_size,
             hash=generate_hash(file)
         )

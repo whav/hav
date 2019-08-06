@@ -211,7 +211,7 @@ class IngestSerializer(serializers.Serializer):
 
         # update the ingest queue (if available) by removing the source
         queue = self.context.get('queue')
-        if (queue):
+        if queue:
             queue = IngestQueue.objects.select_for_update().get(pk=queue.pk)
             queue.link_to_media(media, source)
             queue.save()

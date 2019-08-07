@@ -6,7 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 import random
-from apps.media.models import License, MediaCreator, MediaType, MediaCreatorRole
+from apps.media.models import License, MediaCreator, MediaType, MediaCreatorRole, Media
 from apps.sets.models import Node
 from apps.ingest.models import IngestQueue
 from apps.hav_collections.models import Collection
@@ -98,17 +98,24 @@ class IngestTest(APITestCase):
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    # def test_multiple_sources(self):
-    #     data = self.generateMediaData()
-    #     self.client.force_login(self.user)
-    #     # another source
-    #     source = self.generate_source_id()
-    #     data.update({'sources': data['sources'] + [source]})
-    #     self.client.force_login(self.user)
-    #     response = self.client.post(self.url, data, format='json')
-    #     print(response)
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #
+    def test_with_attachments(self):
+        data = self.generateMediaData()
+        self.client.force_login(self.user)
+        # another source
+        source = self.generate_source_id()
+        data.update({'attachments': [{
+            'source': source,
+            'creators': [
+                data['creators'][0]
+            ]
+        }]})
+        self.client.force_login(self.user)
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        media = Media.objects.get(pk=response.json()['pk'])
+        self.assertEqual(media.attachments.count(), 1)
+
 
 
 

@@ -45,10 +45,12 @@ class ArchiveTest(TestCase):
         self.assertEqual(self.af.hash, file_hash)
         self.assertEqual(self.af.original_filename, 'file.bin')
         self.assertEqual(self.af.size, 1024)
+        self.assertIsNotNone(self.af.archived_at)
 
         self.assertEqual(self.attachment.hash, attachment_hash)
         self.assertEqual(self.attachment.original_filename, 'attachment.bin')
         self.assertEqual(self.attachment.size, 1024)
+        self.assertIsNotNone(self.attachment.archived_at)
 
 
     def test_media_linking(self):

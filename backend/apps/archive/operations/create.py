@@ -1,11 +1,9 @@
 import os
-import uuid
 import logging
 
-from django.contrib.auth.models import User
 from django.core.files import File
-from apps.archive.models import ArchiveFile, AttachmentFile
-from apps.media.models import Media
+from apps.archive.models import ArchiveFile
+from django.utils.timezone import now
 
 from .hash import generate_hash
 
@@ -55,10 +53,12 @@ def archive_file(af_pk, is_attachment=False):
     archive_file.original_filename = os.path.split(path)[1]
 
     logger.info('Moving file to archive with name: {0}'.format(filename))
+    archive_file.archived_at = now()
 
     with open(path, 'rb') as f:
         archive_file.file.save(filename, File(f))
 
+    archive_file.save()
     return archive_file.pk
 
 

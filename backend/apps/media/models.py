@@ -12,11 +12,18 @@ class MediaType(models.Model):
         (1, 'analog'),
         (2, 'digital')
     ]
+
+    ANALOG = TYPE_CHOICES[0][0]
+    DIGITAL = TYPE_CHOICES[1][0]
+
     type = models.IntegerField(choices=TYPE_CHOICES)
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return f'{self.get_type_display()}/{self.name}'
+
+    class Meta:
+        unique_together = (('type', 'name'), )
 
 
 class MediaCreator(models.Model):
@@ -89,15 +96,19 @@ class Media(models.Model):
     title = models.CharField('title', max_length=255, blank=True)
     description = models.TextField('description', blank=True)
 
-    collection = models.ForeignKey(Collection, null=True, blank=False, on_delete=models.SET_NULL)
+    collection = models.ForeignKey(Collection, null=True, blank=False, on_delete=models.PROTECT)
 
     creators = models.ManyToManyField(MediaCreator, through=MediaToCreator, verbose_name='creators')
-    creation_date = DateTimeRangeField()
-    license = models.ForeignKey(License, null=True, on_delete=models.SET_NULL)
+
+    creation_date = DateTimeRangeField(null=True, blank=True)
+
+    license = models.ForeignKey(License, null=True, blank=True, on_delete=models.SET_NULL)
 
     tags = ArrayField(models.CharField(max_length=255), default=list)
 
     original_media_type = models.ForeignKey(MediaType, on_delete=models.PROTECT)
+
+    # these fields are mainly used for automatic imports
     original_media_description = models.TextField(blank=True)
     original_media_identifier = models.CharField(blank=True, max_length=200)
 
@@ -105,6 +116,7 @@ class Media(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_media')
+
     modified_at = models.DateTimeField(auto_now=True, null=True)
     modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name='modified_media')
 

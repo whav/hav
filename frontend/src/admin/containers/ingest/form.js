@@ -4,12 +4,14 @@ import {
   Form,
   Field,
   ErrorMessage as FormikErrorMessage,
-  FieldArray
+  FieldArray,
+  connect,
+  getIn
 } from "formik";
-import isString from "lodash/isString";
 import classnames from "classnames";
 import ReactSelect from "react-select";
 import { Persist } from "formik-persist";
+import groupBy from "lodash/groupBy";
 import parseDateToRange from "../../utils/daterange";
 import TagInput from "../../ui/components/taginput";
 import Button from "../../ui/components/buttons";
@@ -132,44 +134,87 @@ const TagField = ({ field, form, ...props }) => {
   );
 };
 
+class MTField extends React.Component {
+  state = {
+    group: null
+  };
+
+  onChange = e => {
+    this.setState({ group: e.target.value });
+    this.props.formik.setFieldValue("media_type", "");
+  };
+
+  render() {
+    const { media_types = [], formik } = this.props;
+    const currentValue = formik.values.media_type;
+    const grouped = groupBy(media_types, "type");
+    const currentSelection = media_types.find(mt => mt.id === currentValue);
+    // default to first group
+    let currentGroup = this.state.group || Object.keys(grouped)[0];
+    if (currentSelection) {
+      currentGroup = currentSelection.type;
+    }
+    return (
+      <>
+        <BField label="Original Media Type">
+          {Object.keys(grouped).map(k => (
+            <label key={k} className="radio">
+              <input
+                type="radio"
+                name="mediatypetype"
+                value={k}
+                checked={k === currentGroup}
+                onChange={this.onChange}
+              />
+              {k}
+            </label>
+          ))}
+        </BField>
+        <BField>
+          <Field
+            component={SelectField}
+            name="media_type"
+            options={grouped[currentGroup]}
+          />
+          <ErrorMessage name="media_type" component="div" />
+        </BField>
+      </>
+    );
+  }
+}
+
+const MediaTypeField = connect(MTField);
+
 const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
   return (
-    <React.Fragment>
-      <div className="columns">
-        <div className="column">
-          <BField label="Media Type">
-            <Field
-              component={SelectField}
-              name="media_type"
-              options={media_types}
-            />
-            <ErrorMessage name="media_type" component="div" />
-          </BField>
-        </div>
-        <div className="column">
-          <BField label="Date">
-            <Field
-              className="input"
-              component={DateField}
-              name="date"
-              placeholder="YYYY-MM-DD"
-              autoComplete="off"
-            />
-            <ErrorMessage name="date" component="div" />
-          </BField>
-        </div>
-        <div className="column">
-          <BField label="License">
-            <Field
-              component={SelectField}
-              name="media_license"
-              options={licenses}
-            />
-            <ErrorMessage name="media_license" component="div" />
-          </BField>
-        </div>
-      </div>
-    </React.Fragment>
+    <Columns>
+      <Column>
+        <MediaTypeField media_types={media_types} />
+      </Column>
+      <Column>
+        {" "}
+        <BField label="Original Creation Date">
+          <Field
+            className="input"
+            component={DateField}
+            name="date"
+            placeholder="YYYY-MM-DD"
+            autoComplete="off"
+          />
+          <ErrorMessage name="date" component="div" />
+        </BField>
+      </Column>
+      <Column>
+        <BField label="License">
+          <Field
+            component={SelectField}
+            name="media_license"
+            options={licenses}
+          />
+          <ErrorMessage name="media_license" component="div" />
+        </BField>
+      </Column>
+    </Columns>
   );
 };
 
@@ -194,7 +239,6 @@ const CreatorRoleTable = ({
           <tbody>
             {instances.map((_, index) => {
               const field_accessor = `${accessor}.${index}`;
-              console.log(`${field_accessor}.creator`);
               return (
                 <tr key={index}>
                   <td>
@@ -405,23 +449,25 @@ class IngestForm extends React.Component {
               <Field type="hidden" name="source" />
               <Field type="hidden" name="target" />
 
+              <BField label="Title">
+                <Field className="input" name="media_title" />
+                <ErrorMessage name="media_title" component="div" />
+              </BField>
+              <BField label="Tags">
+                <Field
+                  component={TagField}
+                  className="input"
+                  name="media_tags"
+                />
+                <ErrorMessage name="media_tags" component="div" />
+              </BField>
+              <SharedFields {...options} />
+
               <Columns>
                 <Column className="is-one-third is-clipped ingest-form-preview">
                   <SourcePreview url={source} />
                 </Column>
                 <Column>
-                  <BField label="Title">
-                    <Field className="input" name="media_title" />
-                    <ErrorMessage name="media_title" component="div" />
-                  </BField>
-                  <BField label="Tags">
-                    <Field
-                      component={TagField}
-                      className="input"
-                      name="media_tags"
-                    />
-                    <ErrorMessage name="media_tags" component="div" />
-                  </BField>
                   <CreatorRoleTable
                     {...options}
                     accessor="creators"
@@ -443,8 +489,6 @@ class IngestForm extends React.Component {
                 />
                 <ErrorMessage name="description" component="div" />
               </BField>
-
-              <SharedFields {...options} />
 
               {/* Attachments */}
               <Columns>

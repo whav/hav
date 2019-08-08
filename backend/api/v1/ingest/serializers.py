@@ -12,9 +12,9 @@ from apps.archive.operations.hash import generate_hash
 from apps.ingest.models import IngestQueue
 from apps.sets.models import Node
 from apps.archive.models import AttachmentFile, ArchiveFile, FileCreator
-from apps.media.models import MediaToCreator, MediaCreatorRole, Media, License, MediaType
+from apps.media.models import MediaToCreator, MediaCreatorRole, Media, License, MediaType, MediaCreator
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
-    InternalIngestHyperlinkField, IngestionReferenceField
+    IngestionReferenceField
 from hav_utils.daterange import parse
 from .ingest_task import archive_and_create_webassets
 from .fields import resolveURLtoFilePath
@@ -22,24 +22,14 @@ from .fields import resolveURLtoFilePath
 logger = logging.getLogger(__name__)
 
 
-class MediaLicenseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = License
-        fields = [
-            'id',
-            'name'
-        ]
-
-class MediaTypeSerializer(serializers.ModelSerializer):
-
+class MediaCreatorSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
 
-    def get_name(self, obj):
-        return str(obj)
+    def get_name(self, mc):
+        return str(mc)
 
     class Meta:
-        model = MediaType
+        model = MediaCreator
         fields = [
             'id',
             'name'
@@ -56,11 +46,29 @@ class MediaCreatorRoleSerializer(serializers.ModelSerializer):
         model = MediaCreatorRole
         fields = ['id', 'name']
 
+class MediaLicenseSerializer(serializers.ModelSerializer):
 
-class MediaCreatorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MediaToCreator
-        fields = ['role', 'creator']
+        model = License
+        fields = [
+            'id',
+            'name'
+        ]
+
+class MediaTypeSerializer(serializers.ModelSerializer):
+
+    type = serializers.SerializerMethodField()
+
+    def get_type(self, obj):
+        return obj.get_type_display()
+
+    class Meta:
+        model = MediaType
+        fields = [
+            'id',
+            'name',
+            'type'
+        ]
 
 
 

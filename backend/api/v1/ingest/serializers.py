@@ -46,6 +46,10 @@ class MediaCreatorRoleSerializer(serializers.ModelSerializer):
         model = MediaCreatorRole
         fields = ['id', 'name']
 
+
+
+
+
 class MediaLicenseSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -69,6 +73,18 @@ class MediaTypeSerializer(serializers.ModelSerializer):
             'name',
             'type'
         ]
+
+
+class MediaToCreatorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MediaToCreator
+        fields = ['id', 'creator', 'role']
+
+
+class FileToCreatorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileCreator
+        fields = ['id', 'creator', 'role']
 
 
 
@@ -109,7 +125,7 @@ def validate_source(url):
 
 class AttachmentSerializer(serializers.ModelSerializer):
     source = IngestionReferenceField()
-    creators = MediaCreatorSerializer(many=True, allow_empty=False)
+    creators = FileToCreatorSerializer(many=True, allow_empty=False)
 
     def validate_source(self, source_id):
         validate_source(source_id)
@@ -128,7 +144,7 @@ class IngestSerializer(serializers.Serializer):
 
     date = serializers.CharField()
 
-    creators = MediaCreatorSerializer(many=True, allow_empty=False)
+    creators = MediaToCreatorSerializer(many=True, allow_empty=False)
 
     media_license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
     media_title = serializers.CharField(max_length=255)

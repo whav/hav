@@ -185,39 +185,6 @@ class MTField extends React.Component {
 
 const MediaTypeField = connect(MTField);
 
-const SharedFields = ({ licenses = [], creators = [], media_types = [] }) => {
-  return (
-    <Columns>
-      <Column>
-        <MediaTypeField media_types={media_types} />
-      </Column>
-      <Column>
-        {" "}
-        <BField label="Original Creation Date">
-          <Field
-            className="input"
-            component={DateField}
-            name="date"
-            placeholder="YYYY-MM-DD"
-            autoComplete="off"
-          />
-          <ErrorMessage name="date" component="div" />
-        </BField>
-      </Column>
-      <Column>
-        <BField label="License">
-          <Field
-            component={SelectField}
-            name="media_license"
-            options={licenses}
-          />
-          <ErrorMessage name="media_license" component="div" />
-        </BField>
-      </Column>
-    </Columns>
-  );
-};
-
 const CreatorRoleTable = ({
   instances,
   accessor,
@@ -390,7 +357,44 @@ class TemplateForm extends React.Component {
         render={({ values }) => (
           <Form className="box ingest-template-form">
             <Persist name={persistName} />
-            <SharedFields {...options} />
+            <Columns>
+              <Column>
+                <BField label="Original Media Type">
+                  <Field
+                    component={SelectField}
+                    name="media_type"
+                    options={options.media_types.map(mt => ({
+                      ...mt,
+                      name: `${mt.type}/${mt.name}`
+                    }))}
+                  />
+                  <ErrorMessage name="media_license" component="div" />
+                </BField>
+              </Column>
+              <Column>
+                {" "}
+                <BField label="Original Creation Date">
+                  <Field
+                    className="input"
+                    component={DateField}
+                    name="date"
+                    placeholder="YYYY-MM-DD"
+                    autoComplete="off"
+                  />
+                  <ErrorMessage name="date" component="div" />
+                </BField>
+              </Column>
+              <Column>
+                <BField label="License">
+                  <Field
+                    component={SelectField}
+                    name="media_license"
+                    options={options.licenses}
+                  />
+                  <ErrorMessage name="media_license" component="div" />
+                </BField>
+              </Column>
+            </Columns>
             <CreatorRoleTable
               instances={values.creators}
               accessor="creators"
@@ -461,7 +465,35 @@ class IngestForm extends React.Component {
                 />
                 <ErrorMessage name="media_tags" component="div" />
               </BField>
-              <SharedFields {...options} />
+
+              <Columns>
+                <Column>
+                  <MediaTypeField media_types={options.media_types} />
+                </Column>
+                <Column>
+                  {" "}
+                  <BField label="Original Creation Date">
+                    <Field
+                      className="input"
+                      component={DateField}
+                      name="date"
+                      placeholder="YYYY-MM-DD"
+                      autoComplete="off"
+                    />
+                    <ErrorMessage name="date" component="div" />
+                  </BField>
+                </Column>
+                <Column>
+                  <BField label="License">
+                    <Field
+                      component={SelectField}
+                      name="media_license"
+                      options={options.licenses}
+                    />
+                    <ErrorMessage name="media_license" component="div" />
+                  </BField>
+                </Column>
+              </Columns>
 
               <Columns>
                 <Column className="is-one-third is-clipped ingest-form-preview">

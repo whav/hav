@@ -6,6 +6,10 @@ form.ingest-template-form {
   background-color: rgba(128, 128, 128, 0.178);
 }
 
+form.creator-table {
+  background-color: transparent;
+}
+
 form.ingest-form {
   margin-top: 1rem;
 }

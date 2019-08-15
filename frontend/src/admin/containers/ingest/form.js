@@ -195,7 +195,10 @@ const CreatorRoleTable = ({
     name={accessor}
     render={arrayhelpers => {
       return (
-        <table className="table is-fullwidth">
+        <table
+          className="table is-fullwidth creator-table"
+          style={{ backgroundColor: "transparent" }}
+        >
           <thead>
             <tr>
               <th>Creator</th>

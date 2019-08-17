@@ -7,7 +7,7 @@ class SourcePreview extends React.Component {
     loading: true
   };
 
-  componentDidMount() {
+  UNSAFE_componentDidMount() {
     if (this.props.data === undefined) {
       this.props.loadData();
     }

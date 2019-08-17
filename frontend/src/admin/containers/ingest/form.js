@@ -15,6 +15,7 @@ import groupBy from "lodash/groupBy";
 import parseDateToRange from "../../utils/daterange";
 import TagInput from "../../ui/components/taginput";
 import Button from "../../ui/components/buttons";
+import Modal from "../../ui/modal";
 import { UploadContainer, SingleUpload } from "../simpleUpload";
 import SourcePreview from "./sources";
 import "./form.css";
@@ -190,88 +191,90 @@ const CreatorRoleTable = ({
   accessor,
   creators = [],
   creator_roles = []
-}) => (
-  <FieldArray
-    name={accessor}
-    render={arrayhelpers => {
-      return (
-        <table
-          className="table is-fullwidth creator-table"
-          style={{ backgroundColor: "transparent" }}
-        >
-          <thead>
-            <tr>
-              <th>Creator</th>
-              <th>Role</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {instances.map((_, index) => {
-              const field_accessor = `${accessor}.${index}`;
-              return (
-                <tr key={index}>
-                  <td>
-                    <Field
-                      component={SelectField}
-                      className="input"
-                      name={`${field_accessor}.creator`}
-                      multiple={false}
-                      options={creators}
-                    />
-                    <ErrorMessage
-                      name={`${field_accessor}.creator`}
-                      component="div"
-                    />
-                  </td>
-                  <td>
-                    <Field
-                      component={SelectField}
-                      className="input"
-                      name={`${field_accessor}.role`}
-                      multiple={false}
-                      options={creator_roles}
-                    />
-                    <ErrorMessage
-                      name={`${field_accessor}.role`}
-                      component="div"
-                    />
-                  </td>
-                  <td className="has-text-right">
-                    {index === 0 ? null : (
-                      <a
-                        className="delete is-small"
-                        onClick={e => {
-                          e.preventDefault();
-                          arrayhelpers.remove(index);
-                        }}
-                      >
-                        Delete
-                      </a>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-            <tr>
-              <td colSpan={3} className="has-text-right">
-                <Button
-                  className="is-small"
-                  onClick={e => {
-                    e.preventDefault();
-                    arrayhelpers.push({ creator: "", role: "" });
-                  }}
-                >
-                  Add Creator
-                </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      );
-    }}
-  />
-);
+}) => {
+  return (
+    <FieldArray
+      name={accessor}
+      render={arrayhelpers => {
+        return (
+          <table
+            className="table is-fullwidth creator-table"
+            style={{ backgroundColor: "transparent" }}
+          >
+            <thead>
+              <tr>
+                <th>Creator</th>
+                <th>Role</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {instances.map((_, index) => {
+                const field_accessor = `${accessor}.${index}`;
+                return (
+                  <tr key={index}>
+                    <td>
+                      <Field
+                        component={SelectField}
+                        className="input"
+                        name={`${field_accessor}.creator`}
+                        multiple={false}
+                        options={creators}
+                      />
+                      <ErrorMessage
+                        name={`${field_accessor}.creator`}
+                        component="div"
+                      />
+                    </td>
+                    <td>
+                      <Field
+                        component={SelectField}
+                        className="input"
+                        name={`${field_accessor}.role`}
+                        multiple={false}
+                        options={creator_roles}
+                      />
+                      <ErrorMessage
+                        name={`${field_accessor}.role`}
+                        component="div"
+                      />
+                    </td>
+                    <td className="has-text-right">
+                      {index === 0 ? null : (
+                        <a
+                          className="delete is-small"
+                          onClick={e => {
+                            e.preventDefault();
+                            arrayhelpers.remove(index);
+                          }}
+                        >
+                          Delete
+                        </a>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+              <tr>
+                <td colSpan={3} className="has-text-right">
+                  <Button
+                    className="is-small"
+                    onClick={e => {
+                      e.preventDefault();
+                      arrayhelpers.push({ creator: "", role: "" });
+                    }}
+                  >
+                    Add Creator
+                  </Button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        );
+      }}
+    />
+  );
+};
 
 const UploadComponent = props =>
   props.success ? null : <SingleUpload {...props} />;

@@ -18,7 +18,7 @@ class FilebrowserView extends React.Component {
     this.props.loadData();
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     if (newProps.match.url !== this.props.match.url) {
       newProps.loadData();
     }

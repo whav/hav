@@ -3,21 +3,23 @@ from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Count
-from apps.media.models import MediaCreator, MediaCreatorRole, License, Media, MediaType
+from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
 from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin
-from .serializers import MediaCreatorRoleSerializer, MediaLicenseSerializer, \
-    PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, \
-    SimpleIngestQueueSerializer, IngestSerializer, SimpleMediaSerializer, MediaTypeSerializer
+from .serializers import PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, \
+    SimpleIngestQueueSerializer, IngestSerializer, SimpleMediaSerializer
+
+from ..misc_models.serializers import MediaCreatorSerializer, MediaCreatorRoleSerializer, MediaTypeSerializer,\
+    MediaLicenseSerializer
 
 
 class IngestOptionsView(IncomingBaseMixin, APIView):
     def get(self, request):
         return Response({
-            "creators": [{'id': mc.pk, 'name': str(mc)} for mc in MediaCreator.objects.all()],
-            "roles": MediaCreatorRoleSerializer(MediaCreatorRole.objects.all(), many=True).data,
+            "creators": MediaCreatorSerializer(MediaCreator.objects.all(), many=True).data,
+            "creator_roles": MediaCreatorRoleSerializer(MediaCreatorRole.objects.all(), many=True).data,
             "licenses": MediaLicenseSerializer(License.objects.all(), many=True).data,
-            "media_types": MediaTypeSerializer(MediaType.objects.all(), many=True).data
+            "media_types": MediaTypeSerializer(MediaType.objects.all(), many=True).data,
         })
 
 

@@ -26,10 +26,16 @@ const initialFormValues = {
   media_license: "",
   media_tags: [],
   media_type: "",
-  creators: [],
+  creators: [
+    {
+      creator: "",
+      role: ""
+    }
+  ],
   date: "",
   start: "",
-  end: ""
+  end: "",
+  attachments: []
 };
 
 class WSListener extends React.PureComponent {
@@ -64,7 +70,13 @@ class IngestQueue extends React.Component {
   constructor(props) {
     super(props);
     const formData = {};
-    props.items.forEach(k => (formData[k] = { ...initialFormValues }));
+    props.items.forEach(k => {
+      formData[k] = {
+        ...initialFormValues,
+        source: k,
+        target: this.props.target
+      };
+    });
     this.state = {
       formData,
       templateData: {},
@@ -88,13 +100,7 @@ class IngestQueue extends React.Component {
   };
 
   ingestItem = (ingestId, data) => {
-    const finalData = {
-      sources: [ingestId],
-      target: this.props.target,
-      ...data
-      // start: start.toISOString(),
-      // end: end.toISOString()
-    };
+    const finalData = { ...data };
     // throw new Error("Not there yet.");
     let response = queueForIngestion(this.props.uuid, finalData);
 
@@ -152,7 +158,7 @@ class IngestQueue extends React.Component {
           <IngestForm
             key={source}
             source={source}
-            // persistName={source}
+            persistName={source}
             options={options}
             onSubmit={data => this.ingestItem(source, data)}
             persistName={`${window.location.href}||${source}`}

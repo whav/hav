@@ -1,11 +1,9 @@
 import os
-import uuid
 import logging
 
-from django.contrib.auth.models import User
 from django.core.files import File
-from apps.archive.models import ArchiveFile, AttachmentFile
-from apps.media.models import Media
+from apps.archive.models import ArchiveFile
+from django.utils.timezone import now
 
 from .hash import generate_hash
 
@@ -32,49 +30,36 @@ def _get_archive_file_name(filepath, uuid):
 
 
 
-def archive_file(filepath, media_id, user_id, is_attachment=False):
-    media = Media.objects.get(pk=media_id)
-    user = User.objects.get(pk=user_id)
-    path = os.path.normpath(filepath)
+def archive_file(af_pk, is_attachment=False):
+    archive_file = ArchiveFile.objects.get(pk=af_pk)
+    path = archive_file.resolve_source()
 
     # do some basics checks
     _check_file_permissions(path)
 
     # generate uuid
-    uid = uuid.uuid4()
 
     # some basic stats
     archive_fields = {
      'hash': generate_hash(path),
      'size': _get_file_size(path),
      'original_filename': os.path.split(path)[1],
-     'archived_by': user,
-     'id': uid,
     }
 
-    filename = _get_archive_file_name(path, uid)
+    filename = _get_archive_file_name(path, archive_file.pk)
 
-    FileModel = ArchiveFile
-    if is_attachment:
-        FileModel = AttachmentFile
-
-    af = FileModel(**archive_fields)
-
-    # check if everything looks good up to now
-    af.full_clean(exclude=['file'])
+    archive_file.hash = generate_hash(path)
+    archive_file.size = _get_file_size(path)
+    archive_file.original_filename = os.path.split(path)[1]
 
     logger.info('Moving file to archive with name: {0}'.format(filename))
+    archive_file.archived_at = now()
 
     with open(path, 'rb') as f:
-        af.file.save(filename, File(f))
+        archive_file.file.save(filename, File(f))
 
-    af.save()
-    if is_attachment:
-        media.attachments.add(af)
-    else:
-        media.files.add(af)
-
-    return af.pk
+    archive_file.save()
+    return archive_file.pk
 
 
 

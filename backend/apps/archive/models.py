@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import filesizeformat
 
+from hav_utils.fields import LanguageField
 from .storage import ArchiveStorage
 from ..media.models import CreatorBase, MediaCreator
 
@@ -32,6 +33,8 @@ class ArchiveFile(models.Model):
     created_at = models.DateTimeField(null=True)
 
     creators = models.ManyToManyField(MediaCreator, through=FileCreator, verbose_name='creators')
+
+    language = LanguageField(blank=True)
 
     @property
     def mime_type(self):

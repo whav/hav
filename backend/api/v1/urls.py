@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls import url, include
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
+from rest_framework.reverse import reverse as django_reverse
 
 from sources.filesystem import FSSource
 from sources.whav import WHAVSource
@@ -10,6 +10,8 @@ from sources.uploads import UploadSource
 
 from .havBrowser.urls import hav_urls
 from .ingest.urls import ingest_urls
+
+from .misc_models.urls import urlpatterns as model_url_patterns
 
 # TODO: this is a duplication of the sources defined in settings.py
 incoming_fss_source = FSSource(settings.INCOMING_FILES_ROOT, source_id='incoming')
@@ -20,24 +22,31 @@ app_name = 'api'
 
 @api_view(['GET'])
 def start(request):
+
+    def reverse(name):
+        return django_reverse(f'api:v1:{name}', request=request)
+
     return Response(
         {
-            "hav": reverse('api:v1:hav_browser:hav_root', request=request),
+            "hav": reverse('hav_browser:hav_root'),
             "sources": [
                 {
                     "name": "Incoming",
-                    "url": reverse('api:v1:filebrowser_root', request=request)
+                    "url": reverse('filebrowser_root')
                 },
                 {
                     "name": "WHAV",
-                    "url": reverse("api:v1:whav_root", request=request)
+                    "url": reverse("whav_root")
                 },
                 {
                     "name": "Uploads",
-                    "url": reverse("api:v1:fileupload", request=request)
+                    "url": reverse("fileupload")
 
                 }
-            ]
+            ],
+            "models": {
+                'persons': reverse('models:creators'),
+            }
         }
     )
 
@@ -54,5 +63,6 @@ urlpatterns = [
     url(r'^hav/', include(
         (hav_urls('hav'), app_name),
         namespace='hav_browser')
-    )
+    ),
+    url(r'^models/', include((model_url_patterns, 'models')))
 ]

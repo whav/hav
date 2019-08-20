@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import DateTimeRangeField, ArrayField
 from django.conf import settings
 from django.utils.functional import cached_property
-
+from model_utils.models import TimeStampedModel
 from apps.sets.models import Node
 from apps.hav_collections.models import Collection
 
@@ -26,12 +26,26 @@ class MediaType(models.Model):
         unique_together = (('type', 'name'), )
 
 
-class MediaCreator(models.Model):
-    first_name = models.CharField(max_length=100, blank=True)
-    last_name = models.CharField(max_length=100)
-    display_name = models.CharField(max_length=200, blank=True)
+class MediaCreator(TimeStampedModel):
 
-    email = models.EmailField(blank=True)
+    name = models.CharField(max_length=200)
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        editable=False,
+        related_name="+",
+        related_query_name="+",
+    )
+    modified_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        editable=False,
+        related_name="+",
+        related_query_name="+",
+    )
 
     def __str__(self):
 

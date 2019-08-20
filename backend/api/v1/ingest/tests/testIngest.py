@@ -34,7 +34,7 @@ class IngestTest(APITestCase):
         self.target = self.root.add_child(name='testchild')
         self.user = User.objects.create_superuser('tester', 'test@example.com', uuid4())
         self.creator = MediaCreator.objects.create(name='Tester Testeroo')
-        self.role = MediaCreatorRole.objects.create(role_name='testrole')
+        self.role = MediaCreatorRole.objects.create(name='testrole')
         self.license = License.objects.create(short_name='WTFPL')
 
         self.collection = Collection.objects.create(

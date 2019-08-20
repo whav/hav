@@ -22,59 +22,6 @@ from .fields import resolveURLtoFilePath
 logger = logging.getLogger(__name__)
 
 
-class MediaCreatorSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField()
-
-    def get_name(self, mc):
-        return str(mc)
-
-    class Meta:
-        model = MediaCreator
-        fields = [
-            'id',
-            'name'
-        ]
-
-class MediaCreatorRoleSerializer(serializers.ModelSerializer):
-
-    name = serializers.SerializerMethodField()
-
-    def get_name(self, mcr):
-        return str(mcr)
-
-    class Meta:
-        model = MediaCreatorRole
-        fields = ['id', 'name']
-
-
-
-
-
-class MediaLicenseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = License
-        fields = [
-            'id',
-            'name'
-        ]
-
-class MediaTypeSerializer(serializers.ModelSerializer):
-
-    type = serializers.SerializerMethodField()
-
-    def get_type(self, obj):
-        return obj.get_type_display()
-
-    class Meta:
-        model = MediaType
-        fields = [
-            'id',
-            'name',
-            'type'
-        ]
-
-
 class MediaToCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaToCreator

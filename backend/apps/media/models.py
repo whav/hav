@@ -60,10 +60,10 @@ class MediaCreator(TimeStampedModel):
 
 class MediaCreatorRole(models.Model):
 
-    role_name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
-        return self.role_name
+        return self.name
 
 
 class CreatorBase(models.Model):

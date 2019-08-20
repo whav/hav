@@ -6,9 +6,11 @@ from django.db.models import Q, Count
 from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
 from apps.ingest.models import IngestQueue
 from ..permissions import IncomingBaseMixin
-from .serializers import MediaCreatorRoleSerializer, MediaCreatorSerializer, MediaLicenseSerializer, \
-    PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, \
-    SimpleIngestQueueSerializer, IngestSerializer, SimpleMediaSerializer, MediaTypeSerializer
+from .serializers import PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, \
+    SimpleIngestQueueSerializer, IngestSerializer, SimpleMediaSerializer
+
+from ..misc_models.serializers import MediaCreatorSerializer, MediaCreatorRoleSerializer, MediaTypeSerializer,\
+    MediaLicenseSerializer
 
 
 class IngestOptionsView(IncomingBaseMixin, APIView):

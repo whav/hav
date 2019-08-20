@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import MediaCreatorAPI
+from .views import MediaCreatorAPI, MediaCreatorRoleAPI, MediaLicenseAPI
 
 urlpatterns = [
     path('creators/', MediaCreatorAPI.as_view(), name='creators'),
+    path('licenses/', MediaLicenseAPI.as_view(), name='licenses'),
+    path('creator_roles/', MediaCreatorRoleAPI.as_view(), name='creator_roles')
 ]

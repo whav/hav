@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.media.models import MediaCreator
+from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
 
 
 class MediaCreatorSerializer(serializers.ModelSerializer):
@@ -8,3 +8,33 @@ class MediaCreatorSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
+class MediaCreatorRoleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MediaCreatorRole
+        fields = ['id', 'name']
+
+
+class MediaLicenseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = License
+        fields = [
+            'id',
+            'name'
+        ]
+
+class MediaTypeSerializer(serializers.ModelSerializer):
+
+    type = serializers.SerializerMethodField()
+
+    def get_type(self, obj):
+        return obj.get_type_display()
+
+    class Meta:
+        model = MediaType
+        fields = [
+            'id',
+            'name',
+            'type'
+        ]

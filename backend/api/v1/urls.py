@@ -26,6 +26,12 @@ def start(request):
     def reverse(name):
         return django_reverse(f'api:v1:{name}', request=request)
 
+    # build a structure for all patterns defined in misc models
+    misc_models = {}
+    for pattern in model_url_patterns:
+        name = pattern.name
+        misc_models.update({name: reverse(f'models:{name}')})
+
     return Response(
         {
             "hav": reverse('hav_browser:hav_root'),
@@ -44,9 +50,7 @@ def start(request):
 
                 }
             ],
-            "models": {
-                'persons': reverse('models:creators'),
-            }
+            "models": misc_models
         }
     )
 

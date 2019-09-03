@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'apps.ingest',
     'apps.webassets',
     'apps.hav_collections',
+    'apps.tags',
     'sources.uploads',
 
 ]

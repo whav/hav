@@ -1,12 +1,14 @@
-from django.test import TestCase
-from ..models import Tag, ManagedTag, CollectionTag
-from apps.hav_collections.models import Collection
-from itertools import permutations, chain
 import string
-from random import choices, shuffle, sample, choice
-from ..fields import SingleTagSelectField, MultipleTagSelectField
-from ..sources import TAGGING_SOURCES
+from itertools import permutations, chain
+from random import shuffle, sample, choice
+
 from django import forms
+from django.test import TestCase
+
+from apps.hav_collections.models import Collection
+from apps.tags.fields import SingleTagSelectField
+from apps.tags.models import Tag, ManagedTag, CollectionTag
+from apps.tags.sources import TAGGING_SOURCES
 
 letters = list(string.ascii_lowercase)
 

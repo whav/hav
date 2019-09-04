@@ -15,7 +15,11 @@ const fetchTags = async query => {
 
   const data = await response.json();
   if (response.ok) {
-    const results = data.results.map(r => ({ value: r.pk, label: r.name }));
+    const results = data.results.map(r => ({
+      value: r.id,
+      label: r.name,
+      ...r
+    }));
     console.log(results);
     return results;
   } else {

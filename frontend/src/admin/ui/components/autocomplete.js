@@ -18,7 +18,7 @@ class MultiTagField extends React.Component {
       <AsyncSelect
         isMulti={true}
         cacheOptions={false}
-        defaultOptions={true}
+        defaultOptions={false}
         loadOptions={fetchTags}
       />
     );

@@ -9,6 +9,8 @@ const Welcome = () => {
     <div className="content">
       <h1>HAV Dashboard</h1>
       <p>Please use the menu on the left.</p>
+
+      <h2>Tag Test</h2>
       <MultiTagField />
     </div>
   );

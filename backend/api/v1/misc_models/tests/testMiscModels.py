@@ -24,7 +24,6 @@ class MiscModelsAPITest(APITestCase):
             self.client.force_login(self.user)
             response = self.client.get(url, format='json')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertIsInstance(response.data, list)
             self.client.logout()
 
 

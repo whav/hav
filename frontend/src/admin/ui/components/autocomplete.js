@@ -2,7 +2,7 @@ import React from "react";
 import AsyncSelect from "react-select/async";
 import fetchTags from "../../api/tags";
 
-class MultiTagField extends ReactComponent {
+class MultiTagField extends React.Component {
   state = {
     inputValue: ""
   };
@@ -16,10 +16,10 @@ class MultiTagField extends ReactComponent {
   render() {
     return (
       <AsyncSelect
-        isMulti
-        cacheOptions
-        defaultOptions
-        loadOptions={promiseOptions}
+        isMulti={true}
+        cacheOptions={false}
+        defaultOptions={true}
+        loadOptions={fetchTags}
       />
     );
   }

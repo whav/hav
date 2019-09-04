@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q, Count
 from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
 from apps.ingest.models import IngestQueue
+from apps.tags.models import find_tags
 from ..permissions import IncomingBaseMixin
 from .serializers import PrepareIngestSerializer, IngestionItemSerializer, IngestQueueSerializer, \
     SimpleIngestQueueSerializer, IngestSerializer, SimpleMediaSerializer

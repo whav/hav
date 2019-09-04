@@ -19,8 +19,6 @@ class Tag(models.Model):
 class CollectionTag(Tag):
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
 
-    class Meta:
-        ordering = ('pk', )
 
 class ManagedTag(Tag):
 
@@ -39,5 +37,9 @@ class ManagedTag(Tag):
         unique_together = [
             ('source', 'source_ref')
         ]
-        ordering = ('pk',)
 
+
+
+def find_tags(query, collection=None):
+    base_qs = Tag.objects.filter(name__icontains=query)
+    return base_qs

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
-
+from apps.tags.models import Tag
 
 class MediaCreatorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,4 +37,13 @@ class MediaTypeSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'type'
+        ]
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = [
+            'name',
+            'pk',
         ]

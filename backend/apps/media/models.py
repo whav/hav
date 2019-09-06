@@ -5,7 +5,7 @@ from django.utils.functional import cached_property
 from model_utils.models import TimeStampedModel
 from apps.sets.models import Node
 from apps.hav_collections.models import Collection
-
+from apps.tags.models import Tag
 
 class MediaType(models.Model):
     TYPE_CHOICES = [
@@ -118,7 +118,7 @@ class Media(models.Model):
 
     license = models.ForeignKey(License, null=True, blank=True, on_delete=models.SET_NULL)
 
-    tags = ArrayField(models.CharField(max_length=255), default=list)
+    tags = models.ManyToManyField(Tag)
 
     original_media_type = models.ForeignKey(MediaType, on_delete=models.PROTECT)
 

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
-from apps.tags.models import Tag
+from apps.tags.models import Tag, ManagedTag, CollectionTag
+from apps.tags.sources import TAGGING_SOURCES
+
 
 class MediaCreatorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,9 +43,20 @@ class MediaTypeSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
+
+    type = serializers.SerializerMethodField()
+
+    def get_type(self, tag):
+        if isinstance(tag, ManagedTag):
+            return tag.get_source_display()
+        elif isinstance(tag, CollectionTag):
+            return 'collection'
+        return None
+
     class Meta:
         model = Tag
         fields = [
             'id',
             'name',
+            'type'
         ]

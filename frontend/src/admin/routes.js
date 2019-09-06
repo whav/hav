@@ -22,6 +22,7 @@ import Uploads from "./containers/simpleUpload";
 import IngestionQueueList from "./containers/ingest/queues";
 import Ingest from "./containers/ingest/queue";
 import SaveIngestionQueue from "./containers/ingest/index";
+import Playground from "./ui/playground";
 
 const routes = [
   {
@@ -55,6 +56,10 @@ const routes = [
   {
     path: "/:repository(hav)/media/:media_id/",
     main: HAVMediaDetail
+  },
+  {
+    path: "/playground/",
+    main: Playground
   }
 ];
 
@@ -99,6 +104,10 @@ const mainNav = [
         link: "/sources/upload/"
       }
     ]
+  },
+  {
+    title: "Experiments",
+    sub: [{ title: "Playground", link: "/playground/", menuExact: false }]
   }
 ];
 

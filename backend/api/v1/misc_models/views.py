@@ -40,7 +40,7 @@ class TagAutocompleteView(IncomingBaseMixin, generics.ListAPIView):
         qs = Tag.objects.none()
         query = self.request.query_params.get('search', '').strip()
         if query:
-            qs = Tag.objects.filter(name__icontains=query)
+            qs = Tag.objects.filter(name__icontains=query).select_subclasses()
         return qs
 
 

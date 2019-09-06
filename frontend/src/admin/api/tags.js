@@ -15,13 +15,8 @@ const fetchTags = async query => {
 
   const data = await response.json();
   if (response.ok) {
-    const results = data.results.map(r => ({
-      value: r.id,
-      label: r.name,
-      ...r
-    }));
-    console.log(results);
-    return results;
+    // Fix me: this breaks pagination
+    return data.results;
   } else {
     return Promise.reject(data);
   }

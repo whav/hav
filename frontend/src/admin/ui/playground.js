@@ -2,16 +2,21 @@ import React from "react";
 import { MultiTagField } from "./components/autocomplete";
 
 class Playground extends React.Component {
-  state = { value: "" };
+  state = { multiselect: [] };
 
   render() {
     return (
       <div className="content">
-        <h2>Tag Field Test</h2>
-        <MultiTagField onChange={value => this.setState({ value })} />
+        <h1>Playground</h1>
+
+        <h2>Multi Tag Field</h2>
+        <MultiTagField
+          value={this.state.multiselect}
+          onChange={values => this.setState({ multiselect: values })}
+        />
         <hr />
 
-        <pre>{JSON.stringify(this.state.value, null, 2)}</pre>
+        <pre>{JSON.stringify(this.state, null, 2)}</pre>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import React from "react";
-import AsyncSelect from "react-select/async";
+import AsyncCreatableSelect from "react-select/async-creatable";
 import groupBy from "lodash/groupBy";
-import fetchTags from "../../api/tags";
+import { fetchTags, createTag } from "../../api/tags";
 
 import { GoGlobe } from "react-icons/go";
 import { MdLanguage } from "react-icons/md";
@@ -16,10 +16,12 @@ const icon_for_type = type => {
   return icon || null;
 };
 
+const prepareOption = o => ({ value: o.id, label: o.name, ...o });
+
 const fetchFancyTags = async (query, limit_types = [], grouped = false) => {
   const opts = await fetchTags(query);
   // do the basic mapping so that we have value and label
-  const options = opts.map(o => ({ value: o.id, label: o.name, ...o }));
+  const options = opts.map(prepareOption);
   let fancyOptions;
   if (grouped) {
     const groupedOptions = groupBy(options, o => o.type);
@@ -55,17 +57,42 @@ const fetchFancyTags = async (query, limit_types = [], grouped = false) => {
 
 class MultiTagField extends React.Component {
   state = {
-    inputValue: ""
+    inputValue: "",
+    values: []
+  };
+
+  handleCreate = new_option => {
+    createTag(new_option).then(data => {
+      const option = prepareOption(data);
+      this.setState(state => {
+        const values = [...state.values, option];
+        this.props.onChange && this.props.onChange(values);
+        return {
+          inputValue: "",
+          values
+        };
+      });
+    });
+  };
+
+  handleChange = values => {
+    // values might be null, but we need an array
+    values = values || [];
+    this.setState({ values });
+    this.props.onChange && this.props.onChange(values);
   };
 
   render() {
     return (
-      <AsyncSelect
+      <AsyncCreatableSelect
         isMulti={true}
         cacheOptions={false}
         defaultOptions={false}
         loadOptions={q => fetchFancyTags(q, [], true)}
-        {...this.props}
+        isLoading={this.state.isLoading}
+        onChange={this.handleChange}
+        onCreateOption={this.handleCreate}
+        value={this.state.values}
       />
     );
   }

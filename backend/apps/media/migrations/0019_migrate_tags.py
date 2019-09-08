@@ -3,7 +3,6 @@
 from django.db import migrations, models
 
 
-
 def migrate_tags(apps, schema_editor):
 
     Media = apps.get_model('media', 'Media')
@@ -16,9 +15,8 @@ def migrate_tags(apps, schema_editor):
             tags.append(tag)
         media.tags.set(tags)
 
-class Migration(migrations.Migration):
 
-    replaces = [('media', '0019_auto_20190906_1823'), ('media', '0020_media_tags'), ('media', '0021_auto_20190906_1828'), ('media', '0022_remove_media_old_tags')]
+class Migration(migrations.Migration):
 
     dependencies = [
         ('tags', '0001_initial'),

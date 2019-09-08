@@ -50,7 +50,7 @@ class TagSerializer(serializers.ModelSerializer):
         if isinstance(tag, ManagedTag):
             return tag.get_source_display()
         elif isinstance(tag, CollectionTag):
-            return 'collection'
+            return tag.collection.short_name
         return None
 
     class Meta:
@@ -59,4 +59,13 @@ class TagSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'type'
+        ]
+
+
+class CollectionTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CollectionTag
+        fields = [
+            'name',
+            'collection'
         ]

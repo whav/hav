@@ -110,6 +110,11 @@ class IngestTest(APITestCase):
         )
         self.assertEqual(media.description, data['media_description'])
         self.assertEqual(media.title, data['media_title'])
+        self.assertEqual(media.license.pk, self.license.pk)
+
+        mc = media.mediatocreator_set.get()
+        self.assertEqual(mc.creator.pk, self.creator.pk)
+        self.assertEqual(mc.role.pk, self.role.pk)
 
 
     def test_with_attachments(self):

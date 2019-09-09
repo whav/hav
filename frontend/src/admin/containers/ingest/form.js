@@ -5,8 +5,7 @@ import {
   Field,
   ErrorMessage as FormikErrorMessage,
   FieldArray,
-  connect,
-  getIn
+  connect
 } from "formik";
 import classnames from "classnames";
 import ReactSelect from "react-select";
@@ -14,11 +13,14 @@ import { Persist } from "formik-persist";
 import groupBy from "lodash/groupBy";
 import parseDateToRange from "../../utils/daterange";
 import TagInput from "../../ui/components/taginput";
+import { FieldWrapper as BField } from "../../ui/forms";
 import Button from "../../ui/components/buttons";
 import Modal from "../../ui/modal";
 import { UploadContainer, SingleUpload } from "../simpleUpload";
 import SourcePreview from "./sources";
 import "./form.css";
+
+import { MultiTagField } from "../../ui/components/autocomplete";
 
 const customStyles = {
   control: provided => ({
@@ -42,15 +44,6 @@ const CombiField = ({ label = "", name, props }) => {
       {label ? <label className="label">{label}</label> : null}
       <div className={classnames("control")}>{children}</div>
       <ErrorMessage name={name} />
-    </div>
-  );
-};
-
-const BField = ({ label = "", children }) => {
-  return (
-    <div className="field">
-      {label ? <label className="label">{label}</label> : null}
-      <div className={classnames("control")}>{children}</div>
     </div>
   );
 };
@@ -123,7 +116,7 @@ const SelectField = ({ options = [], multiple = false, field, form }) => {
 
 const TagField = ({ field, form, ...props }) => {
   return (
-    <TagInput
+    <MultiTagField
       {...props}
       name={field.name}
       value={field.value}
@@ -444,7 +437,8 @@ class IngestForm extends React.Component {
       initialValues = {},
       persistName,
       onDelete,
-      source
+      source,
+      collection_id
     } = this.props;
     return (
       <Formik
@@ -468,6 +462,7 @@ class IngestForm extends React.Component {
                   component={TagField}
                   className="input"
                   name="media_tags"
+                  collection_id={collection_id}
                 />
                 <ErrorMessage name="media_tags" component="div" />
               </BField>

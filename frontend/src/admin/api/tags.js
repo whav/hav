@@ -1,9 +1,9 @@
 import { autocompleteURL } from "./urls";
 import { getCSRFCookie } from "../../utils/xhr";
 
-const fetchTags = async query => {
+const fetchTags = async (query, collection) => {
   const response = await fetch(
-    `${autocompleteURL}?${new URLSearchParams({ search: query })}`,
+    `${autocompleteURL}?${new URLSearchParams({ search: query, collection })}`,
     {
       method: "GET",
       credentials: "same-origin",
@@ -22,11 +22,13 @@ const fetchTags = async query => {
   }
 };
 
-const createTag = async name => {
+const createTag = async (name, collection) => {
+  console.log(name, collection);
   const response = await fetch(autocompleteURL, {
     method: "POST",
     body: JSON.stringify({
-      name
+      name,
+      collection
     }),
     headers: new Headers({
       "X-CSRFTOKEN": getCSRFCookie(),

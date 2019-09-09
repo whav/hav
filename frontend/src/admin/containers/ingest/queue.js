@@ -101,7 +101,10 @@ class IngestQueue extends React.Component {
 
   ingestItem = (ingestId, data) => {
     const finalData = { ...data };
-    // throw new Error("Not there yet.");
+    console.log("Before submit", JSON.stringify(finalData, null, 2));
+    // flatten where needed
+    finalData.media_tags = finalData.media_tags.map(t => t.value);
+    console.log(JSON.stringify(finalData, null, 2));
     let response = queueForIngestion(this.props.uuid, finalData);
 
     response
@@ -126,7 +129,8 @@ class IngestQueue extends React.Component {
       items = [],
       target,
       created_media_entries = [],
-      ws_url
+      ws_url,
+      target_collection_id
     } = this.props;
     const {
       formData,
@@ -160,6 +164,7 @@ class IngestQueue extends React.Component {
             source={source}
             persistName={source}
             options={options}
+            collection_id={target_collection_id}
             onSubmit={data => this.ingestItem(source, data)}
             persistName={`${window.location.href}||${source}`}
             onDelete={() => {
@@ -243,6 +248,7 @@ const Ingest = connect(
     }
     const items = queue.ingestion_queue;
     const target = queue.target;
+    const target_collection_id = queue.target_collection.id;
     const created_media_entries = queue.created_media_entries
       .map(ma => {
         const key = ma.url;
@@ -255,6 +261,7 @@ const Ingest = connect(
     return {
       items,
       target,
+      target_collection_id,
       created_media_entries,
       uuid: queue.uuid,
       options: state.ingest.options,

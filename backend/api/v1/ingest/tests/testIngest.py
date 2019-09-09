@@ -9,6 +9,7 @@ import random
 from apps.media.models import License, MediaCreator, MediaType, MediaCreatorRole, Media
 from apps.sets.models import Node
 from apps.ingest.models import IngestQueue
+from apps.tags.models import CollectionTag
 from apps.hav_collections.models import Collection
 from hav_utils.generate_image import generate_image
 
@@ -43,6 +44,7 @@ class IngestTest(APITestCase):
         )
         self.media_type = MediaType.objects.create(type=1, name='testtype')
         self.collection.administrators.set([self.user])
+        self.collection_tag = CollectionTag.objects.create(name='testtag', collection=self.collection)
         self.source_id = self.generate_source_id()
         self.queue = IngestQueue.objects.create(target=self.target, created_by=self.user, ingestion_queue=[self.source_id])
         self.url = reverse('api:v1:ingest:ingest_queue_ingest', kwargs={'pk': str(self.queue.pk)})
@@ -79,7 +81,9 @@ class IngestTest(APITestCase):
                 'media_type': self.media_type.pk,
                 'source': self.source_id,
                 'media_title': 'some title',
-                'attachments': []
+                'attachments': [],
+                'media_tags': [self.collection_tag.pk],
+                'media_description': 'This is the test media description'
         }
 
 
@@ -97,6 +101,16 @@ class IngestTest(APITestCase):
         self.client.force_login(self.user)
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # check for the correct setting of various fields
+        media = Media.objects.get(pk=response.json()['pk'])
+        self.assertQuerysetEqual(
+            media.tags.select_subclasses(),
+            [repr(ct) for ct in CollectionTag.objects.filter(pk=self.collection_tag.pk)]
+        )
+        self.assertEqual(media.description, data['media_description'])
+        self.assertEqual(media.title, data['media_title'])
+
 
     def test_with_attachments(self):
         data = self.generateMediaData()

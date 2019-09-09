@@ -6,7 +6,34 @@ from apps.sets.models import Node
 from apps.media.models import Media
 from apps.archive.models import ArchiveFile
 from apps.webassets.models import WebAsset
+from apps.hav_collections.models import Collection
 from hav_utils.imaginary import generate_thumbnail_url
+
+
+class HAVCollectionSerializer(serializers.ModelSerializer):
+
+    # url = serializers.SerializerMethodField()
+    #
+    # def get_url(self, collection):
+    #     request = self.context.get('request')
+    #     match = request.resolver_match
+    #     url_lookup = '%s:%s' % (':'.join(match.namespaces), 'hav_set')
+    #     url_kwargs = {'pk': collection.root_node_id}
+    #     return request.build_absolute_uri(
+    #         reverse(
+    #             url_lookup,
+    #             kwargs=url_kwargs
+    #         )
+    #     )
+
+    class Meta:
+        model = Collection
+        fields = [
+            'name',
+            'short_name',
+            'id',
+            # 'url',
+        ]
 
 
 class HAVArchiveFileSerializer(serializers.ModelSerializer):
@@ -157,7 +184,9 @@ class BaseHAVNodeSerializer(serializers.ModelSerializer):
 class HAVNodeSerializer(BaseHAVNodeSerializer):
 
     class Meta(BaseHAVNodeSerializer.Meta):
-        fields = BaseHAVNodeSerializer.Meta.fields + ['parentDirs', 'childrenDirs', 'files']
+        fields = BaseHAVNodeSerializer.Meta.fields + ['collection', 'parentDirs', 'childrenDirs', 'files', ]
+
+    collection = HAVCollectionSerializer(read_only=True, source='get_collection')
 
     parentDirs = serializers.SerializerMethodField()
     childrenDirs = serializers.SerializerMethodField()

@@ -13,11 +13,14 @@ from apps.ingest.models import IngestQueue
 from apps.sets.models import Node
 from apps.archive.models import AttachmentFile, ArchiveFile, FileCreator
 from apps.media.models import MediaToCreator, MediaCreatorRole, Media, License, MediaType, MediaCreator
+from apps.tags.models import Tag
 from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkField, \
     IngestionReferenceField
 from hav_utils.daterange import parse
+from ..havBrowser.serializers import HAVCollectionSerializer
 from .ingest_task import archive_and_create_webassets
 from .fields import resolveURLtoFilePath
+from ..permissions import has_collection_permission
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +64,7 @@ def validate_source(url):
     try:
         hash_value = generate_hash(source_path)
     except FileNotFoundError:
-        raise serializers.ValidationError(f"The file {path} could not be found.")
+        raise serializers.ValidationError(f"The file {source_path} could not be found.")
 
     try:
         media = Media.objects.get(files__hash=hash_value)
@@ -98,7 +101,7 @@ class IngestSerializer(serializers.Serializer):
     media_type = serializers.PrimaryKeyRelatedField(queryset=MediaType.objects.all())
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
-    media_tags = serializers.ListField(child=serializers.CharField(max_length=255), required=False)
+    media_tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True, required=False)
 
     attachments = AttachmentSerializer(many=True, allow_empty=True)
 
@@ -122,10 +125,10 @@ class IngestSerializer(serializers.Serializer):
         user = self.context['user']
         target = data.get('target') or self.context['target']
         collection = target.get_collection()
-        if not user.is_superuser or user not in collection.administrators.all():
+        if not has_collection_permission(user, collection):
             raise serializers.ValidationError(
                 'You do not have the appropriate permissions to ingest into the collection "{}"'
-                .format(target.collection.name)
+                .format(collection.name)
             )
 
         if not target.is_descendant_of(collection.root_node) and not target == collection.root_node:
@@ -150,7 +153,6 @@ class IngestSerializer(serializers.Serializer):
             set=self.target_node,
             collection=self.target_node.get_collection(),
             created_by=user,
-            tags=validated_data.get('media_tags', []),
             original_media_type=validated_data['media_type'],
             original_media_identifier=validated_data.get('media_identifier', '')
         )
@@ -158,6 +160,9 @@ class IngestSerializer(serializers.Serializer):
         # save m2m
         for media2creator in validated_data['creators']:
             MediaToCreator.objects.create(media=media, **media2creator)
+
+        # set tags
+        media.tags.set(validated_data.get('media_tags', []))
 
         af = ArchiveFile.objects.create(
             source_id=source,
@@ -254,12 +259,18 @@ class IngestQueueSerializer(serializers.ModelSerializer):
 
     target = HAVTargetField()
 
+    target_collection = serializers.SerializerMethodField()
+
     selection = serializers.ListField(child=IngestionReferenceField(), write_only=True)
 
     created_media_entries = serializers.SerializerMethodField()
 
     related_files = serializers.SerializerMethodField()
     initial_data = serializers.SerializerMethodField()
+
+    def get_target_collection(self, obj):
+        collection = obj.target.get_collection()
+        return HAVCollectionSerializer(instance=collection, context=self.context).data
 
     def get_initial_data(self, obj):
         return {
@@ -293,9 +304,12 @@ class IngestQueueSerializer(serializers.ModelSerializer):
             'uuid',
             'name',
             'target',
+            'target_collection',
             'selection',
             'ingestion_queue',
             'initial_data',
             'related_files',
             'created_media_entries'
         ]
+
+

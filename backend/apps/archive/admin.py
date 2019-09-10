@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import ArchiveFile, AttachmentFile
 
-# Register your models here.
+admin.site.register(ArchiveFile)
+admin.site.register(AttachmentFile)
+

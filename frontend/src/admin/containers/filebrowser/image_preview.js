@@ -55,7 +55,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    loadPreview: source => dispatch(requestFile(source))
+    loadPreview: source => {
+      console.log("Loading Preview...", source);
+      dispatch(requestFile(source));
+    }
   };
 };
 

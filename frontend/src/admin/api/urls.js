@@ -21,7 +21,7 @@ export const ingestFileEndpoint = uuid =>
   uuid ? `${ingestQueueDetail(uuid)}ingest/` : ingestSingle;
 export const ingestQueueModifierEndpoint = uuid =>
   `${ingestQueueDetail(uuid)}modify/`;
-
+export const autocompleteURL = `${apiPrefix}models/tags/`;
 export const uploadURL = `${apiPrefix}sources/upload/`;
 
 export const ingestQueueWS = uuid => {

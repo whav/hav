@@ -5,6 +5,7 @@ import React from "react";
 import Dropzone from "react-dropzone";
 import classNames from "classnames";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 import {
   CheckboxBlankIcon,
@@ -98,21 +99,6 @@ class FileBrowserSettingsDropdown extends React.Component {
 }
 
 class FileBrowserMenu extends React.Component {
-  constructor(props) {
-    super(props);
-    this.createDirectory = this.createDirectory.bind(this);
-  }
-
-  createDirectory() {
-    let name = window.prompt(
-      "Please enter a name for the folder to be created",
-      ""
-    );
-    if (name) {
-      this.props.addDirectory(name);
-    }
-  }
-
   selectAll = () => {
     this.props.handleSelect(Array.from(this.props.allItemIds));
   };
@@ -148,9 +134,9 @@ class FileBrowserMenu extends React.Component {
         <CheckboxCheckedIcon />⇄<CheckboxBlankIcon />
       </Button>,
       this.props.addDirectory ? (
-        <Button key="create-directory" onClick={this.createDirectory}>
+        <Link key="create-directory" className="button" to={`./add/`}>
           <AddIcon /> Add Folder
-        </Button>
+        </Link>
       ) : null,
       // hide this for now
       true ? null : (

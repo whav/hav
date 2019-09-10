@@ -5,6 +5,9 @@ from treebeard.mp_tree import MP_Node
 class Node(MP_Node):
 
     name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+
+    tags = models.ManyToManyField('tags.Tag', blank=True)
 
     @property
     def children(self):

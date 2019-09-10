@@ -18,6 +18,7 @@ import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
 import HAVFileBrowser from "./containers/filebrowser/hav";
 import HAVMediaDetail from "./containers/filebrowser/mediaDetail";
+import HAVAddFolder from "./containers/filebrowser/add_folder";
 import Uploads from "./containers/simpleUpload";
 import IngestionQueueList from "./containers/ingest/queues";
 import Ingest from "./containers/ingest/queue";
@@ -56,6 +57,10 @@ const routes = [
   {
     path: "/:repository(hav)/media/:media_id/",
     main: HAVMediaDetail
+  },
+  {
+    path: "/:repository(hav)/:path?/add/",
+    main: HAVAddFolder
   },
   {
     path: "/playground/",

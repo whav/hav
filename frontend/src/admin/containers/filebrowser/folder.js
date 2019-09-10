@@ -95,7 +95,7 @@ class FileBrowserDirectory extends React.Component {
               <FileBrowserMenu
                 switchDisplayType={switchDisplayStyle}
                 selectedDisplayType={settings.selectedDisplayType}
-                addDirectory={allowCreate ? createDirectory : false}
+                addDirectory={allowCreate}
                 selectedItemIds={Array.from(ingestable)}
                 allItemIds={directory.content}
                 handleSelect={selectItems}

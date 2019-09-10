@@ -2,7 +2,9 @@ import React from "react";
 import { MultiTagField } from "./components/autocomplete";
 
 class Playground extends React.Component {
-  state = { multiselect: [] };
+  state = {
+    multiselect: []
+  };
 
   render() {
     return (

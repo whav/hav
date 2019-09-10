@@ -1,5 +1,6 @@
 import React from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
+import { components } from "react-select";
 import groupBy from "lodash/groupBy";
 import reactModal from "@prezly/react-promise-modal";
 import { fetchTags, createTag } from "../../api/tags";
@@ -30,39 +31,17 @@ const fetchFancyTags = async (
 ) => {
   const opts = await fetchTags(query, collection);
   // do the basic mapping so that we have value and label
-  const options = opts.map(prepareOption);
-
-  let fancyOptions;
-
+  let options = opts.map(prepareOption);
   if (grouped) {
     const groupedOptions = groupBy(options, o => o.type);
-    fancyOptions = Object.entries(groupedOptions).map(([type, options]) => {
-      const Icon = icon_for_type(type);
+    options = Object.entries(groupedOptions).map(([type, options]) => {
       return {
-        label: (
-          <span>
-            <Icon />
-            {type}
-          </span>
-        ),
+        label: type,
         options
       };
     });
-  } else {
-    fancyOptions = options.map(o => {
-      const Icon = icon_for_type(o.type);
-      return {
-        ...o,
-        label: (
-          <span>
-            <Icon />
-            {o.name}
-          </span>
-        )
-      };
-    });
   }
-  return fancyOptions;
+  return options;
 };
 
 class TagModal extends React.Component {
@@ -129,6 +108,31 @@ class TagModal extends React.Component {
   }
 }
 
+const TagLabel = ({ type, name }) => {
+  const Icon = icon_for_type(type);
+  return (
+    <span>
+      <Icon />
+      {name}
+    </span>
+  );
+};
+
+const MultiValueLabel = ({ data }) => <TagLabel {...data} />;
+const Option = props => {
+  const { data, children } = props;
+  return (
+    <components.Option {...props}>
+      {data.__isNew__ ? children : <TagLabel {...props.data} />}
+    </components.Option>
+  );
+};
+
+const customSelectComponents = {
+  MultiValueLabel,
+  Option
+};
+
 class MultiTagField extends React.Component {
   state = {
     inputValue: "",
@@ -176,7 +180,8 @@ class MultiTagField extends React.Component {
         isLoading={this.state.isLoading}
         onChange={this.handleChange}
         onCreateOption={this.handleCreate}
-        value={this.state.values}
+        value={this.props.value}
+        components={customSelectComponents}
       />
     );
   }

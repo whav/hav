@@ -63,6 +63,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class CollectionTagSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = CollectionTag
         fields = [

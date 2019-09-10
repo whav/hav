@@ -20,6 +20,7 @@ from hav_utils.daterange import parse
 from ..havBrowser.serializers import HAVCollectionSerializer
 from .ingest_task import archive_and_create_webassets
 from .fields import resolveURLtoFilePath
+from ..permissions import has_collection_permission
 
 logger = logging.getLogger(__name__)
 
@@ -124,10 +125,10 @@ class IngestSerializer(serializers.Serializer):
         user = self.context['user']
         target = data.get('target') or self.context['target']
         collection = target.get_collection()
-        if not user.is_superuser or user not in collection.administrators.all():
+        if not has_collection_permission(user, collection):
             raise serializers.ValidationError(
                 'You do not have the appropriate permissions to ingest into the collection "{}"'
-                .format(target.collection.name)
+                .format(collection.name)
             )
 
         if not target.is_descendant_of(collection.root_node) and not target == collection.root_node:

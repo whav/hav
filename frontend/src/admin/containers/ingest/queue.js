@@ -101,10 +101,8 @@ class IngestQueue extends React.Component {
 
   ingestItem = (ingestId, data) => {
     const finalData = { ...data };
-    console.log("Before submit", JSON.stringify(finalData, null, 2));
     // flatten where needed
     finalData.media_tags = finalData.media_tags.map(t => t.value);
-    console.log(JSON.stringify(finalData, null, 2));
     let response = queueForIngestion(this.props.uuid, finalData);
 
     response

@@ -8,14 +8,12 @@ import {
   connect
 } from "formik";
 import classnames from "classnames";
-import ReactSelect from "react-select";
+import ReactSelect, { components } from "react-select";
 import { Persist } from "formik-persist";
 import groupBy from "lodash/groupBy";
 import parseDateToRange from "../../utils/daterange";
-import TagInput from "../../ui/components/taginput";
 import { FieldWrapper as BField } from "../../ui/forms";
 import Button from "../../ui/components/buttons";
-import Modal from "../../ui/modal";
 import { UploadContainer, SingleUpload } from "../simpleUpload";
 import SourcePreview from "./sources";
 import "./form.css";
@@ -129,50 +127,36 @@ const TagField = ({ field, form, ...props }) => {
 };
 
 class MTField extends React.Component {
-  state = {
-    group: null
-  };
-
   onChange = e => {
-    this.setState({ group: e.target.value });
-    this.props.formik.setFieldValue("media_type", "");
+    this.props.formik.setFieldValue("media_type", e.value);
   };
 
   render() {
     const { media_types = [], formik } = this.props;
-    const currentValue = formik.values.media_type;
-    const grouped = groupBy(media_types, "type");
-    const currentSelection = media_types.find(mt => mt.id === currentValue);
-    // default to first group
-    let currentGroup = this.state.group || Object.keys(grouped)[0];
-    if (currentSelection) {
-      currentGroup = currentSelection.type;
-    }
+    const current_value = formik.values.media_type;
+    let options = media_types.map(mt => ({
+      label: mt.name,
+      value: mt.id,
+      ...mt
+    }));
+    const selected_option = options.find(o => o.value === current_value);
+    const grouped_options = groupBy(options, "type");
+    options = Object.entries(grouped_options).map(([type, opts]) => ({
+      label: type,
+      options: opts
+    }));
+
     return (
-      <>
-        <BField label="Original Media Type">
-          {Object.keys(grouped).map(k => (
-            <label key={k} className="radio">
-              <input
-                type="radio"
-                name="mediatypetype"
-                value={k}
-                checked={k === currentGroup}
-                onChange={this.onChange}
-              />
-              {k}
-            </label>
-          ))}
-        </BField>
-        <BField>
-          <Field
-            component={SelectField}
-            name="media_type"
-            options={grouped[currentGroup]}
-          />
-          <ErrorMessage name="media_type" component="div" />
-        </BField>
-      </>
+      <BField label="Original Media Type">
+        <Field
+          component={ReactSelect}
+          name="media_type"
+          options={options}
+          onChange={this.onChange}
+          value={selected_option}
+        />
+        <ErrorMessage name="media_type" component="div" />
+      </BField>
     );
   }
 }

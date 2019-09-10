@@ -3,11 +3,7 @@ import { connect } from "react-redux";
 import { requestFile } from "../../ducks/browser";
 
 class SourcePreview extends React.Component {
-  state = {
-    loading: true
-  };
-
-  UNSAFE_componentDidMount() {
+  componentDidMount() {
     if (this.props.data === undefined) {
       this.props.loadData();
     }
@@ -37,7 +33,9 @@ export default connect(
   (dispatch, ownProps) => {
     const url = ownProps.url;
     return {
-      loadData: () => dispatch(requestFile(url))
+      loadData: () => {
+        dispatch(requestFile(url));
+      }
     };
   }
 )(SourcePreview);

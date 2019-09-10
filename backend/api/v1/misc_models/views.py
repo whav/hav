@@ -51,7 +51,7 @@ class TagAutocompleteView(IncomingBaseMixin, APIView):
         # TODO: check for collection permissions
         serializer = CollectionTagSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        collection = serializer.cleaned_data['collection']
+        collection = serializer.validated_data['collection']
         perms = has_collection_permission(request.user, collection)
         if not perms:
             raise ValidationError(f'Permission denied for collection {collection.name}')

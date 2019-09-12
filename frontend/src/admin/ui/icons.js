@@ -4,6 +4,7 @@ import {
   MdCheckBoxOutlineBlank as CheckboxBlankIcon,
   MdCheckBox as CheckboxCheckedIcon,
   MdAddBox as AddIcon,
+  MdEdit as EditIcon,
   MdViewModule as GalleryIcon,
   MdViewList as ListIcon,
   MdFileUpload as UploadIcon
@@ -56,5 +57,6 @@ export {
   LoadingSpinner,
   CheckIcon,
   QuestionMarkIcon,
-  BurgerIcon
+  BurgerIcon,
+  EditIcon
 };

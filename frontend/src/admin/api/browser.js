@@ -16,21 +16,11 @@ export const buildAPIUrl = (repository, path = "") => {
   return encodeURI(`${prefix}${p}`);
 };
 
-export const requestDirectory = url => {
-  return fetch(url, {
-    credentials: "same-origin"
-  }).then(response => {
-    return response.json();
-  });
-};
-
-export const createDirectory = (name, url) => {
+const directoryFetch = (url, method, data) => {
   return fetch(url, {
     credentials: "same-origin",
-    method: "POST",
-    body: JSON.stringify({
-      name
-    }),
+    method: method,
+    body: JSON.stringify(data),
     headers: new Headers({
       "X-CSRFTOKEN": getCSRFCookie(),
       Accept: "application/json",
@@ -39,4 +29,20 @@ export const createDirectory = (name, url) => {
   }).then(response => {
     return response.json();
   });
+};
+
+export const requestDirectory = url => {
+  return fetch(url, {
+    credentials: "same-origin"
+  }).then(response => {
+    return response.json();
+  });
+};
+
+export const createDirectory = (url, data) => {
+  return directoryFetch(url, "POST", data);
+};
+
+export const updateDirectory = (url, data) => {
+  return directoryFetch(url, "PUT", data);
 };

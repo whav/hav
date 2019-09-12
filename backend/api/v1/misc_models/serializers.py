@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
 from apps.tags.models import Tag, ManagedTag, CollectionTag
+from ..permissions import has_collection_permission
 from apps.tags.sources import TAGGING_SOURCES
 
 
@@ -63,6 +64,12 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class CollectionTagSerializer(serializers.ModelSerializer):
+
+    def validate(self, data):
+        user = self.context['request'].user
+        if not has_collection_permission(user, data['collection']):
+            raise serializers.ValidationError('No permission to add tag to collection.')
+        return data
 
     class Meta:
         model = CollectionTag

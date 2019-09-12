@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@prezly/react-promise-modal": "^0.2.0",
     "caniuse-db": "^1.0.30000874",
     "classnames": "^2.2.6",

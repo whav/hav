@@ -8,7 +8,7 @@ import { requestDirectoryAction } from "../../ducks/browser";
 
 import LoadingIndicator from "../../ui/loading";
 
-import { buildApiUrl } from "../../api/urls";
+import buildApiUrl from "../../routes";
 
 import DirectoryView from "./folder";
 import FileView from "./detail";
@@ -38,7 +38,7 @@ class FilebrowserView extends React.Component {
 
 export default connect(
   (state, props) => {
-    const key = buildApiUrl(props.location.pathname);
+    const key = buildApiUrl(props.match.params);
     const data = state.repositories[key];
     return {
       loading: data == undefined,
@@ -46,7 +46,7 @@ export default connect(
     };
   },
   (dispatch, props) => {
-    const apiURL = buildApiUrl(props.location.pathname);
+    const apiURL = buildApiUrl(props.match.params);
     return {
       loadData: () => {
         dispatch(requestDirectoryAction(apiURL));

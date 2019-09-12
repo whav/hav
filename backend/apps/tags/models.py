@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.db.models import Q
 from apps.hav_collections.models import Collection
 from model_utils.managers import InheritanceManager
 from .sources import TAG_LABEL_TO_SOURCE, TAGGING_SOURCES
@@ -19,6 +20,28 @@ class Tag(models.Model):
     class Meta:
         ordering = ('name', )
 
+
+def get_tags_for_collection(collection):
+    if isinstance(collection, Collection):
+        collection = collection.pk
+
+    # brain dump
+    # Tag.objects.annotate(
+    #   mc=Count('media'),
+    #   cc=Count('node'),
+    #   tc=F('mc') + F('cc')
+    # ).filter(tc__gt=0)
+    # .select_subclasses()
+
+    return Tag.objects.filter(
+        Q(
+            Q(collectiontag__isnull=False) &
+            Q(collectiontag__collection=collection))
+        |
+        Q(
+            managedtag__isnull=False
+        )
+    )
 
 class CollectionTag(Tag):
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)

@@ -13,12 +13,17 @@ import {
   IngestPackageIcon
 } from "./ui/icons";
 
+import apiPrefix from "./api/urls";
+
 // base components
 import Welcome from "./home";
 import FileBrowser from "./containers/filebrowser";
 import HAVFileBrowser from "./containers/filebrowser/hav";
 import HAVMediaDetail from "./containers/filebrowser/mediaDetail";
-import HAVAddFolder from "./containers/filebrowser/add_folder";
+import {
+  HAVFolderAdd,
+  HAVFolderUpdate
+} from "./containers/filebrowser/folder_crud";
 import Uploads from "./containers/simpleUpload";
 import IngestionQueueList from "./containers/ingest/queues";
 import Ingest from "./containers/ingest/queue";
@@ -26,10 +31,12 @@ import SaveIngestionQueue from "./containers/ingest/index";
 import Playground from "./ui/playground";
 
 const routes = [
+  // main views
   {
     path: "/",
     main: Welcome
   },
+  // various sources
   {
     path: "/sources/upload/",
     main: Uploads
@@ -38,6 +45,7 @@ const routes = [
     path: "/sources/:repository/:path*/",
     main: FileBrowser
   },
+  // Ingestion views
   {
     path: "/ingest/",
     main: IngestionQueueList
@@ -50,18 +58,24 @@ const routes = [
     path: "/ingest/:uuid/",
     main: Ingest
   },
-  {
-    path: "/:repository(hav)/:path?/",
-    main: HAVFileBrowser
-  },
+  // HAV specific routes
   {
     path: "/:repository(hav)/media/:media_id/",
     main: HAVMediaDetail
   },
   {
-    path: "/:repository(hav)/:path?/add/",
-    main: HAVAddFolder
+    path: "/:repository(hav)/:path?/",
+    main: HAVFileBrowser
   },
+  {
+    path: "/:repository(hav)/:path?/add/",
+    main: HAVFolderAdd
+  },
+  {
+    path: "/:repository(hav)/:path?/edit/",
+    main: HAVFolderUpdate
+  },
+  // Debug stuff
   {
     path: "/playground/",
     main: Playground
@@ -117,3 +131,28 @@ const mainNav = [
 ];
 
 export { mainNav, routes };
+
+export default params => {
+  const {
+    repository = null,
+    path = null,
+    media_id = null,
+    ...unknown
+  } = params;
+  const unknown_params = Object.keys(unknown);
+  if (unknown_params.length > 0) {
+    console.warn(
+      `Unknown captured url param(s): ${Object.keys(unknown_params.join(", "))}`
+    );
+  }
+  const prefix = apiPrefix.endsWith("/") ? apiPrefix.slice(0, -1) : apiPrefix;
+  if (repository && path) {
+    return `${prefix}/${
+      repository === "hav" ? "" : "sources/"
+    }${repository}/${path}/`;
+  } else if (repository === "hav" && media_id) {
+    return `${prefix}/${repository}/media/${media_id}/`;
+  } else if (repository) {
+    return `${prefix}/${repository === "hav" ? "" : "sources/"}${repository}/`;
+  }
+};

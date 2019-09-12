@@ -12,7 +12,7 @@ import { Formik } from "formik";
 import { FieldWrapper, ErrorMessage } from "../../ui/forms";
 
 const mapping = {
-  locations: GoGlobe,
+  countries: GoGlobe,
   languages: MdLanguage
 };
 
@@ -113,6 +113,7 @@ const TagLabel = ({ type, name }) => {
   return (
     <span>
       <Icon />
+      &nbsp;
       {name}
     </span>
   );

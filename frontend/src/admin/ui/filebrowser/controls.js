@@ -14,7 +14,8 @@ import {
   GalleryIcon,
   ListIcon,
   UploadIcon,
-  BurgerIcon
+  BurgerIcon,
+  EditIcon
 } from "../icons";
 
 import Button, { ButtonGroup } from "../components/buttons";
@@ -136,6 +137,11 @@ class FileBrowserMenu extends React.Component {
       this.props.addDirectory ? (
         <Link key="create-directory" className="button" to={`./add/`}>
           <AddIcon /> Add Folder
+        </Link>
+      ) : null,
+      this.props.addDirectory ? (
+        <Link key="edit-directory" className="button" to={`./edit/`}>
+          <EditIcon /> Edit Folder
         </Link>
       ) : null,
       // hide this for now

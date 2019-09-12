@@ -7,6 +7,7 @@ from apps.media.models import Media
 from apps.archive.models import ArchiveFile
 from apps.webassets.models import WebAsset
 from apps.hav_collections.models import Collection
+from ..misc_models.serializers import TagSerializer
 from hav_utils.imaginary import generate_thumbnail_url
 
 
@@ -148,7 +149,13 @@ class BaseHAVNodeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Node
-        fields = ['name', 'path', 'url', 'allowUpload', 'allowCreate']
+        fields = [
+            'name',
+            'path',
+            'url',
+            'allowUpload',
+            'allowCreate'
+        ]
 
     path = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -184,13 +191,20 @@ class BaseHAVNodeSerializer(serializers.ModelSerializer):
 class HAVNodeSerializer(BaseHAVNodeSerializer):
 
     class Meta(BaseHAVNodeSerializer.Meta):
-        fields = BaseHAVNodeSerializer.Meta.fields + ['collection', 'parentDirs', 'childrenDirs', 'files', ]
+        fields = BaseHAVNodeSerializer.Meta.fields + [
+            'description', 'tags', 'tags_full', 'collection',
+            'parentDirs', 'childrenDirs', 'files',
+        ]
 
     collection = HAVCollectionSerializer(read_only=True, source='get_collection')
 
+    tags_full = serializers.SerializerMethodField()
     parentDirs = serializers.SerializerMethodField()
     childrenDirs = serializers.SerializerMethodField()
     files = serializers.SerializerMethodField()
+
+    def get_tags_full(self, instance):
+        return TagSerializer(instance.tags.select_subclasses(), many=True).data
 
     def get_childrenDirs(self, instance):
         return BaseHAVNodeSerializer(
@@ -207,8 +221,13 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
                 context=self.context
             ).data
 
-    def create(self, validated_data, parent):
+    def create(self, validated_data):
+        parent = self.context.get('parent_node')
+        tags = validated_data.pop('tags', [])
+        if not parent:
+            raise serializers.ValidationError('Cannot create root nodes.')
         node = parent.add_child(**validated_data)
+        node.tags.set(tags)
         return node
 
     def get_files(self, instance):
@@ -221,6 +240,7 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
 
 class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):
 
+    # these fields need to be kept in sync with the base serializer above
     name = serializers.SerializerMethodField()
 
     def get_name(self, _):
@@ -244,11 +264,20 @@ class BaseRootHAVNodeSerializer(BaseHAVNodeSerializer):
 class RootHAVCollectionSerializer(BaseRootHAVNodeSerializer):
 
     class Meta(BaseRootHAVNodeSerializer.Meta):
-        fields = BaseRootHAVNodeSerializer.Meta.fields + ['parentDirs', 'childrenDirs', 'files']
+        fields = BaseRootHAVNodeSerializer.Meta.fields + ['description', 'tags', 'parentDirs', 'childrenDirs', 'files']
+
+    description = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
 
     parentDirs = serializers.SerializerMethodField()
     childrenDirs = serializers.SerializerMethodField()
     files = serializers.SerializerMethodField()
+
+    def get_description(self, _):
+        return ''
+
+    def get_tags(self, _):
+        return []
 
     def get_parentDirs(self, _):
         return []
@@ -262,18 +291,3 @@ class RootHAVCollectionSerializer(BaseRootHAVNodeSerializer):
 
     def get_files(self, _):
         return []
-
-
-class CreateHAVCollectionSerializer(serializers.ModelSerializer):
-
-    def create(self, validated_data, parent=None):
-        if not parent:
-            node = Node.add_root(**validated_data)
-        else:
-            assert(isinstance(parent, Node))
-            node = parent.add_child(**validated_data)
-        return node
-
-    class Meta:
-        model = Node
-        fields = ['name',]

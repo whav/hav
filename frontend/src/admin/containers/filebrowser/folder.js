@@ -25,7 +25,8 @@ import {
   FileBrowserMenu,
   SelectedFilesControls
 } from "../../ui/filebrowser/controls";
-import { buildFrontendUrl, buildApiUrl } from "../../api/urls";
+import { buildFrontendUrl } from "../../api/urls";
+import buildAPIUrl from "../../routes";
 import groupFiles from "./grouping";
 
 class FileBrowserDirectory extends React.Component {
@@ -181,7 +182,7 @@ const FileBrowserDirectoryView = connect(
     const settings = rootState.settings;
     const { path } = props.match.params;
 
-    const key = buildApiUrl(props.location.pathname);
+    const key = buildAPIUrl(props.match.params);
 
     let directory = props.data;
     let mappedProps = {
@@ -226,7 +227,7 @@ const FileBrowserDirectoryView = connect(
     };
   },
   (dispatch, props) => {
-    const apiURL = buildApiUrl(props.location.pathname);
+    const apiURL = buildAPIUrl(props.match.params);
     const saveFileSelection = ids => {
       dispatch(queueForIngestion(ids));
     };

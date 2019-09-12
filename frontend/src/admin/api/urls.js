@@ -40,3 +40,4 @@ const buildApiUrl = path => {
 };
 
 export { buildFrontendUrl, buildApiUrl };
+export default apiPrefix;

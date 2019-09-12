@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from apps.sets.models import Node
 from apps.media.models import Media
 from ..permissions import IncomingBaseMixin
-from .serializers import HAVNodeSerializer, RootHAVCollectionSerializer, CreateHAVCollectionSerializer, HAVMediaSerializer
+from .serializers import HAVNodeSerializer, RootHAVCollectionSerializer, HAVMediaSerializer
 
 
 class HAVMediaView(IncomingBaseMixin, RetrieveAPIView):
@@ -31,7 +31,8 @@ class HAVNodeBrowser(IncomingBaseMixin, APIView):
     def get_context(self):
         return {
             'request': self.request,
-            'keys': self.keys
+            'keys': self.keys,
+            'parent_node': self.node
         }
 
     def get_serializer_class(self):
@@ -55,13 +56,24 @@ class HAVNodeBrowser(IncomingBaseMixin, APIView):
         sc = self.get_serializer_class()
         serializer = sc(
             data=request.data,
-            instance=self.node or object(),
             context=self.get_context()
         )
         if serializer.is_valid():
-            serializer.create(serializer.validated_data, parent=self.node)
+            instance = serializer.create(serializer.validated_data)
+            serializer = sc(instance=instance, context=self.get_context())
 
         return Response(serializer.data, status=201)
+
+    def put(self, request, *args, **kwargs):
+        sc = self.get_serializer_class()
+        serializer = sc(
+            data=request.data,
+            instance=self.node,
+            context=self.get_context()
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.update(self.node, serializer.validated_data)
+        return Response(serializer.data, status=200)
 
 
 

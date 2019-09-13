@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from ..permissions import IncomingBaseMixin, has_collection_permission
 
-from .serializers import MediaCreatorSerializer, MediaLicenseSerializer, MediaCreatorRoleSerializer, TagSerializer, CollectionTagSerializer
+from .serializers import MediaCreatorSerializer, MediaLicenseSerializer, MediaCreatorRoleSerializer,\
+    TagSerializer, CollectionTagSerializer, TagSearchSerializer
 from apps.media.models import MediaCreator, License, MediaCreatorRole
 from apps.tags.models import Tag, CollectionTag, ManagedTag, get_tags_for_collection
 
@@ -31,17 +32,14 @@ class TagAutocompleteView(IncomingBaseMixin, APIView):
 
     def get(self, request, *args, **kwargs):
         qs = Tag.objects.none()
-        query = request.query_params.get('search', '').strip()
+        search_serializer = TagSearchSerializer(data=request.query_params)
+        search_serializer.is_valid(raise_exception=True)
+        query = search_serializer.validated_data['search']
+        collection = search_serializer.validated_data['collection']
 
-        collection = request.query_params.get('collection')
-        try:
-            collection = int(collection)
-        except ValueError:
-            collection = None
         if query and not collection:
             qs = ManagedTag.objects.filter(name__icontains=query)[:30]
         elif query and collection:
-            print(collection)
             if not has_collection_permission(request.user, collection):
                 raise ValidationError(f'Permission denied for collection {collection}.')
             qs = get_tags_for_collection(collection)\

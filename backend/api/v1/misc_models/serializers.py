@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
 from apps.tags.models import Tag, ManagedTag, CollectionTag
+from apps.hav_collections.models import Collection
 from ..permissions import has_collection_permission
 from apps.tags.sources import TAGGING_SOURCES
 
@@ -41,6 +42,15 @@ class MediaTypeSerializer(serializers.ModelSerializer):
             'name',
             'type'
         ]
+
+
+class TagSearchSerializer(serializers.Serializer):
+    collection = serializers.PrimaryKeyRelatedField(
+        queryset=Collection.objects.all(),
+        required=False,
+        default=None
+    )
+    search = serializers.CharField(required=False, default=None)
 
 
 class TagSerializer(serializers.ModelSerializer):

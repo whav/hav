@@ -2,8 +2,12 @@ import { autocompleteURL } from "./urls";
 import { getCSRFCookie } from "../../utils/xhr";
 
 const fetchTags = async (query, collection) => {
+  let params = {
+    search: query || "",
+    collection: collection || ""
+  };
   const response = await fetch(
-    `${autocompleteURL}?${new URLSearchParams({ search: query, collection })}`,
+    `${autocompleteURL}?${new URLSearchParams(params)}`,
     {
       method: "GET",
       credentials: "same-origin",

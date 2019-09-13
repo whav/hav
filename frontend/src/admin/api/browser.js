@@ -27,6 +27,19 @@ const directoryFetch = (url, method, data) => {
       "Content-Type": "application/json"
     })
   }).then(response => {
+    if (!response.ok) {
+      return response
+        .json()
+        .catch(() => {
+          // Couldn't parse the JSON
+          throw new Error(response.status);
+        })
+        .then(message => {
+          // Got valid JSON with error response, use it
+          return Promise.reject(message);
+        });
+    }
+    // Successful response, parse the JSON and return the data
     return response.json();
   });
 };

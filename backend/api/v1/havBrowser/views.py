@@ -58,9 +58,10 @@ class HAVNodeBrowser(IncomingBaseMixin, APIView):
             data=request.data,
             context=self.get_context()
         )
-        if serializer.is_valid():
-            instance = serializer.create(serializer.validated_data)
-            serializer = sc(instance=instance, context=self.get_context())
+        serializer.is_valid(raise_exception=True)
+
+        instance = serializer.create(serializer.validated_data)
+        serializer = sc(instance=instance, context=self.get_context())
 
         return Response(serializer.data, status=201)
 

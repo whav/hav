@@ -30,10 +30,6 @@ import buildAPIUrl from "../../routes";
 import groupFiles from "./grouping";
 
 class FileBrowserDirectory extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     if (this.props.loading) {
       return <LoadingIndicator />;
@@ -68,7 +64,6 @@ class FileBrowserDirectory extends React.Component {
           })}
         />
       );
-
       // spice up the directories
       let directories = childrenDirectories.map(d => {
         return {
@@ -84,52 +79,46 @@ class FileBrowserDirectory extends React.Component {
 
       const selectedItemIds = new Set(directory.selected);
       const header = (
-        <header>
-          <Level
-            key="fb-menu"
-            left={
-              <h1 key="title" className="title">
-                {directory.name}
-              </h1>
-            }
-            right={
-              <FileBrowserMenu
-                switchDisplayType={switchDisplayStyle}
-                selectedDisplayType={settings.selectedDisplayType}
-                addDirectory={allowCreate}
-                selectedItemIds={Array.from(ingestable)}
-                allItemIds={directory.content}
-                handleSelect={selectItems}
-                saveFileSelection={() =>
-                  saveFileSelection(Array.from(ingestable))
-                }
-                allowUpload={allowUpload}
-                uploadFile={uploadFile}
-                toggleGrouped={toggleGrouped}
-                isGrouped={settings.displayGrouped}
-              />
-            }
-          />
-        </header>
+        <Level
+          key="fb-menu"
+          left={
+            <h1 key="title" className="title">
+              {directory.name}
+            </h1>
+          }
+          right={
+            <FileBrowserMenu
+              switchDisplayType={switchDisplayStyle}
+              selectedDisplayType={settings.selectedDisplayType}
+              addDirectory={allowCreate}
+              selectedItemIds={Array.from(ingestable)}
+              allItemIds={directory.content}
+              handleSelect={selectItems}
+              saveFileSelection={() =>
+                saveFileSelection(Array.from(ingestable))
+              }
+              allowUpload={allowUpload}
+              uploadFile={uploadFile}
+              toggleGrouped={toggleGrouped}
+              isGrouped={settings.displayGrouped}
+            />
+          }
+        />
       );
 
       const main = isEmpty ? (
         <h2>This directory is empty.</h2>
       ) : (
-        <React.Fragment>
-          {breadcrumbs}
-
-          <FileList
-            directories={directories}
-            files={files}
-            groupedFiles={groupedFiles}
-            uploads={uploads}
-            displayType={settings.selectedDisplayType}
-            handleSelect={selectItems}
-            selectedItemIds={selectedItemIds}
-            settings={settings}
-          />
-        </React.Fragment>
+        <FileList
+          directories={directories}
+          files={files}
+          groupedFiles={groupedFiles}
+          uploads={uploads}
+          displayType={settings.selectedDisplayType}
+          handleSelect={selectItems}
+          selectedItemIds={selectedItemIds}
+          settings={settings}
+        />
       );
 
       let footer = this.props.footer;
@@ -156,7 +145,12 @@ class FileBrowserDirectory extends React.Component {
       }
 
       return (
-        <FileBrowserInterface header={header} main={main} footer={footer} />
+        <FileBrowserInterface
+          header={header}
+          breadcrumbs={breadcrumbs}
+          main={main}
+          footer={footer}
+        />
       );
     }
   }
@@ -210,7 +204,7 @@ const FileBrowserDirectoryView = connect(
     let directoryUploads = Object.values(uploadState[key] || []).filter(
       u => !u.finished
     );
-    console.log(directoryUploads);
+    console.log(parentDirectories);
     return {
       ...mappedProps,
       loading: false,

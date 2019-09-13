@@ -1,18 +1,19 @@
 import React from "react";
 import classnames from "classnames";
 
-const Button = ({ className = "", ...props }) => {
-  return <button className={classnames(className, "button")} {...props} />;
+const Button = ({ className = "", primary = false, ...props }) => {
+  return (
+    <button
+      className={classnames("button", { "is-primary": primary }, className)}
+      {...props}
+    />
+  );
 };
 
-const ButtonGroup = ({ children }) => {
+const ButtonGroup = ({ children, alignRight = false }) => {
   return (
-    <div className="field is-grouped">
-      {children.map((c, i) => (
-        <div key={i} className="control">
-          {c}
-        </div>
-      ))}
+    <div className={classnames("buttons", { "is-right": alignRight })}>
+      {children}
     </div>
   );
 };

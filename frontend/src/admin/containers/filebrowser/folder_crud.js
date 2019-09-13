@@ -7,7 +7,7 @@ import { FieldWrapper, ErrorMessage } from "../../ui/forms";
 import { createDirectory, updateDirectory } from "../../api/browser";
 import { requestDirectoryAction } from "../../ducks/browser";
 import { MultiTagField } from "../../ui/components/autocomplete";
-
+import Button, { ButtonGroup } from "../../ui/components/buttons";
 import buildAPIUrl from "../../routes";
 
 class HAVCreateFolder extends React.Component {
@@ -20,11 +20,16 @@ class HAVCreateFolder extends React.Component {
     this.props.loadData();
   }
 
-  submit = async data => {
+  submit = async (data, { setErrors }) => {
     const finalData = { ...data };
     finalData.tags = data.tags.map(t => t.value);
-    console.log(JSON.stringify(finalData, null, 2));
-    let response = await this.props.submit(finalData);
+    let response;
+    try {
+      response = await this.props.submit(finalData);
+    } catch (errors) {
+      setErrors(errors);
+      return;
+    }
     this.setState({
       saved: true,
       redirect_target: `/hav/${response.path}/`
@@ -55,7 +60,7 @@ class HAVCreateFolder extends React.Component {
             return (
               <>
                 <FieldWrapper label="Name">
-                  <Field className="input" type="text" name="name" />
+                  <Field className="input" type="text" name="name" autoFocus />
                   <ErrorMessage name="name" />
                 </FieldWrapper>
                 <FieldWrapper label="Description">
@@ -78,15 +83,15 @@ class HAVCreateFolder extends React.Component {
                   />
                   <ErrorMessage name="tags" />
                 </FieldWrapper>
-                <button type="submit" onClick={props.handleSubmit}>
-                  {save_button_text}
-                </button>
+                <ButtonGroup alignRight>
+                  <Button primary type="submit" onClick={props.handleSubmit}>
+                    {save_button_text}
+                  </Button>
+                </ButtonGroup>
               </>
             );
           }}
         />
-        <hr />
-        <pre>{JSON.stringify(this.props, null, 2)}</pre>
       </div>
     );
   }

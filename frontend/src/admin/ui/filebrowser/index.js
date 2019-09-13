@@ -359,12 +359,16 @@ export const Header = ({ title = "", aside = null }) => {
 
 export const FileBrowserInterface = ({
   header = null,
+  breadcrumbs = null,
   main = null,
   footer = null
 }) => {
   return (
     <section className="filebrowser">
-      {header ? header : null}
+      <header>
+        {header}
+        {breadcrumbs}
+      </header>
       <main>{main}</main>
       {footer ? footer : null}
     </section>

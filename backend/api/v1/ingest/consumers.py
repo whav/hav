@@ -1,3 +1,5 @@
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 
@@ -37,3 +39,7 @@ class IngestUpdatesConsumer(AsyncJsonWebsocketConsumer):
             'msg': event.get('msg', '')
         })
         await self.send_json(payload)
+
+    @classmethod
+    async def encode_json(cls, content):
+        return json.dumps(content, cls=DjangoJSONEncoder)

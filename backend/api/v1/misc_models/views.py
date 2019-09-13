@@ -36,7 +36,6 @@ class TagAutocompleteView(IncomingBaseMixin, APIView):
         search_serializer.is_valid(raise_exception=True)
         query = search_serializer.validated_data['search']
         collection = search_serializer.validated_data['collection']
-
         if query and not collection:
             qs = ManagedTag.objects.filter(name__icontains=query)[:30]
         elif query and collection:
@@ -49,7 +48,7 @@ class TagAutocompleteView(IncomingBaseMixin, APIView):
         return Response(TagSerializer(instance=qs, many=True).data, status=200)
 
     def post(self, request, *args, **kwargs):
-        serializer = CollectionTagSerializer(data=request.data, context=self.get_serializer_context())
+        serializer = CollectionTagSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         tag = serializer.save()
         return Response(TagSerializer(instance=tag).data, status=201)

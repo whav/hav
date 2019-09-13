@@ -21,17 +21,13 @@ const icon_for_type = type => {
   return icon || IoIosPricetags;
 };
 
-const prepareOption = o => ({ value: o.id, label: o.name, ...o });
-
 const fetchFancyTags = async (
   query,
   collection = null,
   limit_types = [],
   grouped = false
 ) => {
-  const opts = await fetchTags(query, collection);
-  // do the basic mapping so that we have value and label
-  let options = opts.map(prepareOption);
+  const options = await fetchTags(query, collection);
   if (grouped) {
     const groupedOptions = groupBy(options, o => o.type);
     options = Object.entries(groupedOptions).map(([type, options]) => {
@@ -111,7 +107,7 @@ class TagModal extends React.Component {
 const TagLabel = ({ type, name }) => {
   const Icon = icon_for_type(type);
   return (
-    <span>
+    <span key={name}>
       <Icon />
       &nbsp;
       {name}
@@ -146,14 +142,13 @@ class MultiTagField extends React.Component {
   };
 
   handleCreate = async new_option => {
-    const result = await reactModal(props => (
+    const option = await reactModal(props => (
       <TagModal
         {...props}
         name={new_option}
         collection={this.props.collection_id}
       ></TagModal>
     ));
-    const option = prepareOption(result);
     this.setState(state => {
       const values = [...state.values, option];
       this.props.onChange && this.props.onChange(values);
@@ -177,6 +172,7 @@ class MultiTagField extends React.Component {
         isMulti={true}
         cacheOptions={false}
         defaultOptions={false}
+        getOptionValue={o => o.id}
         loadOptions={this.handleSearch}
         isLoading={this.state.isLoading}
         onChange={this.handleChange}

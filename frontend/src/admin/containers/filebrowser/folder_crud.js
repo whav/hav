@@ -8,6 +8,7 @@ import { createDirectory, updateDirectory } from "../../api/browser";
 import { requestDirectoryAction } from "../../ducks/browser";
 import { MultiTagField } from "../../ui/components/autocomplete";
 import Button, { ButtonGroup } from "../../ui/components/buttons";
+import BreadCrumbs from "./breadcrumbs";
 import buildAPIUrl from "../../routes";
 
 class HAVCreateFolder extends React.Component {
@@ -46,19 +47,21 @@ class HAVCreateFolder extends React.Component {
       header_text = "Add new folder",
       save_button_text = "Create",
       initialValues = { name: "", description: "", tags: [] },
-      collection_id
+      collection_id,
+      data
     } = this.props;
-    console.log("collection...", collection_id);
     return (
       <div className="content">
-        <h1>{header_text}</h1>
+        <div className="box">
+          <h1 className="title">{header_text}</h1>
+          <BreadCrumbs directories={data?.parents || []} />
+        </div>
         <Formik
           onSubmit={this.submit}
           initialValues={initialValues}
           render={props => {
-            console.log(props.values);
             return (
-              <>
+              <form onSubmit={props.handleSubmit}>
                 <FieldWrapper label="Name">
                   <Field className="input" type="text" name="name" autoFocus />
                   <ErrorMessage name="name" />
@@ -88,7 +91,7 @@ class HAVCreateFolder extends React.Component {
                     {save_button_text}
                   </Button>
                 </ButtonGroup>
-              </>
+              </form>
             );
           }}
         />

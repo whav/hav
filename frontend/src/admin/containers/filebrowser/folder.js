@@ -14,6 +14,8 @@ import { queueForIngestion } from "../../ducks/ingest";
 import { startFileUpload } from "../../ducks/uploads";
 import LoadingIndicator from "../../ui/loading";
 
+import BreadCrumbs from "./breadcrumbs";
+
 import Level, { LevelItem } from "../../ui/components/level";
 
 import FileList, {
@@ -36,7 +38,6 @@ class FileBrowserDirectory extends React.Component {
     } else {
       const {
         directory,
-        parentDirectories,
         childrenDirectories,
         files,
         groupedFiles,
@@ -53,17 +54,8 @@ class FileBrowserDirectory extends React.Component {
       } = this.props;
 
       let uploads = this.props.uploads;
+      let breadcrumbs = <BreadCrumbs directories={directory.parents} />;
 
-      let breadcrumbs = (
-        <DirectoryListingBreadcrumbs
-          dirs={parentDirectories.map(d => {
-            return {
-              ...d,
-              link: buildFrontendUrl(d.url)
-            };
-          })}
-        />
-      );
       // spice up the directories
       let directories = childrenDirectories.map(d => {
         return {
@@ -159,7 +151,6 @@ class FileBrowserDirectory extends React.Component {
 FileBrowserDirectory.propTypes = {
   files: PropTypes.array,
   directory: PropTypes.object.isRequired,
-  parentDirectories: PropTypes.array,
   childrenDirectories: PropTypes.array,
   switchDisplayStyle: PropTypes.func.isRequired,
   settings: PropTypes.object,
@@ -185,9 +176,6 @@ const FileBrowserDirectoryView = connect(
     };
 
     const allChildren = (directory.content || []).map(c => state[c]);
-    const parentDirectories = (directory.parents || []).map(d => {
-      return state[d];
-    });
 
     // populate children dirs and files from state
     const childrenDirectories = allChildren.filter(c => c.isDirectory);
@@ -204,7 +192,6 @@ const FileBrowserDirectoryView = connect(
     let directoryUploads = Object.values(uploadState[key] || []).filter(
       u => !u.finished
     );
-    console.log(parentDirectories);
     return {
       ...mappedProps,
       loading: false,
@@ -212,7 +199,6 @@ const FileBrowserDirectoryView = connect(
       uploads: directoryUploads,
       settings,
       childrenDirectories,
-      parentDirectories,
       files,
       groupedFiles,
       ingestable,

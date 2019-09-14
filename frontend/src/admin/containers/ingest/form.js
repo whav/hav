@@ -240,6 +240,7 @@ const CreatorRoleTable = ({
                       e.preventDefault();
                       arrayhelpers.push({ creator: "", role: "" });
                     }}
+                    type="button"
                   >
                     Add Creator
                   </Button>
@@ -342,17 +343,7 @@ class TemplateForm extends React.Component {
             <Persist name={persistName} />
             <Columns>
               <Column>
-                <BField label="Original Media Type">
-                  <Field
-                    component={SelectField}
-                    name="media_type"
-                    options={options.media_types.map(mt => ({
-                      ...mt,
-                      name: `${mt.type}/${mt.name}`
-                    }))}
-                  />
-                  <ErrorMessage name="media_license" component="div" />
-                </BField>
+                <MediaTypeField media_types={options.media_types} />
               </Column>
               <Column>
                 {" "}

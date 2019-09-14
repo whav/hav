@@ -3,6 +3,7 @@
  */
 
 //  Icons
+import React from "react";
 
 import {
   DirectoryIcon,
@@ -17,18 +18,40 @@ import apiPrefix from "./api/urls";
 
 // base components
 import Welcome from "./home";
-import FileBrowser from "./containers/filebrowser";
-import HAVFileBrowser from "./containers/filebrowser/hav";
-import HAVMediaDetail from "./containers/filebrowser/mediaDetail";
+
+//import FileBrowser from "./containers/filebrowser";
+const FileBrowser = React.lazy(() => import("./containers/filebrowser"));
+
+//import HAVFileBrowser from "./containers/filebrowser/hav";
+const HAVFileBrowser = React.lazy(() => import("./containers/filebrowser/hav"));
+
+// import HAVMediaDetail from "./containers/filebrowser/mediaDetail";
+const HAVMediaDetail = React.lazy(() =>
+  import("./containers/filebrowser/mediaDetail")
+);
+
 import {
   HAVFolderAdd,
   HAVFolderUpdate
 } from "./containers/filebrowser/folder_crud";
-import Uploads from "./containers/simpleUpload";
-import IngestionQueueList from "./containers/ingest/queues";
-import Ingest from "./containers/ingest/queue";
-import SaveIngestionQueue from "./containers/ingest/index";
-import Playground from "./ui/playground";
+
+// import Uploads from "./containers/simpleUpload";
+const Uploads = React.lazy(() => import("./containers/simpleUpload"));
+// console.log(Uploads);
+// import IngestionQueueList from "./containers/ingest/queues";
+const IngestionQueueList = React.lazy(() =>
+  import("./containers/ingest/queues")
+);
+// import Ingest from "./containers/ingest/queue";
+const Ingest = React.lazy(() => import("./containers/ingest/queue"));
+
+// import SaveIngestionQueue from "./containers/ingest/index";
+const SaveIngestionQueue = React.lazy(() =>
+  import("./containers/ingest/index")
+);
+
+// import Playground from "./ui/playground";
+const Playground = React.lazy(() => import("./ui/playground"));
 
 const routes = [
   // main views

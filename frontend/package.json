@@ -82,6 +82,7 @@
     "style-loader": "^0.23.0",
     "url-loader": "^1.0.1",
     "webpack": "^4.16.5",
+    "webpack-bundle-analyzer": "^3.5.0",
     "webpack-bundle-tracker": "0.4.2-beta",
     "webpack-cleanup-plugin": "^0.5.1",
     "webpack-cli": "^3.1.0",

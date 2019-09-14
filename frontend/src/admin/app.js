@@ -33,20 +33,22 @@ const HavAdmin = ({ store }) => {
           <div className="hav-admin-content">
             <ErrorBoundary>
               <Route component={ScrollToTop} />
-              <Switch>
-                {routes.map((rc, index) => {
-                  let { path, main, ...extra } = rc;
-                  return (
-                    <Route
-                      key={index}
-                      exact={true}
-                      path={path}
-                      component={main}
-                      {...extra}
-                    />
-                  );
-                })}
-              </Switch>
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <Switch>
+                  {routes.map((rc, index) => {
+                    let { path, main, ...extra } = rc;
+                    return (
+                      <Route
+                        key={index}
+                        exact={true}
+                        path={path}
+                        component={main}
+                        {...extra}
+                      />
+                    );
+                  })}
+                </Switch>
+              </React.Suspense>
             </ErrorBoundary>
           </div>
         </App>

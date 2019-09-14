@@ -22,7 +22,7 @@ class HAVCreateFolder extends React.Component {
 
   submit = async (data, { setErrors }) => {
     const finalData = { ...data };
-    finalData.tags = data.tags.map(t => t.value);
+    finalData.tags = data.tags.map(t => t.id);
     let response;
     try {
       response = await this.props.submit(finalData);

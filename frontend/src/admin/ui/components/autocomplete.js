@@ -142,7 +142,7 @@ class MultiTagField extends React.Component {
   };
 
   handleCreate = async new_option => {
-    const option = await reactModal(props => (
+    const result = await reactModal(props => (
       <TagModal
         {...props}
         name={new_option}

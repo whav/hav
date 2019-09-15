@@ -12,7 +12,7 @@ import {
 } from "../../ducks/settings";
 import { queueForIngestion } from "../../ducks/ingest";
 import { startFileUpload } from "../../ducks/uploads";
-import LoadingIndicator from "../../ui/loading";
+import { LoadingPage } from "../../ui/loading";
 
 import BreadCrumbs from "./breadcrumbs";
 
@@ -34,7 +34,7 @@ import groupFiles from "./grouping";
 class FileBrowserDirectory extends React.Component {
   render() {
     if (this.props.loading) {
-      return <LoadingIndicator />;
+      return <LoadingPage />;
     } else {
       const {
         directory,

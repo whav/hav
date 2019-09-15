@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import LoadingIndicator from "../../ui/loading";
+import { LoadingPage } from "../../ui/loading";
 import Error from "../../ui/components/errors";
 
 import { loadAllIngestionQueues } from "../../ducks/ingest";
@@ -15,7 +15,7 @@ class IngestQueueList extends React.Component {
   render() {
     const { loading, queues = [] } = this.props;
     if (loading) {
-      return <LoadingIndicator />;
+      return <LoadingPage />;
     }
     if (queues.length === 0) {
       return <Error>No queues created.</Error>;

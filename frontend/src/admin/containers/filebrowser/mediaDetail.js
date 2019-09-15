@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import Loading from "../../ui/loading";
+import { LoadingPage } from "../../ui/loading";
 import MediaDetail from "../../ui/filebrowser/hav/detail";
 
 import { requestFile } from "../../ducks/browser";
@@ -18,7 +18,7 @@ class HavMediaDetail extends React.Component {
   render() {
     const { loading } = this.state;
     if (loading) {
-      return <Loading />;
+      return <LoadingPage />;
     }
     const { data } = this.props;
 

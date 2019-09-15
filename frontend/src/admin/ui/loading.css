@@ -1,5 +1,5 @@
 .spinning-ckw {
-  animation: ckw 1s linear 0s infinite;
+  animation: ckw 2s linear 0s infinite;
   transform-origin: 50% 50%;
   display: inline-block;
 }

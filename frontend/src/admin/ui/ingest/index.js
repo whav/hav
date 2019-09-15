@@ -1,11 +1,7 @@
 import React from "react";
 import { FallBackImageLoader } from "../filebrowser/index";
-import {
-  LoadingSpinner,
-  CheckIcon,
-  HourglassIcon,
-  QuestionMarkIcon
-} from "../icons";
+import { CheckIcon, HourglassIcon, QuestionMarkIcon } from "../icons";
+import LoadingSpinner from "../loading";
 import { Link } from "react-router-dom";
 import { buildFrontendUrl } from "../../api/urls";
 
@@ -18,7 +14,7 @@ const IngestionProgressDisplay = ({ msg = [] }) => {
         icon = <CheckIcon />;
         break;
       case "started":
-        icon = <LoadingSpinner />;
+        icon = <LoadingSpinner rotating={true} />;
         break;
       case "pending":
         icon = <HourglassIcon />;

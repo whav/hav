@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 
 import { requestDirectoryAction } from "../../ducks/browser";
 
-import LoadingIndicator from "../../ui/loading";
+import { LoadingPage } from "../../ui/loading";
 
 import buildApiUrl from "../../routes";
 
@@ -26,7 +26,7 @@ class FilebrowserView extends React.Component {
 
   render() {
     if (this.props.loading) {
-      return <LoadingIndicator />;
+      return <LoadingPage />;
     }
     return this.props.data.isFile ? (
       <FileView {...this.props} />

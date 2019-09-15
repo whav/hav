@@ -9,6 +9,7 @@ import Nav from "./containers/nav";
 import { routes, mainNav } from "./routes";
 import ScrollToTop from "./ui/scroll";
 import App from "./ui/index";
+import { LoadingPage } from "./ui/loading";
 import ErrorBoundary from "./ui/errors";
 
 const logo = require("../assets/logo.png");
@@ -33,7 +34,7 @@ const HavAdmin = ({ store }) => {
           <div className="hav-admin-content">
             <ErrorBoundary>
               <Route component={ScrollToTop} />
-              <React.Suspense fallback={<div>Loading...</div>}>
+              <React.Suspense fallback={<LoadingPage />}>
                 <Switch>
                   {routes.map((rc, index) => {
                     let { path, main, ...extra } = rc;

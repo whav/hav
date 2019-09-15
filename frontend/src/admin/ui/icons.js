@@ -31,10 +31,6 @@ import {
   FaQuestion as QuestionMarkIcon
 } from "react-icons/fa";
 
-import "./icons.css";
-
-const LoadingSpinner = () => <SpinnerIcon className="spinning-ckw" />;
-
 export {
   CheckboxBlankIcon,
   CheckboxCheckedIcon,
@@ -54,7 +50,6 @@ export {
   DatabaseIcon,
   IngestPackageIcon,
   SpinnerIcon,
-  LoadingSpinner,
   CheckIcon,
   QuestionMarkIcon,
   BurgerIcon,

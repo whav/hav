@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Sockette from "sockette";
 import isEmpty from "lodash/isEmpty";
 
-import LoadingIndicator from "../../ui/loading";
+import { LoadingPage } from "../../ui/loading";
 import {
   fetchIngestionQueue,
   loadIngestOptions,
@@ -231,8 +231,7 @@ class IngestQueueLoader extends React.Component {
   render() {
     const { options, items } = this.props;
     const loading = isEmpty(options) || !Array.isArray(items);
-    // console.log(items);
-    return loading ? <LoadingIndicator /> : <IngestQueue {...this.props} />;
+    return loading ? <LoadingPage /> : <IngestQueue {...this.props} />;
   }
 }
 

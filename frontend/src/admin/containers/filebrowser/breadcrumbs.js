@@ -18,7 +18,7 @@ const DirectoryListingBreadcrumbs = ({ dirs, activeIndex }) => {
 const BreadCrumbsContainer = connect(
   (state, { directory = null, directories = [], match }) => {
     let activeIndex;
-    if (directory.parents && directory.url) {
+    if (directory && directory.parents && directory.url) {
       directories = [...directory.parents, directory.url];
     }
 

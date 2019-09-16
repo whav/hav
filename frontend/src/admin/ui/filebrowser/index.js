@@ -5,7 +5,6 @@
 import { history } from "../../app";
 import React from "react";
 import ImageLoader from "react-load-image";
-import { Link } from "react-router-dom";
 import classNames from "classnames";
 import uniq from "lodash/uniq";
 import PropTypes from "prop-types";
@@ -21,18 +20,7 @@ import {
   HourglassIcon
 } from "../icons";
 
-import Breadcrumbs from "../components/breadcrumbs";
-
-require("./index.css");
-
-const DirectoryListingBreadcrumbs = ({ dirs, current_dir }) => {
-  const create_link = d => <Link to={d.link || "#"}>{d.name}</Link>;
-  let items = dirs.map(create_link);
-  current_dir && items.push(create_link(current_dir));
-  return <Breadcrumbs items={items} />;
-};
-
-export { DirectoryListingBreadcrumbs };
+import "./index.css";
 
 export const FilePlaceHolder = props => {
   let Icon = GenericFallbackIcon;

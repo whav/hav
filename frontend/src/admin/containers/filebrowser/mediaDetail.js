@@ -13,7 +13,14 @@ class HavMediaDetail extends React.Component {
 
   constructor(props) {
     super(props);
-    this.props.loadData().then(() => this.setState({ loading: false }));
+    this.props
+      .loadData()
+      .then(() => this.setState({ loading: false }))
+      .catch(e =>
+        this.setState(() => {
+          throw e;
+        })
+      );
   }
   render() {
     const { loading } = this.state;
@@ -30,6 +37,7 @@ export default connect(
   (state, props) => {
     const key = buildApiUrl(props.location.pathname);
     const data = state.repositories[key];
+    console.log(data);
     return {
       data
     };

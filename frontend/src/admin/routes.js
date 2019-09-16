@@ -19,6 +19,14 @@ import apiPrefix from "./api/urls";
 // base components
 import Welcome from "./home";
 
+import {
+  HAVFolderAdd,
+  HAVFolderUpdate
+} from "./containers/filebrowser/folder_crud";
+
+// Most components here are lazily loaded
+// this leads to webpack creating split points
+
 //import FileBrowser from "./containers/filebrowser";
 const FileBrowser = React.lazy(() => import("./containers/filebrowser"));
 
@@ -30,14 +38,9 @@ const HAVMediaDetail = React.lazy(() =>
   import("./containers/filebrowser/mediaDetail")
 );
 
-import {
-  HAVFolderAdd,
-  HAVFolderUpdate
-} from "./containers/filebrowser/folder_crud";
-
 // import Uploads from "./containers/simpleUpload";
 const Uploads = React.lazy(() => import("./containers/simpleUpload"));
-// console.log(Uploads);
+
 // import IngestionQueueList from "./containers/ingest/queues";
 const IngestionQueueList = React.lazy(() =>
   import("./containers/ingest/queues")

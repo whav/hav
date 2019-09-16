@@ -18,10 +18,7 @@ import BreadCrumbs from "./breadcrumbs";
 
 import Level, { LevelItem } from "../../ui/components/level";
 
-import FileList, {
-  DirectoryListingBreadcrumbs,
-  FileBrowserInterface
-} from "../../ui/filebrowser";
+import FileList, { FileBrowserInterface } from "../../ui/filebrowser";
 
 import {
   FileBrowserMenu,
@@ -54,7 +51,7 @@ class FileBrowserDirectory extends React.Component {
       } = this.props;
 
       let uploads = this.props.uploads;
-      let breadcrumbs = <BreadCrumbs directories={directory.parents} />;
+      let breadcrumbs = <BreadCrumbs directory={directory} />;
 
       // spice up the directories
       let directories = childrenDirectories.map(d => {

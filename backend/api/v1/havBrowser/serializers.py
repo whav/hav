@@ -7,6 +7,7 @@ from apps.media.models import Media
 from apps.archive.models import ArchiveFile
 from apps.webassets.models import WebAsset
 from apps.hav_collections.models import Collection
+from apps.tags.models import Tag
 from ..misc_models.serializers import TagSerializer
 from hav_utils.imaginary import generate_thumbnail_url
 
@@ -192,19 +193,33 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
 
     class Meta(BaseHAVNodeSerializer.Meta):
         fields = BaseHAVNodeSerializer.Meta.fields + [
-            'description', 'tags', 'tags_full', 'collection',
+            'description', 'tags', 'tags_full', 'inherited_tags', 'collection',
             'parentDirs', 'childrenDirs', 'files',
         ]
 
     collection = HAVCollectionSerializer(read_only=True, source='get_collection')
 
     tags_full = serializers.SerializerMethodField()
+    inherited_tags = serializers.SerializerMethodField()
+
     parentDirs = serializers.SerializerMethodField()
     childrenDirs = serializers.SerializerMethodField()
     files = serializers.SerializerMethodField()
 
     def get_tags_full(self, instance):
-        return TagSerializer(instance.tags.select_subclasses(), many=True).data
+        return TagSerializer(
+            instance.tags.select_subclasses(),
+            many=True,
+            context={'node_id': instance.pk}
+        ).data
+
+    def get_inherited_tags(self, instance):
+        data = []
+        for ancestor in instance.get_ancestors():
+            data.extend(
+                TagSerializer(Tag.objects.filter(node=ancestor.pk).select_subclasses(), many=True, context={'node_id': ancestor.pk}).data
+            )
+        return data
 
     def get_childrenDirs(self, instance):
         return BaseHAVNodeSerializer(

@@ -101,23 +101,16 @@ class IngestQueue extends React.Component {
 
   ingestItem = (ingestId, data) => {
     const finalData = { ...data };
-    // flatten where needed
-    finalData.media_tags = finalData.media_tags.map(t => t.value);
     let response = queueForIngestion(this.props.uuid, finalData);
-
-    response
-      .then(data => {
-        this.props.onIngestSuccess(ingestId, data);
-        this.setState(state => ({
-          previously_ingested: {
-            ...state.previously_ingested,
-            [ingestId]: data.url
-          }
-        }));
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    response.then(data => {
+      this.props.onIngestSuccess(ingestId, data);
+      this.setState(state => ({
+        previously_ingested: {
+          ...state.previously_ingested,
+          [ingestId]: data.url
+        }
+      }));
+    });
     return response;
   };
 

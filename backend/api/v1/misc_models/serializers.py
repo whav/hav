@@ -56,6 +56,10 @@ class TagSearchSerializer(serializers.Serializer):
 class TagSerializer(serializers.ModelSerializer):
 
     type = serializers.SerializerMethodField()
+    node = serializers.SerializerMethodField()
+
+    def get_node(self, tag):
+        return self.context.get('node_id')
 
     def get_type(self, tag):
         if isinstance(tag, ManagedTag):
@@ -69,7 +73,21 @@ class TagSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'type'
+            'type',
+            'node'
+        ]
+
+class TagsWithNodeSerializer(TagSerializer):
+
+    node = serializers.SerializerMethodField()
+
+    def get_node(self, tag):
+        relevant_nodes = self.context.get('node_ids', [])
+
+
+    class Meta(TagSerializer.Meta):
+        fields = TagSerializer.Meta.fields + [
+            'node'
         ]
 
 

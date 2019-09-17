@@ -11,6 +11,9 @@ import ProgressBar from "../ui/components/progress";
 import Error from "../ui/components/errors";
 import "./simpleUpload.css";
 
+import { connect } from "react-redux";
+import { add_notification } from "../ducks/notifications";
+
 const buildDetailURL = pk => `/sources/upload/${pk}/`;
 
 class UploadControl extends React.Component {
@@ -130,6 +133,11 @@ class UploadContainer extends React.Component {
       // callback if given
       this.props.onSuccess && this.props.onSuccess(resp);
       update({ success: true, error: false, file: resp });
+      console.log(resp);
+      this.props.add_notification(
+        `Upload of file "${resp.name}" succeeded.`,
+        "success"
+      );
     };
     const onError = () => update({ error: true, success: false });
 
@@ -177,14 +185,19 @@ class RecentUploads extends React.Component {
   }
 }
 
-const Uploads = () => {
+const Uploads = ({ add_notification }) => {
   return (
     <div className="upload-container">
-      <UploadContainer />
+      <UploadContainer add_notification={add_notification} />
       <RecentUploads />
     </div>
   );
 };
 
-export default Uploads;
+const WrappedUploads = connect(
+  null,
+  { add_notification }
+)(Uploads);
+
+export default WrappedUploads;
 export { UploadContainer, SingleUpload };

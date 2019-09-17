@@ -8,7 +8,7 @@ import { GoGlobe } from "react-icons/go";
 import { MdLanguage } from "react-icons/md";
 import { IoIosPricetags } from "react-icons/io";
 import Modal from "../modal";
-import { Formik } from "formik";
+import { Formik, Form } from "formik";
 import { FieldWrapper, ErrorMessage } from "../../ui/forms";
 
 const mapping = {
@@ -68,21 +68,20 @@ class TagModal extends React.Component {
             initialValues={{ name }}
             onSubmit={this.handleSubmit}
             render={props => (
-              <>
+              <Form>
                 <section className="modal-card-body">
-                  <form onSubmit={props.handleSubmit}>
-                    <FieldWrapper label="Tag name">
-                      <input
-                        className="input"
-                        type="text"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        value={props.values.name}
-                        name="name"
-                      ></input>
-                      <ErrorMessage name="name" />
-                    </FieldWrapper>
-                  </form>
+                  <FieldWrapper label="Tag name">
+                    <input
+                      className="input"
+                      autoFocus
+                      type="text"
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
+                      value={props.values.name}
+                      name="name"
+                    ></input>
+                    <ErrorMessage name="name" />
+                  </FieldWrapper>
                 </section>
                 <footer className="modal-card-foot">
                   <button
@@ -95,7 +94,7 @@ class TagModal extends React.Component {
                     Cancel
                   </button>
                 </footer>
-              </>
+              </Form>
             )}
           ></Formik>
         </div>

@@ -11,6 +11,7 @@ import ScrollToTop from "./ui/scroll";
 import App from "./ui/index";
 import { LoadingPage } from "./ui/loading";
 import ErrorBoundary from "./ui/errors";
+import Notifications from "./containers/notifications";
 
 const logo = require("../assets/logo.png");
 
@@ -32,6 +33,7 @@ const HavAdmin = ({ store }) => {
             </nav>
           </div>
           <div className="hav-admin-content">
+            <Notifications />
             <ErrorBoundary>
               <Route component={ScrollToTop} />
               <React.Suspense fallback={<LoadingPage />}>

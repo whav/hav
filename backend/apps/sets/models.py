@@ -24,10 +24,15 @@ class Node(MP_Node):
             else:
                 return ancestor.collection
 
-
     @classmethod
     def get_collection_roots(cls):
         return cls._default_manager.filter(collection__isnull=False)
+
+    @property
+    def inherited_tags(self):
+        from apps.tags.models import Tag
+        qs = Tag.objects.filter(node__in=self.get_ancestors()).order_by('node__depth')
+        return qs
 
     def __str__(self):
         return self.name

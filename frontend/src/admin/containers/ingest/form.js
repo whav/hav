@@ -36,16 +36,6 @@ const Select = ({ className = "", ...props }) => {
   );
 };
 
-const CombiField = ({ label = "", name, props }) => {
-  return (
-    <div className="field">
-      {label ? <label className="label">{label}</label> : null}
-      <div className={classnames("control")}>{children}</div>
-      <ErrorMessage name={name} />
-    </div>
-  );
-};
-
 const ErrorMessage = props => (
   <FormikErrorMessage
     {...props}
@@ -397,9 +387,14 @@ const Column = ({ children, className }) => (
 
 class IngestForm extends React.Component {
   submit = (data, actions) => {
+    data = { ...data };
+    // Flatten where needed
+    data.media_tags = data.media_tags.map(t => t.id);
+    console.log("Submitting...", data);
     this.props
       .onSubmit(data)
       .catch(errors => {
+        console.error("Error in IngestForm", errors);
         // TODO: I think the error component can not deal with arrays of errors
         actions.setErrors({ ...errors });
       })
@@ -421,6 +416,7 @@ class IngestForm extends React.Component {
         enableReinitialize={true}
         onSubmit={this.submit}
         render={({ isSubmitting, errors, values, setSubmitting }) => {
+          console.warn(values.media_tags);
           return (
             <Form className="ingest-form">
               {persistName && <Persist name={persistName} />}

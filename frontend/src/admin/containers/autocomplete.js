@@ -7,7 +7,8 @@ import reactModal from "@prezly/react-promise-modal";
 // import reactModal from "../../../utils/promiseModal";
 import { fetchTags, createTag } from "../api/tags";
 import fetchSkosmosTags from "../api/skosmos";
-import { GoGlobe } from "react-icons/go";
+
+import { GoGlobe, GoGitBranch } from "react-icons/go";
 import { MdLanguage } from "react-icons/md";
 import { IoIosPricetags } from "react-icons/io";
 import Modal from "../ui/modal";
@@ -21,7 +22,8 @@ import { FieldWrapper, ErrorMessage } from "../ui/forms";
 
 const mapping = {
   countries: GoGlobe,
-  languages: MdLanguage
+  languages: MdLanguage,
+  unesco: GoGitBranch
 };
 
 const icon_for_type = type => {
@@ -147,7 +149,10 @@ class MultiTagField extends React.Component {
 
   handleSearch = async q => {
     this.setState({ isLoading: true });
-    const options = await fetchFancyTags(q, this.props.collection_id);
+    let options = [];
+    if (q.length > 3) {
+      options = await fetchFancyTags(q, this.props.collection_id);
+    }
     this.setState({ isLoading: false });
     return options;
   };
@@ -190,6 +195,7 @@ class MultiTagField extends React.Component {
         onCreateOption={this.handleCreate}
         value={this.props.value}
         components={customSelectComponents}
+        noOptionsMessage={({ inputValue }) => `No options ${inputValue}`}
       />
     );
   }

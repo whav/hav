@@ -6,7 +6,7 @@ import { Redirect } from "react-router-dom";
 import { FieldWrapper, ErrorMessage } from "../../ui/forms";
 import { createDirectory, updateDirectory } from "../../api/browser";
 import { requestDirectoryAction } from "../../ducks/browser";
-import { MultiTagField } from "../../ui/components/autocomplete";
+import { MultiTagField } from "../autocomplete";
 import Button, { ButtonGroup } from "../../ui/components/buttons";
 import BreadCrumbs from "./breadcrumbs";
 import buildAPIUrl from "../../routes";

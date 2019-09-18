@@ -18,7 +18,7 @@ import { UploadContainer, SingleUpload } from "../simpleUpload";
 import SourcePreview from "./sources";
 import "./form.css";
 
-import { MultiTagField } from "../../ui/components/autocomplete";
+import { MultiTagField } from "../autocomplete";
 
 const customStyles = {
   control: provided => ({

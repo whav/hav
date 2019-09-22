@@ -9,10 +9,10 @@ class Playground extends React.Component {
 
   render() {
     return (
-      <div className="content">
-        <h1>Playground</h1>
+      <div className="hav-content">
+        <h1 className="title">Playground</h1>
 
-        <h2>Multi Tag Field</h2>
+        <h2 className="subtitle">Multi Tag Field</h2>
         <p>This tag field retrieves managed tags from the hav database</p>
         <MultiTagField
           value={this.state.multiselect}

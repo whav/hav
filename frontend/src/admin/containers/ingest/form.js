@@ -416,7 +416,6 @@ class IngestForm extends React.Component {
         enableReinitialize={true}
         onSubmit={this.submit}
         render={({ isSubmitting, errors, values, setSubmitting }) => {
-          console.warn(values.media_tags);
           return (
             <Form className="ingest-form">
               {persistName && <Persist name={persistName} />}

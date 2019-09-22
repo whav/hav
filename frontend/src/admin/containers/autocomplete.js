@@ -113,6 +113,24 @@ const TagModal = props => {
   );
 };
 
+const BreadCrumbs = ({ crumbs = [] }) => {
+  if (crumbs.length === 0) {
+    return null;
+  }
+  return (
+    <nav
+      className="breadcrumb has-arrow-separator is-small"
+      aria-label="breadcrumbs"
+    >
+      <ul>
+        {crumbs.map((t, i) => (
+          <li key={i}>{t}</li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+
 const TagLabel = ({ type, name, label }) => {
   name = name || label;
   const Icon = icon_for_type(type);
@@ -128,9 +146,12 @@ const TagLabel = ({ type, name, label }) => {
 const MultiValueLabel = ({ data }) => <TagLabel {...data} />;
 const Option = props => {
   const { data, children } = props;
+  const { crumbs = [] } = data;
   return (
     <components.Option {...props}>
       {data.__isNew__ ? children : <TagLabel {...props.data} />}
+
+      <BreadCrumbs crumbs={crumbs} />
     </components.Option>
   );
 };

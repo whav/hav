@@ -18,7 +18,8 @@ body,
   flex-grow: 1;
 }
 
-.hav-admin-content > .content {
+.hav-admin-content > .content,
+.hav-admin-content > .hav-content {
   padding: 2rem;
 }
 

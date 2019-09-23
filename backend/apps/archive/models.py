@@ -9,7 +9,7 @@ from django.template.defaultfilters import filesizeformat
 
 from hav_utils.fields import LanguageField
 from .storage import ArchiveStorage
-from ..media.models import CreatorBase, MediaCreator
+from ..media.models import CreatorBase, MediaCreator, License
 
 
 class FileCreator(CreatorBase):
@@ -35,6 +35,8 @@ class ArchiveFile(models.Model):
     creators = models.ManyToManyField(MediaCreator, through=FileCreator, verbose_name='creators')
 
     language = LanguageField(blank=True)
+
+    license = models.ForeignKey(License, null=True, blank=True, on_delete=models.PROTECT)
 
     @property
     def mime_type(self):

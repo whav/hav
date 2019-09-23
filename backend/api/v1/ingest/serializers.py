@@ -76,6 +76,7 @@ def validate_source(url):
 class AttachmentSerializer(serializers.ModelSerializer):
     source = IngestionReferenceField()
     creators = FileToCreatorSerializer(many=True, allow_empty=False)
+    license = serializers.PrimaryKeyRelatedField(queryset=License.objects.all())
 
     def validate_source(self, source_id):
         validate_source(source_id)
@@ -83,7 +84,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AttachmentFile
-        fields = ('source', 'creators')
+        fields = ('source', 'creators', 'license')
 
 
 

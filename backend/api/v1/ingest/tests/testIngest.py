@@ -126,7 +126,8 @@ class IngestTest(APITestCase):
             'source': source,
             'creators': [
                 data['creators'][0]
-            ]
+            ],
+            'license': self.license.pk
         }]})
         self.client.force_login(self.user)
         response = self.client.post(self.url, data, format='json')

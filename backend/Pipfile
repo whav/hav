@@ -32,6 +32,7 @@ sentry-sdk = "*"
 django-extensions = "==2.1.5"
 django-cors-headers = "*"
 pycountry = "*"
+requests = "*"
 
 [dev-packages]
 ipdb = "*"

@@ -23,7 +23,8 @@ def _import_source(label):
 
 TAGGING_SOURCES = {
     'languages': 'iso639_3',
-    'countries': 'iso3166'
+    'countries': 'iso3166',
+    'skosmos': 'skosmos'
 }
 
 TAG_LABEL_TO_SOURCE = {

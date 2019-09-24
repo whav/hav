@@ -43,7 +43,10 @@ class ArchiveFile(models.Model):
         return guess_type(self.original_filename)[0]
 
     def __str__(self):
-        return '{0} ({1})'.format(self.file.path, filesizeformat(self.size))
+        if self.file:
+            return '{0} ({1})'.format(self.file.path, filesizeformat(self.size))
+        else:
+            return 'Unarchived File Instance: Source {0}'.format(self.source_id)
 
     def resolve_source(self):
         from api.v1.ingest.fields import resolveURLtoFilePath

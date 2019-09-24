@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APITransactionTestCase
 import random
 from apps.media.models import License, MediaCreator, MediaType, MediaCreatorRole, Media
 from apps.sets.models import Node
@@ -28,7 +28,7 @@ def create_image(target):
     img.save(target)
 
 
-class IngestTest(APITestCase):
+class IngestTest(APITransactionTestCase):
 
     def setUp(self):
         self.root = Node.add_root(name='testroot')
@@ -102,6 +102,8 @@ class IngestTest(APITestCase):
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+        # self._run_workers()
+
         # check for the correct setting of various fields
         media = Media.objects.get(pk=response.json()['pk'])
         self.assertQuerysetEqual(
@@ -116,6 +118,9 @@ class IngestTest(APITestCase):
         self.assertEqual(mc.creator.pk, self.creator.pk)
         self.assertEqual(mc.role.pk, self.role.pk)
 
+        self.assertEqual(media.files.count(), 1)
+        archive_file = media.files.all()[0]
+        self.assertIsNotNone(archive_file.file)
 
     def test_with_attachments(self):
         data = self.generateMediaData()

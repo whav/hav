@@ -165,26 +165,26 @@ class IngestSerializer(serializers.Serializer):
         # set tags
         media.tags.set(validated_data.get('media_tags', []))
 
-        af = ArchiveFile.objects.create(
+        archive_file = ArchiveFile.objects.create(
             source_id=source,
             created_by=user,
             media=media
         )
 
-        media.files.set([af])
+        media.files.set([archive_file])
 
-        attachments = []
+        attachment_files = []
         for attachment in validated_data['attachments']:
-            af = AttachmentFile.objects.create(
+            attachment_file = AttachmentFile.objects.create(
                 source_id=attachment['source'],
                 created_by=user
             )
             for creator in attachment['creators']:
-                FileCreator.objects.create(file=af, **creator)
+                FileCreator.objects.create(file=attachment_file, **creator)
 
-            attachments.append(af)
+            attachment_files.append(attachment_file)
 
-        media.attachments.set(attachments)
+        media.attachments.set(attachment_files)
 
         # update the ingest queue (if available) by removing the source
         queue = self.context.get('queue')
@@ -192,16 +192,15 @@ class IngestSerializer(serializers.Serializer):
             queue = IngestQueue.objects.select_for_update().get(pk=queue.pk)
             queue.link_to_media(media, source)
             queue.save()
-
-        archive_ids = [a.pk for a in chain([af], attachments)]
+        archive_ids = [a.pk for a in chain([archive_file], attachment_files)]
 
         logger.info(
-            "Triggering archiving for %d file(s); media: %d; user: %d",
+            "Triggering archiving for %d file(s) (%s); media: %d; user: %d",
             len(archive_ids),
+            ', '.join([str(pk) for pk in archive_ids]),
             media.pk,
             user.pk
         )
-
 
         def ingestion_trigger():
             return archive_and_create_webassets(

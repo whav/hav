@@ -376,3 +376,11 @@ CORS_ORIGIN_WHITELIST = [
 #     r"^https://\w+\.netlify\.com$",
 # ]
 
+# TEST Setup
+
+if 'test' in sys.argv:
+    for key in RQ_QUEUES:
+        RQ_QUEUES[key].update({
+            'ASYNC': False,
+            'DB': 5
+        })

@@ -1,18 +1,21 @@
 from django.test import SimpleTestCase
 from ..sources.skosmos import Source
-
+from ..sources import TAG_LABEL_TO_SOURCE
 
 class TestSkosmosSource(SimpleTestCase):
 
     nepal = "http://skos.um.es/unescothes/C02700"
 
     def setUp(self):
-        self.source = Source()
+        self.source = TAG_LABEL_TO_SOURCE['skosmos']
 
     def test_search(self):
-        data = self.source.search('Nepa*')
-        results = data['results']
-        self.assertIn(self.nepal, [r['uri'] for r in results])
+        results = self.source.search('Nepa*')
+        # this is brittle as the url is somewhere in the value
+        # just create a dumb string and check for existence
+        # TODO: Fix me once the source_key||source_id format stabilises
+        all_results = ' '.join([item for values_and_labels in results for item in values_and_labels])
+        self.assertIn(self.nepal, all_results)
 
     def test_detail(self):
         data = self.source.get(self.nepal)

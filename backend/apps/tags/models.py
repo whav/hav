@@ -3,8 +3,8 @@ from django.db import models
 from django.db.models import Q
 from apps.hav_collections.models import Collection
 from model_utils.managers import InheritanceManager
-from .sources import TAG_LABEL_TO_SOURCE, TAGGING_SOURCES
-
+from .sources import TAG_LABEL_TO_SOURCE, TAGGING_SOURCE_CHOICES
+from django.conf import settings
 
 
 class Tag(models.Model):
@@ -49,7 +49,7 @@ class CollectionTag(Tag):
 
 class ManagedTag(Tag):
 
-    SOURCE_CHOICES = [(v, k) for k, v in TAGGING_SOURCES.items()]
+    SOURCE_CHOICES = TAGGING_SOURCE_CHOICES
 
     # these 2 fields are used to link to external sources
     source = models.CharField(max_length=20, choices=SOURCE_CHOICES, db_index=True)
@@ -68,7 +68,21 @@ class ManagedTag(Tag):
         ]
 
 
+def search_managed_tags(query):
+    for source_key, source in TAG_LABEL_TO_SOURCE.items():
+        results = source.search(query)
+        if isinstance(results, (map, filter)):
+            results = list(results)
+        print(source_key, ': ', results)
+
 
 def find_tags(query, collection=None):
     base_qs = Tag.objects.filter(name__icontains=query)
     return base_qs
+
+
+def create_tag_from_source_key(value):
+    source_key, source_id = value.split('||')
+    source = TAG_LABEL_TO_SOURCE[source_key]
+    print(source.get(source_id))
+

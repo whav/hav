@@ -1,21 +1,20 @@
 from django import forms
 from .models import Tag, CollectionTag, ManagedTag
-from .sources import TAGGING_SOURCES
+from .sources import TAG_LABEL_TO_SOURCE
 
-source_names = set(TAGGING_SOURCES.keys())
+available_sources = set(list(TAG_LABEL_TO_SOURCE.keys()))
 
 
 def resolve_types(types=[]):
     if not types:
         return Tag.objects.select_subclasses()
+
     types = set(types)
-    if not types.issubset(source_names):
-        difference = types.difference(source_names)
+    if not types.issubset(available_sources):
+        difference = types.difference(available_sources)
         raise ValueError(f'The following tag sources are unknown: {", ".join(list(difference))}')
 
-    sources = [TAGGING_SOURCES[t] for t in types]
-    # print(sources)
-    # import ipdb; ipdb.set_trace()
+    sources = list(types)
     return Tag.objects.\
         filter(managedtag__source__in=sources).\
         order_by('pk').select_subclasses(ManagedTag)

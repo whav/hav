@@ -170,10 +170,14 @@ class MultiTagField extends React.Component {
 
   handleSearch = async q => {
     this.setState({ isLoading: true });
-    let options = [];
-    if (q.length > 3) {
-      options = await fetchFancyTags(q, this.props.collection_id);
+    let hav_options = [];
+    let skosmos_options = [];
+    console.log(`Searching for tags ${q}`);
+    if (q.length >= 3) {
+      hav_options = await fetchFancyTags(q, this.props.collection_id);
+      skosmos_options = await fetchSkosmosTags(q);
     }
+    const options = [...skosmos_options, ...hav_options];
     this.setState({ isLoading: false });
     return options;
   };

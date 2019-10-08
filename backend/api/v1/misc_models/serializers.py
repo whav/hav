@@ -3,7 +3,7 @@ from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
 from apps.tags.models import Tag, ManagedTag, CollectionTag
 from apps.hav_collections.models import Collection
 from ..permissions import has_collection_permission
-from apps.tags.sources import TAGGING_SOURCES
+from apps.tags.sources import TAGGING_SOURCE_CHOICES
 
 
 class MediaCreatorSerializer(serializers.ModelSerializer):
@@ -74,19 +74,6 @@ class TagSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'type',
-            'node'
-        ]
-
-class TagsWithNodeSerializer(TagSerializer):
-
-    node = serializers.SerializerMethodField()
-
-    def get_node(self, tag):
-        relevant_nodes = self.context.get('node_ids', [])
-
-
-    class Meta(TagSerializer.Meta):
-        fields = TagSerializer.Meta.fields + [
             'node'
         ]
 

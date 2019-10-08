@@ -41,6 +41,7 @@ env = environ.Env(
     CACHE_URL=(str, 'redis://127.0.0.1:6379/0'),
     DATABASE_URL=(str, 'postgres:///hav'),
     WHAV_DATABASE_URL=(str, 'postgres:///whav'),
+    HAV_SKOSMOS_URL=(str, 'https://skosmos-hav.aussereurop.univie.ac.at/rest/v1/')
 )
 
 # read the .env file
@@ -376,8 +377,24 @@ CORS_ORIGIN_WHITELIST = [
 #     r"^https://\w+\.netlify\.com$",
 # ]
 
-# TEST Setup
+# TAGGING
+TAGGING_SOURCES = {
+    "skosmos": {
+        "source": "apps.tags.sources.skosmos.Source",
+        "options": {
+            "url": env('HAV_SKOSMOS_URL')
+        }
+    },
+    "languages": {
+        "source": "apps.tags.sources.iso639_3.Source",
+    },
+    "countries": {
+        "source": "apps.tags.sources.iso3166.Source",
+    }
+}
 
+
+# TEST Setup
 if 'test' in sys.argv:
     for key in RQ_QUEUES:
         RQ_QUEUES[key].update({

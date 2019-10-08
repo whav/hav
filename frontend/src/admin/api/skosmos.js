@@ -8,7 +8,7 @@ const gatherCrumbs = result => {
 
 const fetchSkosmosTags = async (query, lang = "en") => {
   let params = {
-    query: `${query}*`,
+    query: `*${query}*`,
     lang,
     labellang: lang,
     maxhits: 20,

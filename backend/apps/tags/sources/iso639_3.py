@@ -2,20 +2,25 @@ from pycountry import languages
 
 from . import BaseSource
 
-def language_to_output(l):
-    return l.alpha_3, l.name
 
 def get_language(ref):
     return languages.get(alpha_3=ref)
 
+
 class Source(BaseSource):
 
+    def build_result(self, language):
+        return self.get_value(language.alpha_3), language.name
+
     def get_all(self):
-        return map(language_to_output, languages)
+        return map(self.build_result, languages)
 
     def get(self, ref):
-        return language_to_output(get_language(ref))
+        return self.build_result(get_language(ref))
 
     def search(self, query):
-        return []
+        # languages.
+        results = filter(lambda l: l.name.lower().startswith(query), languages)
+        return map(self.build_result, results)
+
 

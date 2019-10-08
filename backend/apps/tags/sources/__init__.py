@@ -1,7 +1,10 @@
 from importlib import import_module
+from django.conf import settings
 
+class BaseSource:
 
-class BaseSource(object):
+    def __init__(self, source_id):
+        self.source = source_id
 
     def get_all(self):
         raise NotImplementedError()
@@ -12,21 +15,24 @@ class BaseSource(object):
     def get(self, ref):
         raise NotImplementedError()
 
-
-# the code below should probably live somewhere else
-# AppConfig? settings.py?
-def _import_source(label):
-    source_pkg = import_module(f'.{label}', 'apps.tags.sources')
-    source_class = getattr(source_pkg, 'Source')
-    return source_class
+    def get_value(self, ref):
+        return f'{self.source}||{ref}'
 
 
-TAGGING_SOURCES = {
-    'languages': 'iso639_3',
-    'countries': 'iso3166',
-    'skosmos': 'skosmos'
-}
+source = getattr(settings, 'TAGGING_SOURCE', {})
 
-TAG_LABEL_TO_SOURCE = {
-    k: _import_source(v)() for k, v in TAGGING_SOURCES.items()
-}
+TAGGING_SOURCE_CHOICES = []
+TAG_LABEL_TO_SOURCE = {}
+
+for key, source_settings in settings.TAGGING_SOURCES.items():
+    TAGGING_SOURCE_CHOICES.append((key, key))
+    module_string, source_class = source_settings['source'].rsplit('.', 1)
+    module = import_module(module_string)
+    SourceClass = getattr(module, source_class)
+    source_options = source_settings.get('options', {})
+    TAG_LABEL_TO_SOURCE[key] = SourceClass(key, **source_options)
+
+
+def resolve_source_from_value(value):
+    source_key, ref = value.split('||', maxsplit=1)
+    return TAG_LABEL_TO_SOURCE[source_key], ref

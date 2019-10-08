@@ -18,6 +18,7 @@ from .fields import HAVTargetField, IngestHyperlinkField, FinalIngestHyperlinkFi
     IngestionReferenceField
 from hav_utils.daterange import parse
 from ..havBrowser.serializers import HAVCollectionSerializer
+from ..misc_models.fields import CreatableTagField
 from .ingest_task import archive_and_create_webassets
 from .fields import resolveURLtoFilePath
 from ..permissions import has_collection_permission
@@ -102,7 +103,7 @@ class IngestSerializer(serializers.Serializer):
     media_type = serializers.PrimaryKeyRelatedField(queryset=MediaType.objects.all())
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
-    media_tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True, required=False)
+    media_tags = CreatableTagField(queryset=Tag.objects.all(), many=True, required=False)
 
     attachments = AttachmentSerializer(many=True, allow_empty=True)
 

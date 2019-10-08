@@ -8,7 +8,9 @@ from django.test import TestCase
 from apps.hav_collections.models import Collection
 from apps.tags.fields import SingleTagSelectField
 from apps.tags.models import Tag, ManagedTag, CollectionTag
-from apps.tags.sources import TAGGING_SOURCES
+from apps.tags.sources import TAG_LABEL_TO_SOURCE
+
+tagging_source_keys = list(TAG_LABEL_TO_SOURCE.keys())
 
 letters = list(string.ascii_lowercase)
 
@@ -28,7 +30,7 @@ class TestTags(TestCase):
     size = 5
 
     def setUp(self):
-        sources = list(TAGGING_SOURCES.values())
+        sources = tagging_source_keys
         managed_tags = [
             ManagedTag(name=n, source=choice(sources), source_ref=n) for n in sample(three_letter_words, k=self.size)
         ]
@@ -83,8 +85,8 @@ class TestTags(TestCase):
         model_field = forms.ModelChoiceField(Tag.objects.all().select_subclasses())
         self.assertEqualChoices(tag_field, model_field)
 
-        for key, val in TAGGING_SOURCES.items():
-            tag_field = SingleTagSelectField([key])
-            model_field = forms.ModelChoiceField(ManagedTag.objects.filter(source=val).order_by('pk'))
+        for tag_source in tagging_source_keys:
+            tag_field = SingleTagSelectField([tag_source])
+            model_field = forms.ModelChoiceField(ManagedTag.objects.filter(source=tag_source).order_by('pk'))
             self.assertEqualChoices(tag_field, model_field)
 

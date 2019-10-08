@@ -247,7 +247,8 @@ const CreatorRoleTable = ({
 const UploadComponent = props =>
   props.success ? null : <SingleUpload {...props} />;
 
-const Attachments = ({ attachments, errors, ...props }) => {
+const Attachments = ({ attachments, errors, licenses, ...props }) => {
+  console.log("Attachment", props);
   return (
     <FieldArray
       name="attachments"
@@ -274,6 +275,18 @@ const Attachments = ({ attachments, errors, ...props }) => {
                     accessor={`${field_accessor}.creators`}
                     instances={a.creators}
                   />
+
+                  <BField label="License">
+                    <Field
+                      component={SelectField}
+                      name={`${field_accessor}.license`}
+                      options={licenses}
+                    />
+                    <ErrorMessage
+                      name={`${field_accessor}.license`}
+                      component="div"
+                    />
+                  </BField>
                 </div>
               </div>
             );

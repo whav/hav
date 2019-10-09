@@ -4,7 +4,7 @@ from django.db.models import Q
 from apps.hav_collections.models import Collection
 from model_utils.managers import InheritanceManager
 from .sources import TAG_LABEL_TO_SOURCE, TAGGING_SOURCE_CHOICES
-from django.conf import settings
+from .fields import TagSourceChoiceField
 
 
 class Tag(models.Model):
@@ -18,7 +18,7 @@ class Tag(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('name', )
+        ordering = ("name",)
 
 
 def get_tags_for_collection(collection):
@@ -34,14 +34,10 @@ def get_tags_for_collection(collection):
     # .select_subclasses()
 
     return Tag.objects.filter(
-        Q(
-            Q(collectiontag__isnull=False) &
-            Q(collectiontag__collection=collection))
-        |
-        Q(
-            managedtag__isnull=False
-        )
+        Q(Q(collectiontag__isnull=False) & Q(collectiontag__collection=collection))
+        | Q(managedtag__isnull=False)
     )
+
 
 class CollectionTag(Tag):
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
@@ -52,20 +48,18 @@ class ManagedTag(Tag):
     SOURCE_CHOICES = TAGGING_SOURCE_CHOICES
 
     # these 2 fields are used to link to external sources
-    source = models.CharField(max_length=20, choices=SOURCE_CHOICES, db_index=True)
-    source_ref = models.CharField(max_length=20, db_index=True)
+    source = TagSourceChoiceField(blank=False)
+    source_ref = models.CharField(max_length=50, db_index=True)
 
     def __str__(self):
-        return f'{self.name} ({self.source})'
+        return f"{self.name} ({self.source})"
 
     def resolve(self):
         source = TAG_LABEL_TO_SOURCE[self.source]
         return source.get(self.source_ref)
 
     class Meta:
-        unique_together = [
-            ('source', 'source_ref')
-        ]
+        unique_together = [("source", "source_ref")]
 
 
 def search_managed_tags(query):
@@ -73,7 +67,7 @@ def search_managed_tags(query):
         results = source.search(query)
         if isinstance(results, (map, filter)):
             results = list(results)
-        print(source_key, ': ', results)
+        print(source_key, ": ", results)
 
 
 def find_tags(query, collection=None):
@@ -82,7 +76,6 @@ def find_tags(query, collection=None):
 
 
 def create_tag_from_source_key(value):
-    source_key, source_id = value.split('||')
+    source_key, source_id = value.split("||")
     source = TAG_LABEL_TO_SOURCE[source_key]
     print(source.get(source_id))
-

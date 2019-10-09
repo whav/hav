@@ -8,7 +8,6 @@ def get_language(ref):
 
 
 class Source(BaseSource):
-
     def build_result(self, language):
         return self.get_value(language.alpha_3), language.name
 
@@ -22,5 +21,3 @@ class Source(BaseSource):
         # languages.
         results = filter(lambda l: l.name.lower().startswith(query), languages)
         return map(self.build_result, results)
-
-

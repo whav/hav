@@ -401,7 +401,7 @@ class IngestForm extends React.Component {
   submit = (data, actions) => {
     data = { ...data };
     // Flatten where needed
-    data.media_tags = data.media_tags.map(t => t.id);
+    data.media_tags = data.media_tags.map(t => t.value);
     console.log("Submitting...", data);
     this.props
       .onSubmit(data)

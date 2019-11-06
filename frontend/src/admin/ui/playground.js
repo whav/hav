@@ -19,7 +19,7 @@ class Playground extends React.Component {
           onChange={values => this.setState({ multiselect: values })}
         />
         <hr />
-        <h2>Skosmos Tag Field</h2>
+        <h2 className="subtitle">Skosmos Tag Field</h2>
         <p>This tag field retrieves tags from our skosmos instance.</p>
         <SkosmosTagField
           value={this.state.skosmos_select}

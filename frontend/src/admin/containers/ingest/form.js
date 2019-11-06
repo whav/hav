@@ -248,7 +248,6 @@ const UploadComponent = props =>
   props.success ? null : <SingleUpload {...props} />;
 
 const Attachments = ({ attachments, errors, licenses, ...props }) => {
-  console.log("Attachment", props);
   return (
     <FieldArray
       name="attachments"

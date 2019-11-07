@@ -14,13 +14,7 @@ class TestSkosmosSource(SimpleTestCase):
 
     def test_search(self):
         results = self.source.search("Nepa*")
-        # this is brittle as the url is somewhere in the value
-        # just create a dumb string and check for existence
-        # TODO: Fix me once the source_key||source_id format stabilises
-        all_results = " ".join(
-            [item for values_and_labels in results for item in values_and_labels]
-        )
-        self.assertIn(self.nepal, all_results)
+        self.assertIn(self.nepal, [r["source_ref"] for r in results])
 
     def test_detail(self):
         data = self.source.get(self.nepal)

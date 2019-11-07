@@ -8,9 +8,12 @@ def get_country(ref):
 
 
 class Source(BaseSource):
-
     def country_to_output(self, country):
-        return self.get_value(country.alpha_3), country.name
+        return {
+            "name": country.name,
+            "source": self.source,
+            "source_ref": country.alpha_3,
+        }
 
     def get_all(self):
         return map(self.country_to_output, countries)
@@ -20,4 +23,3 @@ class Source(BaseSource):
 
     def search(self, query):
         return map(self.country_to_output, countries.search_fuzzy(query))
-

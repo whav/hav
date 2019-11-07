@@ -16,7 +16,11 @@ class Source(BaseSource):
         super().__init__(*args, **kwargs)
 
     def build_response(self, item):
-        return self.get_value(item["uri"]), item["prefLabel"]
+        return {
+            "name": item["prefLabel"],
+            "source": self.source,
+            "source_ref": item["uri"],
+        }
 
     def get_all(self):
         return []

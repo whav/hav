@@ -9,7 +9,11 @@ def get_language(ref):
 
 class Source(BaseSource):
     def build_result(self, language):
-        return self.get_value(language.alpha_3), language.name
+        return {
+            "name": language.name,
+            "source": self.source,
+            "source_ref": language.alpha_3,
+        }
 
     def get_all(self):
         return map(self.build_result, languages)

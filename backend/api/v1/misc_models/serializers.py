@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
-from apps.tags.models import Tag
+from apps.tags.models import Tag, TagSource
 from apps.hav_collections.models import Collection
 from ..permissions import has_collection_permission
 from apps.tags.sources import TAGGING_SOURCE_CHOICES
@@ -43,30 +43,16 @@ class TagSearchSerializer(serializers.Serializer):
     search = serializers.CharField(required=False, default=None)
 
 
+class TagSourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TagSource
+        fields = ["source", "source_ref"]
+
+
 class TagSerializer(serializers.ModelSerializer):
 
-    type = serializers.SerializerMethodField()
-    node = serializers.SerializerMethodField()
-
-    def get_node(self, tag):
-        return self.context.get("node_id")
-
-    def get_type(self, tag):
-        # FIXME
-        return None
+    source = TagSourceSerializer()
 
     class Meta:
         model = Tag
-        fields = ["id", "name", "type", "node"]
-
-
-class CollectionTagSerializer(serializers.ModelSerializer):
-    def validate(self, data):
-        user = self.context["request"].user
-        if not has_collection_permission(user, data["collection"]):
-            raise serializers.ValidationError("No permission to add tag to collection.")
-        return data
-
-    class Meta:
-        model = Tag
-        fields = ["name", "collection"]
+        fields = ["name", "collection", "source"]

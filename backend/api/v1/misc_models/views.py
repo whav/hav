@@ -9,7 +9,6 @@ from .serializers import (
     MediaLicenseSerializer,
     MediaCreatorRoleSerializer,
     TagSerializer,
-    CollectionTagSerializer,
     TagSearchSerializer,
 )
 from apps.media.models import MediaCreator, License, MediaCreatorRole
@@ -53,11 +52,3 @@ class TagAutocompleteView(IncomingBaseMixin, APIView):
         # limit the results
         qs = qs[:30]
         return Response(TagSerializer(instance=qs, many=True).data, status=200)
-
-    def post(self, request, *args, **kwargs):
-        serializer = CollectionTagSerializer(
-            data=request.data, context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        tag = serializer.save()
-        return Response(TagSerializer(instance=tag).data, status=201)

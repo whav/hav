@@ -15,9 +15,6 @@ class BaseSource:
     def get(self, ref):
         raise NotImplementedError()
 
-    def get_value(self, ref):
-        return f"{self.source}||{ref}"
-
 
 source = getattr(settings, "TAGGING_SOURCE", {})
 

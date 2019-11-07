@@ -4,10 +4,16 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from ..permissions import IncomingBaseMixin, has_collection_permission
 
-from .serializers import MediaCreatorSerializer, MediaLicenseSerializer, MediaCreatorRoleSerializer,\
-    TagSerializer, CollectionTagSerializer, TagSearchSerializer
+from .serializers import (
+    MediaCreatorSerializer,
+    MediaLicenseSerializer,
+    MediaCreatorRoleSerializer,
+    TagSerializer,
+    CollectionTagSerializer,
+    TagSearchSerializer,
+)
 from apps.media.models import MediaCreator, License, MediaCreatorRole
-from apps.tags.models import Tag, CollectionTag, ManagedTag, get_tags_for_collection
+from apps.tags.models import Tag
 
 
 class MediaCreatorAPI(IncomingBaseMixin, generics.ListCreateAPIView):
@@ -29,32 +35,29 @@ class MediaCreatorRoleAPI(IncomingBaseMixin, generics.ListAPIView):
 
 
 class TagAutocompleteView(IncomingBaseMixin, APIView):
-
     def get(self, request, *args, **kwargs):
         qs = Tag.objects.none()
         search_serializer = TagSearchSerializer(data=request.query_params)
         search_serializer.is_valid(raise_exception=True)
-        query = search_serializer.validated_data['search']
-        collection = search_serializer.validated_data['collection']
-        if query and not collection:
-            qs = ManagedTag.objects.filter(name__icontains=query)[:30]
-        elif query and collection:
-            if not has_collection_permission(request.user, collection):
-                raise ValidationError(f'Permission denied for collection {collection}.')
-            qs = get_tags_for_collection(collection)\
-                .filter(name__icontains=query)\
-                .select_subclasses(ManagedTag, CollectionTag)[:30]
+        query = search_serializer.validated_data["search"]
+        collection = search_serializer.validated_data["collection"]
 
+        if query:
+            qs = Tag.objects.filter(name__icontains=query)
+
+        if collection:
+            if not has_collection_permission(request.user, collection):
+                raise ValidationError(f"Permission denied for collection {collection}.")
+            qs = qs.filter(collection=collection)
+
+        # limit the results
+        qs = qs[:30]
         return Response(TagSerializer(instance=qs, many=True).data, status=200)
 
     def post(self, request, *args, **kwargs):
-        serializer = CollectionTagSerializer(data=request.data, context={'request': request})
+        serializer = CollectionTagSerializer(
+            data=request.data, context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
         tag = serializer.save()
         return Response(TagSerializer(instance=tag).data, status=201)
-
-
-
-
-
-

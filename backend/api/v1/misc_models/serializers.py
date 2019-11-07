@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
-from apps.tags.models import Tag, ManagedTag, CollectionTag
+from apps.tags.models import Tag
 from apps.hav_collections.models import Collection
 from ..permissions import has_collection_permission
 from apps.tags.sources import TAGGING_SOURCE_CHOICES
@@ -9,24 +9,20 @@ from apps.tags.sources import TAGGING_SOURCE_CHOICES
 class MediaCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaCreator
-        fields = ['id', 'name']
+        fields = ["id", "name"]
 
 
 class MediaCreatorRoleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MediaCreatorRole
-        fields = ['id', 'name']
+        fields = ["id", "name"]
 
 
 class MediaLicenseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = License
-        fields = [
-            'id',
-            'name'
-        ]
+        fields = ["id", "name"]
+
 
 class MediaTypeSerializer(serializers.ModelSerializer):
 
@@ -37,18 +33,12 @@ class MediaTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MediaType
-        fields = [
-            'id',
-            'name',
-            'type'
-        ]
+        fields = ["id", "name", "type"]
 
 
 class TagSearchSerializer(serializers.Serializer):
     collection = serializers.PrimaryKeyRelatedField(
-        queryset=Collection.objects.all(),
-        required=False,
-        default=None
+        queryset=Collection.objects.all(), required=False, default=None
     )
     search = serializers.CharField(required=False, default=None)
 
@@ -59,36 +49,24 @@ class TagSerializer(serializers.ModelSerializer):
     node = serializers.SerializerMethodField()
 
     def get_node(self, tag):
-        return self.context.get('node_id')
+        return self.context.get("node_id")
 
     def get_type(self, tag):
-        if isinstance(tag, ManagedTag):
-            return tag.get_source_display()
-        elif isinstance(tag, CollectionTag):
-            return tag.collection.short_name
+        # FIXME
         return None
 
     class Meta:
         model = Tag
-        fields = [
-            'id',
-            'name',
-            'type',
-            'node'
-        ]
+        fields = ["id", "name", "type", "node"]
 
 
 class CollectionTagSerializer(serializers.ModelSerializer):
-
     def validate(self, data):
-        user = self.context['request'].user
-        if not has_collection_permission(user, data['collection']):
-            raise serializers.ValidationError('No permission to add tag to collection.')
+        user = self.context["request"].user
+        if not has_collection_permission(user, data["collection"]):
+            raise serializers.ValidationError("No permission to add tag to collection.")
         return data
 
     class Meta:
-        model = CollectionTag
-        fields = [
-            'name',
-            'collection'
-        ]
+        model = Tag
+        fields = ["name", "collection"]

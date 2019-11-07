@@ -7,7 +7,7 @@ class Node(MP_Node):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
 
-    tags = models.ManyToManyField('tags.Tag', blank=True)
+    tags = models.ManyToManyField("tags.Tag")
 
     @property
     def children(self):
@@ -15,6 +15,7 @@ class Node(MP_Node):
 
     def get_collection(self):
         from apps.hav_collections.models import Collection
+
         try:
             return self.collection
         except Collection.DoesNotExist:
@@ -31,10 +32,12 @@ class Node(MP_Node):
     @property
     def inherited_tags(self):
         from apps.tags.models import Tag
-        qs = Tag.objects.filter(node__in=self.get_ancestors()).order_by('node__depth')
+
+        qs = Tag.objects.filter(node__in=self.get_ancestors()).order_by("node__depth")
         return qs
 
     def __str__(self):
         return self.name
+
 
 #

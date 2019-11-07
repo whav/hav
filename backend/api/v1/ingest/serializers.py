@@ -239,6 +239,10 @@ class IngestSerializer(serializers.Serializer):
         return media
 
 
+def validate_initial_ingest(source, target):
+    serializer = IngestSerializer({"source": source, "target": target})
+
+
 class SimpleIngestQueueSerializer(serializers.ModelSerializer):
     target = HAVTargetField()
 

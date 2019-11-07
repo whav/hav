@@ -1,5 +1,5 @@
 from django.test import SimpleTestCase
-from apps.tags.models import search_managed_tags
+from apps.tags.sources import search_tag_sources
 
 
 class TestSourceSearch(SimpleTestCase):
@@ -7,7 +7,4 @@ class TestSourceSearch(SimpleTestCase):
     query = "nepal"
 
     def test_search(self):
-        search_managed_tags(self.query)
-
-
-
+        self.assertIsNotNone(search_tag_sources(self.query))

@@ -7,11 +7,9 @@ from apps.sets.models import Node
 from apps.hav_collections.models import Collection
 from apps.tags.models import Tag
 
+
 class MediaType(models.Model):
-    TYPE_CHOICES = [
-        (1, 'analog'),
-        (2, 'digital')
-    ]
+    TYPE_CHOICES = [(1, "analog"), (2, "digital")]
 
     ANALOG = TYPE_CHOICES[0][0]
     DIGITAL = TYPE_CHOICES[1][0]
@@ -20,10 +18,10 @@ class MediaType(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'{self.get_type_display()}/{self.name}'
+        return f"{self.get_type_display()}/{self.name}"
 
     class Meta:
-        unique_together = (('type', 'name'), )
+        unique_together = (("type", "name"),)
 
 
 class MediaCreator(TimeStampedModel):
@@ -53,8 +51,7 @@ class MediaCreator(TimeStampedModel):
             return self.display_name
 
         return "{0}{1}".format(
-            self.last_name,
-            ", {0}".format(self.first_name) if self.first_name else ''
+            self.last_name, ", {0}".format(self.first_name) if self.first_name else ""
         )
 
 
@@ -76,12 +73,10 @@ class CreatorBase(models.Model):
 
 class MediaToCreator(CreatorBase):
 
-    media = models.ForeignKey('Media', on_delete=models.CASCADE)
+    media = models.ForeignKey("Media", on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = [
-            ('creator', 'role', 'media')
-        ]
+        unique_together = [("creator", "role", "media")]
 
 
 class License(models.Model):
@@ -94,31 +89,31 @@ class License(models.Model):
 
 
 class MediaManager(models.Manager):
-
     def create_media(self, creators=[], **kwargs):
         media = self.create(**kwargs)
         for c in creators:
-            MediaToCreator.objects.create(
-                creator=c,
-                media=media
-            )
+            MediaToCreator.objects.create(creator=c, media=media)
         return media
 
 
 class Media(models.Model):
 
-    title = models.CharField('title', max_length=255, blank=True)
-    description = models.TextField('description', blank=True)
+    title = models.CharField("title", max_length=255, blank=True)
+    description = models.TextField("description", blank=True)
 
-    collection = models.ForeignKey(Collection, null=True, blank=False, on_delete=models.PROTECT)
+    collection = models.ForeignKey(
+        Collection, null=True, blank=False, on_delete=models.PROTECT
+    )
 
-    creators = models.ManyToManyField(MediaCreator, through=MediaToCreator, verbose_name='creators')
+    creators = models.ManyToManyField(
+        MediaCreator, through=MediaToCreator, verbose_name="creators"
+    )
 
     creation_date = DateTimeRangeField(null=True, blank=True)
 
-    license = models.ForeignKey(License, null=True, blank=True, on_delete=models.SET_NULL)
-
-    tags = models.ManyToManyField(Tag)
+    license = models.ForeignKey(
+        License, null=True, blank=True, on_delete=models.SET_NULL
+    )
 
     original_media_type = models.ForeignKey(MediaType, on_delete=models.PROTECT)
 
@@ -129,13 +124,24 @@ class Media(models.Model):
     set = models.ForeignKey(Node, on_delete=models.PROTECT)
 
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_media')
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="created_media"
+    )
 
     modified_at = models.DateTimeField(auto_now=True, null=True)
-    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name='modified_media')
+    modified_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.PROTECT,
+        related_name="modified_media",
+    )
 
-    files = models.ManyToManyField('archive.ArchiveFile', blank=False)
-    attachments = models.ManyToManyField('archive.AttachmentFile', blank=True, related_name='is_attachment_for')
+    files = models.ManyToManyField("archive.ArchiveFile", blank=False)
+    attachments = models.ManyToManyField(
+        "archive.AttachmentFile", blank=True, related_name="is_attachment_for"
+    )
+
+    tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return "Media ID {}".format(self.pk)
@@ -150,5 +156,4 @@ class Media(models.Model):
     objects = MediaManager()
 
     class Meta:
-        ordering = ('created_at',)
-
+        ordering = ("created_at",)

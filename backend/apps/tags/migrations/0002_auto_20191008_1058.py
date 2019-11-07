@@ -5,14 +5,20 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('tags', '0001_initial'),
-    ]
+    dependencies = [("tags", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='managedtag',
-            name='source',
-            field=models.CharField(choices=[('iso639_3', 'languages'), ('iso3166', 'countries'), ('skosmos', 'skosmos')], db_index=True, max_length=20),
-        ),
+            model_name="managedtag",
+            name="source",
+            field=models.CharField(
+                choices=[
+                    ("iso639_3", "languages"),
+                    ("iso3166", "countries"),
+                    ("skosmos", "skosmos"),
+                ],
+                db_index=True,
+                max_length=20,
+            ),
+        )
     ]

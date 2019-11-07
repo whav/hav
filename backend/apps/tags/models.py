@@ -1,49 +1,11 @@
 import uuid
 from django.db import models
-from django.db.models import Q
 from apps.hav_collections.models import Collection
-from model_utils.managers import InheritanceManager
 from .sources import TAG_LABEL_TO_SOURCE, TAGGING_SOURCE_CHOICES
 from .fields import TagSourceChoiceField
 
 
-class Tag(models.Model):
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    name = models.CharField(max_length=200)
-    objects = InheritanceManager()
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ("name",)
-
-
-def get_tags_for_collection(collection):
-    if isinstance(collection, Collection):
-        collection = collection.pk
-
-    # brain dump
-    # Tag.objects.annotate(
-    #   mc=Count('media'),
-    #   cc=Count('node'),
-    #   tc=F('mc') + F('cc')
-    # ).filter(tc__gt=0)
-    # .select_subclasses()
-
-    return Tag.objects.filter(
-        Q(Q(collectiontag__isnull=False) & Q(collectiontag__collection=collection))
-        | Q(managedtag__isnull=False)
-    )
-
-
-class CollectionTag(Tag):
-    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
-
-
-class ManagedTag(Tag):
+class TagSource(models.Model):
 
     SOURCE_CHOICES = TAGGING_SOURCE_CHOICES
 
@@ -62,20 +24,22 @@ class ManagedTag(Tag):
         unique_together = [("source", "source_ref")]
 
 
-def search_managed_tags(query):
-    for source_key, source in TAG_LABEL_TO_SOURCE.items():
-        results = source.search(query)
-        if isinstance(results, (map, filter)):
-            results = list(results)
-        print(source_key, ": ", results)
+class Tag(models.Model):
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
 
-def find_tags(query, collection=None):
-    base_qs = Tag.objects.filter(name__icontains=query)
-    return base_qs
+    name = models.CharField(max_length=200)
 
+    # currently a tag can have only one source
+    # we might want to change this in the future to support all possible
+    # SKOS relations
+    source = models.ForeignKey(
+        TagSource, blank=True, null=True, on_delete=models.PROTECT
+    )
 
-def create_tag_from_source_key(value):
-    source_key, source_id = value.split("||")
-    source = TAG_LABEL_TO_SOURCE[source_key]
-    print(source.get(source_id))
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ("name",)

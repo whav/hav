@@ -1,12 +1,10 @@
 from django.contrib import admin
-from .models import CollectionTag, ManagedTag
-
-admin.site.register(CollectionTag)
+from .models import Tag
 
 
-class ManagedTagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'source', 'source_ref')
-    list_filter = ('source',)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ("name", "collection", "source")
+    list_filter = ("collection", "source")
 
 
-admin.site.register(ManagedTag, ManagedTagAdmin)
+admin.site.register(Tag, TagAdmin)

@@ -14,7 +14,7 @@ class TestSkosmosSource(SimpleTestCase):
 
     def test_search(self):
         results = self.source.search("Nepa*")
-        self.assertIn(self.nepal, [r["source_ref"] for r in results])
+        self.assertIn(self.nepal, [r.source_ref for r in results])
 
     def test_detail(self):
         data = self.source.get(self.nepal)

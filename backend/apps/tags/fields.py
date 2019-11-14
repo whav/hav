@@ -7,10 +7,10 @@ available_sources = set(list(TAG_LABEL_TO_SOURCE.keys()))
 
 
 def resolve_types(types=[]):
-    from .models import Tag, ManagedTag
+    from .models import Tag
 
     if not types:
-        return Tag.objects.select_subclasses()
+        return Tag.objects.all()
 
     types = set(types)
     if not types.issubset(available_sources):
@@ -20,11 +20,7 @@ def resolve_types(types=[]):
         )
 
     sources = list(types)
-    return (
-        Tag.objects.filter(managedtag__source__in=sources)
-        .order_by("pk")
-        .select_subclasses(ManagedTag)
-    )
+    return Tag.objects.filter(source__source__in=sources).order_by("pk")
 
 
 class TagSourceChoiceField(models.CharField):

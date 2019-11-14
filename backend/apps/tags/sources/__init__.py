@@ -1,5 +1,24 @@
 from importlib import import_module
 from django.conf import settings
+from dataclasses import dataclass, field
+from typing import List
+
+
+@dataclass
+class TagSourceResult:
+    name: str
+    source: str
+    source_ref: str
+    crumbs: List[str] = field(default_factory=list)
+
+    id: str = None
+
+    def to_tag(self):
+        from ..models import TagSource, Tag
+
+        ts = TagSource(source=self.source, source_ref=self.source_ref)
+        tag = Tag(name=self.name, id=self.id, source=ts)
+        return tag
 
 
 class BaseSource:
@@ -35,7 +54,8 @@ def resolve_source_from_value(value):
     return TAG_LABEL_TO_SOURCE[source_key], ref
 
 
-def search_tag_sources(query):
+def search_tag_sources(query, sources=None):
+    # TODO: limit sources
     results = []
     for source in TAG_LABEL_TO_SOURCE.values():
         results.extend(source.search(query))

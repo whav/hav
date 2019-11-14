@@ -1,5 +1,5 @@
 from django.conf import settings
-from . import BaseSource
+from . import BaseSource, TagSourceResult
 import requests
 
 headers = {"Accept": "application/json"}
@@ -16,11 +16,17 @@ class Source(BaseSource):
         super().__init__(*args, **kwargs)
 
     def build_response(self, item):
-        return {
-            "name": item["prefLabel"],
-            "source": self.source,
-            "source_ref": item["uri"],
-        }
+        crumbs = [
+            item["inScheme"][0]["prefLabel"],
+            *[b["prefLabel"] for b in item.get("broader", [])],
+        ]
+
+        return TagSourceResult(
+            name=item["prefLabel"],
+            source=self.source,
+            source_ref=item["uri"],
+            crumbs=crumbs,
+        )
 
     def get_all(self):
         return []
@@ -32,7 +38,12 @@ class Source(BaseSource):
         response = skosmos_get(
             self.url,
             "search",
-            params={"query": f"{query}*", "lang": "en", "unique": True},
+            params={
+                "query": f"{query}*",
+                "lang": "en",
+                "unique": True,
+                "fields": "broader inScheme",
+            },
         )
         results = response.get("results", [])
         return list(map(self.build_response, results))

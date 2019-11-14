@@ -1,6 +1,6 @@
 from pycountry import languages
 
-from . import BaseSource
+from . import BaseSource, TagSourceResult
 
 
 def get_language(ref):
@@ -9,11 +9,9 @@ def get_language(ref):
 
 class Source(BaseSource):
     def build_result(self, language):
-        return {
-            "name": language.name,
-            "source": self.source,
-            "source_ref": language.alpha_3,
-        }
+        return TagSourceResult(
+            name=language.name, source=self.source, source_ref=language.alpha_3
+        )
 
     def get_all(self):
         return map(self.build_result, languages)

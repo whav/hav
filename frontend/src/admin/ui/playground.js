@@ -7,6 +7,11 @@ class Playground extends React.Component {
     skosmos_select: []
   };
 
+  submit = e => {
+    e.preventDefault();
+    console.log(JSON.stringify(this.state, null, 2));
+  };
+
   render() {
     return (
       <div className="hav-content">
@@ -14,10 +19,14 @@ class Playground extends React.Component {
 
         <h2 className="subtitle">Multi Tag Field</h2>
         <p>This tag field retrieves managed tags from the hav database</p>
-        <MultiTagField
-          value={this.state.multiselect}
-          onChange={values => this.setState({ multiselect: values })}
-        />
+        <form onSubmit={this.submit}>
+          <MultiTagField
+            value={this.state.multiselect}
+            onChange={values => this.setState({ multiselect: values })}
+          />
+          <button>Submit</button>
+        </form>
+
         <hr />
         <h2 className="subtitle">Skosmos Tag Field</h2>
         <p>This tag field retrieves tags from our skosmos instance.</p>

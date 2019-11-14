@@ -194,7 +194,7 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
 
     def get_tags_full(self, instance):
         return TagSerializer(
-            instance.tags.select_subclasses(),
+            instance.tags.all().select_related("source"),
             many=True,
             context={"node_id": instance.pk},
         ).data
@@ -204,7 +204,7 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
         for ancestor in instance.get_ancestors():
             data.extend(
                 TagSerializer(
-                    Tag.objects.filter(node=ancestor.pk).select_subclasses(),
+                    Tag.objects.filter(node=ancestor.pk).select_related("source"),
                     many=True,
                     context={"node_id": ancestor.pk},
                 ).data

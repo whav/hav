@@ -78,7 +78,15 @@ class IngestTest(APITransactionTestCase):
             "source": self.source_id,
             "media_title": "some title",
             "attachments": [],
-            "media_tags": [self.tag.pk],
+            "media_tags": [
+                {"id": str(self.tag.pk)},
+                {"name": "Testtag"},
+                {
+                    "name": "Nepal",
+                    "source": "skosmos",
+                    "source_ref": "http://skos.um.es/unescothes/C02700",
+                },
+            ],
             "media_description": "This is the test media description",
         }
 
@@ -101,8 +109,10 @@ class IngestTest(APITransactionTestCase):
 
         # check for the correct setting of various fields
         media = Media.objects.get(pk=response.json()["pk"])
-        self.assertEqual(media.tags.count(), 1)
-        self.assertEqual(media.tags.get(), self.tag)
+        self.assertEqual(media.tags.count(), 3)
+        self.assertIn(self.tag.pk, [t.pk for t in media.tags.all()])
+        # self.assertEqual(media.tags.get(), self.tag)
+        assert any([t.source for t in media.tags.all()])
 
         self.assertEqual(media.description, data["media_description"])
         self.assertEqual(media.title, data["media_title"])

@@ -14,7 +14,7 @@ import { IoIosPricetags } from "react-icons/io";
 import Modal from "../ui/modal";
 import { Formik, Form } from "formik";
 import { FieldWrapper, ErrorMessage } from "../ui/forms";
-
+import uuid from "uuid/v4";
 // this shamefully does not work since react-promise-modal does not use portals
 // it renders into it's own container which it appends to the document body
 // import { useDispatch } from "react-redux";
@@ -23,7 +23,8 @@ import { FieldWrapper, ErrorMessage } from "../ui/forms";
 const mapping = {
   countries: GoGlobe,
   languages: MdLanguage,
-  unesco: GoGitBranch
+  unesco: GoGitBranch,
+  skosmos: GoGitBranch
 };
 
 const icon_for_type = type => {
@@ -37,7 +38,7 @@ const fetchFancyTags = async (
   limit_types = [],
   grouped = false
 ) => {
-  const options = await fetchTags(query, collection);
+  let options = await fetchTags(query, collection);
   if (grouped) {
     const groupedOptions = groupBy(options, o => o.type);
     options = Object.entries(groupedOptions).map(([type, options]) => {
@@ -51,7 +52,7 @@ const fetchFancyTags = async (
 };
 
 const TagModal = props => {
-  const { show, onDismiss, name = "" } = props;
+  const { show, onDismiss, name = "", source = {} } = props;
   // const dispatch = useDispatch();
 
   const handleSubmit = async (values, actions) => {
@@ -143,10 +144,14 @@ const TagLabel = ({ type, name, label }) => {
   );
 };
 
-const MultiValueLabel = ({ data }) => <TagLabel {...data} />;
+const MultiValueLabel = ({ data }) => {
+  // console.log("rendering MVL", data);
+  return <TagLabel {...data} />;
+};
 const Option = props => {
   const { data, children } = props;
   const { crumbs = [] } = data;
+  // console.log("Option", props, data.__isNew__);
   return (
     <components.Option {...props}>
       {data.__isNew__ ? children : <TagLabel {...props.data} />}
@@ -170,15 +175,18 @@ class MultiTagField extends React.Component {
 
   handleSearch = async q => {
     this.setState({ isLoading: true });
-    let hav_options = [];
-    let skosmos_options = [];
-    console.log(`Searching for tags ${q}`);
-    if (q.length >= 3) {
-      hav_options = await fetchFancyTags(q, this.props.collection_id);
-      skosmos_options = await fetchSkosmosTags(q);
-    }
-    const options = [...skosmos_options, ...hav_options];
+    let options = await fetchFancyTags(q, this.props.collection_id);
     this.setState({ isLoading: false });
+    // options.forEach(o => {});
+    const prepOptions = o => {
+      const uid = uuid();
+      o = o.label ? o : { ...o, label: uid };
+      o = o.value ? o : { ...o, value: o.id ? o.id : uid };
+      return o;
+    };
+    options = options.map(prepOptions);
+    // console.warn(`Query for "${q}" returned ${options.length} options.`);
+    // console.table(options);
     return options;
   };
 
@@ -203,9 +211,15 @@ class MultiTagField extends React.Component {
   handleChange = values => {
     // values might be null, but we need an array
     values = values || [];
+    console.log("Setting values", values);
     this.setState({ values });
     this.props.onChange && this.props.onChange(values);
   };
+
+  // filterOption = (candidate, input) => {
+  //   console.log(candidate, input);
+  //   return false;
+  // };
 
   render() {
     return (
@@ -213,14 +227,17 @@ class MultiTagField extends React.Component {
         isMulti={true}
         cacheOptions={false}
         defaultOptions={false}
-        getOptionValue={o => o.id}
+        // submit the full object and let the server figure out what to do
+        // getOptionValue={o => o.id}
         loadOptions={this.handleSearch}
         isLoading={this.state.isLoading}
         onChange={this.handleChange}
         onCreateOption={this.handleCreate}
         value={this.props.value}
         components={customSelectComponents}
-        noOptionsMessage={({ inputValue }) => `No options ${inputValue}`}
+        noOptionsMessage={({ inputValue }) => `No options.`}
+        // hideSelectedOptions={false}
+        // filterOption={this.filterOption}
       />
     );
   }

@@ -1,6 +1,6 @@
 from pycountry import countries
 
-from . import BaseSource
+from . import BaseSource, TagSourceResult
 
 
 def get_country(ref):
@@ -9,11 +9,9 @@ def get_country(ref):
 
 class Source(BaseSource):
     def country_to_output(self, country):
-        return {
-            "name": country.name,
-            "source": self.source,
-            "source_ref": country.alpha_3,
-        }
+        return TagSourceResult(
+            name=country.name, source=self.source, source_ref=country.alpha_3
+        )
 
     def get_all(self):
         return map(self.country_to_output, countries)
@@ -22,4 +20,8 @@ class Source(BaseSource):
         return self.country_to_output(get_country(ref))
 
     def search(self, query):
-        return map(self.country_to_output, countries.search_fuzzy(query))
+        try:
+            results = countries.search_fuzzy(query)
+        except LookupError:
+            results = []
+        return map(self.country_to_output, results)

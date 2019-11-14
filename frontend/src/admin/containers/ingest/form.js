@@ -11,6 +11,8 @@ import classnames from "classnames";
 import ReactSelect, { components } from "react-select";
 import { Persist } from "formik-persist";
 import groupBy from "lodash/groupBy";
+import pickBy from "lodash/pickBy";
+import identity from "lodash/identity";
 import parseDateToRange from "../../utils/daterange";
 import { FieldWrapper as BField } from "../../ui/forms";
 import Button from "../../ui/components/buttons";
@@ -400,9 +402,10 @@ const Column = ({ children, className }) => (
 class IngestForm extends React.Component {
   submit = (data, actions) => {
     data = { ...data };
-    // Flatten where needed
-    data.media_tags = data.media_tags.map(t => t.value);
-    console.log("Submitting...", data);
+    console.log(data.media_tags);
+    // Remove falsy values from the tag object
+    data.media_tags = data.media_tags.map(t => pickBy(t, identity));
+
     this.props
       .onSubmit(data)
       .catch(errors => {

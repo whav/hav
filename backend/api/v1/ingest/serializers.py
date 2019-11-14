@@ -5,7 +5,6 @@ from psycopg2.extras import DateTimeTZRange
 from rest_framework import serializers
 from django.urls import reverse
 
-
 from api.v1.havBrowser.serializers import HAVMediaSerializer
 
 from apps.archive.operations.hash import generate_hash
@@ -20,7 +19,6 @@ from apps.media.models import (
     MediaType,
     MediaCreator,
 )
-from apps.tags.models import Tag
 from .fields import (
     HAVTargetField,
     IngestHyperlinkField,
@@ -30,6 +28,7 @@ from .fields import (
 from hav_utils.daterange import parse
 from ..havBrowser.serializers import HAVCollectionSerializer
 from ..misc_models.fields import CreatableTagField
+from ..misc_models.serializers import SimpleTagSerializer
 from .ingest_task import archive_and_create_webassets
 from .fields import resolveURLtoFilePath
 from ..permissions import has_collection_permission
@@ -122,11 +121,13 @@ class IngestSerializer(serializers.Serializer):
     media_type = serializers.PrimaryKeyRelatedField(queryset=MediaType.objects.all())
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
-    media_tags = CreatableTagField(
-        queryset=Tag.objects.all(), many=True, required=False
-    )
+    media_tags = SimpleTagSerializer(many=True, required=False)
 
     attachments = AttachmentSerializer(many=True, allow_empty=True)
+
+    @property
+    def collection(self):
+        return self.target_node.get_collection()
 
     @property
     def target_node(self):
@@ -169,7 +170,7 @@ class IngestSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context["user"]
         source = validated_data["source"]
-
+        collection = self.target_node.get_collection()
         start, end = parse(validated_data["date"])
         dt_range = DateTimeTZRange(lower=start, upper=end)
         # actually create the media object
@@ -190,7 +191,18 @@ class IngestSerializer(serializers.Serializer):
             MediaToCreator.objects.create(media=media, **media2creator)
 
         # set tags
-        media.tags.set(validated_data.get("media_tags", []))
+        #
+        tags_data = validated_data.get("media_tags", [])
+        tags = []
+        for td in tags_data:
+            tag_serializer = SimpleTagSerializer(
+                data=td, context={"collection": self.collection}
+            )
+            assert tag_serializer.is_valid()
+            tag = tag_serializer.save()
+            tags.append(tag)
+
+        media.tags.set(tags)
 
         archive_file = ArchiveFile.objects.create(
             source_id=source, created_by=user, media=media

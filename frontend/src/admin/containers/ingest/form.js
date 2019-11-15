@@ -12,6 +12,7 @@ import ReactSelect, { components } from "react-select";
 import { Persist } from "formik-persist";
 import groupBy from "lodash/groupBy";
 import pickBy from "lodash/pickBy";
+import pick from "lodash/pick";
 import identity from "lodash/identity";
 import parseDateToRange from "../../utils/daterange";
 import { FieldWrapper as BField } from "../../ui/forms";
@@ -399,12 +400,17 @@ const Column = ({ children, className }) => (
   <div className={classnames("column", className)}>{children}</div>
 );
 
+const clean_tag_data = t => {
+  t = pick(t, ["id", "name", "source", "source_ref"]);
+  t = pickBy(t, identity);
+  return t;
+};
+
 class IngestForm extends React.Component {
   submit = (data, actions) => {
     data = { ...data };
-    console.log(data.media_tags);
     // Remove falsy values from the tag object
-    data.media_tags = data.media_tags.map(t => pickBy(t, identity));
+    data.media_tags = data.media_tags.map(clean_tag_data);
 
     this.props
       .onSubmit(data)

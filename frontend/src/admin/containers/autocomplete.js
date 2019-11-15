@@ -6,7 +6,6 @@ import groupBy from "lodash/groupBy";
 import reactModal from "@prezly/react-promise-modal";
 // import reactModal from "../../../utils/promiseModal";
 import { fetchTags, createTag } from "../api/tags";
-import fetchSkosmosTags from "../api/skosmos";
 
 import { GoGlobe, GoGitBranch } from "react-icons/go";
 import { MdLanguage } from "react-icons/md";
@@ -28,8 +27,11 @@ const mapping = {
 };
 
 const icon_for_type = type => {
-  const icon = mapping[type];
-  return icon || IoIosPricetags;
+  if (!type) {
+    return IoIosPricetags;
+  }
+  const icon = mapping[type] || mapping[type.toLowerCase()] || IoIosPricetags;
+  return icon;
 };
 
 const fetchFancyTags = async (
@@ -132,9 +134,9 @@ const BreadCrumbs = ({ crumbs = [] }) => {
   );
 };
 
-const TagLabel = ({ type, name, label }) => {
+const TagLabel = ({ source, name, label }) => {
   name = name || label;
-  const Icon = icon_for_type(type);
+  const Icon = icon_for_type(source);
   return (
     <span key={name}>
       <Icon />
@@ -146,12 +148,13 @@ const TagLabel = ({ type, name, label }) => {
 
 const MultiValueLabel = ({ data }) => {
   // console.log("rendering MVL", data);
+  console.log(data);
   return <TagLabel {...data} />;
 };
 const Option = props => {
   const { data, children } = props;
   const { crumbs = [] } = data;
-  // console.log("Option", props, data.__isNew__);
+  console.log("Option", props);
   return (
     <components.Option {...props}>
       {data.__isNew__ ? children : <TagLabel {...props.data} />}
@@ -241,31 +244,4 @@ class MultiTagField extends React.Component {
   }
 }
 
-class SkosmosTagField extends React.Component {
-  state = {
-    isLoading: false
-  };
-  handleSearch = async query => {
-    this.setState({ isLoading: true });
-    const data = await fetchSkosmosTags(query);
-    this.setState({ isLoading: false });
-    return data;
-  };
-
-  render() {
-    return (
-      <AsyncSelect
-        isMulti={true}
-        cacheOptions={false}
-        defaultOptions={false}
-        isLoading={this.state.isLoading}
-        loadOptions={this.handleSearch}
-        onChange={this.props.onChange}
-        value={this.props.value}
-        components={customSelectComponents}
-      />
-    );
-  }
-}
-
-export { MultiTagField, SkosmosTagField };
+export { MultiTagField };

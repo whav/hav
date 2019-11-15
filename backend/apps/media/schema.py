@@ -5,6 +5,7 @@ from graphene_django.types import DjangoObjectType
 from .models import Media, MediaCreator, License
 from apps.sets.schema import NodeType
 from apps.sets.models import Node
+from apps.tags.schema import TagType
 
 from hav_utils.imaginary import generate_thumbnail_url, generate_srcset_urls
 
@@ -17,26 +18,24 @@ class MediaType(DjangoObjectType):
     type = graphene.Field(graphene.String)
 
     creation_timeframe = graphene.List(graphene.DateTime)
+    tags = graphene.List(TagType)
 
     def resolve_creation_timeframe(self, info):
         # print(self.creation_date)
-        return [
-            self.creation_date.lower,
-            self.creation_date.upper
-        ]
+        return [self.creation_date.lower, self.creation_date.upper]
 
     def resolve_srcset(self, info):
         if self.primary_file:
             webasset_images = filter(
-                lambda x: x.mime_type.startswith('image'),
-                self.primary_file.webasset_set.all()
+                lambda x: x.mime_type.startswith("image"),
+                self.primary_file.webasset_set.all(),
             )
             try:
                 webasset = list(webasset_images)[0]
             except IndexError:
                 pass
             else:
-                return [f'{src[1]} {src[0]}w' for src in generate_srcset_urls(webasset)]
+                return [f"{src[1]} {src[0]}w" for src in generate_srcset_urls(webasset)]
         return []
 
     def resolve_type(self, info):
@@ -44,11 +43,14 @@ class MediaType(DjangoObjectType):
             return self.primary_file.mime_type
         return None
 
+    def resolve_tags(self, info):
+        return self.tags.all()
+
     def resolve_thumbnail_url(self, info):
         if self.primary_file:
             webasset_images = filter(
-                lambda x: x.mime_type.startswith('image'),
-                self.primary_file.webasset_set.all()
+                lambda x: x.mime_type.startswith("image"),
+                self.primary_file.webasset_set.all(),
             )
             webasset_images = list(webasset_images)
             try:
@@ -57,7 +59,7 @@ class MediaType(DjangoObjectType):
                 return None
             else:
                 return generate_thumbnail_url(webasset)
-        return ''
+        return ""
 
     def resolve_ancestors(self, info):
         root = self.set.get_collection()
@@ -73,9 +75,7 @@ class MediaType(DjangoObjectType):
 
     class Meta:
         model = Media
-        exclude = [
-            'creation_date'
-        ]
+        exclude = ["creation_date"]
 
 
 class CreatorType(DjangoObjectType):
@@ -94,9 +94,9 @@ class Query(object):
     media_entries = graphene.List(MediaType, nodeID=graphene.String(required=True))
 
     def resolve_media(self, info, **kwargs):
-        id = kwargs.get('id')
-        return Media.objects.prefetch_related('files__webasset_set').get(pk=id)
+        id = kwargs.get("id")
+        return Media.objects.prefetch_related("files__webasset_set").get(pk=id)
 
     def resolve_media_entries(self, info, nodeID):
         node = Node.objects.get(pk=nodeID)
-        return Media.objects.prefetch_related('files__webasset_set').filter(set=node)
+        return Media.objects.prefetch_related("files__webasset_set").filter(set=node)

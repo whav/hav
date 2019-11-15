@@ -177,7 +177,9 @@ class MultiTagField extends React.Component {
     this.setState({ isLoading: true });
     let options = await fetchFancyTags(q, this.props.collection_id);
     this.setState({ isLoading: false });
-    // options.forEach(o => {});
+    // for some reason or the other react-select needs label and value
+    // and a clever combination of props for AsyncCreatable
+    // to actually work the way I want it to
     const prepOptions = o => {
       const uid = uuid();
       o = o.label ? o : { ...o, label: uid };
@@ -216,11 +218,6 @@ class MultiTagField extends React.Component {
     this.props.onChange && this.props.onChange(values);
   };
 
-  // filterOption = (candidate, input) => {
-  //   console.log(candidate, input);
-  //   return false;
-  // };
-
   render() {
     return (
       <AsyncCreatableSelect
@@ -236,6 +233,7 @@ class MultiTagField extends React.Component {
         value={this.props.value}
         components={customSelectComponents}
         noOptionsMessage={({ inputValue }) => `No options.`}
+        // these props break all kinds of stuff
         // hideSelectedOptions={false}
         // filterOption={this.filterOption}
       />

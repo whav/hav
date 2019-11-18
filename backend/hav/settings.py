@@ -14,6 +14,7 @@ import sys
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
 import environ
+from pathlib import Path
 from dj_database_url import parse as parse_db_url
 
 from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
@@ -166,14 +167,14 @@ REST_FRAMEWORK = {
     )
 }
 
-WEBPACK_BUILD_PATH = project_root("frontend/build/")
+WEBPACK_BUILD_PATH = project_root("frontend/admin/build/")
 
 
 WEBPACK_LOADER = {
     "DEFAULT": {
         "CACHE": not DEBUG,
         "BUNDLE_DIR_NAME": "/",
-        "STATS_FILE": project_root("frontend/build/webpack-stats.json"),
+        "STATS_FILE": Path(WEBPACK_BUILD_PATH) / "webpack-stats.json",
         "POLL_INTERVAL": 0.1,
         "TIMEOUT": None,
         "IGNORE": [".+\.hot-update.js", ".+\.map"],

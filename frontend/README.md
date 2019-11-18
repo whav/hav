@@ -1,5 +1,3 @@
-# HAV Frontend
+# HAV frontend projects
 
-The naming here might actually be confusing at the moment.
-The code in this folder actually represents the frontend gui of
-the admin/backend parts of the HAV.
+This folder, organised as yarn workspaces, holds the frontend parts of the HAV.

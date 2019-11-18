@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+div.two-column-layout {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.main {
+  padding: 2rem;
+  flex-grow: 1;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main main {
+  flex-grow: 1;
+}
+.main main.static-content {
+  max-width: 40rem;
+}
+
+footer {
+  text-align: right;
+}
+
+.image-loader {
+  width: 300px;
+  height: 300px;
+  margin: 2rem;
+  background-color: antiquewhite;
+  background-image: url('../assets/logos/hav.svg');
+  background-size: 30% auto;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+main.static-content {
+  max-width: 40rem;
+}
+
+main.static-content figure {
+  padding: 2rem 0;
+}
+
+main.static-content img {
+  width: 90%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+main.static-content figcaption {
+  text-align: center;
+}
+
+main.static-content p {
+  margin-bottom: 2rem;
+}
+
+main.static-content .leaflet-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  height: 300px;
+}

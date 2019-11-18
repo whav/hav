@@ -343,7 +343,8 @@ class TemplateForm extends React.Component {
         onSubmit={(values, actions) => {
           apply(values);
         }}
-        render={({ values }) => (
+      >
+        {({ values }) => (
           <Form className="box ingest-template-form">
             <Persist name={persistName} />
             <Columns>
@@ -390,7 +391,7 @@ class TemplateForm extends React.Component {
             </div>
           </Form>
         )}
-      />
+      </Formik>
     );
   }
 }
@@ -412,14 +413,12 @@ class IngestForm extends React.Component {
     // Remove falsy values from the tag object
     data.media_tags = data.media_tags.map(clean_tag_data);
 
-    this.props
-      .onSubmit(data)
-      .catch(errors => {
-        console.error("Error in IngestForm", errors);
-        // TODO: I think the error component can not deal with arrays of errors
-        actions.setErrors({ ...errors });
-      })
-      .finally(() => actions.setSubmitting(false));
+    this.props.onSubmit(data).catch(errors => {
+      console.error("Error in IngestForm", errors);
+      // TODO: I think the error component can not deal with arrays of errors
+      actions.setErrors({ ...errors });
+    });
+    // .finally(() => actions.setSubmitting(false));
   };
 
   render() {
@@ -436,7 +435,8 @@ class IngestForm extends React.Component {
         initialValues={initialValues}
         enableReinitialize={true}
         onSubmit={this.submit}
-        render={({ isSubmitting, errors, values, setSubmitting }) => {
+      >
+        {({ isSubmitting, errors, values, setSubmitting }) => {
           return (
             <Form className="ingest-form">
               {persistName && <Persist name={persistName} />}
@@ -555,7 +555,7 @@ class IngestForm extends React.Component {
             </Form>
           );
         }}
-      />
+      </Formik>
     );
   }
 }

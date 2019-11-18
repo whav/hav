@@ -208,9 +208,9 @@ class IngestQueue extends React.Component {
         ) : null}
         <FormSet>{forms}</FormSet>
         <hr />
-        {previouslyIngestedMediaEntries.map(m => (
-          <PreviouslyIngestedMedia key={m.name} media={m} />
-        ))}
+        {previouslyIngestedMediaEntries.map(m => {
+          return <PreviouslyIngestedMedia key={`media-${m.pk}`} media={m} />;
+        })}
       </div>
     );
   }

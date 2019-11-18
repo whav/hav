@@ -17,7 +17,7 @@ class Playground extends React.Component {
         <h1 className="title">Playground</h1>
 
         <h2 className="subtitle">Multi Tag Field</h2>
-        <p>This tag field retrieves managed tags from the hav database</p>
+        <p>This tag field retrieves Tags from the HAV database</p>
         <form onSubmit={this.submit}>
           <MultiTagField
             value={this.state.multiselect}

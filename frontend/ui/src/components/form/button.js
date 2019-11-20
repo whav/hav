@@ -1,8 +1,8 @@
 import React from "react";
 
-const Button = props => {
-  console.log("Rendering button...", props);
-  return <button>{props.title || "Button"}</button>;
-};
+import { Button } from "rebass";
 
-export default Button;
+export default props => {
+  console.log("Rendering button...", props);
+  return <Button>{props.title || "Button"}</Button>;
+};

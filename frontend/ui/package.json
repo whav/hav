@@ -1,0 +1,18 @@
+{
+  "name": "hav-shared-ui-components",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "playroom": "^0.10.1"
+  },
+  "scripts": {
+    "playroom:start": "playroom start",
+    "playroom:build": "playroom build"
+  }
+}

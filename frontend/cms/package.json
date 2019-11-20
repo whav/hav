@@ -1,9 +1,8 @@
 {
-  "name": "gatsby-starter-default",
+  "name": "hav-cms",
   "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
+  "description": "The CMS parts of the HAV",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
     "@mdx-js/mdx": "^1.0.20",
     "@mdx-js/react": "^1.0.20",
@@ -34,7 +33,8 @@
     "redux": "^4.0.1"
   },
   "keywords": [
-    "gatsby"
+    "gatsby",
+    "hav"
   ],
   "license": "MIT",
   "scripts": {

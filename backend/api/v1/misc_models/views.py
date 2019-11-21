@@ -10,6 +10,7 @@ from .serializers import (
     MediaCreatorSerializer,
     MediaLicenseSerializer,
     MediaCreatorRoleSerializer,
+    SimpleTagSerializer,
 )
 from apps.media.models import MediaCreator, License, MediaCreatorRole
 from apps.tags.models import Tag, search_tags
@@ -46,3 +47,16 @@ class TagAutocompleteView(IncomingBaseMixin, APIView):
             logger.info(f"Query for {query} yielded {len(results)} results")
             results = [r.__dict__ for r in results]
         return Response(results, status=200)
+
+    def post(self, request):
+        tag_serializer = SimpleTagSerializer(
+            data=request.data, context={"user": request.user}
+        )
+        tag_serializer.is_valid(raise_exception=True)
+        collection = tag_serializer.get_collection()
+        #
+        if has_collection_permission(request.user, collection):
+            tag = tag_serializer.save()
+            return Response(SimpleTagSerializer(instance=tag).data, status=201)
+        else:
+            return

@@ -68,6 +68,10 @@ class SimpleTagSerializer(serializers.Serializer):
     source = serializers.ChoiceField(choices=TAGGING_SOURCE_CHOICES, required=False)
     source_ref = serializers.CharField(required=False)
 
+    collection = serializers.PrimaryKeyRelatedField(
+        queryset=Collection.objects.all(), required=False
+    )
+
     def validate_id(self, value):
         try:
             Tag.objects.get(pk=value)
@@ -79,8 +83,17 @@ class SimpleTagSerializer(serializers.Serializer):
     def validate_source_link(self, source, source_ref):
         return source, source_ref
 
-    def validate(self, attrs):
+    def get_collection(self):
+        if self.validated_data and self.validated_data.get("collection"):
+            return self.validated_data["collection"]
 
+        collection = self.context.get("collection")
+        if collection is None:
+            raise serializers.ValidationError("No collection found passed.")
+
+        return collection
+
+    def validate(self, attrs):
         # deal with source tuple
         source_values = attrs.get("source"), attrs.get("source_ref")
         if all(source_values):
@@ -108,14 +121,8 @@ class SimpleTagSerializer(serializers.Serializer):
             ts = None
         return Tag(**data, source=ts)
 
-    def save(self, collection=None):
-        if collection is None:
-            collection = self.context.get("collection")
-        if not collection:
-            raise serializers.ValidationError(
-                "Need a collection either in context or passed as argument to save."
-            )
-
+    def save(self):
+        collection = self.get_collection()
         pk = self.validated_data.get("id")
         if pk:
             tag = Tag.objects.get(id=pk, collection=collection)

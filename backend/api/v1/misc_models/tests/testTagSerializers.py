@@ -35,19 +35,19 @@ class TagSerializerTests(APITestCase):
             "source": "skosmos",
             "source_ref": "http://skos.um.es/unescothes/C00366",
         }
-        ts = SimpleTagSerializer(data=data)
+        ts = SimpleTagSerializer(data=data, context={"collection": self.collection})
         assert ts.is_valid(raise_exception=True)
-        tag = ts.save(collection=self.collection)
+        tag = ts.save()
         self.assertIsInstance(tag, Tag)
         self.assertIsInstance(tag.source, TagSource)
         ts = SimpleTagSerializer(data=data)
         assert ts.is_valid(raise_exception=True)
 
     def testSimpleTagCreate(self):
-        data = {"name": "Bhutan"}
+        data = {"name": "Bhutan", "collection": self.collection.pk}
         ts = SimpleTagSerializer(data=data)
         assert ts.is_valid(raise_exception=True)
-        tag = ts.save(collection=self.collection)
+        tag = ts.save()
         self.assertIsInstance(tag, Tag)
         self.assertIsNone(tag.source)
 

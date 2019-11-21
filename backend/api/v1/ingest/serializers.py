@@ -180,7 +180,7 @@ class IngestSerializer(serializers.Serializer):
             title=validated_data.get("media_title", ""),
             description=validated_data.get("media_description", ""),
             set=self.target_node,
-            collection=self.target_node.get_collection(),
+            collection=collection,
             created_by=user,
             original_media_type=validated_data["media_type"],
             original_media_identifier=validated_data.get("media_identifier", ""),

@@ -17,8 +17,8 @@ const FileBrowserItem = ({ children }) => {
       style={{
         flexGrow: 1,
         flexShrink: 1,
-        minHeight: "20rem",
-        minWidth: "20rem"
+        height: "5rem",
+        width: "5rem"
       }}
     >
       {children}

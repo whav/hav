@@ -1,0 +1,12 @@
+.media-detail {
+  max-width: 80rem;
+}
+
+.media-detail img {
+  max-width: 100%;
+  height: auto;
+}
+
+.media-detail pre {
+  max-width: 100%;
+}

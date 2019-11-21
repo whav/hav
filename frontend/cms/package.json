@@ -1,0 +1,57 @@
+{
+  "name": "hav-cms",
+  "private": true,
+  "description": "The CMS parts of the HAV",
+  "version": "0.1.0",
+  "dependencies": {
+    "@mdx-js/mdx": "^1.0.20",
+    "@mdx-js/react": "^1.0.20",
+    "apollo-boost": "^0.4.2",
+    "classnames": "^2.2.6",
+    "gatsby": "^2.0.76",
+    "gatsby-image": "^2.1.4",
+    "gatsby-plugin-create-client-paths": "^2.0.5",
+    "gatsby-plugin-manifest": "^2.2.28",
+    "gatsby-plugin-mdx": "^1.0.5",
+    "gatsby-plugin-offline": "^3.0.21",
+    "gatsby-plugin-react-helmet": "^3.0.12",
+    "gatsby-plugin-sharp": "^2.2.39",
+    "gatsby-remark-images": "^3.1.31",
+    "gatsby-source-filesystem": "^2.0.39",
+    "gatsby-source-graphql": "^2.0.19",
+    "gatsby-transformer-sharp": "^2.3.5",
+    "isomorphic-fetch": "^2.2.1",
+    "leaflet": "^1.5.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8",
+    "react-apollo": "^3.1.3",
+    "react-dom": "^16.8",
+    "react-helmet": "^5.2.1",
+    "react-icons": "^3.7.0",
+    "react-leaflet": "^2.4.0",
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.1"
+  },
+  "keywords": [
+    "gatsby",
+    "hav"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop -p 8001",
+    "start": "npm run develop",
+    "format": "prettier --write \"src/**/*.js\"",
+    "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+  },
+  "bugs": {
+    "url": "https://github.com/gatsbyjs/gatsby/issues"
+  }
+}

@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 sudo: required
 
 language: python
@@ -8,7 +8,7 @@ install:
   - sudo pip install docker-compose
 
 env:
-  - DOCKER_COMPOSE_VERSION=1.23.2
+  - DOCKER_COMPOSE_VERSION=1.25.0
 
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then

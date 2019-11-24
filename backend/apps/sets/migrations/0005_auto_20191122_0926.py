@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('sets', '0004_node_tags'),
-    ]
+    dependencies = [("sets", "0004_node_tags")]
 
     operations = [
         migrations.AlterField(
-            model_name='node',
-            name='tags',
-            field=models.ManyToManyField(blank=True, to='tags.Tag'),
-        ),
+            model_name="node",
+            name="tags",
+            field=models.ManyToManyField(blank=True, to="tags.Tag"),
+        )
     ]

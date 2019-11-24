@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from ..permissions import IncomingBaseMixin, has_collection_permission
 import logging
+from django.http import HttpResponseForbidden
 
 
 from .serializers import (
@@ -54,9 +55,8 @@ class TagAutocompleteView(IncomingBaseMixin, APIView):
         )
         tag_serializer.is_valid(raise_exception=True)
         collection = tag_serializer.get_collection()
-        #
         if has_collection_permission(request.user, collection):
             tag = tag_serializer.save()
             return Response(SimpleTagSerializer(instance=tag).data, status=201)
         else:
-            return
+            return HttpResponseForbidden()

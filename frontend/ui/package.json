@@ -5,6 +5,8 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "lorem-ipsum": "^2.0.3",
+    "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-icons": "^3.8.0",
@@ -12,10 +14,20 @@
     "theme-ui": "^0.2.49"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@storybook/addon-actions": "^5.2.6",
+    "@storybook/addon-links": "^5.2.6",
+    "@storybook/addons": "^5.2.6",
+    "@storybook/react": "^5.2.6",
+    "babel-loader": "^8.0.6",
     "playroom": "^0.10.1"
   },
   "scripts": {
     "playroom:start": "playroom start",
-    "playroom:build": "playroom build"
+    "playroom:build": "playroom build",
+    "cosmos": "cosmos",
+    "cosmos:export": "cosmos-export",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   }
 }

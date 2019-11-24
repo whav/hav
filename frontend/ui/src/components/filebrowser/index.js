@@ -11,7 +11,6 @@ const Folder = ({ name = "Unnamed folder" }) => {
 };
 
 const FileBrowserItem = ({ children }) => {
-  console.log(children);
   return (
     <div
       style={{

@@ -3,7 +3,13 @@ import React from "react";
 import { ThemeProvider } from "theme-ui";
 import theme from "./theme";
 
-export default props => {
-  console.log(props);
-  return <ThemeProvider theme={theme}>{props.children}</ThemeProvider>;
+export default ({ children }) => {
+  return (
+    <ThemeProvider theme={theme}>
+      <React.Fragment>
+        <style>{`html,body { margin: 0; }`}</style>
+        {children}
+      </React.Fragment>
+    </ThemeProvider>
+  );
 };

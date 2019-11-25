@@ -1,5 +1,6 @@
 import React from "react";
 import { MultiTagField } from "../containers/autocomplete";
+import { Alert, Box, Button } from "hav-shared-ui-components";
 
 class Playground extends React.Component {
   state = {
@@ -25,8 +26,16 @@ class Playground extends React.Component {
           />
           <button className="btn">Submit</button>
         </form>
-        <hr />
         <pre>{JSON.stringify(this.state, null, 2)}</pre>
+
+        <hr />
+
+        <h2 className="subtitle">Shared UI Components</h2>
+        <Alert variant="primary">Test</Alert>
+        <Box>
+          <p>I am Box!</p>
+        </Box>
+        <Button>TestMe</Button>
       </div>
     );
   }

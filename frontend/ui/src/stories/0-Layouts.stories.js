@@ -5,18 +5,10 @@ import { Button } from "@storybook/react/demo";
 import Wrapper from "../layout/wrapper";
 import Main, { StickyHeaderMain } from "../layout/main";
 import LoremIpsum from "../dev/loremipsum";
+import { ExampleMenu as Nav } from "./2-MainMenu.stories";
 
 export default {
   title: "Layouts"
-};
-
-const Nav = () => {
-  return (
-    <ul>
-      <li>One</li>
-      <li>Two</li>
-    </ul>
-  );
 };
 
 const SBWrapper = ({ children }) => <Wrapper nav={<Nav />}>{children}</Wrapper>;

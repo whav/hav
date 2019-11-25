@@ -3,6 +3,8 @@
  */
 import React from "react";
 
+const pms = { px: [1], py: [1], mx: [1] };
+
 const Welcome = () => {
   return (
     <div className="hav-content">

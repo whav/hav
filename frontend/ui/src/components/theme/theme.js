@@ -6,13 +6,13 @@ export default {
     monospace: "Menlo, monospace"
   },
   colors: {
-    text: "#fff",
-    background: "#000",
+    text: "#000",
+    background: "#fff",
     primary: "#00b89c",
     sidebar: "#f8b20c"
   },
   sizes: {
-    sidebar: "30%"
+    sidebar: "20vw"
   },
   layout: {
     main_nav: {

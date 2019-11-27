@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React from "react";
 
 import Menu from "../components/navigation/main_menu";
 import Wrapper from "../layout/wrapper";

@@ -7,9 +7,8 @@ import reactModal from "@prezly/react-promise-modal";
 // import reactModal from "../../../utils/promiseModal";
 import { fetchTags, createTag } from "../api/tags";
 
-import { GoGlobe, GoGitBranch } from "react-icons/go";
-import { MdLanguage } from "react-icons/md";
-import { IoIosPricetags } from "react-icons/io";
+import { icons } from "hav-shared-ui-components";
+
 import Modal from "../ui/modal";
 import { Formik, Form } from "formik";
 import { FieldWrapper, ErrorMessage } from "../ui/forms";
@@ -20,17 +19,17 @@ import uuid from "uuid/v4";
 // import { add_notification } from "../../ducks/notifications";
 
 const mapping = {
-  countries: GoGlobe,
-  languages: MdLanguage,
-  unesco: GoGitBranch,
-  skosmos: GoGitBranch
+  countries: icons.GlobeIcon,
+  languages: icons.LanguageIcon,
+  unesco: icons.BranchIcon,
+  skosmos: icons.GoGitBranch
 };
 
 const icon_for_type = type => {
   if (!type) {
-    return IoIosPricetags;
+    return icons.TagsIcon;
   }
-  const icon = mapping[type] || mapping[type.toLowerCase()] || IoIosPricetags;
+  const icon = mapping[type] || mapping[type.toLowerCase()] || icons.TagsIcon;
   return icon;
 };
 

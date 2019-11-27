@@ -5,4 +5,7 @@ export { Alert, Box } from "./components";
 export { default as MainWrapper } from "./layout/wrapper";
 export { default as Main } from "./layout/main";
 export { default as LoremIpsum } from "./dev/loremipsum";
-export { default as ThemeProvider } from "./components/theme/provider";
+export { default as ThemeProvider } from "./theme/provider";
+
+import * as HAVIcons from "./icons";
+export { HAVIcons as icons };

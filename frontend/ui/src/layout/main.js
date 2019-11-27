@@ -1,7 +1,10 @@
 /** @jsx jsx */
 import { jsx } from "theme-ui";
 import PropTypes from "prop-types";
+import { Box as BaseBox } from "../components";
 import React from "react";
+
+const Box = props => <BaseBox px={3} {...props} />;
 
 const Main = ({
   header = null,
@@ -17,27 +20,31 @@ const Main = ({
       overflowY: "auto"
     }}
   >
-    <header
+    <Box
+      as="header"
+      px={3}
       sx={{
         variant: "layout.header"
       }}
     >
       {header}
-    </header>
-    <main
+    </Box>
+    <Box
+      as="main"
       sx={{
         variant: content_variant
       }}
     >
       {children}
-    </main>
-    <footer
+    </Box>
+    <Box
+      as="footer"
       sx={{
         variant: "layout.footer"
       }}
     >
       {footer}
-    </footer>
+    </Box>
   </div>
 );
 

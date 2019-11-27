@@ -13,7 +13,7 @@ export default {
 
 const SBWrapper = ({ children }) => <Wrapper nav={<Nav />}>{children}</Wrapper>;
 
-const DummyText = ({ paragraphs = 10 }) => (
+const DummyText = ({ paragraphs = 30 }) => (
   <LoremIpsum paragraphs={paragraphs} />
 );
 const Header = () => <h1>I am the header</h1>;
@@ -29,7 +29,7 @@ export const main = () => {
   );
 };
 
-export const stickyHeader = () => {
+export const stickyHeaderAndFooter = () => {
   return (
     <SBWrapper>
       <StickyHeaderMain header={<Header />} footer={<Footer />}>

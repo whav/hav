@@ -1,10 +1,15 @@
+/** @jsx jsx */
+import { jsx } from "theme-ui";
+
 import React from "react";
-import { FiFolder } from "react-icons/fi";
+import { FolderIcon } from "../../icons";
 
 const Folder = ({ name = "Unnamed folder" }) => {
   return (
-    <div>
-      <FiFolder />
+    <div
+      sx={{ textAlign: "center", "& > svg": { height: "4rem", width: "4rem" } }}
+    >
+      <FolderIcon />
       <p>{name}</p>
     </div>
   );
@@ -13,11 +18,12 @@ const Folder = ({ name = "Unnamed folder" }) => {
 const FileBrowserItem = ({ children }) => {
   return (
     <div
-      style={{
-        flexGrow: 1,
-        flexShrink: 1,
-        height: "5rem",
-        width: "5rem"
+      sx={{
+        flexGrow: 0,
+        flexShrink: 0,
+        justifyContent: "flex-start",
+        width: "5rem",
+        px: ".5rem"
       }}
     >
       {children}
@@ -25,10 +31,11 @@ const FileBrowserItem = ({ children }) => {
   );
 };
 
+const SelectableFileBrowserItem = ({ selected = false, ...props }) => {};
+
 const FileBrowser = ({ children }) => {
-  console.log(children);
   return (
-    <div style={{ display: "flex" }}>
+    <div sx={{ display: "flex", flexWrap: "wrap" }}>
       {children.map((child, index) => (
         <FileBrowserItem key={index}>{child}</FileBrowserItem>
       ))}

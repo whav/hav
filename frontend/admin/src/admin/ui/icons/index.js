@@ -1,6 +1,6 @@
 import React from "react";
 
-import {
+export {
   MdCheckBoxOutlineBlank as CheckboxBlankIcon,
   MdCheckBox as CheckboxCheckedIcon,
   MdAddBox as AddIcon,
@@ -10,7 +10,7 @@ import {
   MdFileUpload as UploadIcon
 } from "react-icons/md";
 
-import {
+export {
   GoHome as HomeIcon,
   GoFileDirectory as DirectoryIcon,
   GoCheck as SelectFileCheckboxIcon,
@@ -19,7 +19,7 @@ import {
   GoThreeBars as BurgerIcon
 } from "react-icons/go";
 
-import {
+export {
   FaFileImage as ImageFallbackIcon,
   FaFileVideo as VideoFallbackIcon,
   FaFileAudio as AudioFallbackIcon,
@@ -30,28 +30,3 @@ import {
   FaCheck as CheckIcon,
   FaQuestion as QuestionMarkIcon
 } from "react-icons/fa";
-
-export {
-  CheckboxBlankIcon,
-  CheckboxCheckedIcon,
-  AddIcon,
-  GalleryIcon,
-  ListIcon,
-  UploadIcon,
-  DirectoryIcon,
-  GenericFallbackIcon,
-  SelectFileCheckboxIcon,
-  ImageFallbackIcon,
-  VideoFallbackIcon,
-  AudioFallbackIcon,
-  HourglassIcon,
-  HomeIcon,
-  ArchiveIcon,
-  DatabaseIcon,
-  IngestPackageIcon,
-  SpinnerIcon,
-  CheckIcon,
-  QuestionMarkIcon,
-  BurgerIcon,
-  EditIcon
-};

@@ -1,7 +1,9 @@
 {
   "name": "hav-shared-ui-components",
   "version": "1.0.0",
+  "source": "src/index.js",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "license": "MIT",
   "private": true,
   "dependencies": {
@@ -23,7 +25,9 @@
     "@storybook/addon-links": "^5.2.6",
     "@storybook/addons": "^5.2.6",
     "@storybook/react": "^5.2.6",
+    "@theme-ui/presets": "^0.2.44",
     "babel-loader": "^8.0.6",
+    "bulma": "^0.8.0",
     "playroom": "^0.10.1"
   },
   "scripts": {

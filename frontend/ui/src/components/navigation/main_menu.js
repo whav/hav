@@ -29,7 +29,7 @@ const MainMenu = ({ children }) => {
 
 const MenuGroup = ({ label, children }) => {
   return (
-    <li>
+    <React.Fragment>
       {label}
       <ul
         sx={{
@@ -41,7 +41,7 @@ const MenuGroup = ({ label, children }) => {
           <li key={index}>{child}</li>
         ))}
       </ul>
-    </li>
+    </React.Fragment>
   );
 };
 

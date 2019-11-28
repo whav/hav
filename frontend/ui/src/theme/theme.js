@@ -1,10 +1,11 @@
 import { roboto } from "@theme-ui/presets";
 
 export default {
+  breakpoints: ["40em", "52em", "64em"],
   fonts: {
     ...roboto.fonts,
     body: '"Noto Sans", system-ui, sans-serif',
-    heading: '"Noto Serif", system-ui, sans-serif'
+    heading: '"Noto Serif", system-ui, serif'
   },
   colors: {
     ...roboto.colors,

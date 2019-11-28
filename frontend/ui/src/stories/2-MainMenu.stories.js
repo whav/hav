@@ -38,7 +38,9 @@ export const ExampleMenu = () => (
   <Menu.MainMenu>
     <Menu.MenuGroup label="Menu Items">
       {menu_items.map(item => (
-        <a href={`#${item}`}>{item}</a>
+        <a key={item} href={`#${item}`}>
+          {item}
+        </a>
       ))}
     </Menu.MenuGroup>
   </Menu.MainMenu>

@@ -1,10 +1,18 @@
 FROM node:12 as build-stage
 
 WORKDIR /code/
-COPY ./frontend/admin/package.json ./frontend/yarn.lock ./
+# Link up the package json files
+COPY ./frontend/package.json ./frontend/yarn.lock ./
+COPY ./frontend/admin/package.json ./admin/
+COPY ./frontend/ui/package.json ./ui/
+COPY ./frontend/cms/package.json ./cms/
+# install and build the packages
 RUN yarn install --production=false
-RUN yarn list && ls -lah ./node_modules/.bin/
-COPY ./frontend/admin ./
+COPY ./frontend/admin ./admin/
+COPY ./frontend/ui ./ui/
+WORKDIR ./ui/
+RUN yarn build
+WORKDIR ../admin/
 RUN yarn build
 
 FROM python:3.7.1-stretch
@@ -33,7 +41,7 @@ RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/arch
 RUN pip install -U pipenv
 
 WORKDIR /hav/frontend
-COPY --from=build-stage /code/build ./admin/build
+COPY --from=build-stage /code/admin/build ./admin/build
 
 WORKDIR /hav/backend
 COPY backend/Pipfile backend/Pipfile.lock ./

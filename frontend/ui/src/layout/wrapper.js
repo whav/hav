@@ -1,13 +1,15 @@
 /** @jsx jsx */
 import { jsx } from "theme-ui";
 import PropTypes from "prop-types";
-import React from "react";
+// import React from "react";
+// import HavLogo from "../images/hav.png";
+// import { Image } from "../components";
 
 const Wrapper = props => (
   <div
     sx={{
       display: "flex",
-      flexWrap: "wrap",
+      flexDirection: ["column", "row"],
       height: "100vh",
       overflow: "hidden",
       variant: "layout.root"
@@ -20,6 +22,12 @@ const Wrapper = props => (
         variant: "layout.main_nav"
       }}
     >
+      {/* <Image
+        src={HavLogo}
+        px={[1, 4]}
+        py={[1, 4]}
+        sx={{ maxWidth: [100, 300] }}
+      /> */}
       {props.nav}
     </aside>
     <main

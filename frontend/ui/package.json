@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "source": "src/index.js",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
   "license": "MIT",
   "private": true,
   "dependencies": {
@@ -28,6 +27,7 @@
     "@theme-ui/presets": "^0.2.44",
     "babel-loader": "^8.0.6",
     "bulma": "^0.8.0",
+    "microbundle": "^0.12.0-next.6",
     "playroom": "^0.10.1"
   },
   "scripts": {
@@ -35,7 +35,7 @@
     "playroom:build": "playroom build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "build": "babel ./src --out-dir dist",
-    "watch": "babel ./src --out-dir dist -w"
+    "build": "microbundle --no-compress --jsx React.createElement",
+    "watch": "microbundle --watch --no-compress --jsx React.createElement"
   }
 }

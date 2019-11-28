@@ -4,8 +4,5 @@
     "admin",
     "cms",
     "ui"
-  ],
-  "devDependencies": {
-    "microbundle": "^0.11.0"
-  }
+  ]
 }

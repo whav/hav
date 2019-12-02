@@ -1,8 +1,8 @@
 {
-  "name": "hav-shared-ui-components",
+  "name": "hav-ui",
   "version": "1.0.0",
   "source": "src/index.js",
-  "main": "dist/index.js",
+  "module": "dist/",
   "license": "MIT",
   "private": true,
   "dependencies": {

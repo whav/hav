@@ -1,6 +1,9 @@
 import React from "react";
 import { MultiTagField } from "../containers/autocomplete";
-import { Alert, Box, Button } from "hav-shared-ui-components";
+import { Button } from "hav-ui";
+import { H1, H2 } from "hav-ui/components";
+import { Alert, Box } from "@theme-ui/components";
+import { from } from "zen-observable";
 
 class Playground extends React.Component {
   state = {
@@ -30,8 +33,10 @@ class Playground extends React.Component {
 
         <hr />
 
-        <h2 className="subtitle">Shared UI Components</h2>
+        <H1>Shared UI Components</H1>
         <Alert variant="primary">Test</Alert>
+
+        <H2>Theme UI Components</H2>
         <Box>
           <p>I am Box!</p>
         </Box>

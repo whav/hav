@@ -7,7 +7,7 @@ import reactModal from "@prezly/react-promise-modal";
 // import reactModal from "../../../utils/promiseModal";
 import { fetchTags, createTag } from "../api/tags";
 
-import { icons } from "hav-shared-ui-components";
+import { icons } from "hav-ui";
 
 import Modal from "../ui/modal";
 import { Formik, Form } from "formik";

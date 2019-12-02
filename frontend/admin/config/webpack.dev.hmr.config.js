@@ -18,7 +18,10 @@ module.exports = opts => {
     plugins: [
       ...config.plugins,
       new webpack.HotModuleReplacementPlugin(),
-      new BundleAnalyzerPlugin()
+      new BundleAnalyzerPlugin({
+        openAnalyzer: false,
+        analyzerMode: "disabled"
+      })
     ],
     output: {
       ...config.output,

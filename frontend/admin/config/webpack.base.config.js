@@ -34,10 +34,12 @@ module.exports = opts => {
       path: output_path,
       filename: "[name]-[hash].js"
     },
-    plugins,
     resolve: {
-      extensions: [".mjs", ".js", ".jsx", ".json"]
+      alias: {
+        "hav-ui": path.join(PROJECT_ROOT, "../ui/src")
+      }
     },
+    plugins,
     module: {
       rules: [
         {
@@ -63,7 +65,10 @@ module.exports = opts => {
         {
           test: /\.jsx?$/,
           exclude: /(node_modules|bower_components)/,
-          loader: "babel-loader"
+          loader: "babel-loader",
+          options: {
+            rootMode: "upward"
+          }
         }
       ]
     }

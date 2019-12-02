@@ -1,4 +1,5 @@
-var proxy = require('http-proxy-middleware');
+const path = require('path');
+const proxy = require('http-proxy-middleware');
 
 let HAV_URL = process.env.HAV_URL || 'https://hav.aussereurop.univie.ac.at/';
 if (HAV_URL.endsWith('/')) {

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "theme-ui";
 import PropTypes from "prop-types";
-import { Box as BaseBox } from "../components";
+import { Box as BaseBox } from "@theme-ui/components";
 import React from "react";
 
 const Box = props => <BaseBox px={3} {...props} />;

@@ -13,7 +13,7 @@ import { LoadingPage } from "./ui/loading";
 import ErrorBoundary from "./ui/errors";
 import Notifications from "./containers/notifications";
 
-import { ThemeProvider } from "hav-shared-ui-components";
+import { ThemeProvider } from "hav-ui";
 
 const logo = require("../assets/logo.png");
 

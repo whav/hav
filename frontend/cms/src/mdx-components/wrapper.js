@@ -3,17 +3,8 @@
 import React, { Component } from 'react';
 import { graphql } from 'gatsby';
 
-import Media from './components/media';
-import HAVMap from './components/map';
-
 import { MDXRenderer } from 'gatsby-plugin-mdx';
-import { MDXProvider } from '@mdx-js/react';
 import Layout from './layout';
-
-const Components = {
-  Media,
-  HAVMap,
-};
 
 export default class MDXRuntime extends Component {
   render() {
@@ -21,9 +12,7 @@ export default class MDXRuntime extends Component {
     const { collection_slug, collection } = props.pageContext;
     return (
       <Layout active_collection={collection_slug} collection={collection}>
-        <MDXProvider components={Components}>
-          <MDXRenderer {...props}>{data.mdx.body}</MDXRenderer>
-        </MDXProvider>
+        <MDXRenderer {...props}>{data.mdx.body}</MDXRenderer>
       </Layout>
     );
   }

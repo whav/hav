@@ -7,9 +7,11 @@ import React from "react";
 import { ThemeProvider } from "theme-ui";
 import defaultTheme from "./theme";
 
-export default ({ theme = defaultTheme, children }) => {
+import * as allComponents from "../components";
+
+export default ({ theme = defaultTheme, children, components = null }) => {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} components={components || allComponents}>
       <Global
         styles={css`
           @import url("https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Serif&display=swap");

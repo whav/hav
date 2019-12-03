@@ -1,8 +1,9 @@
 FROM node:12 as build-stage
 
 WORKDIR /code/
-# Link up the package json files
-COPY ./frontend/package.json ./frontend/yarn.lock ./
+
+# Link up the required build files
+COPY ./frontend/package.json ./frontend/yarn.lock ./frontend/babel.config.json ./
 COPY ./frontend/admin/package.json ./admin/
 COPY ./frontend/ui/package.json ./ui/
 COPY ./frontend/cms/package.json ./cms/

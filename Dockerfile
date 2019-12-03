@@ -11,9 +11,7 @@ COPY ./frontend/cms/package.json ./cms/
 RUN yarn install --production=false
 COPY ./frontend/admin ./admin/
 COPY ./frontend/ui ./ui/
-WORKDIR ./ui/
-RUN yarn build
-WORKDIR ../admin/
+WORKDIR ./admin/
 RUN yarn build
 
 FROM python:3.7.1-stretch

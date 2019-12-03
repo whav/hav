@@ -1,8 +1,5 @@
-let path = require("path");
-let webpack = require("webpack");
-
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 let baseConfig = require("./webpack.base.config");
-let WebpackCleanupPlugin = require("webpack-cleanup-plugin");
 
 module.exports = opts => {
   const { CDN_PATH, PROJECT_ROOT } = opts,
@@ -17,12 +14,6 @@ module.exports = opts => {
       // set CDN_PATH to your cdn static file directory
       publicPath: CDN_PATH || "/static/wp/"
     },
-    plugins: [
-      ...config.plugins,
-      // this cleans up the build directory
-      new WebpackCleanupPlugin({
-        exclude: ["webpack-stats.json"]
-      })
-    ]
+    plugins: [new CleanWebpackPlugin(), ...config.plugins]
   };
 };

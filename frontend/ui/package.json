@@ -34,8 +34,6 @@
     "playroom:start": "playroom start",
     "playroom:build": "playroom build",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "build": "microbundle --no-compress --jsx React.createElement",
-    "watch": "microbundle --watch --no-compress --jsx React.createElement"
+    "build-storybook": "build-storybook"
   }
 }

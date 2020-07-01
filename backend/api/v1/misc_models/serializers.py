@@ -2,15 +2,14 @@ from rest_framework import serializers
 from apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
 from apps.tags.models import Tag, TagSource
 from apps.hav_collections.models import Collection
-from ..permissions import has_collection_permission
 from apps.tags.sources import TAGGING_SOURCE_CHOICES
-from apps.tags.models import search_tags
 
 
 class MediaCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaCreator
-        fields = ["id", "name"]
+        fields = ["id", "first_name", "last_name", "display_name",
+                  "name", "email"]
 
 
 class MediaCreatorRoleSerializer(serializers.ModelSerializer):

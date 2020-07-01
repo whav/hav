@@ -20,6 +20,7 @@ upload_source = UploadSource(settings.MEDIA_ROOT, source_id='upload')
 
 app_name = 'api'
 
+
 @api_view(['GET'])
 def start(request):
 
@@ -54,6 +55,7 @@ def start(request):
         }
     )
 
+
 source_patterns = [
     url(r'^incoming/', include(incoming_fss_source.urls)),
     url(r'^whav/', include(whav_source.urls)),
@@ -67,6 +69,6 @@ urlpatterns = [
     url(r'^hav/', include(
         (hav_urls('hav'), app_name),
         namespace='hav_browser')
-    ),
+        ),
     url(r'^models/', include((model_url_patterns, 'models')))
 ]

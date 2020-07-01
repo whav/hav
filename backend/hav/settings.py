@@ -17,8 +17,6 @@ import environ
 from pathlib import Path
 from dj_database_url import parse as parse_db_url
 
-from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
-
 # this is needed to let daphne install the twisted reactor
 import daphne.server  # noqa
 
@@ -33,6 +31,7 @@ django_root = environ.Path(__file__) - 2
 env = environ.Env(
     DEBUG=(bool, False),
     DJANGO_SECRET_KEY=str,
+    DRF_AUTH_TOKEN=(str, ""),
     ALLOWED_HOSTS=(list, ["*"]),
     SENTRY_DSN=(str, ""),
     LOGLEVEL=(str, "debug"),
@@ -53,6 +52,8 @@ DEBUG = env("DEBUG", False)
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+
+DRF_AUTH_TOKEN = env("DRF_AUTH_TOKEN")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -333,8 +334,9 @@ TAGGING_SOURCES = {
     "countries": {"source": "apps.tags.sources.iso3166.Source"},
 }
 
-
 # TEST Setup
 if "test" in sys.argv:
     for key in RQ_QUEUES:
         RQ_QUEUES[key].update({"ASYNC": False, "DB": 5})
+
+    FIXTURE_DIRS = (django_root("fixtures"),)

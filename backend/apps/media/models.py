@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import DateTimeRangeField, ArrayField
+from django.contrib.postgres.fields import DateTimeRangeField
 from django.conf import settings
 from django.utils.functional import cached_property
 from model_utils.models import TimeStampedModel
@@ -26,7 +26,10 @@ class MediaType(models.Model):
 
 class MediaCreator(TimeStampedModel):
 
-    name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100)
+    display_name = models.CharField(max_length=200, blank=True)
+    email = models.EmailField(blank=True)
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -44,6 +47,12 @@ class MediaCreator(TimeStampedModel):
         related_name="+",
         related_query_name="+",
     )
+
+    @property
+    def name(self):
+        return "{0}{1}".format(
+            self.last_name, ", {0}".format(self.first_name) if self.first_name else ""
+        )
 
     def __str__(self):
 

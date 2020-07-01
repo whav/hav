@@ -1,7 +1,6 @@
-from django.core.management.base import BaseCommand, CommandError
-from apps.media.models import Media, License, MediaCreator
+from django.core.management.base import BaseCommand
+from apps.media.models import Media, License, MediaCreator, MediaType
 from apps.hav_collections.models import Collection
-from hav_utils.generate_image import generate_image
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -11,6 +10,8 @@ import random
 users = list(User.objects.all())
 licenses = list(License.objects.all())
 creators = MediaCreator.objects.all()
+media_types = MediaType.objects.all()
+
 
 class Command(BaseCommand):
     help = 'Generates images and adds them to collections'
@@ -31,6 +32,7 @@ class Command(BaseCommand):
                 Media.objects.create_media(
                     creators=random.choices(creators, k=1),
                     license=random.choice(licenses),
+                    original_media_type=random.choice(media_types),
                     creation_date=(
                         timezone.now(),
                         None
@@ -39,5 +41,3 @@ class Command(BaseCommand):
                     collection=collection,
                     created_by=random.choice(users)
                 )
-
-

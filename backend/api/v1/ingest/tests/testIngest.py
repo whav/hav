@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITransactionTestCase
 import random
 from apps.media.models import License, MediaCreator, MediaType, MediaCreatorRole, Media
 from apps.sets.models import Node
@@ -34,7 +34,7 @@ class IngestTest(APITransactionTestCase):
         self.root = Node.add_root(name="testroot")
         self.target = self.root.add_child(name="testchild")
         self.user = User.objects.create_superuser("tester", "test@example.com", uuid4())
-        self.creator = MediaCreator.objects.create(name="Tester Testeroo")
+        self.creator = MediaCreator.objects.create(first_name="Tester", last_name="Testeroo")
         self.role = MediaCreatorRole.objects.create(name="testrole")
         self.license = License.objects.create(short_name="WTFPL")
 

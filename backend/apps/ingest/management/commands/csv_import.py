@@ -126,13 +126,15 @@ class Command(BaseCommand):
                 ingest_url = reverse("api:v1:ingest:ingest_queue_ingest",
                                      kwargs={"pk": str(target_q.pk)})
 
+            print(f"Source file: {rel_file_path}")
             print(f"Target node: {target_file_node}")
             resp = client.post(base_url + str(ingest_url), json=media_data, headers=headers)
+            print(resp.content)
+            print(resp)
+            print("===" * 10)
             line['csv_import_status'] = resp.status_code
             line['csv_import_mediapk'] = resp.json()['pk']
             tracklog.append(line)
-            print(resp)
-            print("===" * 10)
 
         logfile = Path(settings.INGEST_LOG_DIR).joinpath(os.path.basename(csv_file.name)
                                                          + "_" + str(timestamp)

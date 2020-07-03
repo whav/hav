@@ -59,4 +59,4 @@ dist/*
 !dist/README.*
 
 # dont' track local bash/ipyhton history
-.localhistory/.*
+.localhistory/*

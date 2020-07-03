@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 from apps.hav_collections.models import Collection
-from .sources import TAG_LABEL_TO_SOURCE, TAGGING_SOURCE_CHOICES, search_tag_sources
+from .sources import TAG_LABEL_TO_SOURCE, search_tag_sources
 from .fields import TagSourceChoiceField
 
 
@@ -12,7 +12,7 @@ class TagSource(models.Model):
     source_ref = models.CharField(max_length=50, db_index=True)
 
     def __str__(self):
-        return f"{self.name} ({self.source})"
+        return f"{self.source} ({self.source_ref})"
 
     def resolve(self):
         source = TAG_LABEL_TO_SOURCE[self.source]

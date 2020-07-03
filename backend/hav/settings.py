@@ -280,6 +280,8 @@ HAV_ARCHIVE_PATH = project_root(env("HAV_ARCHIVE_PATH", default="dist/archive"))
 
 WHAV_ARCHIVE_PATH = project_root(env("WHAV_ARCHIVE_PATH", default="dist/whav"))
 
+INGEST_LOG_DIR = project_root(env("INGEST_LOG_DIR", default="dist/ingestlog"))
+
 INGESTION_SOURCES = {
     "whav": {"engine": "sources.whav.WHAVSource", "db": "whav"},
     "incoming": {"engine": "sources.filesystem.FSSource", "root": INCOMING_FILES_ROOT},

@@ -85,7 +85,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         timestamp = int(datetime.now().timestamp())
         base_url = options['api_base_url']
-        print(base_url)
         user = User.objects.get(username=options['ingest_user'])
         # set up client and auth headers
         client = RequestsClient()
@@ -115,7 +114,6 @@ class Command(BaseCommand):
                 )
 
             source_id = base_url + '/api/v1/sources/incoming/' + str(encodePath(rel_file_path)) + '=/'
-            print(source_id)
             media_data = media_data_from_csv(source_id, line, collection)
             target_file_node = self.get_or_create_subnodes_from_path(rel_file_path,
                                                                      target_parent_node)
@@ -127,7 +125,6 @@ class Command(BaseCommand):
                 )
                 ingest_url = reverse("api:v1:ingest:ingest_queue_ingest",
                                      kwargs={"pk": str(target_q.pk)})
-                print(ingest_url)
 
             print(f"Target node: {target_file_node}")
             resp = client.post(base_url + str(ingest_url), json=media_data, headers=headers)
@@ -137,14 +134,16 @@ class Command(BaseCommand):
             print(resp)
             print("===" * 10)
 
-        with open(os.path.basename(csv_file.name) + "_"
-                    + str(timestamp) + "_importtracklog.csv", 'w') as of:
+        logfile = Path(settings.INGEST_LOG_DIR).joinpath(os.path.basename(csv_file.name)
+                                                         + "_" + str(timestamp)
+                                                         + "_importtracklog.csv")
+
+        with open(logfile, 'w') as of:
             fieldnames.append('csv_import_status')
             fieldnames.append('csv_import_mediapk')
             csvwriter = csv.DictWriter(of, fieldnames)
             csvwriter.writeheader()
             for row in tracklog:
-                print(type(row), row)
                 csvwriter.writerow(row)
 
     @staticmethod

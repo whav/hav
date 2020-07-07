@@ -13,11 +13,9 @@ from apps.sets.models import Node
 from apps.archive.models import AttachmentFile, ArchiveFile, FileCreator
 from apps.media.models import (
     MediaToCreator,
-    MediaCreatorRole,
     Media,
     License,
     MediaType,
-    MediaCreator,
 )
 from .fields import (
     HAVTargetField,
@@ -27,7 +25,6 @@ from .fields import (
 )
 from hav_utils.daterange import parse
 from ..havBrowser.serializers import HAVCollectionSerializer
-from ..misc_models.fields import CreatableTagField
 from ..misc_models.serializers import SimpleTagSerializer
 from .ingest_task import archive_and_create_webassets
 from .fields import resolveURLtoFilePath
@@ -82,7 +79,7 @@ def validate_source(url):
         if len(media_entries):
             error_msg += f" Check media {', '.join(media_entries)}."
         else:
-            error_msg += f" No media entry related to this file found."
+            error_msg += " No media entry related to this file found."
         raise serializers.ValidationError(error_msg)
 
     except ArchiveFile.DoesNotExist:
@@ -113,6 +110,9 @@ class IngestSerializer(serializers.Serializer):
     )
 
     date = serializers.CharField()
+    embargo_end_date = serializers.DateField(allow_null=True,
+                                             required=False)
+    is_private = serializers.BooleanField(required=False)
 
     creators = MediaToCreatorSerializer(many=True, allow_empty=False)
 
@@ -122,6 +122,13 @@ class IngestSerializer(serializers.Serializer):
     media_description = serializers.CharField(allow_blank=True, required=False)
     media_identifier = serializers.CharField(allow_blank=True, required=False)
     media_tags = SimpleTagSerializer(many=True, required=False)
+
+    media_lat = serializers.DecimalField(max_digits=9, decimal_places=6,
+                                         min_value=-90, max_value=90,
+                                         required=False)
+    media_lon = serializers.DecimalField(max_digits=9, decimal_places=6,
+                                         min_value=-180, max_value=180,
+                                         required=False)
 
     attachments = AttachmentSerializer(many=True, allow_empty=True)
 
@@ -184,6 +191,10 @@ class IngestSerializer(serializers.Serializer):
             created_by=user,
             original_media_type=validated_data["media_type"],
             original_media_identifier=validated_data.get("media_identifier", ""),
+            embargo_end_date=validated_data.get("embargo_end_date", ""),
+            is_private=validated_data.get("is_private", False),
+            coords_lat=validated_data.get("media_lat", None),
+            coords_lon=validated_data.get("media_lon", None)
         )
 
         # save m2m

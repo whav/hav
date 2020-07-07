@@ -76,7 +76,7 @@ def media_data_from_csv_maker():
     cd_country = "HAV:ContentDescription:Country"
     cd_provincestate = "HAV:ContentDescription:Province-State"
     cd_city = "HAV:ContentDescription:City"
-    cd_author = "HAV:ContentDescription:Author"
+    cd_author = "HAV:Description:Author"
     # new stuff
     md_embargoend = "HAV:MediaDescription:EmbargoEndDate"
     md_isprivate = "HAV:MediaDescription:IsPrivate"
@@ -88,7 +88,7 @@ def media_data_from_csv_maker():
         extratags = [("country", csv_line_dict[cd_country]),
                      ("province/state", csv_line_dict[cd_provincestate]),
                      ("city", csv_line_dict[cd_city]),
-                     ("desctiption_author", csv_line_dict[cd_author])
+                     ("description_author", csv_line_dict[cd_author])
                      ]
         tags.extend(f"{e[0]}:{e[1]}" for e in extratags if e[1])
 

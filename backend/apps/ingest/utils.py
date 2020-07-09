@@ -60,6 +60,18 @@ def get_or_create_node(nodename, parentnode):
         raise MultipleObjectsReturned(f"found multiple target nodes {matches} for parent: {parentnode}")
 
 
+def get_or_create_subnodes_from_path(relative_path, target_node):
+    ''' take string containing a relative path and a targed parent node;
+    get/create subnodes for each path segment and return the last node
+    '''
+    for path_segment in os.path.dirname(os.path.normpath(relative_path)).split(os.sep):
+        new_node, created = get_or_create_node(path_segment, target_node)
+        if created:
+            print(f"Node {new_node} has been created in parent-node {target_node}")
+        target_node = new_node
+    return target_node
+
+
 def media_data_from_csv_maker():
     # MediaDescription Fieldnames from CSV
     md_origmdate = "HAV:MediaDescription:OriginalMediaDate"
@@ -81,17 +93,22 @@ def media_data_from_csv_maker():
     md_embargoend = "HAV:MediaDescription:EmbargoEndDate"
     md_isprivate = "HAV:MediaDescription:IsPrivate"
     cd_gpsdata = "HAV:ContentDescription:GPSData"
+    md_rotate = "HAV:MediaDescription:Rotate"
+    md_maxres = "HAV:MediaDescription:MaxResolution"
 
     def media_data_from_csv(source_id, csv_line_dict, collection):
         # throw all extra fields into tags for the time being
-        tags = csv_line_dict[cd_tags].split(", ")
-        extratags = [("country", csv_line_dict[cd_country]),
-                     ("province/state", csv_line_dict[cd_provincestate]),
-                     ("city", csv_line_dict[cd_city]),
-                     ("description_author", csv_line_dict[cd_author])
+        tags = csv_line_dict.get(cd_tags, []).split(", ")
+        extratags = [("country", csv_line_dict.get(cd_country)),
+                     ("province/state", csv_line_dict.get(cd_provincestate)),
+                     ("city", csv_line_dict.get(cd_city)),
+                     ("description_author", csv_line_dict.get(cd_author)),
+                     ("rotate", csv_line_dict.get(md_rotate)),
+                     ("maxres", csv_line_dict.get(md_maxres))
                      ]
         tags.extend(f"{e[0]}:{e[1]}" for e in extratags if e[1])
 
+        # try splitting cd_gpsdata in lat and lon
         try:
             lat, lon = csv_line_dict[cd_gpsdata].split(', ')
         except ValueError as err:
@@ -111,12 +128,12 @@ def media_data_from_csv_maker():
             "attachments": [],
             "media_tags": [{"id": str(cached_get_or_create_tags(t,
                             collection)[0].id)} for t in tags],
-            "media_description": csv_line_dict[cd_description],
+            "media_description": csv_line_dict.get(cd_description, ""),
             "media_identifier": ', '.join(filter(None,
-                                                 [csv_line_dict[md_origsig],
-                                                  csv_line_dict[md_sig],
+                                                 [csv_line_dict.get(md_origsig),
+                                                  csv_line_dict.get(md_sig),
                                                   ])),
-            "embargo_end_date": csv_line_dict[md_embargoend] or None,
+            "embargo_end_date": csv_line_dict.get(md_embargoend) or None,
             "is_private": True if csv_line_dict[md_isprivate].lower() == "true"
             else False,
             "media_lat": lat,
@@ -131,15 +148,3 @@ def media_data_from_csv_maker():
         return md
 
     return media_data_from_csv
-
-
-def get_or_create_subnodes_from_path(relative_path, target_node):
-    ''' take string containing a relative path and a targed parent node;
-    get/create subnodes for each path segment and return the last node
-    '''
-    for path_segment in os.path.dirname(os.path.normpath(relative_path)).split(os.sep):
-        new_node, created = get_or_create_node(path_segment, target_node)
-        if created:
-            print(f"Node {new_node} has been created in parent-node {target_node}")
-        target_node = new_node
-    return target_node

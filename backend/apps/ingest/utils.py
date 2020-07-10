@@ -1,7 +1,53 @@
 import os
+from collections import defaultdict
 from functools import lru_cache
 from apps.media.models import MediaCreator, MediaCreatorRole, MediaType, License, Tag
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+
+# MediaDescription Fieldnames from CSV
+md_origmdate = "HAV:MediaDescription:OriginalMediaDate"
+md_origmtype = "HAV:MediaDescription:OriginalMediaType"
+md_creator = "HAV:MediaDescription:MediaCreator"
+md_role = "HAV:MediaDescription:MediaCreatorRole"
+md_license = "HAV:MediaDescription:License"
+md_sig = "HAV:MediaDescription:Signature"
+md_origsig = "HAV:MediaDescription:OriginalSignature"
+# ContentDescription Fieldnames from CSV
+cd_title = "HAV:ContentDescription:Title"
+cd_description = "HAV:ContentDescription:Description"
+cd_tags = "HAV:ContentDescription:Tags"
+cd_country = "HAV:ContentDescription:Country"
+cd_provincestate = "HAV:ContentDescription:Province-State"
+cd_city = "HAV:ContentDescription:City"
+cd_author = "HAV:Description:Author"
+# new stuff
+md_embargoend = "HAV:MediaDescription:EmbargoEndDate"
+md_isprivate = "HAV:MediaDescription:IsPrivate"
+cd_gpsdata = "HAV:ContentDescription:GPSData"
+md_rotate = "HAV:MediaDescription:Rotate"
+md_maxres = "HAV:MediaDescription:MaxResolution"
+
+
+class SanityCheckError(Exception):
+    pass
+
+
+def check_sanity(csv_data):
+    print("\n================\nstarting sanity-check")
+    to_check = defaultdict(set)
+    for line_number, line in csv_data:
+        to_check[MediaCreator].update(line[md_creator].split('\n'))
+        to_check[MediaCreatorRole].update(line[md_role].split('\n'))
+        to_check[MediaType].add(line[md_origmtype])
+        to_check[License].add(line[md_license])
+    pklist = []
+    for model, values in to_check.items():
+        for v in values:
+            pklist.append(get_pk_from_csvfield(v, model))
+    if None in pklist:
+        raise SanityCheckError("Sanity-check failed…")
+    else:
+        print("\nSanity-check complete\n=============\n")
 
 
 # hacky, cached ORM query helper
@@ -13,13 +59,17 @@ def get_pk_from_csvfield(querystring, model):
     try:
         if model == MediaCreator:
             # CSV data comes as string in the form "name surname"
+            try:
+                first_name, last_name = querystring.split()
+            except ValueError:
+                first_name, last_name = '', querystring
             return model.objects.get(
-                first_name=querystring.split()[0],
-                last_name=querystring.split()[1]).pk
+                first_name=first_name,
+                last_name=last_name).pk
         elif model == MediaType:
             # CSV data comes as string in the form "type:name" (e.g. analoge:trans_35)
             qss = querystring.split(':')
-            if qss[0] == 'analoge':
+            if qss[0] == 'analoge' or qss[0] == 'analog':
                 mtype = 1
             elif qss[0] == 'digital':
                 mtype = 2
@@ -34,7 +84,7 @@ def get_pk_from_csvfield(querystring, model):
             return model.objects.get(name=querystring).pk
     except ObjectDoesNotExist:
         print(f"{model} matching query '{querystring}' does not exist.")
-        return ""
+        return None
 
 
 # cached get_or_create helper for tags
@@ -72,79 +122,53 @@ def get_or_create_subnodes_from_path(relative_path, target_node):
     return target_node
 
 
-def media_data_from_csv_maker():
-    # MediaDescription Fieldnames from CSV
-    md_origmdate = "HAV:MediaDescription:OriginalMediaDate"
-    md_origmtype = "HAV:MediaDescription:OriginalMediaType"
-    md_creator = "HAV:MediaDescription:MediaCreator"
-    md_role = "HAV:MediaDescription:MediaCreatorRole"
-    md_license = "HAV:MediaDescription:License"
-    md_sig = "HAV:MediaDescription:Signature"
-    md_origsig = "HAV:MediaDescription:OriginalSignature"
-    # ContentDescription Fieldnames from CSV
-    cd_title = "HAV:ContentDescription:Title"
-    cd_description = "HAV:ContentDescription:Description"
-    cd_tags = "HAV:ContentDescription:Tags"
-    cd_country = "HAV:ContentDescription:Country"
-    cd_provincestate = "HAV:ContentDescription:Province-State"
-    cd_city = "HAV:ContentDescription:City"
-    cd_author = "HAV:Description:Author"
-    # new stuff
-    md_embargoend = "HAV:MediaDescription:EmbargoEndDate"
-    md_isprivate = "HAV:MediaDescription:IsPrivate"
-    cd_gpsdata = "HAV:ContentDescription:GPSData"
-    md_rotate = "HAV:MediaDescription:Rotate"
-    md_maxres = "HAV:MediaDescription:MaxResolution"
+def media_data_from_csv(source_id, csv_line_dict, collection):
+    # throw all extra fields into tags for the time being
+    tags = csv_line_dict.get(cd_tags, []).split(", ")
+    extratags = [("country", csv_line_dict.get(cd_country)),
+                 ("province/state", csv_line_dict.get(cd_provincestate)),
+                 ("city", csv_line_dict.get(cd_city)),
+                 ("description_author", csv_line_dict.get(cd_author)),
+                 ("rotate", csv_line_dict.get(md_rotate)),
+                 ("maxres", csv_line_dict.get(md_maxres))
+                 ]
+    tags.extend(f"{e[0]}:{e[1]}" for e in extratags if e[1])
 
-    def media_data_from_csv(source_id, csv_line_dict, collection):
-        # throw all extra fields into tags for the time being
-        tags = csv_line_dict.get(cd_tags, []).split(", ")
-        extratags = [("country", csv_line_dict.get(cd_country)),
-                     ("province/state", csv_line_dict.get(cd_provincestate)),
-                     ("city", csv_line_dict.get(cd_city)),
-                     ("description_author", csv_line_dict.get(cd_author)),
-                     ("rotate", csv_line_dict.get(md_rotate)),
-                     ("maxres", csv_line_dict.get(md_maxres))
-                     ]
-        tags.extend(f"{e[0]}:{e[1]}" for e in extratags if e[1])
+    # try splitting cd_gpsdata in lat and lon
+    try:
+        lat, lon = csv_line_dict[cd_gpsdata].split(', ')
+    except ValueError as err:
+        print(err)
+        lat, lon = None, None
 
-        # try splitting cd_gpsdata in lat and lon
-        try:
-            lat, lon = csv_line_dict[cd_gpsdata].split(', ')
-        except ValueError as err:
-            print(err)
-            lat, lon = None, None
+    md = {
+        "date": csv_line_dict[md_origmdate],
+        "creators": [{"creator": get_pk_from_csvfield(cr[0], MediaCreator),
+                      "role": get_pk_from_csvfield(cr[1], MediaCreatorRole)} for cr in zip(csv_line_dict[md_creator].split('\n'), csv_line_dict[md_role].split('\n'))],
+        "media_license": get_pk_from_csvfield(csv_line_dict[md_license],
+                                              License),
+        "media_type": get_pk_from_csvfield(csv_line_dict[md_origmtype],
+                                           MediaType),
+        "source": source_id,
+        "media_title": csv_line_dict[cd_title],
+        "attachments": [],
+        "media_tags": [{"id": str(cached_get_or_create_tags(t,
+                        collection)[0].id)} for t in tags],
+        "media_description": csv_line_dict.get(cd_description, ""),
+        "media_identifier": ', '.join(filter(None,
+                                             [csv_line_dict.get(md_origsig),
+                                              csv_line_dict.get(md_sig),
+                                              ])),
+        "embargo_end_date": csv_line_dict.get(md_embargoend) or None,
+        "is_private": True if csv_line_dict[md_isprivate].lower() == "true"
+        else False,
+        "media_lat": lat,
+        "media_lon": lon,
+    }
 
-        md = {
-            "date": csv_line_dict[md_origmdate],
-            "creators": [{"creator": get_pk_from_csvfield(cr[0], MediaCreator),
-                          "role": get_pk_from_csvfield(cr[1], MediaCreatorRole)} for cr in zip(csv_line_dict[md_creator].split('\n'), csv_line_dict[md_role].split('\n'))],
-            "media_license": get_pk_from_csvfield(csv_line_dict[md_license],
-                                                  License),
-            "media_type": get_pk_from_csvfield(csv_line_dict[md_origmtype],
-                                               MediaType),
-            "source": source_id,
-            "media_title": csv_line_dict[cd_title],
-            "attachments": [],
-            "media_tags": [{"id": str(cached_get_or_create_tags(t,
-                            collection)[0].id)} for t in tags],
-            "media_description": csv_line_dict.get(cd_description, ""),
-            "media_identifier": ', '.join(filter(None,
-                                                 [csv_line_dict.get(md_origsig),
-                                                  csv_line_dict.get(md_sig),
-                                                  ])),
-            "embargo_end_date": csv_line_dict.get(md_embargoend) or None,
-            "is_private": True if csv_line_dict[md_isprivate].lower() == "true"
-            else False,
-            "media_lat": lat,
-            "media_lon": lon,
-        }
+    # DRF's decimalfield serializer is not accepting empty/none values (makes sense). => don't send 'em.
+    if not lat and not lon:
+        md.pop('media_lat')
+        md.pop('media_lon')
 
-        # DRF's decimalfield serializer is not accepting empty/none values (makes sense). => don't send 'em.
-        if not lat and not lon:
-            md.pop('media_lat')
-            md.pop('media_lon')
-
-        return md
-
-    return media_data_from_csv
+    return md

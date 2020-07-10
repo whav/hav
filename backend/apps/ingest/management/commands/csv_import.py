@@ -12,7 +12,7 @@ from django.urls import reverse
 from apps.sets.models import Node
 from apps.ingest.models import IngestQueue
 from sources.filesystem.utils import encodePath
-from apps.ingest.utils import media_data_from_csv_maker, \
+from apps.ingest.utils import check_sanity, media_data_from_csv, \
     get_or_create_subnodes_from_path
 
 
@@ -37,8 +37,6 @@ class Command(BaseCommand):
         client = RequestsClient()
         headers = {'Authorization': 'Token ' + settings.DRF_AUTH_TOKEN}
 
-        media_data_from_csv = media_data_from_csv_maker()
-
         csv_file = options["csv_file"]
         target_parent_node = Node.objects.get(pk=options["set_id"])
         collection = target_parent_node.get_collection()
@@ -46,10 +44,16 @@ class Command(BaseCommand):
         csv_reader = csv.DictReader(csv_file)
         fieldnames = csv_reader.fieldnames
 
+        csv_data = []
+        for line_number, line in enumerate(csv_reader):
+            csv_data.append([line_number, line])
+
+        check_sanity(csv_data)
+
         tracklog = []
         target_q = None
         success_cnt, failed_cnt = 0, 0
-        for line_number, line in enumerate(csv_reader):
+        for line_number, line in csv_data:
             # retry from the tracklog of a previous import run…
             if options['retry']:
                 status_code = line.get('csv_import_status')

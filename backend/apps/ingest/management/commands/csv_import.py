@@ -3,6 +3,7 @@ import argparse
 import csv
 from datetime import datetime
 from pathlib import Path
+from rest_framework import status
 from rest_framework.test import RequestsClient
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -25,6 +26,8 @@ class Command(BaseCommand):
                             help="override api base url")
         parser.add_argument("--retry", default=False, action="store_true",
                             help="retry importing failed entries from the tracklog-file of a previous import run")
+        parser.add_argument("--bullhead", default=False, action="store_true",
+                            help="continue import run despite Error 500 return-codes")
         parser.add_argument(
             "--dry-run", nargs="?", dest="dry_run", const=True, default=False
         )
@@ -86,13 +89,22 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
             print(f"Source file: {rel_file_path}")
             print(f"Target node: {target_file_node}")
             print(media_data)
+
             resp = client.post(base_url + str(ingest_url), json=media_data, headers=headers)
+
+            # bullhead mode: don't crash on E500s
+            if options["bullhead"] and status.is_server_error(resp.status_code):
+                new_media_pk = None
+            else:
+                new_media_pk = resp.json().get('pk')
+
             print(resp.content)
             print(resp)
             print("===" * 10)
+
             line['csv_import_status'] = resp.status_code
-            if resp.json().get('pk'):
-                line['csv_import_mediapk'] = resp.json()['pk']
+            if new_media_pk:
+                line['csv_import_mediapk'] = new_media_pk
                 success_cnt += 1
             else:
                 line['csv_import_mediapk'] = 'failed'

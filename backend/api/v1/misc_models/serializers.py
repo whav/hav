@@ -8,8 +8,7 @@ from apps.tags.sources import TAGGING_SOURCE_CHOICES
 class MediaCreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaCreator
-        fields = ["id", "first_name", "last_name", "display_name",
-                  "name", "email"]
+        fields = ["id", "first_name", "last_name", "display_name", "name", "email"]
 
 
 class MediaCreatorRoleSerializer(serializers.ModelSerializer):

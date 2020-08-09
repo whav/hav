@@ -14,7 +14,7 @@ COPY ./frontend/ui ./ui/
 WORKDIR ./admin/
 RUN yarn build
 
-FROM python:3.7.1-stretch
+FROM python:3.8-buster
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && \
@@ -37,21 +37,23 @@ IMAGINARY_SECRET=UNSAFE
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads"]
 
 
-RUN pip install -U pipenv
+RUN pip install -U poetry
 
 WORKDIR /hav/frontend
 COPY --from=build-stage /code/admin/build ./admin/build
 
 WORKDIR /hav/backend
-COPY backend/Pipfile backend/Pipfile.lock ./
+COPY backend/pyproject.toml backend/poetry.lock ./
+RUN poetry export --format requirements.txt --without-hashes --dev -o requirements.txt
+RUN python -m venv /venv
+RUN /venv/bin/pip install -r requirements.txt
 
-RUN pipenv install --system && pipenv install --system --dev
 
 # Copy all backend files
 COPY ./backend .
 
-RUN ["python", "manage.py", "collectstatic", "--no-input"]
+RUN ["/venv/bin/python", "manage.py", "collectstatic", "--no-input"]
 
 WORKDIR /hav
 
-CMD ["daphne", "-p", "8000",  "-b", "0.0.0.0",  "hav.asgi:application"]
+CMD ["/venv/bin/daphne", "-p", "8000",  "-b", "0.0.0.0",  "hav.asgi:application"]

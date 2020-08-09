@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0022_auto_20200410_2125'),
+        ("media", "0022_auto_20200410_2125"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='mediacreator',
-            name='display_name',
+            model_name="mediacreator",
+            name="display_name",
             field=models.CharField(blank=True, max_length=200),
         ),
         migrations.AddField(
-            model_name='mediacreator',
-            name='email',
+            model_name="mediacreator",
+            name="email",
             field=models.EmailField(blank=True, max_length=254),
         ),
         migrations.AddField(
-            model_name='mediacreator',
-            name='first_name',
+            model_name="mediacreator",
+            name="first_name",
             field=models.CharField(blank=True, max_length=100),
         ),
         migrations.AlterField(
-            model_name='mediacreator',
-            name='last_name',
+            model_name="mediacreator",
+            name="last_name",
             field=models.CharField(max_length=100),
         ),
     ]

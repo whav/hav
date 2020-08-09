@@ -5,9 +5,7 @@ from apps.sets.models import Node
 
 
 def root_nodes():
-    return {
-        'pk__in': Node.get_root_nodes().values_list('pk', flat=True)
-    }
+    return {"pk__in": Node.objects.filter(depth__lte=2).values_list("pk", flat=True)}
 
 
 class Collection(models.Model):
@@ -25,9 +23,8 @@ class Collection(models.Model):
         null=True,
         on_delete=models.PROTECT,
         limit_choices_to=root_nodes,
-        unique=True
+        unique=True,
     )
 
     def __str__(self):
         return self.slug
-

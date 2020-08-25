@@ -17,6 +17,8 @@ import environ
 from pathlib import Path
 from dj_database_url import parse as parse_db_url
 
+from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
+
 # this is needed to let daphne install the twisted reactor
 import daphne.server  # noqa
 

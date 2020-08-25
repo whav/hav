@@ -1,6 +1,6 @@
 .navigation {
   padding: 2rem;
-  max-width: 20%;
+  width: 18%;
   background-color: #f8b20c;
   font-size: 1.3rem;
 }
@@ -48,8 +48,8 @@
 
 .navigation .logo {
   display: block;
-  width: 8rem;
-  margin-bottom: 0.5rem;
+  width: 80%;
+  margin: 0.5rem auto;
 }
 
 .navigation ul {

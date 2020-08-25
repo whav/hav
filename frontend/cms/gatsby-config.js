@@ -54,6 +54,8 @@ module.exports = {
       ['/api', '/images', '/admin', '/dbadmin', '/static'],
       proxy({
         target: HAV_URL,
+        // secure: false,
+        changeOrigin: true,
       })
     );
   },

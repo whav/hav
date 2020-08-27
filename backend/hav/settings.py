@@ -282,6 +282,7 @@ HAV_ARCHIVE_PATH = project_root(env("HAV_ARCHIVE_PATH", default="dist/archive"))
 
 WHAV_ARCHIVE_PATH = project_root(env("WHAV_ARCHIVE_PATH", default="dist/whav"))
 
+# this is not nice
 INGEST_LOG_DIR = project_root(env("INGEST_LOG_DIR", default="dist/ingestlog"))
 
 INGESTION_SOURCES = {

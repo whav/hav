@@ -10,10 +10,10 @@ List available workspaces
 yarn workspaces
 ```
 
-Run the admin frontend build server
+Run the admin frontend build server in hot module reloading
 
 ```
-yarn workspace hav-admin start
+yarn workspace hav-admin hmr
 ```
 
 Start the CMS against a running django development server:

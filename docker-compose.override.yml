@@ -10,8 +10,12 @@ services:
           - whav_db
         environment:
           - DEBUG=True
+          - HOME=${BASHHOMEDIR}
+          - IPYTHONDIR=${IPYTHONDIR}
         volumes:
           - ./backend:/hav/backend
+          - .localhistory:${BASHHOMEDIR}
+          - .localhistory:${IPYTHONDIR}
         command: ./manage.py runserver 0.0.0.0:8000
 
     django-wsgi:
@@ -19,9 +23,13 @@ services:
         - hav_db
         - whav_db
         environment:
-        - DEBUG=True
+          - DEBUG=True
+          - HOME=${BASHHOMEDIR}
+          - IPYTHONDIR=${IPYTHONDIR}
         volumes:
-            - ./backend:/hav/backend
+          - ./backend:/hav/backend
+          - .localhistory:${BASHHOMEDIR}
+          - .localhistory:${IPYTHONDIR}
         command: ./manage.py runserver --noasgi 0.0.0.0:8000
 
     imaginary:

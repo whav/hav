@@ -57,3 +57,6 @@ hav/settings/secrets.py
 docs/site/
 dist/*
 !dist/README.*
+
+# dont' track local bash/ipyhton history
+.localhistory/*

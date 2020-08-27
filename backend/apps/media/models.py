@@ -1,6 +1,8 @@
+from decimal import Decimal
 from django.db import models
 from django.contrib.postgres.fields import DateTimeRangeField
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.functional import cached_property
 from model_utils.models import TimeStampedModel
 from apps.sets.models import Node
@@ -129,6 +131,18 @@ class Media(models.Model):
     # these fields are mainly used for automatic imports
     original_media_description = models.TextField(blank=True)
     original_media_identifier = models.CharField(blank=True, max_length=200)
+
+    embargo_end_date = models.DateField(null=True, blank=True)
+    is_private = models.BooleanField(default=False)
+
+    coords_lat = models.DecimalField(max_digits=9, decimal_places=6,
+                                     validators=[MinValueValidator(Decimal(-90)),
+                                                 MaxValueValidator(Decimal(90)),
+                                                 ], null=True, blank=True)
+    coords_lon = models.DecimalField(max_digits=9, decimal_places=6,
+                                     validators=[MinValueValidator(Decimal(-180)),
+                                                 MaxValueValidator(Decimal(180)),
+                                                 ], null=True, blank=True)
 
     set = models.ForeignKey(Node, on_delete=models.PROTECT)
 

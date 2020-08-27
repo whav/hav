@@ -23,7 +23,7 @@ class ArchiveFile(models.Model):
     file = models.FileField(storage=ArchiveStorage(), upload_to='%Y/%m/%d', editable=False, null=True)
 
     original_filename = models.CharField(max_length=200, editable=False, blank=True)
-    source_id = models.CharField(max_length=200, blank=True)
+    source_id = models.CharField(max_length=400, blank=True)
 
     hash = models.CharField(max_length=40, unique=True, db_index=True, null=True, default=None)
     size = models.BigIntegerField(default=0)
@@ -66,9 +66,8 @@ class ArchiveFile(models.Model):
     class Meta:
         ordering = ('archived_at',)
 
+
 class AttachmentFile(ArchiveFile):
 
     class Meta:
         proxy = True
-
-

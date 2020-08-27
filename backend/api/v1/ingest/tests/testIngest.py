@@ -1,5 +1,6 @@
 from uuid import uuid4
 import os
+from decimal import Decimal
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.urls import reverse
@@ -90,6 +91,12 @@ class IngestTest(APITransactionTestCase):
                 },
             ],
             "media_description": "This is the test media description",
+            "media_identifier": "24QRV",
+            "embargo_end_date": "2100-01-01",
+            "is_private": True,
+            "media_lat": "23.13234",
+            "media_lon": "-32.19843",
+
         }
 
     def test_create_permissions(self):
@@ -118,6 +125,11 @@ class IngestTest(APITransactionTestCase):
 
         self.assertEqual(media.description, data["media_description"])
         self.assertEqual(media.title, data["media_title"])
+        self.assertEqual(media.original_media_identifier, data["media_identifier"])
+        self.assertEqual(str(media.embargo_end_date), data["embargo_end_date"])
+        self.assertEqual(media.is_private, data["is_private"])
+        self.assertEqual(media.coords_lat, Decimal(data["media_lat"]))
+        self.assertEqual(media.coords_lon, Decimal(data["media_lon"]))
         self.assertEqual(media.license.pk, self.license.pk)
 
         mc = media.mediatocreator_set.get()

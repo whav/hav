@@ -25,7 +25,7 @@ class ArchiveFile(models.Model):
     )
 
     original_filename = models.CharField(max_length=200, editable=False, blank=True)
-    source_id = models.CharField(max_length=200, blank=True)
+    source_id = models.CharField(max_length=400, blank=True)
 
     hash = models.CharField(
         max_length=40, unique=True, db_index=True, null=True, default=None

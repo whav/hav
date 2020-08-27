@@ -56,7 +56,7 @@ services:
     django-wsgi:
         <<: *django
         command: [
-          "uwsgi",
+          "/venv/bin/uwsgi",
           "--module=hav.wsgi:application",
           "--master",
           "--http-socket=:8000",
@@ -66,17 +66,17 @@ services:
     rq-archive:
         <<: *django
         user: ${ARCHIVE_UID}
-        command: python manage.py rqworker archive
+        command: /venv/bin/python manage.py rqworker archive
 
     rq-webassets:
         <<: *django
         user: ${WEBASSETS_UID}
-        command: python manage.py rqworker webassets
+        command: /venv/bin/python manage.py rqworker webassets
 
     rq-default:
         <<: *django
         user: ${DJANGO_UID}
-        command: python manage.py rqworker default
+        command: /venv/bin/python manage.py rqworker default
 
     imaginary:
         image: h2non/imaginary:1.0.18

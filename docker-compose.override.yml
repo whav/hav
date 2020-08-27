@@ -16,7 +16,7 @@ services:
           - ./backend:/hav/backend
           - .localhistory:${BASHHOMEDIR}
           - .localhistory:${IPYTHONDIR}
-        command: ./manage.py runserver 0.0.0.0:8000
+        command: /venv/bin/python ./manage.py runserver 0.0.0.0:8000
 
     django-wsgi:
         depends_on:
@@ -27,10 +27,10 @@ services:
           - HOME=${BASHHOMEDIR}
           - IPYTHONDIR=${IPYTHONDIR}
         volumes:
-          - ./backend:/hav/backend
-          - .localhistory:${BASHHOMEDIR}
-          - .localhistory:${IPYTHONDIR}
-        command: ./manage.py runserver --noasgi 0.0.0.0:8000
+            - ./backend:/hav/backend
+            - .localhistory:${BASHHOMEDIR}
+            - .localhistory:${IPYTHONDIR}
+        command: /venv/bin/python ./manage.py runserver --noasgi 0.0.0.0:8000
 
     imaginary:
         ports:

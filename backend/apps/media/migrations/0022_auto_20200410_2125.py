@@ -6,13 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0021_media_tags'),
+        ("media", "0021_media_tags"),
     ]
 
     operations = [
-        migrations.RenameField('mediacreator',
-           'name',
-           'last_name',
-        ),
-
+        migrations.RenameField("mediacreator", "name", "last_name",),
     ]

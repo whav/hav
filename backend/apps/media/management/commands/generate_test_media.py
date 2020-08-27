@@ -14,18 +14,18 @@ media_types = MediaType.objects.all()
 
 
 class Command(BaseCommand):
-    help = 'Generates images and adds them to collections'
+    help = "Generates images and adds them to collections"
 
     def add_arguments(self, parser):
-        parser.add_argument('media_count', type=int)
+        parser.add_argument("media_count", type=int)
 
     def handle(self, *args, **options):
-        count = options['media_count']
+        count = options["media_count"]
         for collection in Collection.objects.filter(root_node__isnull=False):
             root_node = collection.root_node
             self.stdout.write(
                 self.style.SUCCESS(
-                    f'{Collection} MediaCount: {Media.objects.filter(collection=collection).count()}'
+                    f"{Collection} MediaCount: {Media.objects.filter(collection=collection).count()}"
                 )
             )
             for i in range(count):
@@ -33,11 +33,8 @@ class Command(BaseCommand):
                     creators=random.choices(creators, k=1),
                     license=random.choice(licenses),
                     original_media_type=random.choice(media_types),
-                    creation_date=(
-                        timezone.now(),
-                        None
-                    ),
+                    creation_date=(timezone.now(), None),
                     set=root_node,
                     collection=collection,
-                    created_by=random.choice(users)
+                    created_by=random.choice(users),
                 )

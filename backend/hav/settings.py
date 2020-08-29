@@ -193,6 +193,7 @@ STATICFILES_DIRS = (("wp", WEBPACK_BUILD_PATH), ("dj_static", django_root("stati
 STATIC_ROOT = project_root(env("STATIC_ROOT", default="dist/static/"))
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 

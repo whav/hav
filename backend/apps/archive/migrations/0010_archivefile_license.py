@@ -7,14 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0019_migrate_tags'),
-        ('archive', '0009_archivefile_language'),
+        ("media", "0019_migrate_tags"),
+        ("archive", "0009_archivefile_language"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='archivefile',
-            name='license',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='media.License'),
+            model_name="archivefile",
+            name="license",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="media.License",
+            ),
         ),
     ]

@@ -9,11 +9,15 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class WHAVSource(Source):
 
+class WHAVSource(Source):
     def to_fs_path(self, *args, **kwargs):
-        if 'mediaordering_id' in kwargs:
-            mo = MediaOrdering.objects.filter(pk=kwargs['mediaordering_id']).select_related('media').first()
+        if "mediaordering_id" in kwargs:
+            mo = (
+                MediaOrdering.objects.filter(pk=kwargs["mediaordering_id"])
+                .select_related("media")
+                .first()
+            )
             return os.path.join(settings.WHAV_ARCHIVE_PATH, mo.media.localfile.path)
         return None
 
@@ -22,19 +26,15 @@ class WHAVSource(Source):
         kwargs = {}
 
         if not obj:
-            namespaces.append('whav_root')
+            namespaces.append("whav_root")
         elif isinstance(obj, ImageCollection):
-            namespaces.append('whav_collection')
-            kwargs = {
-                'collection_id': obj.pk
-            }
+            namespaces.append("whav_collection")
+            kwargs = {"collection_id": obj.pk}
         elif isinstance(obj, MediaOrdering):
-            namespaces.append('whav_media')
-            kwargs = {
-                'mediaordering_id': obj.pk
-            }
+            namespaces.append("whav_media")
+            kwargs = {"mediaordering_id": obj.pk}
 
-        url = reverse(':'.join(namespaces), kwargs=kwargs)
+        url = reverse(":".join(namespaces), kwargs=kwargs)
 
         if request:
             return request.build_absolute_uri(url)
@@ -44,18 +44,18 @@ class WHAVSource(Source):
     @property
     def urls(self):
         kwargs = {
-            'source_config': self,
+            "source_config": self,
         }
         return [
-            path('', WHAVCollectionBrowser.as_view(**kwargs), name='whav_root'),
+            path("", WHAVCollectionBrowser.as_view(**kwargs), name="whav_root"),
             path(
-                '<int:collection_id>/',
+                "<int:collection_id>/",
                 WHAVCollectionBrowser.as_view(**kwargs),
-                name='whav_collection'
+                name="whav_collection",
             ),
             path(
-                'media/<int:mediaordering_id>/',
+                "media/<int:mediaordering_id>/",
                 WHAVMediaDetail.as_view(**kwargs),
-                name='whav_media'
-            )
+                name="whav_media",
+            ),
         ]

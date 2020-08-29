@@ -14,75 +14,158 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('sets', '0001_initial'),
+        ("sets", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='License',
+            name="License",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('short_name', models.CharField(max_length=10, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("short_name", models.CharField(max_length=10, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Media',
+            name="Media",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('creation_date', django.contrib.postgres.fields.ranges.DateTimeRangeField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('modified_at', models.DateTimeField(auto_now=True, null=True)),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='created_media', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "creation_date",
+                    django.contrib.postgres.fields.ranges.DateTimeRangeField(),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("modified_at", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="created_media",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='MediaCreator',
+            name="MediaCreator",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(blank=True, max_length=100)),
-                ('last_name', models.CharField(max_length=100)),
-                ('display_name', models.CharField(blank=True, max_length=200)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(blank=True, max_length=100)),
+                ("last_name", models.CharField(max_length=100)),
+                ("display_name", models.CharField(blank=True, max_length=200)),
             ],
         ),
         migrations.CreateModel(
-            name='MediaCreatorRole',
+            name="MediaCreatorRole",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role_name', models.CharField(max_length=50, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("role_name", models.CharField(max_length=50, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='MediaToCreator',
+            name="MediaToCreator",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='media.MediaCreator')),
-                ('media', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='media.Media')),
-                ('role', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='media.MediaCreatorRole')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "creator",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="media.MediaCreator",
+                    ),
+                ),
+                (
+                    "media",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="media.Media"
+                    ),
+                ),
+                (
+                    "role",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="media.MediaCreatorRole",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='media',
-            name='creators',
-            field=models.ManyToManyField(through='media.MediaToCreator', to='media.MediaCreator', verbose_name='creators'),
+            model_name="media",
+            name="creators",
+            field=models.ManyToManyField(
+                through="media.MediaToCreator",
+                to="media.MediaCreator",
+                verbose_name="creators",
+            ),
         ),
         migrations.AddField(
-            model_name='media',
-            name='license',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='media.License'),
+            model_name="media",
+            name="license",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="media.License",
+            ),
         ),
         migrations.AddField(
-            model_name='media',
-            name='modified_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='modified_media', to=settings.AUTH_USER_MODEL),
+            model_name="media",
+            name="modified_by",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="modified_media",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='media',
-            name='set',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='sets.Node'),
+            model_name="media",
+            name="set",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="sets.Node"
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='mediatocreator',
-            unique_together=set([('creator', 'role', 'media')]),
+            name="mediatocreator",
+            unique_together=set([("creator", "role", "media")]),
         ),
     ]

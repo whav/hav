@@ -7,13 +7,15 @@ from apps.archive.models import ArchiveFile
 from hav_utils.storages import getStorage
 
 
-webasset_storage = getStorage('webassets')
+webasset_storage = getStorage("webassets")
+
 
 def upload_to(webasset, original_filename):
     ext = os.path.splitext(original_filename)[1]
     af = webasset.archivefile
     path = os.path.splitext(af.file.name)[0]
-    return webasset_storage.get_available_name('%s%s' % (path, ext))
+    return webasset_storage.get_available_name("%s%s" % (path, ext))
+
 
 class WebAsset(models.Model):
 
@@ -29,17 +31,16 @@ class WebAsset(models.Model):
     height = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
-        return '%s %s' % (self.file.name, self.mime_type)
+        return "%s %s" % (self.file.name, self.mime_type)
 
     def is_image(self):
-        return self.mime_type.startswith('image')
+        return self.mime_type.startswith("image")
 
     def get_available_file_name(self, extension):
-        if not extension.startswith('.'):
-            extension = '.%s' % extension
+        if not extension.startswith("."):
+            extension = ".%s" % extension
         return os.path.join(
-            self.file.storage.location,
-            upload_to(self, f'file{extension}')
+            self.file.storage.location, upload_to(self, f"file{extension}")
         )
 
     def save(self, *args, **kwargs):
@@ -51,4 +52,3 @@ class WebAsset(models.Model):
             self.width, self.height = img.size
 
         return super().save(*args, **kwargs)
-    

@@ -8,23 +8,28 @@ from django.db import migrations
 # RunPython operations to refer to the local versions:
 # apps.media.migrations.0012_auto_20190327_2009
 
+
 def move_source(apps, schema_editor):
-    Media = apps.get_model('media', 'Media')
-    ArchiveFile = apps.get_model('archive', 'ArchiveFile')
+    Media = apps.get_model("media", "Media")
+    ArchiveFile = apps.get_model("archive", "ArchiveFile")
     for media in Media.objects.all():
         try:
-            file = ArchiveFile.objects.filter(media__pk=media.pk).order_by('archived_at').first()
+            file = (
+                ArchiveFile.objects.filter(media__pk=media.pk)
+                .order_by("archived_at")
+                .first()
+            )
         except ArchiveFile.DoesNotExist:
             continue
         else:
             file.source_id = media.source
             file.save()
 
+
 class Migration(migrations.Migration):
 
-
     dependencies = [
-        ('media', '0011_media_attachments'),
+        ("media", "0011_media_attachments"),
     ]
 
     operations = [
@@ -32,7 +37,7 @@ class Migration(migrations.Migration):
             code=move_source,
         ),
         migrations.RemoveField(
-            model_name='media',
-            name='source',
+            model_name="media",
+            name="source",
         ),
     ]

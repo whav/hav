@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0005_media_collection'),
+        ("media", "0005_media_collection"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='media',
-            name='description',
-            field=models.TextField(blank=True, verbose_name='description'),
+            model_name="media",
+            name="description",
+            field=models.TextField(blank=True, verbose_name="description"),
         ),
         migrations.AddField(
-            model_name='media',
-            name='title',
-            field=models.CharField(blank=True, max_length=255, verbose_name='title'),
+            model_name="media",
+            name="title",
+            field=models.CharField(blank=True, max_length=255, verbose_name="title"),
         ),
     ]

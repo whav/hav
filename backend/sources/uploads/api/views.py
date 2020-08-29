@@ -12,7 +12,9 @@ from hav_utils.imaginary import generate_thumbnail_url, generate_srcset_urls
 from ...permissions import IncomingBaseMixin
 
 from sources.uploads.models import FileUpload
-from sources.filesystem.api.serializers import FileDetailSerializer as FSFileDetailSerializer
+from sources.filesystem.api.serializers import (
+    FileDetailSerializer as FSFileDetailSerializer,
+)
 
 
 class BaseFileSerializer(serializers.ModelSerializer):
@@ -26,11 +28,11 @@ class BaseFileSerializer(serializers.ModelSerializer):
 
     @property
     def _config(self):
-        return self.context['source_config']
+        return self.context["source_config"]
 
     @property
     def request(self):
-        return self.context['request']
+        return self.context["request"]
 
     def get_full_name(self, upload):
         return upload.file.name
@@ -50,14 +52,19 @@ class BaseFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FileUpload
-        fields = ('created_at', 'url', 'path', 'preview_url', 'name',)
+        fields = (
+            "created_at",
+            "url",
+            "path",
+            "preview_url",
+            "name",
+        )
 
 
 class FileDetailSerializer(FSFileDetailSerializer):
-
     @property
     def upload(self):
-        return self.context['upload']
+        return self.context["upload"]
 
     def get_srcset(self, p):
         return generate_srcset_urls(self.upload)
@@ -67,18 +74,14 @@ class FileDetailSerializer(FSFileDetailSerializer):
 
     def get_url(self, path):
         return self.request.build_absolute_uri(
-            self._config.to_url(
-                self.upload.pk,
-                self.request
-            )
+            self._config.to_url(self.upload.pk, self.request)
         )
 
 
 class CreateFileSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model =FileUpload
-        fields = ('file',)
+        model = FileUpload
+        fields = ("file",)
 
 
 class FileUploadBaseView(IncomingBaseMixin, APIView):
@@ -86,23 +89,18 @@ class FileUploadBaseView(IncomingBaseMixin, APIView):
 
     @property
     def context(self):
-        return {
-            'request': self.request,
-            'source_config': self.source_config
-        }
+        return {"request": self.request, "source_config": self.source_config}
 
 
 class FileUploadView(FileUploadBaseView):
-
     def get(self, request):
         date_cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
         serializer = BaseFileSerializer(
             FileUpload.objects.filter(
-                created_by=self.request.user,
-                created_at__gt=date_cutoff
-            ).order_by('-created_at'),
+                created_by=self.request.user, created_at__gt=date_cutoff
+            ).order_by("-created_at"),
             many=True,
-            context=self.context
+            context=self.context,
         )
         return Response(data=serializer.data)
 
@@ -113,12 +111,10 @@ class FileDetailView(FileUploadBaseView):
     def get(self, request, pk):
         upload = get_object_or_404(FileUpload, pk=pk)
         context = self.context
-        context.update({
-            'upload': upload
-        })
+        context.update({"upload": upload})
         serializer = FileDetailSerializer(
             instance=Path(self.source_config.root_path).joinpath(upload.file.name),
-            context=context
+            context=context,
         )
         return Response(serializer.data)
 
@@ -127,8 +123,5 @@ class FileDetailView(FileUploadBaseView):
         serializer.is_valid(raise_exception=True)
         fu = serializer.save(created_by=request.user)
 
-        serializer = BaseFileSerializer(
-            instance=fu,
-            context=self.context
-        )
+        serializer = BaseFileSerializer(instance=fu, context=self.context)
         return Response(data=serializer.data, status=201)

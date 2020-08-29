@@ -8,7 +8,7 @@ def range_from_partial_date(year, month=None, day=None):
     end = None
 
     if day and not month:
-        raise ValueError('Cannot create range from year and day.')
+        raise ValueError("Cannot create range from year and day.")
 
     if year and month and day:
         d = date(year, month, day)
@@ -26,7 +26,3 @@ def range_from_partial_date(year, month=None, day=None):
     end = datetime.combine(end, time.max)
 
     return start, end
-
-
-
-

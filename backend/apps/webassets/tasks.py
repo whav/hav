@@ -9,17 +9,17 @@ from .operations import create_webassets
 logger = logging.getLogger(__name__)
 
 
-@job('webassets')
+@job("webassets")
 def create(archived_file_id):
     webasset = create_webassets(archived_file_id)
     return webasset.pk
 
 
-@job('webassets')
+@job("webassets")
 def create_webassets_after_archive_task():
     current_job = get_current_job()
     previous_job_id = current_job.dependency.id
-    archive_queue = get_queue('archive')
+    archive_queue = get_queue("archive")
     archived_file_id = archive_queue.fetch_job(previous_job_id).result
     webasset = create_webassets(archived_file_id)
     return webasset.pk
@@ -32,5 +32,3 @@ def create_webassets_after_archive_task():
 #     logger.warning('I am a warning.')
 #     logger.info('I am an info message.')
 #     logger.error('I am an error.')
-
-

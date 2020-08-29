@@ -96,7 +96,6 @@ class IngestTest(APITransactionTestCase):
             "is_private": True,
             "media_lat": "23.13234",
             "media_lon": "-32.19843",
-
         }
 
     def test_create_permissions(self):

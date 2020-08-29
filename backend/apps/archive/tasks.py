@@ -5,10 +5,8 @@ from django_rq import job
 
 logger = logging.getLogger(__name__)
 
-@job('archive')
+
+@job("archive")
 def archive(pk, is_attachment=False, **kwargs):
-    logger.info(
-        f'Calling archive task for ArchiveFile {pk}.')
+    logger.info(f"Calling archive task for ArchiveFile {pk}.")
     return archive_file(pk, is_attachment=is_attachment, **kwargs)
-
-

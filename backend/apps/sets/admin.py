@@ -8,4 +8,5 @@ from .models import Node
 class NodeAdmin(TreeAdmin):
     form = movenodeform_factory(Node)
 
+
 admin.site.register(Node, NodeAdmin)

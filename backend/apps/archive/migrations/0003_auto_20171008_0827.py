@@ -9,13 +9,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0002_archivefile_size'),
+        ("archive", "0002_archivefile_size"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='archivefile',
-            name='file',
-            field=models.FileField(editable=False, storage=apps.archive.storage.ArchiveStorage(), upload_to='%Y/%m/%d'),
+            model_name="archivefile",
+            name="file",
+            field=models.FileField(
+                editable=False,
+                storage=apps.archive.storage.ArchiveStorage(),
+                upload_to="%Y/%m/%d",
+            ),
         ),
     ]

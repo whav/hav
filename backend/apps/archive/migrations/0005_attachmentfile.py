@@ -6,18 +6,17 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0004_auto_20190222_1624'),
+        ("archive", "0004_auto_20190222_1624"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AttachmentFile',
-            fields=[
-            ],
+            name="AttachmentFile",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
+                "proxy": True,
+                "indexes": [],
             },
-            bases=('archive.archivefile',),
+            bases=("archive.archivefile",),
         ),
     ]

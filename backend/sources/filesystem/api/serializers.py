@@ -9,21 +9,22 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def is_hidden(fn):
-    return fn.startswith('.')
+    return fn.startswith(".")
+
 
 class FileStatsSerializer(serializers.BaseSerializer):
-
     def to_representation(self, path):
         stats = path.stat()
         mode = stats.st_mode
         return {
-            'isDirectory': stat.S_ISDIR(mode),
-            'isRegularFile': stat.S_ISREG(mode),
-            'size': stats.st_size,
-            'read': os.access(path, os.R_OK),
-            'write': os.access(path, os.W_OK),
-            'execute': os.access(path, os.X_OK)
+            "isDirectory": stat.S_ISDIR(mode),
+            "isRegularFile": stat.S_ISREG(mode),
+            "size": stats.st_size,
+            "read": os.access(path, os.R_OK),
+            "write": os.access(path, os.W_OK),
+            "execute": os.access(path, os.X_OK),
         }
 
 
@@ -35,18 +36,17 @@ class FileBrowserBaseSerializer(serializers.Serializer):
 
     ingestable = serializers.SerializerMethodField()
 
-
     @property
     def _config(self):
-        return self.context['source_config']
+        return self.context["source_config"]
 
     @property
     def request(self):
-        return self.context['request']
+        return self.context["request"]
 
     def get_name(self, path):
         if path == self.get_root():
-            return 'Root'
+            return "Root"
         return path.name
 
     # some methods that are used in subclasses
@@ -65,7 +65,6 @@ class FileBrowserBaseSerializer(serializers.Serializer):
 
     def get_ingestable(self, _):
         return False
-
 
 
 class FileSerializer(FileBrowserBaseSerializer):
@@ -101,8 +100,6 @@ class FileSerializer(FileBrowserBaseSerializer):
         return path.stem
 
 
-
-
 class FileDetailSerializer(FileSerializer):
 
     meta = serializers.SerializerMethodField()
@@ -119,11 +116,10 @@ class FileDetailSerializer(FileSerializer):
 
     def get_related_files(self, path):
         base_name = path.stem
-        related_files = list(path.parent.glob(f'{base_name}.*'))
+        related_files = list(path.parent.glob(f"{base_name}.*"))
         related_files.remove(path)
-        return [
-            FileSerializer(p, context=self.context).data for p in related_files
-        ]
+        return [FileSerializer(p, context=self.context).data for p in related_files]
+
 
 class BaseDirectorySerializer(FileBrowserBaseSerializer):
 
@@ -141,6 +137,7 @@ class BaseDirectorySerializer(FileBrowserBaseSerializer):
     def get_isFile(self, _):
         return False
 
+
 class DirectorySerializer(BaseDirectorySerializer):
 
     parentDirs = serializers.SerializerMethodField()
@@ -155,16 +152,14 @@ class DirectorySerializer(BaseDirectorySerializer):
         parent_dirs = [p for p in path.parents if p >= self._config.root_path]
         parent_dirs.reverse()
         return BaseDirectorySerializer(
-            parent_dirs,
-            many=True,
-            context=self.context
+            parent_dirs, many=True, context=self.context
         ).data
 
     def get_childrenDirs(self, path):
         return BaseDirectorySerializer(
             [d.resolve() for d in path.iterdir() if d.is_dir()],
             many=True,
-            context=self.context
+            context=self.context,
         ).data
 
     def get_files(self, path):
@@ -172,11 +167,7 @@ class DirectorySerializer(BaseDirectorySerializer):
         # sort by name and size
         # largest file is the one that we assume should be ingested
         files.sort(key=lambda f: (f.stem, f.stat().st_size * -1))
-        return FileSerializer(
-            files,
-            many=True,
-            context=self.context
-        ).data
+        return FileSerializer(files, many=True, context=self.context).data
 
     def get_allowUpload(self, path):
         return True

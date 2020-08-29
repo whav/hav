@@ -21,8 +21,8 @@ class FileBrowserMixin(object):
     @property
     def context(self):
         return {
-            'source_config': self.source_config,
-            'request': self.request,
+            "source_config": self.source_config,
+            "request": self.request,
         }
 
     @property
@@ -37,69 +37,52 @@ class FileBrowserMixin(object):
 
 
 class FileBrowser(IncomingBaseMixin, FileBrowserMixin, APIView):
-
     def get(self, request, path=None, **kwargs):
         path = self.source_config.to_fs_path(path)
 
         if path.is_file():
-            serializer = FileDetailSerializer(
-                instance=path,
-                context=self.context
-            )
+            serializer = FileDetailSerializer(instance=path, context=self.context)
         elif path.is_dir():
-            serializer = DirectorySerializer(
-                instance=path,
-                context=self.context
-            )
+            serializer = DirectorySerializer(instance=path, context=self.context)
         else:
-            raise Http404('File or directory not found.')
+            raise Http404("File or directory not found.")
 
         if not os.access(str(path), os.R_OK):
-            raise Http404('Incorrect permissions.')
+            raise Http404("Incorrect permissions.")
 
         return Response(serializer.data)
 
 
 class FileOperationException(APIException):
-    default_detail = 'The file operation you have requested could not be completed.'
-    default_code = 'file_handling_error'
+    default_detail = "The file operation you have requested could not be completed."
+    default_code = "file_handling_error"
 
 
 class FileBrowserFileDetail(IncomingBaseMixin, FileBrowserMixin, APIView):
-
     def get(self, request, path=None, **kwargs):
 
         path = self.resolve_directory(path)
         try:
-            assert(path.is_file())
-            assert(os.access(str(path), os.R_OK))
+            assert path.is_file()
+            assert os.access(str(path), os.R_OK)
         except (FileNotFoundError, AssertionError):
             raise Http404()
-        serializer = FileDetailSerializer(
-            instance=path,
-            context=self.context
-        )
+        serializer = FileDetailSerializer(instance=path, context=self.context)
         return Response(serializer.data)
 
     def put(self, request, path=None, **kwargs):
         filename = self.resolve_directory(path).name
         view = FileBrowserFileUpload.as_view(root=self.root)
-        return view(
-            request,
-            path=path[0:-len(filename)],
-            filename=filename,
-            **kwargs
-        )
-
+        return view(request, path=path[0 : -len(filename)], filename=filename, **kwargs)
 
 
 class FileBrowserFileUpload(IncomingBaseMixin, FileBrowserMixin, APIView):
 
     parser_classes = [FileUploadParser]
 
-    def save_file(self, file, path, mode='xb'):
+    def save_file(self, file, path, mode="xb"):
 
-        assert(isinstance(path, Path))
+        assert isinstance(path, Path)
         # convert to relative if needed
         if path.is_absolute():
             path = path.relative_to(self.root_path)
@@ -111,21 +94,15 @@ class FileBrowserFileUpload(IncomingBaseMixin, FileBrowserMixin, APIView):
                     destination.write(chunk)
         except OSError as err:
             raise FileOperationException(
-                detail='{0} {1}'.format(
-                    FileOperationException.default_detail,
-                    err
-                )
+                detail="{0} {1}".format(FileOperationException.default_detail, err)
             )
 
         return path
 
     def put(self, request, path=None, filename=None, **kwargs):
-        file = request.data['file']
+        file = request.data["file"]
         # get an absolute path to the file to be created
         path = self.resolve_directory(path).joinpath(filename)
         self.save_file(file, path)
-        serializer = FileSerializer(
-            instance=path,
-            context=self.context
-        )
+        serializer = FileSerializer(instance=path, context=self.context)
         return Response(data=serializer.data, status=201)

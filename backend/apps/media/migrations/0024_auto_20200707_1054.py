@@ -8,28 +8,46 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0023_auto_20200410_2128'),
+        ("media", "0023_auto_20200410_2128"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='media',
-            name='coords_lat',
-            field=models.DecimalField(blank=True, decimal_places=6, max_digits=9, null=True, validators=[django.core.validators.MinValueValidator(Decimal('-90')), django.core.validators.MaxValueValidator(Decimal('90'))]),
+            model_name="media",
+            name="coords_lat",
+            field=models.DecimalField(
+                blank=True,
+                decimal_places=6,
+                max_digits=9,
+                null=True,
+                validators=[
+                    django.core.validators.MinValueValidator(Decimal("-90")),
+                    django.core.validators.MaxValueValidator(Decimal("90")),
+                ],
+            ),
         ),
         migrations.AddField(
-            model_name='media',
-            name='coords_lon',
-            field=models.DecimalField(blank=True, decimal_places=6, max_digits=9, null=True, validators=[django.core.validators.MinValueValidator(Decimal('-180')), django.core.validators.MaxValueValidator(Decimal('180'))]),
+            model_name="media",
+            name="coords_lon",
+            field=models.DecimalField(
+                blank=True,
+                decimal_places=6,
+                max_digits=9,
+                null=True,
+                validators=[
+                    django.core.validators.MinValueValidator(Decimal("-180")),
+                    django.core.validators.MaxValueValidator(Decimal("180")),
+                ],
+            ),
         ),
         migrations.AddField(
-            model_name='media',
-            name='embargo_end_date',
+            model_name="media",
+            name="embargo_end_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='media',
-            name='is_private',
+            model_name="media",
+            name="is_private",
             field=models.BooleanField(default=False),
         ),
     ]

@@ -11,55 +11,90 @@ import uuid
 
 class Migration(migrations.Migration):
 
-    replaces = [('ingest', '0001_initial'), ('ingest', '0002_hstore'), ('ingest', '0003_ingestqueue_ingested_items'), ('ingest', '0004_auto_20180205_1428')]
+    replaces = [
+        ("ingest", "0001_initial"),
+        ("ingest", "0002_hstore"),
+        ("ingest", "0003_ingestqueue_ingested_items"),
+        ("ingest", "0004_auto_20180205_1428"),
+    ]
 
     initial = True
 
     dependencies = [
-        ('sets', '0001_initial'),
+        ("sets", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='IngestQueue',
+            name="IngestQueue",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('selection', django.contrib.postgres.fields.ArrayField(base_field=models.URLField(), default=list, size=None)),
-                ('expanded_selection', django.contrib.postgres.fields.ArrayField(base_field=models.URLField(), default=list, size=None)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('ready_for_ingestion', models.BooleanField(default=False)),
-                ('ingested', models.DateTimeField(default=None, null=True)),
-                ('data', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('target', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='sets.Node')),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "selection",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.URLField(), default=list, size=None
+                    ),
+                ),
+                (
+                    "expanded_selection",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.URLField(), default=list, size=None
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("ready_for_ingestion", models.BooleanField(default=False)),
+                ("ingested", models.DateTimeField(default=None, null=True)),
+                ("data", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "target",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="sets.Node",
+                    ),
+                ),
             ],
         ),
-        django.contrib.postgres.operations.HStoreExtension(
+        django.contrib.postgres.operations.HStoreExtension(),
+        migrations.RemoveField(
+            model_name="ingestqueue",
+            name="data",
         ),
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='data',
+            model_name="ingestqueue",
+            name="expanded_selection",
         ),
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='expanded_selection',
+            model_name="ingestqueue",
+            name="ingested",
         ),
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='ingested',
+            model_name="ingestqueue",
+            name="ready_for_ingestion",
         ),
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='ready_for_ingestion',
-        ),
-        migrations.RemoveField(
-            model_name='ingestqueue',
-            name='selection',
+            model_name="ingestqueue",
+            name="selection",
         ),
         migrations.AddField(
-            model_name='ingestqueue',
-            name='ingestion_items',
+            model_name="ingestqueue",
+            name="ingestion_items",
             field=django.contrib.postgres.fields.jsonb.JSONField(default=dict),
         ),
     ]

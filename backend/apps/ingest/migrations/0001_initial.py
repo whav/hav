@@ -16,22 +16,53 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('sets', '0001_initial'),
+        ("sets", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='IngestQueue',
+            name="IngestQueue",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('selection', django.contrib.postgres.fields.ArrayField(base_field=models.URLField(), default=list, size=None)),
-                ('expanded_selection', django.contrib.postgres.fields.ArrayField(base_field=models.URLField(), default=list, size=None)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('ready_for_ingestion', models.BooleanField(default=False)),
-                ('ingested', models.DateTimeField(default=None, null=True)),
-                ('data', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('target', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='sets.Node')),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "selection",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.URLField(), default=list, size=None
+                    ),
+                ),
+                (
+                    "expanded_selection",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.URLField(), default=list, size=None
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("ready_for_ingestion", models.BooleanField(default=False)),
+                ("ingested", models.DateTimeField(default=None, null=True)),
+                ("data", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "target",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="sets.Node",
+                    ),
+                ),
             ],
         ),
     ]

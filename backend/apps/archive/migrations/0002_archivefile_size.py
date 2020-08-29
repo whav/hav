@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0001_initial'),
+        ("archive", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='archivefile',
-            name='size',
+            model_name="archivefile",
+            name="size",
             field=models.IntegerField(default=1),
             preserve_default=False,
         ),

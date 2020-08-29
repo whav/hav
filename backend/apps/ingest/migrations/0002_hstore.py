@@ -6,7 +6,7 @@ from django.contrib.postgres.operations import HStoreExtension
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ingest', '0001_initial'),
+        ("ingest", "0001_initial"),
     ]
     operations = [
         HStoreExtension(),

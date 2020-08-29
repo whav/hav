@@ -10,7 +10,7 @@ split_date_time = re.compile(r"(?P<date>[\d\-]+)[\ T]?(?P<time>.*)?")
 def parse(dt_string):
     match = split_date_time.match(dt_string)
     if match is None:
-        raise ValueError(f'Unable to parse {dt_string}.')
+        raise ValueError(f"Unable to parse {dt_string}.")
     d = match.groupdict()
     date_part = d.get("date")
     time_part = d.get("time")

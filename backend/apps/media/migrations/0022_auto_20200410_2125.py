@@ -10,5 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameField("mediacreator", "name", "last_name",),
+        migrations.RenameField(
+            "mediacreator",
+            "name",
+            "last_name",
+        ),
     ]

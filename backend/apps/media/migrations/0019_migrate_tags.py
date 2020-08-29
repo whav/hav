@@ -5,13 +5,15 @@ from django.db import migrations, models
 
 def migrate_tags(apps, schema_editor):
 
-    Media = apps.get_model('media', 'Media')
-    CollectionTag = apps.get_model('tags', 'CollectionTag')
+    Media = apps.get_model("media", "Media")
+    CollectionTag = apps.get_model("tags", "CollectionTag")
 
     for media in Media.objects.all().iterator():
         tags = []
         for tag_name in media.old_tags:
-            tag, created = CollectionTag.objects.get_or_create(name=tag_name, collection=media.collection)
+            tag, created = CollectionTag.objects.get_or_create(
+                name=tag_name, collection=media.collection
+            )
             tags.append(tag)
         media.tags.set(tags)
 
@@ -19,26 +21,24 @@ def migrate_tags(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tags', '0001_initial'),
-        ('media', '0018_auto_20190820_0733'),
+        ("tags", "0001_initial"),
+        ("media", "0018_auto_20190820_0733"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='media',
-            old_name='tags',
-            new_name='old_tags',
+            model_name="media",
+            old_name="tags",
+            new_name="old_tags",
         ),
         migrations.AddField(
-            model_name='media',
-            name='tags',
-            field=models.ManyToManyField(to='tags.Tag'),
+            model_name="media",
+            name="tags",
+            field=models.ManyToManyField(to="tags.Tag"),
         ),
-        migrations.RunPython(
-            code=migrate_tags
-        ),
+        migrations.RunPython(code=migrate_tags),
         migrations.RemoveField(
-            model_name='media',
-            name='old_tags',
+            model_name="media",
+            name="old_tags",
         ),
     ]

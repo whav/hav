@@ -1,3 +1,3 @@
 import mimetypes
 
-mimetypes.add_type('video/MP2T', '.mts')
+mimetypes.add_type("video/MP2T", ".mts")

@@ -1,17 +1,15 @@
 class WhavDBRouter(object):
-
     def allow_migrate(self, db, app, **kwargs):
-        if app == 'whav' or db == 'whav':
+        if app == "whav" or db == "whav":
             return False
         return None
 
     def db_for_write(self, model, **hints):
-        if model._meta.app_label == 'whav':
-            return 'whav'
+        if model._meta.app_label == "whav":
+            return "whav"
         return None
 
     def db_for_read(self, model, **hints):
-        if model._meta.app_label == 'whav':
-            return 'whav'
+        if model._meta.app_label == "whav":
+            return "whav"
         return None
-

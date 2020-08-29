@@ -16,33 +16,33 @@ from apps.sets.models import Node
 from apps.media.models import Media
 
 tmpdirs = {
-    'archive': tempfile.TemporaryDirectory(),
-    'webassets': tempfile.TemporaryDirectory(),
-    'incoming': tempfile.TemporaryDirectory(),
-    'logs': tempfile.TemporaryDirectory()
+    "archive": tempfile.TemporaryDirectory(),
+    "webassets": tempfile.TemporaryDirectory(),
+    "incoming": tempfile.TemporaryDirectory(),
+    "logs": tempfile.TemporaryDirectory(),
 }
 
 
 @override_settings(
-    HAV_ARCHIVE_PATH=tmpdirs['archive'].name,
-    WEBASSET_ROOT=tmpdirs['webassets'].name,
-    INCOMING_FILES_ROOT=tmpdirs['incoming'].name,
-    INGEST_LOG_DIR=tmpdirs['logs'].name
+    HAV_ARCHIVE_PATH=tmpdirs["archive"].name,
+    WEBASSET_ROOT=tmpdirs["webassets"].name,
+    INCOMING_FILES_ROOT=tmpdirs["incoming"].name,
+    INGEST_LOG_DIR=tmpdirs["logs"].name,
 )
 class TestCSVImport(TransactionTestCase):
-    fixtures = ['ingest-test-fixtures_media']
+    fixtures = ["ingest-test-fixtures_media"]
 
     csv_file = Path(__file__).parent / "./meta.csv"
 
     def setUp(self) -> None:
-        self.user = User.objects.create_superuser('batch_import_user',
-                                                  'batch@import.user', uuid4)
+        self.user = User.objects.create_superuser(
+            "batch_import_user", "batch@import.user", uuid4
+        )
         self.root_node = Node.add_root(name="test")
         self.collection = Collection.objects.create(
             name="test", short_name="test", root_node=self.root_node
         )
         self.collection.administrators.set([self.user])
-
 
     def run_command(self, *args, **kwargs):
         output = StringIO()
@@ -55,11 +55,11 @@ class TestCSVImport(TransactionTestCase):
             self.run_command(self.csv_file)
 
     def testOverrides(self):
-        assert settings.INCOMING_FILES_ROOT == tmpdirs['incoming'].name
-        assert settings.HAV_ARCHIVE_PATH == tmpdirs['archive'].name
-        assert settings.WEBASSET_ROOT == tmpdirs['webassets'].name
-        assert settings.INGEST_LOG_DIR == tmpdirs['logs'].name
-        
+        assert settings.INCOMING_FILES_ROOT == tmpdirs["incoming"].name
+        assert settings.HAV_ARCHIVE_PATH == tmpdirs["archive"].name
+        assert settings.WEBASSET_ROOT == tmpdirs["webassets"].name
+        assert settings.INGEST_LOG_DIR == tmpdirs["logs"].name
+
     def testCommandSuccess(self):
 
         self.usertoken = Token.objects.create(user=self.user).key
@@ -69,4 +69,3 @@ class TestCSVImport(TransactionTestCase):
             self.run_command(self.csv_file, self.root_node.pk, self.user.username)
 
         self.assertEqual(Media.objects.all().count(), 4)
-

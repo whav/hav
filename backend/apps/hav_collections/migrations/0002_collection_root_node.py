@@ -8,14 +8,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('sets', '0001_initial'),
-        ('hav_collections', '0001_initial'),
+        ("sets", "0001_initial"),
+        ("hav_collections", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='collection',
-            name='root_node',
-            field=models.OneToOneField(limit_choices_to=apps.hav_collections.models.root_nodes, null=True, on_delete=django.db.models.deletion.PROTECT, to='sets.Node'),
+            model_name="collection",
+            name="root_node",
+            field=models.OneToOneField(
+                limit_choices_to=apps.hav_collections.models.root_nodes,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="sets.Node",
+            ),
         ),
     ]

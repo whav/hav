@@ -217,12 +217,11 @@ class HAVNodeSerializer(BaseHAVNodeSerializer):
         ).data
 
     def get_parentDirs(self, instance):
-        return (
-            [BaseRootHAVNodeSerializer(object(), context=self.context).data]
-            + BaseHAVNodeSerializer(
-                instance.get_ancestors(), many=True, context=self.context
-            ).data
-        )
+        return [
+            BaseRootHAVNodeSerializer(object(), context=self.context).data
+        ] + BaseHAVNodeSerializer(
+            instance.get_ancestors(), many=True, context=self.context
+        ).data
 
     def create(self, validated_data):
         parent = self.context.get("parent_node")

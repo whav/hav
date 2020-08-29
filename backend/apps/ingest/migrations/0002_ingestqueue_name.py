@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ingest', '0001_squashed_0004_auto_20180205_1428'),
+        ("ingest", "0001_squashed_0004_auto_20180205_1428"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='ingestqueue',
-            name='name',
-            field=models.CharField(default='', max_length=100),
+            model_name="ingestqueue",
+            name="name",
+            field=models.CharField(default="", max_length=100),
             preserve_default=False,
         ),
     ]

@@ -7,37 +7,37 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ingest', '0003_ingestqueue_ingested_items'),
+        ("ingest", "0003_ingestqueue_ingested_items"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='data',
+            model_name="ingestqueue",
+            name="data",
         ),
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='expanded_selection',
+            model_name="ingestqueue",
+            name="expanded_selection",
         ),
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='ingested',
+            model_name="ingestqueue",
+            name="ingested",
         ),
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='ingested_items',
+            model_name="ingestqueue",
+            name="ingested_items",
         ),
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='ready_for_ingestion',
+            model_name="ingestqueue",
+            name="ready_for_ingestion",
         ),
         migrations.RemoveField(
-            model_name='ingestqueue',
-            name='selection',
+            model_name="ingestqueue",
+            name="selection",
         ),
         migrations.AddField(
-            model_name='ingestqueue',
-            name='ingestion_items',
+            model_name="ingestqueue",
+            name="ingestion_items",
             field=django.contrib.postgres.fields.jsonb.JSONField(default=dict),
         ),
     ]

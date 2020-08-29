@@ -6,13 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0017_auto_20190820_0703'),
+        ("media", "0017_auto_20190820_0703"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='mediacreatorrole',
-            old_name='role_name',
-            new_name='name',
+            model_name="mediacreatorrole",
+            old_name="role_name",
+            new_name="name",
         ),
     ]

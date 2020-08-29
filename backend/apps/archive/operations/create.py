@@ -11,11 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 def _check_file_permissions(filepath):
-    logger.debug('Checking file permissions for {0}'.format(filepath))
-    assert os.path.exists(filepath), 'File does not exist.'
-    assert os.path.isfile(filepath), 'Path is not a file.'
-    assert os.access(filepath, os.R_OK), 'File is not readable by current user.'
-    logger.debug('Basic file checks passed.')
+    logger.debug("Checking file permissions for {0}".format(filepath))
+    assert os.path.exists(filepath), "File does not exist."
+    assert os.path.isfile(filepath), "Path is not a file."
+    assert os.access(filepath, os.R_OK), "File is not readable by current user."
+    logger.debug("Basic file checks passed.")
 
 
 def _get_file_size(filepath):
@@ -26,8 +26,7 @@ def _get_file_size(filepath):
 def _get_archive_file_name(filepath, uuid):
     _, filename = os.path.split(filepath)
     _, ext = os.path.splitext(filename)
-    return '{uuid}{ext}'.format(uuid=uuid, ext=ext)
-
+    return "{uuid}{ext}".format(uuid=uuid, ext=ext)
 
 
 def archive_file(af_pk, is_attachment=False):
@@ -41,9 +40,9 @@ def archive_file(af_pk, is_attachment=False):
 
     # some basic stats
     archive_fields = {
-     'hash': generate_hash(path),
-     'size': _get_file_size(path),
-     'original_filename': os.path.split(path)[1],
+        "hash": generate_hash(path),
+        "size": _get_file_size(path),
+        "original_filename": os.path.split(path)[1],
     }
 
     filename = _get_archive_file_name(path, archive_file.pk)
@@ -52,14 +51,11 @@ def archive_file(af_pk, is_attachment=False):
     archive_file.size = _get_file_size(path)
     archive_file.original_filename = os.path.split(path)[1]
 
-    logger.info('Moving file to archive with name: {0}'.format(filename))
+    logger.info("Moving file to archive with name: {0}".format(filename))
     archive_file.archived_at = now()
 
-    with open(path, 'rb') as f:
+    with open(path, "rb") as f:
         archive_file.file.save(filename, File(f))
 
     archive_file.save()
     return archive_file.pk
-
-
-

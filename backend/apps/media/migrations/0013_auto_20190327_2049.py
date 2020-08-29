@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0012_auto_20190327_2009_squashed_0013_remove_media_source'),
+        ("media", "0012_auto_20190327_2009_squashed_0013_remove_media_source"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='media',
-            options={'ordering': ('created_at',)},
+            name="media",
+            options={"ordering": ("created_at",)},
         ),
     ]

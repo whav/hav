@@ -6,20 +6,18 @@ from rest_framework import serializers
 from apps.whav.models import ImageCollection, MediaOrdering
 from hav_utils.imaginary import generate_srcset_urls, generate_thumbnail_url
 
+
 class WHAVSerializerMixin(object):
-
-
     @property
     def _config(self):
-        return self.context['source_config']
+        return self.context["source_config"]
 
     @property
     def request(self):
-        return self.context['request']
+        return self.context["request"]
 
     def get_isFile(self, obj):
         return isinstance(obj, MediaOrdering)
-
 
 
 class SimpleWHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
@@ -47,8 +45,6 @@ class SimpleWHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
         path = self.get_path_for_media(media)
         return os.path.split(path)[1]
 
-
-
     def get_path_for_media(self, media):
         return media.localfile.path
 
@@ -64,10 +60,8 @@ class SimpleWHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
         media = mo.media
         rel_path = media.webimage.original_image
         rel_path, ext = os.path.splitext(rel_path)
-        rel_path = '%s_display_image%s' % (rel_path, ext)
-        return 'https://whav.aussereurop.univie.ac.at/display/%s' % rel_path
-
-
+        rel_path = "%s_display_image%s" % (rel_path, ext)
+        return "https://whav.aussereurop.univie.ac.at/display/%s" % rel_path
 
     def get_preview_url(self, mo):
         return generate_thumbnail_url(self._get_image_url(mo))
@@ -79,15 +73,12 @@ class SimpleWHAVFileSerializer(WHAVSerializerMixin, serializers.Serializer):
         return True
 
 
-
 class WHAVFileSerializer(SimpleWHAVFileSerializer):
 
     srcset = serializers.SerializerMethodField()
 
     def get_srcset(self, mo):
         return generate_srcset_urls(self._get_image_url(mo))
-
-
 
 
 class BaseWHAVCollectionSerializer(WHAVSerializerMixin, serializers.Serializer):
@@ -103,7 +94,7 @@ class BaseWHAVCollectionSerializer(WHAVSerializerMixin, serializers.Serializer):
         return instance.name
 
     def get_path(self, instance):
-        return '%d' % instance.pk
+        return "%d" % instance.pk
 
     def get_url(self, instance):
         return self._config.to_url(instance, self.request)
@@ -113,17 +104,14 @@ class BaseWHAVCollectionSerializer(WHAVSerializerMixin, serializers.Serializer):
 
 
 class BaseRootWHAVCollectionSerializer(BaseWHAVCollectionSerializer):
-
     def get_name(self, _):
-        return 'WHAV'
+        return "WHAV"
 
     def get_path(self, _):
-        return ''
+        return ""
 
     def get_url(self, _):
         return super().get_url(None)
-
-
 
 
 class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
@@ -134,24 +122,23 @@ class WHAVCollectionSerializer(BaseWHAVCollectionSerializer):
 
     def get_childrenDirs(self, instance):
         return BaseWHAVCollectionSerializer(
-            instance.get_children(),
-            many=True,
-            context=self.context
+            instance.get_children(), many=True, context=self.context
         ).data
 
     def get_parentDirs(self, instance):
-        return [BaseRootWHAVCollectionSerializer(object(), context=self.context).data] + \
-            BaseWHAVCollectionSerializer(
-                instance.get_ancestors(),
-                many=True,
-                context=self.context
-            ).data
+        return [
+            BaseRootWHAVCollectionSerializer(object(), context=self.context).data
+        ] + BaseWHAVCollectionSerializer(
+            instance.get_ancestors(), many=True, context=self.context
+        ).data
 
     def get_files(self, ic):
         return SimpleWHAVFileSerializer(
-            MediaOrdering.objects.filter(collection=ic).select_related('media', 'media__webimage').prefetch_related('media__basefile_set__localfile'),
+            MediaOrdering.objects.filter(collection=ic)
+            .select_related("media", "media__webimage")
+            .prefetch_related("media__basefile_set__localfile"),
             many=True,
-            context=self.context
+            context=self.context,
         ).data
 
 
@@ -166,12 +153,8 @@ class RootWHAVCollectionSerializer(BaseRootWHAVCollectionSerializer):
 
     def get_childrenDirs(self, _):
         return BaseWHAVCollectionSerializer(
-            ImageCollection.get_root_nodes(),
-            many=True,
-            context=self.context
+            ImageCollection.get_root_nodes(), many=True, context=self.context
         ).data
 
     def get_files(self, _):
         return []
-
-

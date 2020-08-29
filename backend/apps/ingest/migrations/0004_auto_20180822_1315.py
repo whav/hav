@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ingest', '0003_auto_20180816_1007'),
+        ("ingest", "0003_auto_20180816_1007"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='ingestqueue',
-            name='ingestion_queue',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.URLField(), default=list, size=None),
+            model_name="ingestqueue",
+            name="ingestion_queue",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.URLField(), default=list, size=None
+            ),
         ),
     ]

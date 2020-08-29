@@ -6,13 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0011_remove_media_original_media_type'),
+        ("media", "0011_remove_media_original_media_type"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='media',
-            old_name='_original_media_type',
-            new_name='original_media_type',
+            model_name="media",
+            old_name="_original_media_type",
+            new_name="original_media_type",
         ),
     ]

@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0005_attachmentfile'),
+        ("archive", "0005_attachmentfile"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='archivefile',
-            options={'ordering': ('archived_at',)},
+            name="archivefile",
+            options={"ordering": ("archived_at",)},
         ),
     ]

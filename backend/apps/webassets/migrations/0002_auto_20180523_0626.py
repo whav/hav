@@ -8,23 +8,29 @@ import hav_utils.storages
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('webassets', '0001_initial'),
+        ("webassets", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='webasset',
-            name='height',
+            model_name="webasset",
+            name="height",
             field=models.PositiveIntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='webasset',
-            name='width',
+            model_name="webasset",
+            name="width",
             field=models.PositiveIntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='webasset',
-            name='file',
-            field=models.FileField(storage=hav_utils.storages.ProtectedFileSystemStorage(base_url='//127.0.0.1:9000/', location='/home/sean/src/hav/dist/webassets'), upload_to=apps.webassets.models.upload_to),
+            model_name="webasset",
+            name="file",
+            field=models.FileField(
+                storage=hav_utils.storages.ProtectedFileSystemStorage(
+                    base_url="//127.0.0.1:9000/",
+                    location="/home/sean/src/hav/dist/webassets",
+                ),
+                upload_to=apps.webassets.models.upload_to,
+            ),
         ),
     ]

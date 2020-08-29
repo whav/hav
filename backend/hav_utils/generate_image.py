@@ -1,10 +1,11 @@
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-font_path = os.path.join(os.path.dirname(__file__), 'font.ttf')
+font_path = os.path.join(os.path.dirname(__file__), "font.ttf")
+
 
 def generate_image(text, width=800, height=600, output=None, margin=80):
-    img = Image.new('RGB', (width, height))
+    img = Image.new("RGB", (width, height))
     draw = ImageDraw.Draw(img)
     size = 10
     text_width = 1
@@ -16,13 +17,8 @@ def generate_image(text, width=800, height=600, output=None, margin=80):
         size += 10
 
     # calculate position of top left corner of text
-    text_position = (
-        width / 2 - text_width / 2,
-        height / 2 - text_height / 2
-    )
+    text_position = (width / 2 - text_width / 2, height / 2 - text_height / 2)
     draw.text(text_position, text, font=fnt)
     if output:
         img.save(output)
     return img
-
-

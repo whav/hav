@@ -8,14 +8,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0003_auto_20171008_0827'),
-        ('media', '0001_initial'),
+        ("archive", "0003_auto_20171008_0827"),
+        ("media", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='media',
-            name='files',
-            field=models.ManyToManyField(to='archive.ArchiveFile'),
+            model_name="media",
+            name="files",
+            field=models.ManyToManyField(to="archive.ArchiveFile"),
         ),
     ]

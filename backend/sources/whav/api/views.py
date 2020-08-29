@@ -4,7 +4,11 @@ from rest_framework.response import Response
 from django.http import Http404
 from apps.whav.models import ImageCollection, MediaOrdering
 from ...permissions import IncomingBaseMixin
-from .serializers import WHAVCollectionSerializer, RootWHAVCollectionSerializer, WHAVFileSerializer
+from .serializers import (
+    WHAVCollectionSerializer,
+    RootWHAVCollectionSerializer,
+    WHAVFileSerializer,
+)
 
 
 class BaseWHAVBrowser(IncomingBaseMixin):
@@ -13,14 +17,10 @@ class BaseWHAVBrowser(IncomingBaseMixin):
 
     @property
     def context(self):
-        return {
-            'request': self.request,
-            'source_config': self.source_config
-        }
+        return {"request": self.request, "source_config": self.source_config}
 
 
 class WHAVCollectionBrowser(BaseWHAVBrowser, APIView):
-
     def get(self, request, collection_id=None):
         # any truthy object will do if there is no imagecollection
         image_collection = object()
@@ -33,24 +33,17 @@ class WHAVCollectionBrowser(BaseWHAVBrowser, APIView):
             except ImageCollection.DoesNotExist:
                 raise Http404()
 
-        serializer = serializer_class(
-            instance=image_collection,
-            context=self.context
-        )
+        serializer = serializer_class(instance=image_collection, context=self.context)
         return Response(serializer.data)
 
 
 class WHAVMediaDetail(BaseWHAVBrowser, RetrieveAPIView):
 
     queryset = MediaOrdering.objects.all()
-    lookup_url_kwarg = 'mediaordering_id'
+    lookup_url_kwarg = "mediaordering_id"
     serializer_class = WHAVFileSerializer
 
     def get_serializer_context(self):
         ctx = super().get_serializer_context()
         ctx.update(self.context)
         return ctx
-
-
-
-

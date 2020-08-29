@@ -7,13 +7,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ingest', '0002_hstore'),
+        ("ingest", "0002_hstore"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='ingestqueue',
-            name='ingested_items',
+            model_name="ingestqueue",
+            name="ingested_items",
             field=django.contrib.postgres.fields.hstore.HStoreField(default=dict),
         ),
     ]

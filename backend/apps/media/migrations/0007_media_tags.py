@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0006_auto_20180927_0828'),
+        ("media", "0006_auto_20180927_0828"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='media',
-            name='tags',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=255), default=list, size=None),
+            model_name="media",
+            name="tags",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(max_length=255), default=list, size=None
+            ),
         ),
     ]

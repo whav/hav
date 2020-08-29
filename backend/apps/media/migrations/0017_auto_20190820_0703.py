@@ -8,18 +8,26 @@ import model_utils.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0016_media_creator'),
+        ("media", "0016_media_creator"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='mediacreator',
-            name='created',
-            field=model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created'),
+            model_name="mediacreator",
+            name="created",
+            field=model_utils.fields.AutoCreatedField(
+                default=django.utils.timezone.now,
+                editable=False,
+                verbose_name="created",
+            ),
         ),
         migrations.AddField(
-            model_name='mediacreator',
-            name='modified',
-            field=model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified'),
+            model_name="mediacreator",
+            name="modified",
+            field=model_utils.fields.AutoLastModifiedField(
+                default=django.utils.timezone.now,
+                editable=False,
+                verbose_name="modified",
+            ),
         ),
     ]

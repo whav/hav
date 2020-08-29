@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0013_auto_20190327_2049'),
+        ("media", "0013_auto_20190327_2049"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='mediacreator',
-            name='email',
+            model_name="mediacreator",
+            name="email",
             field=models.EmailField(blank=True, max_length=254),
         ),
     ]

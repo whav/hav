@@ -6,23 +6,35 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0002_media_files'),
+        ("media", "0002_media_files"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='media',
-            name='original_media_description',
+            model_name="media",
+            name="original_media_description",
             field=models.TextField(blank=True),
         ),
         migrations.AddField(
-            model_name='media',
-            name='original_media_identifier',
+            model_name="media",
+            name="original_media_identifier",
             field=models.CharField(blank=True, max_length=200),
         ),
         migrations.AddField(
-            model_name='media',
-            name='original_media_type',
-            field=models.IntegerField(choices=[(1, '%s: %s'), (2, '%s: %s'), (3, '%s: %s'), (4, '%s: %s'), (5, '%s: %s'), (6, '%s: %s'), (7, '%s: %s'), (8, '%s: %s')], default=1),
+            model_name="media",
+            name="original_media_type",
+            field=models.IntegerField(
+                choices=[
+                    (1, "%s: %s"),
+                    (2, "%s: %s"),
+                    (3, "%s: %s"),
+                    (4, "%s: %s"),
+                    (5, "%s: %s"),
+                    (6, "%s: %s"),
+                    (7, "%s: %s"),
+                    (8, "%s: %s"),
+                ],
+                default=1,
+            ),
         ),
     ]

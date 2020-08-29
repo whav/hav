@@ -135,14 +135,26 @@ class Media(models.Model):
     embargo_end_date = models.DateField(null=True, blank=True)
     is_private = models.BooleanField(default=False)
 
-    coords_lat = models.DecimalField(max_digits=9, decimal_places=6,
-                                     validators=[MinValueValidator(Decimal(-90)),
-                                                 MaxValueValidator(Decimal(90)),
-                                                 ], null=True, blank=True)
-    coords_lon = models.DecimalField(max_digits=9, decimal_places=6,
-                                     validators=[MinValueValidator(Decimal(-180)),
-                                                 MaxValueValidator(Decimal(180)),
-                                                 ], null=True, blank=True)
+    coords_lat = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        validators=[
+            MinValueValidator(Decimal(-90)),
+            MaxValueValidator(Decimal(90)),
+        ],
+        null=True,
+        blank=True,
+    )
+    coords_lon = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        validators=[
+            MinValueValidator(Decimal(-180)),
+            MaxValueValidator(Decimal(180)),
+        ],
+        null=True,
+        blank=True,
+    )
 
     set = models.ForeignKey(Node, on_delete=models.PROTECT)
 

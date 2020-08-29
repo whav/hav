@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hav_collections', '0002_collection_root_node'),
+        ("hav_collections", "0002_collection_root_node"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='collection',
-            name='public',
+            model_name="collection",
+            name="public",
             field=models.BooleanField(default=True),
         ),
     ]

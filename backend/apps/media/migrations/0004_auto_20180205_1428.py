@@ -6,13 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0003_auto_20180204_1024'),
+        ("media", "0003_auto_20180204_1024"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='media',
-            name='original_media_type',
-            field=models.IntegerField(choices=[(1, 'analogue: slide'), (2, 'analogue: negative'), (3, 'analogue: photo'), (4, 'analogue: compact casette'), (5, 'analogue: compact_audio_disc'), (6, 'digital: photo'), (7, 'digital: video'), (8, 'digital: sound')], default=1),
+            model_name="media",
+            name="original_media_type",
+            field=models.IntegerField(
+                choices=[
+                    (1, "analogue: slide"),
+                    (2, "analogue: negative"),
+                    (3, "analogue: photo"),
+                    (4, "analogue: compact casette"),
+                    (5, "analogue: compact_audio_disc"),
+                    (6, "digital: photo"),
+                    (7, "digital: video"),
+                    (8, "digital: sound"),
+                ],
+                default=1,
+            ),
         ),
     ]

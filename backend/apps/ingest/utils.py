@@ -36,8 +36,8 @@ def check_sanity(csv_data):
     print("\n================\nstarting sanity-check")
     to_check = defaultdict(set)
     for line_number, line in csv_data:
-        to_check[MediaCreator].update(line[md_creator].split('\n'))
-        to_check[MediaCreatorRole].update(line[md_role].split('\n'))
+        to_check[MediaCreator].update(line[md_creator].split("\n"))
+        to_check[MediaCreatorRole].update(line[md_role].split("\n"))
         to_check[MediaType].add(line[md_origmtype])
         to_check[License].add(line[md_license])
     pklist = []
@@ -53,25 +53,23 @@ def check_sanity(csv_data):
 # hacky, cached ORM query helper
 @lru_cache(maxsize=1024)
 def get_pk_from_csvfield(querystring, model):
-    '''a hacky, cached ORM lookup helper bending the data from the CSV fields
+    """a hacky, cached ORM lookup helper bending the data from the CSV fields
     into what the respective queried models expect.
-    '''
+    """
     try:
         if model == MediaCreator:
             # CSV data comes as string in the form "name surname"
             try:
                 first_name, last_name = querystring.split()
             except ValueError:
-                first_name, last_name = '', querystring
-            return model.objects.get(
-                first_name=first_name,
-                last_name=last_name).pk
+                first_name, last_name = "", querystring
+            return model.objects.get(first_name=first_name, last_name=last_name).pk
         elif model == MediaType:
             # CSV data comes as string in the form "type:name" (e.g. analoge:trans_35)
-            qss = querystring.split(':')
-            if qss[0] == 'analoge' or qss[0] == 'analog':
+            qss = querystring.split(":")
+            if qss[0] == "analoge" or qss[0] == "analog":
                 mtype = 1
-            elif qss[0] == 'digital':
+            elif qss[0] == "digital":
                 mtype = 2
             else:
                 raise ValueError(f"Unknown mediatype: {qss[0]}")
@@ -90,16 +88,15 @@ def get_pk_from_csvfield(querystring, model):
 # cached get_or_create helper for tags
 @lru_cache(1024)
 def cached_get_or_create_tags(tagname, target_collection):
-    return Tag.objects.get_or_create(name=tagname,
-                                     collection=target_collection)
+    return Tag.objects.get_or_create(name=tagname, collection=target_collection)
 
 
 # simple get_or_create-like helper for treebeard child-nodes
 def get_or_create_node(nodename, parentnode):
-    ''' get or create a child named "nodename" for given parentnode; return
+    """get or create a child named "nodename" for given parentnode; return
     a tuple containing the childnode and "True" or "False" depending if it
     has been newly created or not
-    '''
+    """
     matches = [n for n in parentnode.get_children() if n.name == nodename]
     if not matches:
         newnode = parentnode.add_child(name=nodename)
@@ -107,13 +104,15 @@ def get_or_create_node(nodename, parentnode):
     elif len(matches) == 1:
         return matches[0], False
     else:
-        raise MultipleObjectsReturned(f"found multiple target nodes {matches} for parent: {parentnode}")
+        raise MultipleObjectsReturned(
+            f"found multiple target nodes {matches} for parent: {parentnode}"
+        )
 
 
 def get_or_create_subnodes_from_path(relative_path, target_node):
-    ''' take string containing a relative path and a targed parent node;
+    """take string containing a relative path and a targed parent node;
     get/create subnodes for each path segment and return the last node
-    '''
+    """
     for path_segment in os.path.dirname(os.path.normpath(relative_path)).split(os.sep):
         new_node, created = get_or_create_node(path_segment, target_node)
         if created:
@@ -125,50 +124,62 @@ def get_or_create_subnodes_from_path(relative_path, target_node):
 def media_data_from_csv(source_id, csv_line_dict, collection):
     # throw all extra fields into tags for the time being
     tags = csv_line_dict.get(cd_tags, []).split(", ")
-    extratags = [("country", csv_line_dict.get(cd_country)),
-                 ("province/state", csv_line_dict.get(cd_provincestate)),
-                 ("city", csv_line_dict.get(cd_city)),
-                 ("description_author", csv_line_dict.get(cd_author)),
-                 ("rotate", csv_line_dict.get(md_rotate)),
-                 ("maxres", csv_line_dict.get(md_maxres))
-                 ]
+    extratags = [
+        ("country", csv_line_dict.get(cd_country)),
+        ("province/state", csv_line_dict.get(cd_provincestate)),
+        ("city", csv_line_dict.get(cd_city)),
+        ("description_author", csv_line_dict.get(cd_author)),
+        ("rotate", csv_line_dict.get(md_rotate)),
+        ("maxres", csv_line_dict.get(md_maxres)),
+    ]
     tags.extend(f"{e[0]}:{e[1]}" for e in extratags if e[1])
 
     # try splitting cd_gpsdata in lat and lon
     try:
-        lat, lon = csv_line_dict[cd_gpsdata].split(', ')
+        lat, lon = csv_line_dict[cd_gpsdata].split(", ")
     except ValueError as err:
         print(err)
         lat, lon = None, None
 
     md = {
         "date": csv_line_dict[md_origmdate],
-        "creators": [{"creator": get_pk_from_csvfield(cr[0], MediaCreator),
-                      "role": get_pk_from_csvfield(cr[1], MediaCreatorRole)} for cr in zip(csv_line_dict[md_creator].split('\n'), csv_line_dict[md_role].split('\n'))],
-        "media_license": get_pk_from_csvfield(csv_line_dict[md_license],
-                                              License),
-        "media_type": get_pk_from_csvfield(csv_line_dict[md_origmtype],
-                                           MediaType),
+        "creators": [
+            {
+                "creator": get_pk_from_csvfield(cr[0], MediaCreator),
+                "role": get_pk_from_csvfield(cr[1], MediaCreatorRole),
+            }
+            for cr in zip(
+                csv_line_dict[md_creator].split("\n"),
+                csv_line_dict[md_role].split("\n"),
+            )
+        ],
+        "media_license": get_pk_from_csvfield(csv_line_dict[md_license], License),
+        "media_type": get_pk_from_csvfield(csv_line_dict[md_origmtype], MediaType),
         "source": source_id,
         "media_title": csv_line_dict[cd_title],
         "attachments": [],
-        "media_tags": [{"id": str(cached_get_or_create_tags(t,
-                        collection)[0].id)} for t in tags],
+        "media_tags": [
+            {"id": str(cached_get_or_create_tags(t, collection)[0].id)} for t in tags
+        ],
         "media_description": csv_line_dict.get(cd_description, ""),
-        "media_identifier": ', '.join(filter(None,
-                                             [csv_line_dict.get(md_origsig),
-                                              csv_line_dict.get(md_sig),
-                                              ])),
+        "media_identifier": ", ".join(
+            filter(
+                None,
+                [
+                    csv_line_dict.get(md_origsig),
+                    csv_line_dict.get(md_sig),
+                ],
+            )
+        ),
         "embargo_end_date": csv_line_dict.get(md_embargoend) or None,
-        "is_private": True if csv_line_dict[md_isprivate].lower() == "true"
-        else False,
+        "is_private": True if csv_line_dict[md_isprivate].lower() == "true" else False,
         "media_lat": lat,
         "media_lon": lon,
     }
 
     # DRF's decimalfield serializer is not accepting empty/none values (makes sense). => don't send 'em.
     if not lat and not lon:
-        md.pop('media_lat')
-        md.pop('media_lon')
+        md.pop("media_lat")
+        md.pop("media_lon")
 
     return md

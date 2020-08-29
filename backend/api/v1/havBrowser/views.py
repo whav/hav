@@ -5,7 +5,11 @@ from rest_framework.response import Response
 from apps.sets.models import Node
 from apps.media.models import Media
 from ..permissions import IncomingBaseMixin
-from .serializers import HAVNodeSerializer, RootHAVCollectionSerializer, HAVMediaSerializer
+from .serializers import (
+    HAVNodeSerializer,
+    RootHAVCollectionSerializer,
+    HAVMediaSerializer,
+)
 
 
 class HAVMediaView(IncomingBaseMixin, RetrieveAPIView):
@@ -23,17 +27,12 @@ class HAVNodeBrowser(IncomingBaseMixin, APIView):
     @property
     def node(self):
 
-        if not self._node and self.kwargs.get('pk'):
-            self._node = Node.objects.get(pk=self.kwargs['pk'])
+        if not self._node and self.kwargs.get("pk"):
+            self._node = Node.objects.get(pk=self.kwargs["pk"])
         return self._node
 
-
     def get_context(self):
-        return {
-            'request': self.request,
-            'keys': self.keys,
-            'parent_node': self.node
-        }
+        return {"request": self.request, "keys": self.keys, "parent_node": self.node}
 
     def get_serializer_class(self):
         if self.node:
@@ -46,18 +45,15 @@ class HAVNodeBrowser(IncomingBaseMixin, APIView):
         serializer = sc(
             # any truthy object will do if there is no node
             instance=self.node or object(),
-            context=self.get_context()
+            context=self.get_context(),
         )
         return Response(serializer.data)
 
     def post(self, request, pk=None):
         if not pk:
-            return Response('Cannot create root nodes', status=400)
+            return Response("Cannot create root nodes", status=400)
         sc = self.get_serializer_class()
-        serializer = sc(
-            data=request.data,
-            context=self.get_context()
-        )
+        serializer = sc(data=request.data, context=self.get_context())
         serializer.is_valid(raise_exception=True)
 
         instance = serializer.create(serializer.validated_data)
@@ -68,19 +64,8 @@ class HAVNodeBrowser(IncomingBaseMixin, APIView):
     def put(self, request, *args, **kwargs):
         sc = self.get_serializer_class()
         serializer = sc(
-            data=request.data,
-            instance=self.node,
-            context=self.get_context()
+            data=request.data, instance=self.node, context=self.get_context()
         )
         serializer.is_valid(raise_exception=True)
         serializer.update(self.node, serializer.validated_data)
         return Response(serializer.data, status=200)
-
-
-
-
-
-
-
-
-

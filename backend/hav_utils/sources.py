@@ -9,13 +9,13 @@ def register(root):
     path = pathlib.Path(root).resolve()
 
     if not path.is_absolute():
-        raise ImproperlyConfigured('You need to register absolute paths.')
+        raise ImproperlyConfigured("You need to register absolute paths.")
 
     if not path.is_dir():
-        raise ImproperlyConfigured('The registered path needs to point to a directory.')
+        raise ImproperlyConfigured("The registered path needs to point to a directory.")
 
     if path in _sources:
-        raise ImproperlyConfigured('This path has already been registered')
+        raise ImproperlyConfigured("This path has already been registered")
 
     _sources.add(path)
 
@@ -28,7 +28,9 @@ def validate_file_path(path):
         except ValueError:
             pass
     else:
-        raise ValidationError('The path ${0} is not within a registered source.'.format(path.to_posix()))
+        raise ValidationError(
+            "The path ${0} is not within a registered source.".format(path.to_posix())
+        )
 
 
 def to_absolute_path(path, root):
@@ -37,5 +39,3 @@ def to_absolute_path(path, root):
         return path
 
     return str(pathlib.Path(root).joinpath(p).absolute())
-
-

@@ -7,38 +7,45 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0007_auto_20190731_1004'),
+        ("archive", "0007_auto_20190731_1004"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='archivefile',
-            old_name='archived_by',
-            new_name='created_by',
+            model_name="archivefile",
+            old_name="archived_by",
+            new_name="created_by",
         ),
         migrations.AddField(
-            model_name='archivefile',
-            name='created_at',
+            model_name="archivefile",
+            name="created_at",
             field=models.DateTimeField(null=True),
         ),
         migrations.AlterField(
-            model_name='archivefile',
-            name='archived_at',
+            model_name="archivefile",
+            name="archived_at",
             field=models.DateTimeField(null=True),
         ),
         migrations.AlterField(
-            model_name='archivefile',
-            name='file',
-            field=models.FileField(editable=False, null=True, storage=apps.archive.storage.ArchiveStorage(), upload_to='%Y/%m/%d'),
+            model_name="archivefile",
+            name="file",
+            field=models.FileField(
+                editable=False,
+                null=True,
+                storage=apps.archive.storage.ArchiveStorage(),
+                upload_to="%Y/%m/%d",
+            ),
         ),
         migrations.AlterField(
-            model_name='archivefile',
-            name='hash',
-            field=models.CharField(db_index=True, default=None, max_length=40, null=True, unique=True),
+            model_name="archivefile",
+            name="hash",
+            field=models.CharField(
+                db_index=True, default=None, max_length=40, null=True, unique=True
+            ),
         ),
         migrations.AlterField(
-            model_name='archivefile',
-            name='size',
+            model_name="archivefile",
+            name="size",
             field=models.BigIntegerField(default=0),
         ),
     ]

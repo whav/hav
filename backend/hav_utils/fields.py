@@ -5,9 +5,9 @@ from pycountry import languages
 
 class LanguageField(models.CharField):
     field_defaults = {
-        'max_length': 3,
-        'db_index': True,
-        'choices': [(l.alpha_3, l.name) for l in languages]
+        "max_length": 3,
+        "db_index": True,
+        "choices": [(l.alpha_3, l.name) for l in languages],
     }
 
     def __init__(self, *args, **kwargs):

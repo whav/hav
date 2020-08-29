@@ -8,27 +8,38 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0014_mediacreator_email'),
+        ("media", "0014_mediacreator_email"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='media',
-            name='collection',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='hav_collections.Collection'),
+            model_name="media",
+            name="collection",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="hav_collections.Collection",
+            ),
         ),
         migrations.AlterField(
-            model_name='media',
-            name='creation_date',
-            field=django.contrib.postgres.fields.ranges.DateTimeRangeField(blank=True, null=True),
+            model_name="media",
+            name="creation_date",
+            field=django.contrib.postgres.fields.ranges.DateTimeRangeField(
+                blank=True, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='media',
-            name='license',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='media.License'),
+            model_name="media",
+            name="license",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="media.License",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='mediatype',
-            unique_together={('type', 'name')},
+            name="mediatype",
+            unique_together={("type", "name")},
         ),
     ]

@@ -6,14 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0005_attachmentfile'),
-        ('media', '0010_auto_20190223_2211_squashed_0013_auto_20190223_2240'),
+        ("archive", "0005_attachmentfile"),
+        ("media", "0010_auto_20190223_2211_squashed_0013_auto_20190223_2240"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='media',
-            name='attachments',
-            field=models.ManyToManyField(blank=True, related_name='is_attachment_for', to='archive.AttachmentFile'),
+            model_name="media",
+            name="attachments",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="is_attachment_for",
+                to="archive.AttachmentFile",
+            ),
         ),
     ]

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0007_media_tags'),
+        ("media", "0007_media_tags"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='media',
-            name='source',
+            model_name="media",
+            name="source",
             field=models.CharField(blank=True, max_length=255),
         ),
     ]

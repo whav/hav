@@ -50,6 +50,7 @@ env/
 
 hav/settings/secrets.py
 .env
+.venv
 
 .thumbor/
 .vscode/
@@ -60,3 +61,4 @@ dist/*
 
 # dont' track local bash/ipyhton history
 .localhistory/*
+

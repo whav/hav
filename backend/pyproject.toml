@@ -45,3 +45,4 @@ django-debug-toolbar = "*"
 ipdb = "*"
 pytest = "*"
 pytest-django = "*"
+black = {version = "^20.8b1", allow-prereleases = true}

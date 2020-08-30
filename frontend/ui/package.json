@@ -6,29 +6,33 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@theme-ui/components": "^0.2.49",
-    "lorem-ipsum": "^2.0.3",
-    "prop-types": "^15.7.2",
-    "react-icons": "^3.8.0",
-    "theme-ui": "^0.2.49"
+    "react-icons": "^3.8.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0"
+    "@theme-ui/components": "^0.2.49",
+    "react": "^16.8",
+    "theme-ui": "^0.2.49"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.4",
     "@babel/core": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
     "@babel/preset-react": "^7.7.4",
-    "@storybook/addon-actions": "^5.2.6",
-    "@storybook/addon-links": "^5.2.6",
-    "@storybook/addons": "^5.2.6",
-    "@storybook/react": "^5.2.6",
-    "@theme-ui/presets": "^0.2.44",
+    "@storybook/addon-actions": "^6.x",
+    "@storybook/addon-links": "^6.x",
+    "@storybook/addons": "^6.x",
+    "@storybook/react": "^6.x",
+    "@theme-ui/components": "^0.3.1",
+    "@theme-ui/presets": "^0.3.0",
     "babel-loader": "^8.0.6",
     "bulma": "^0.8.0",
+    "lorem-ipsum": "^2.0.3",
     "microbundle": "^0.12.0-next.6",
-    "playroom": "^0.10.1"
+    "playroom": "^0.10.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "theme-ui": "^0.3.1"
   },
   "scripts": {
     "playroom:start": "playroom start",

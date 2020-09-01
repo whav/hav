@@ -2,11 +2,11 @@
 import { jsx } from "theme-ui";
 import React from "react";
 
-const MainMenu = ({ children }) => {
+const Nav = ({ children }) => {
   return (
     <nav
       sx={{
-        px: ".5rem"
+        px: ".5rem",
       }}
     >
       <ul
@@ -15,8 +15,8 @@ const MainMenu = ({ children }) => {
           px: 0,
           "& a": {
             textDecoration: "none",
-            color: "text"
-          }
+            color: "text",
+          },
         }}
       >
         {React.Children.map(children, (child, index) => (
@@ -27,14 +27,14 @@ const MainMenu = ({ children }) => {
   );
 };
 
-const MenuGroup = ({ label, children }) => {
+const NavGroup = ({ label, children }) => {
   return (
     <React.Fragment>
       {label}
       <ul
         sx={{
           listStyle: "none",
-          px: "1rem"
+          px: "1rem",
         }}
       >
         {React.Children.map(children, (child, index) => (
@@ -45,7 +45,4 @@ const MenuGroup = ({ label, children }) => {
   );
 };
 
-export default {
-  MainMenu,
-  MenuGroup
-};
+export { Nav, NavGroup };

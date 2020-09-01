@@ -3,10 +3,12 @@
   "workspaces": [
     "admin",
     "cms",
-    "ui"
+    "ui",
+    "cms-next"
   ],
   "scripts": {
     "cms": "HAV_URL=http://127.0.0.1:8000/ yarn workspace hav-cms start",
-    "admin": "yarn workspace hav-admin hmr"
+    "admin": "yarn workspace hav-admin hmr",
+    "ui": "yarn workspace hav-ui watch"
   }
 }

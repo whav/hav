@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { Image } from "../components";
 
 const Wrapper = (props) => {
-  console.log(props);
   return (
     <div
       sx={{
@@ -24,7 +23,7 @@ const Wrapper = (props) => {
       >
         {props.logo_url && (
           <Image
-            src={logo_url}
+            src={props.logo_url}
             px={[1, 4]}
             py={[1, 4]}
             sx={{ maxWidth: [100, 300] }}

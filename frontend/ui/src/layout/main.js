@@ -2,29 +2,28 @@
 import { jsx } from "theme-ui";
 import PropTypes from "prop-types";
 import { Box as BaseBox } from "@theme-ui/components";
-import React from "react";
 
-const Box = props => <BaseBox px={3} {...props} />;
+const Box = (props) => <BaseBox px={3} {...props} />;
 
 const Main = ({
   header = null,
   footer = null,
   content_variant = "layout.content",
-  children
+  children,
 }) => (
   <div
     sx={{
       display: "flex",
       flexDirection: "column",
       height: "100%",
-      overflowY: "auto"
+      overflowY: "auto",
     }}
   >
     <Box
       as="header"
       px={3}
       sx={{
-        variant: "layout.header"
+        variant: "layout.header",
       }}
     >
       {header}
@@ -32,7 +31,7 @@ const Main = ({
     <Box
       as="main"
       sx={{
-        variant: content_variant
+        variant: content_variant,
       }}
     >
       {children}
@@ -40,7 +39,7 @@ const Main = ({
     <Box
       as="footer"
       sx={{
-        variant: "layout.footer"
+        variant: "layout.footer",
       }}
     >
       {footer}
@@ -51,10 +50,10 @@ const Main = ({
 Main.propTypes = {
   children: PropTypes.element.isRequired,
   header: PropTypes.element,
-  footer: PropTypes.element
+  footer: PropTypes.element,
 };
 
-const StickyHeaderMain = props => {
+const StickyHeaderMain = (props) => {
   return <Main {...props} content_variant="layout.content_sticky" />;
 };
 

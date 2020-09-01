@@ -2,7 +2,7 @@ import React from "react";
 
 import * as Menu from "../components/navigation/main_menu";
 import Wrapper from "../layout/wrapper";
-
+import HAVLogo from "../images/hav.svg";
 export default {
   title: "Main Menu",
   excludeStories: ["ExampleMenu"],
@@ -12,7 +12,7 @@ export default {
 const menu_items = ["Entry A", "Entry B", "Entry C"];
 
 const WrapMenu = ({ children }) => (
-  <Wrapper nav={children}>
+  <Wrapper logo_url={HAVLogo} nav={children}>
     <div>
       <p>I am the main content.</p>
       <p>I am of no interest for this example.</p>

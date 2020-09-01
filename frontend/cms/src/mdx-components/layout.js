@@ -6,8 +6,8 @@ import Layout from '../components/layout';
 import Media from './components/media';
 import HAVMap from './components/map';
 
-import ThemeProvider from '../../../ui/src/theme/provider';
-import * as uiComponents from '@theme-ui/components';
+import { ThemeProvider } from 'hav-ui';
+import { Components as uiComponents } from 'hav-ui';
 
 const Components = {
   Media,

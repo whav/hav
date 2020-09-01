@@ -1,12 +1,16 @@
 import React from 'react';
 import Layout from '../components/layout';
+import { Button } from 'hav-ui';
 
 const SearchInput = ({ collection }) => {
   return (
-    <input
-      type="search"
-      placeholder={`Search ${collection.shortName} collection`}
-    />
+    <>
+      <input
+        type="search"
+        placeholder={`Search ${collection.shortName} collection`}
+      />
+      <Button>Search</Button>
+    </>
   );
 };
 

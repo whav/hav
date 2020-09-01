@@ -6,10 +6,9 @@
   "dependencies": {
     "@mdx-js/mdx": "^1.0.20",
     "@mdx-js/react": "^1.0.20",
-    "@theme-ui/components": "^0.2.49",
     "apollo-boost": "^0.4.2",
     "classnames": "^2.2.6",
-    "gatsby": "^2.0.76",
+    "gatsby": "^2.24.52",
     "gatsby-image": "^2.1.4",
     "gatsby-plugin-alias-imports": "^1.0.5",
     "gatsby-plugin-create-client-paths": "^2.0.5",
@@ -22,6 +21,7 @@
     "gatsby-source-filesystem": "^2.0.39",
     "gatsby-source-graphql": "^2.0.19",
     "gatsby-transformer-sharp": "^2.3.5",
+    "hav-ui": "==1.0.0",
     "isomorphic-fetch": "^2.2.1",
     "leaflet": "^1.5.0",
     "prop-types": "^15.7.2",
@@ -47,13 +47,14 @@
     "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""
   },
   "devDependencies": {
+    "http-proxy-middleware": "^1.0.5",
     "prettier": "^1.18.2"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+    "url": "https://github.com/whav/hav"
   },
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/whav/hav/issues"
   }
 }

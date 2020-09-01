@@ -3,7 +3,7 @@ from django.views.generic import RedirectView
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
-from .graphql.views import ProtectedGraphQLView
+from .graphql.views import ProtectedGraphQLView, GraphQLView
 
 api_urls = [
     re_path(r"^v1/", include("api.v1.urls", namespace="v1")),
@@ -12,7 +12,8 @@ api_urls = [
     ),
     re_path(
         r"^graphql",
-        ProtectedGraphQLView.as_view(graphiql=True),
+        # ProtectedGraphQLView.as_view(graphiql=True),
+        csrf_exempt(GraphQLView.as_view(graphiql=True)),
         name="graphql",
     ),
     re_path(

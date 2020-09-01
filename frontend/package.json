@@ -4,5 +4,9 @@
     "admin",
     "cms",
     "ui"
-  ]
+  ],
+  "scripts": {
+    "cms": "HAV_URL=http://127.0.0.1:8000/ yarn workspace hav-cms start",
+    "admin": "yarn workspace hav-admin hmr"
+  }
 }

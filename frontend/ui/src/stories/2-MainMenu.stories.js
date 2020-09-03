@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from "theme-ui";
+
 import React from "react";
 
 import * as Menu from "../components/navigation/main_menu";

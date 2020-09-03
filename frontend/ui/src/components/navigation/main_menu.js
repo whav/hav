@@ -6,7 +6,7 @@ const Nav = ({ children }) => {
   return (
     <nav
       sx={{
-        px: ".5rem",
+        px: ".6rem",
       }}
     >
       <ul
@@ -16,6 +16,13 @@ const Nav = ({ children }) => {
           "& a": {
             textDecoration: "none",
             color: "text",
+            display: "block",
+          },
+          "li a:hover": {
+            bg: "sidebar_hover",
+          },
+          "> li": {
+            display: "block",
           },
         }}
       >

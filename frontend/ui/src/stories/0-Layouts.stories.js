@@ -1,4 +1,5 @@
-import React from "react";
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 
 import Wrapper from "../layout/wrapper";
 import Main, { StickyHeaderMain } from "../layout/main";
@@ -20,7 +21,11 @@ const Footer = () => <h3>I am the footer</h3>;
 export const main = () => {
   return (
     <SBWrapper>
-      <Main header={<Header />} footer={<Footer />}>
+      <Main
+        header={<Header />}
+        footer={<Footer />}
+        content_variant="layout.text_content"
+      >
         <LoremIpsum paragraphs={10} />
       </Main>
     </SBWrapper>

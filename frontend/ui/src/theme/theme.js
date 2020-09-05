@@ -38,7 +38,6 @@ export default {
     },
     text_content: {
       maxWidth: ["80vw", "500px"],
-      bg: "black",
     },
   },
   cards: {

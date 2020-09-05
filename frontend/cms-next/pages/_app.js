@@ -1,12 +1,22 @@
 import { ThemeProvider } from "hav-ui";
-import { MainWrapper, Main, Nav } from "hav-ui";
+import { MainWrapper, Main } from "hav-ui";
 import Head from "next/head";
+import Link from "next/link";
+import { Nav } from "components/navigation";
 
 function MyApp({ Component, pageProps }) {
   const nav = (
     <Nav>
-      <a href="/urxn/">test</a>
-      <a href="/test2">Test2</a>
+      <Link href="/">Home</Link>
+      {["whav", "gaenzle", "nebesky"].map((slug) => (
+        <Link
+          key={slug}
+          href="/collections/[collection_slug]"
+          as={`/collections/${slug}`}
+        >
+          {slug}
+        </Link>
+      ))}
     </Nav>
   );
 

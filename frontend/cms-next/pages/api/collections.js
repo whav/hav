@@ -1,6 +1,35 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { query } from "lib/graphql";
 
-export default (req, res) => {
-  res.statusCode = 200
-  res.json({ name: 'John Doe' })
-}
+export default async (req, res) => {
+  const result = await query(`
+      {
+        media(id: "935") {
+          title
+          collection {
+            name
+            shortName
+          }
+          ancestors {
+            name
+          }
+          creators {
+            firstName
+            lastName
+            id
+          }
+          creationTimeframe
+          tags {
+            name
+            source {
+              source
+              sourceRef
+            }
+          }
+        }
+      }
+  `);
+  console.log(result);
+  const { data } = result;
+  res.status = 200;
+  res.json(data);
+};

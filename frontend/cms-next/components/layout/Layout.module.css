@@ -1,0 +1,24 @@
+.wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.nav {
+  background-color: aqua;
+}
+
+.main {
+  padding: 1em;
+  background-color: bisque;
+}
+
+@media (min-width: 800px) {
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .nav {
+    min-width: 200px;
+  }
+}

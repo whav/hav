@@ -6,13 +6,13 @@
 }
 
 .nav {
-  background-color: aqua;
+  /* background-color: aqua; */
   flex-grow: 0;
 }
 
 .main {
   padding: 1em;
-  background-color: bisque;
+  /* background-color: bisque; */
   flex-grow: 1;
 }
 

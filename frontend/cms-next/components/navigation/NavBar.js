@@ -48,17 +48,20 @@ const NavBar = () => {
               <img src="/logos/univie.svg" />
             </li>
             <li>
-              <Link href="/imprint/">
-                <a>Imprint</a>
+              <Link href="/cooperation/">
+                <a>How to cooperate</a>
               </Link>
             </li>
+
             <li>
               <Link href="/open-knowledge/">
                 <a>License Models</a>
               </Link>
             </li>
             <li>
-              <Link href="/cooperation/">How to cooperate</Link>
+              <Link href="/imprint/">
+                <a>Imprint</a>
+              </Link>
             </li>
           </ul>
         </div>

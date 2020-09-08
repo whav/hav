@@ -1,8 +1,8 @@
 import React from "react";
-import { Button } from "hav-ui";
+import { Button } from "theme-ui";
 import { useRouter } from "next/router";
 
-const SearchInput = () => {
+const SearchInput = ({ slug }) => {
   return (
     <>
       <input type="search" placeholder={`Search collection`} />
@@ -14,7 +14,7 @@ const SearchInput = () => {
 const SearchPage = () => {
   const router = useRouter();
   const { collection_slug } = router.query;
-  return <SearchInput />;
+  return <SearchInput slug={collection_slug} />;
 };
 
 export default SearchPage;

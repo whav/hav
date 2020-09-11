@@ -48,13 +48,29 @@
 
 .nav a {
   text-decoration: none;
-  color: inherit;
+  color: white;
+  /* display: block; */
+}
+
+.nav a.active_link {
+  text-decoration: underline;
+}
+
+.nav a:hover {
+  background-color: blanchedalmond;
 }
 
 .nav li img {
   max-height: 3rem;
   max-width: 100%;
   padding-bottom: 0.5rem;
+}
+
+.grouper {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: black;
+  padding-right: 0.3rem;
 }
 
 @media (min-width: 600px) {

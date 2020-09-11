@@ -1,16 +1,12 @@
 import renderToString from "next-mdx-remote/render-to-string";
 import hydrate from "next-mdx-remote/hydrate";
-import MDX from "../components/mdx";
+import MDX, { components } from "../components/mdx";
 
 // server side only dependencies
 import { promises as fs } from "fs";
 import path from "path";
 import fg from "fast-glob";
 import matter from "gray-matter";
-
-const Test = () => <h3>MDX Component!</h3>;
-
-const components = { Test };
 
 export default function ContentPage({ source, frontmatter }) {
   const content = hydrate(source, { components });

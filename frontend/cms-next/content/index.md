@@ -8,4 +8,4 @@ Further information about us, our ongoing research initiatives and related news 
 
 ## The HAV's Core Area
 
-<Test />
+<HAVMap lat={35.6037} lng={82.4853} zoom={5} />

@@ -2,12 +2,11 @@
   "private": true,
   "workspaces": [
     "admin",
-    "cms",
     "ui",
     "cms-next"
   ],
   "scripts": {
-    "cms": "HAV_URL=http://127.0.0.1:8000/ yarn workspace hav-cms start",
+    "cms": "HAV_URL=http://127.0.0.1:8000/ yarn workspace cms-next dev",
     "admin": "yarn workspace hav-admin hmr",
     "ui": "yarn workspace hav-ui watch"
   }

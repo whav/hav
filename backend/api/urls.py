@@ -19,5 +19,5 @@ api_urls = [
     re_path(
         r"^$", RedirectView.as_view(pattern_name="api:v1:api_root", permanent=False)
     ),
-    path(r"", include("api.public.urls", namespace="public")),
+    path(r"public/", include("api.public.urls", namespace="public")),
 ]

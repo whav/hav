@@ -3,18 +3,16 @@ import styles from "./NavBar.module.css";
 import { MenuButton } from "theme-ui";
 
 import ActiveLink from "./Link";
-import { useRouter } from "next/router";
 import { useCollection } from "hooks";
+import useSWR from "swr";
 
-const collections = ["nebesky", "gaenszle"];
-if (process.env.NODE_ENV === "development") {
-  collections.push("test");
-}
+const fetcher = (url) => fetch(url).then((r) => r.json());
+
 const Link = (props) => {
   return <ActiveLink activeClassName={styles.active_link} {...props} />;
 };
 
-const CollectionNav = ({ slug }) => {
+const CollectionNav = ({ collection: { slug, shortName } }) => {
   return (
     <ul>
       <li>
@@ -24,7 +22,7 @@ const CollectionNav = ({ slug }) => {
       </li>
       <li>
         <Link href="/[[...page]]/" as={`/collections/${slug}/`}>
-          <a>{slug}</a>
+          <a>{shortName}</a>
         </Link>
       </li>
       <li>
@@ -47,7 +45,7 @@ const CollectionNav = ({ slug }) => {
   );
 };
 
-const GlobalNav = () => {
+const GlobalNav = ({ collections = [] }) => {
   return (
     <ul>
       <li>
@@ -73,9 +71,9 @@ const GlobalNav = () => {
         Collections
         <ul>
           {collections.map((c) => (
-            <li key={c}>
-              <Link href="/[[...page]]/" as={`/collections/${c}/`}>
-                <a>{c}</a>
+            <li key={c.slug}>
+              <Link href="/[[...page]]/" as={`/collections/${c.slug}/`}>
+                <a>{c.shortName}</a>
               </Link>
             </li>
           ))}
@@ -88,6 +86,9 @@ const GlobalNav = () => {
 const NavBar = () => {
   const [navVisible, setNavVisibility] = useState(false);
   const collection_slug = useCollection();
+  const { data } = useSWR("/api/collections/", fetcher);
+  const collections = data?.collections || [];
+  const collection = collections.find((c) => c.slug === collection_slug);
 
   return (
     <div className={styles.navbar_wrapper}>
@@ -104,12 +105,12 @@ const NavBar = () => {
         </div>
       </div>
       <nav className={`${styles.nav} ${navVisible ? "" : styles.nav_hidden}`}>
-        {collection_slug ? (
-          <CollectionNav slug={collection_slug} />
+        {collection ? (
+          <CollectionNav collection={collection} />
         ) : (
-          <GlobalNav />
+          <GlobalNav collections={collections} />
         )}
-        <div className="nav-bottom">
+        <div className={styles.nav_bottom}>
           <ul>
             <li>
               <img src="/logos/cirdis.svg" />
@@ -121,7 +122,7 @@ const NavBar = () => {
             <li>
               <a href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf">
                 Privacy Policy
-              </a>
+              </a>{" "}
               <Link href="/imprint/">
                 <a>Imprint</a>
               </Link>

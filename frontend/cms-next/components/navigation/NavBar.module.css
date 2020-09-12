@@ -1,5 +1,4 @@
 .navbar_wrapper {
-  background-color: #f8b20c;
   padding: 0.5em;
 }
 
@@ -71,6 +70,10 @@
   font-weight: bold;
   color: black;
   padding-right: 0.3rem;
+}
+
+.nav_bottom {
+  font-size: 0.8rem;
 }
 
 @media (min-width: 600px) {

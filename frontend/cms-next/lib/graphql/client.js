@@ -1,22 +1,21 @@
-const gql = require("graphql-tag");
-const ApolloClient = require("apollo-client").ApolloClient;
-const fetch = require("node-fetch");
-const createHttpLink = require("apollo-link-http").createHttpLink;
-const InMemoryCache = require("apollo-cache-inmemory").InMemoryCache;
+const { gql, GraphQLClient } = require("graphql-request");
 
-const httpLink = createHttpLink({
-  uri: "https://hav2.aussereurop.univie.ac.at/api/graphql",
-  fetch: fetch,
-});
+// const url = new URL();
+// url.origin = new URL(process.env.HAV_URL).origin;
+// url.pathname = "/api/graphql/";
 
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache(),
-});
+const client = new GraphQLClient(
+  "https://hav2.aussereurop.univie.ac.at/api/graphql/",
+  // url.href,
+  { headers: {} }
+);
 
-const query = async (query) => {
-  const result = await client.query({ query: gql(query) });
-  return result;
+const query = async (query, variables) => {
+  const q = query;
+  // console.log("url??", url, url.href);
+
+  // console.log(q, variables);
+  return client.request(q, variables);
 };
 
-export { query, client };
+export { query, client, gql };

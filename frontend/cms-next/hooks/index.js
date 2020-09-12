@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import useSWR from "swr";
 
 const collectionRe = /^\/collections\/(\w+)\/.*$/;
 
@@ -17,4 +18,18 @@ export const useCollection = () => {
     }
   }
   return collection_slug;
+};
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
+
+export const useAPI = (url, query = {}) => {
+  let params;
+  if (query) {
+    params = new URLSearchParams(query);
+  }
+
+  if (params) {
+    url = `${url}?${params}`;
+  }
+  return useSWR(url, fetcher);
 };

@@ -4,14 +4,12 @@ import { MenuButton } from "theme-ui";
 
 import ActiveLink from "./Link";
 import { useRouter } from "next/router";
+import { useCollection } from "hooks";
 
 const collections = ["nebesky", "gaenszle"];
 if (process.env.NODE_ENV === "development") {
   collections.push("test");
 }
-
-const collectionRe = /^\/collections\/(\w+)\/.*$/;
-
 const Link = (props) => {
   return <ActiveLink activeClassName={styles.active_link} {...props} />;
 };
@@ -21,7 +19,7 @@ const CollectionNav = ({ slug }) => {
     <ul>
       <li>
         <Link href="/[[...page]]/" as="/">
-          <a>Return</a>
+          <a>← All Collections</a>
         </Link>
       </li>
       <li>
@@ -89,20 +87,8 @@ const GlobalNav = () => {
 
 const NavBar = () => {
   const [navVisible, setNavVisibility] = useState(false);
-  const router = useRouter();
+  const collection_slug = useCollection();
 
-  let { collection_slug } = router.query;
-  if (!collection_slug) {
-    const match = router.asPath.match(collectionRe);
-    if (match) {
-      collection_slug = match[1];
-    }
-  }
-  console.log(
-    collection_slug,
-    router.asPath,
-    router.asPath.match(collectionRe)
-  );
   return (
     <div className={styles.navbar_wrapper}>
       <div className={styles.navbar}>

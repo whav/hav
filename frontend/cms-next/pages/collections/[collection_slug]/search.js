@@ -1,10 +1,13 @@
 import React from "react";
 import { Button } from "theme-ui";
-import { useRouter } from "next/router";
+import { useCollection } from "hooks";
 
 const SearchInput = ({ slug }) => {
   return (
     <>
+      <h1>Search collection {slug}</h1>
+      <p>This page will alow you to search the collection {slug}</p>
+      <hr />
       <input type="search" placeholder={`Search collection`} />
       <Button>Search</Button>
     </>
@@ -12,8 +15,7 @@ const SearchInput = ({ slug }) => {
 };
 
 const SearchPage = () => {
-  const router = useRouter();
-  const { collection_slug } = router.query;
+  const { collection_slug } = useCollection();
   return <SearchInput slug={collection_slug} />;
 };
 

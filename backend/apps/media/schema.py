@@ -88,7 +88,7 @@ class LicenseType(DjangoObjectType):
         model = License
 
 
-class Query(object):
+class Query:
 
     media = graphene.Field(MediaType, id=graphene.String(required=True))
     media_entries = graphene.List(MediaType, nodeID=graphene.String(required=True))

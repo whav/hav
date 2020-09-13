@@ -1,0 +1,26 @@
+.filebrowser {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.filebrowser > * {
+  display: block;
+  /* flex-grow: 0;
+  flex-shrink: 0; */
+  /* width: 5rem; */
+  padding: 0 0.5rem;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.item {
+  width: 5rem;
+  text-align: center;
+}
+
+.item > svg {
+  display: block;
+  width: 5rem;
+}

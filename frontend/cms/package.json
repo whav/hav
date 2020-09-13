@@ -1,60 +1,29 @@
 {
   "name": "hav-cms",
-  "private": true,
-  "description": "The CMS parts of the HAV",
   "version": "0.1.0",
-  "dependencies": {
-    "@mdx-js/mdx": "^1.0.20",
-    "@mdx-js/react": "^1.0.20",
-    "apollo-boost": "^0.4.2",
-    "classnames": "^2.2.6",
-    "gatsby": "^2.24.52",
-    "gatsby-image": "^2.1.4",
-    "gatsby-plugin-alias-imports": "^1.0.5",
-    "gatsby-plugin-create-client-paths": "^2.0.5",
-    "gatsby-plugin-manifest": "^2.2.28",
-    "gatsby-plugin-mdx": "^1.0.5",
-    "gatsby-plugin-offline": "^3.0.21",
-    "gatsby-plugin-react-helmet": "^3.0.12",
-    "gatsby-plugin-sharp": "^2.2.39",
-    "gatsby-remark-images": "^3.1.31",
-    "gatsby-source-filesystem": "^2.0.39",
-    "gatsby-source-graphql": "^2.0.19",
-    "gatsby-transformer-sharp": "^2.3.5",
-    "hav-ui": "==1.0.0",
-    "isomorphic-fetch": "^2.2.1",
-    "leaflet": "^1.5.0",
-    "prop-types": "^15.7.2",
-    "react": "^16.8",
-    "react-apollo": "^3.1.3",
-    "react-dom": "^16.8",
-    "react-helmet": "^5.2.1",
-    "react-icons": "^3.7.0",
-    "react-leaflet": "^2.4.0",
-    "react-redux": "^7.1.0",
-    "redux": "^4.0.1"
-  },
-  "keywords": [
-    "gatsby",
-    "hav"
-  ],
-  "license": "MIT",
+  "private": true,
   "scripts": {
-    "build": "gatsby build",
-    "develop": "gatsby develop -p 8001",
-    "start": "npm run develop",
-    "format": "prettier --write \"src/**/*.js\"",
-    "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
-  "devDependencies": {
-    "http-proxy-middleware": "^1.0.5",
-    "prettier": "^1.18.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/whav/hav"
-  },
-  "bugs": {
-    "url": "https://github.com/whav/hav/issues"
+  "dependencies": {
+    "@babel/runtime": "^7.11.2",
+    "@mdx-js/loader": "^1.6.16",
+    "@next/mdx": "^9.5.3",
+    "fast-glob": "^3.2.4",
+    "graphql": "^15.3.0",
+    "graphql-request": "^3.1.0",
+    "graphql-tag": "^2.11.0",
+    "gray-matter": "^4.0.2",
+    "hav-ui": "./ui/",
+    "next": "9.5.2",
+    "next-mdx-remote": "^1.0.0",
+    "node-fetch": "^2.6.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-icons": "^3.11.0",
+    "swr": "^0.3.2",
+    "theme-ui": "^0.3.1"
   }
 }

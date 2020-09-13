@@ -17,12 +17,21 @@ export default async (req, res) => {
             id
           }
         }
+        mediaEntries(nodeID: $set) {
+          id
+          title
+          thumbnailUrl
+        }
       }
     `,
     req.query
   );
-  //   console.log(result);
-  // const { data } = result;
+
+  const data = {
+    ...result.node,
+    mediaEntries: result.mediaEntries,
+  };
+  // console.log(data);
   res.status = 200;
-  res.json(result);
+  res.json(data);
 };

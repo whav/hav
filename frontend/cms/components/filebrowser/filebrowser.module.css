@@ -1,14 +1,12 @@
 .filebrowser {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  /* flex-wrap: wrap; */
   width: 100%;
+  grid-template-columns: repeat(5, 1fr);
 }
 
 .filebrowser > * {
   display: block;
-  /* flex-grow: 0;
-  flex-shrink: 0; */
-  /* width: 5rem; */
   padding: 0 0.5rem;
   text-align: center;
   text-decoration: none;
@@ -16,11 +14,15 @@
 }
 
 .item {
-  width: 5rem;
   text-align: center;
+  overflow: hidden;
 }
 
 .item > svg {
   display: block;
   width: 5rem;
+}
+
+.item > img {
+  max-width: 200px;
 }

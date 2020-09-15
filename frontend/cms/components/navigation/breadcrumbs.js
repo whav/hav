@@ -1,23 +1,26 @@
-/** @jsx jsx */
-import { jsx } from "theme-ui";
 import React from "react";
 
-const Breadcrumbs = ({ items, separator = "/" }) => {
+const Breadcrumbs = ({ children, separator = "/" }) => {
   return (
-    <ul
-      sx={{
-        "& li": {
-          display: "inline"
-        },
-        "& li+li:before": {
-          content: `"${separator}"`,
-          px: ".5rem"
-        }
-      }}
-    >
-      {items.map((item, index) => (
+    <ul>
+      {children.map((item, index) => (
         <li key={index}>{item}</li>
       ))}
+      <style jsx>{`
+        ul {
+          list-style: none;
+          padding-left: 0;
+        }
+        li {
+          display: inline-block;
+        }
+        li:not(:first-child) {
+          padding-left: 0.5rem;
+        }
+        li:not(:first-child)::before {
+          content: "${separator} "
+        }
+      `}</style>
     </ul>
   );
 };

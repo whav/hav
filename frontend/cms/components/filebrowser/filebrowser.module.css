@@ -19,8 +19,8 @@
 }
 
 .item > svg {
-  display: block;
-  width: 5rem;
+  width: 100%;
+  min-height: 100px;
 }
 
 .item > img {

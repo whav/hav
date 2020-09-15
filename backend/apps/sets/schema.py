@@ -22,7 +22,7 @@ class NodeType(DjangoObjectType):
         return self.get_children()
 
     def resolve_ancestors(self, info):
-        return self.get_ancestors()
+        return self.collection_ancestors
 
 
 class Query(object):

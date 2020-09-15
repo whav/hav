@@ -13,6 +13,17 @@ class Node(MP_Node):
     def children(self):
         return self.get_children()
 
+    @property
+    def collection_ancestors(self):
+        root_node_id = self.get_collection().root_node_id
+        ancestors = self.get_ancestors()
+
+        for index, ancestors in enumerate(ancestors):
+            if ancestors.pk == root_node_id:
+                return ancestors[index + 1 :]
+
+        return ancestors
+
     def get_collection(self):
         from apps.hav_collections.models import Collection
 

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useAPI } from "hooks";
 import { Link } from "components";
 import { Folder, Media, FileBrowser } from "components/filebrowser";
+import Breadcrumbs from "components/navigation/breadcrumbs";
 
 const CollectionBrowser = (props) => {
   const router = useRouter();
@@ -23,9 +24,19 @@ const CollectionBrowser = (props) => {
 
   return (
     <>
-      <h1>Browse collection: {name}</h1>
-      <pre>{JSON.stringify(ancestors, null, 2)}</pre>
-      <p>This page will allow you to browse the collection.</p>
+      <h1>{name}</h1>
+      <Breadcrumbs>
+        {ancestors.map((a) => (
+          <Link
+            key={`set-${a.id}`}
+            href={router.pathname}
+            as={`/collections/${collection_slug}/browse/${a.id}/`}
+          >
+            <a>{a.name}</a>
+          </Link>
+        ))}
+      </Breadcrumbs>
+
       <FileBrowser>
         {children.map((c) => (
           <Link
@@ -50,7 +61,7 @@ const CollectionBrowser = (props) => {
           </Link>
         ))}
       </FileBrowser>
-      <pre>{JSON.stringify({ props, data }, null, 2)}</pre>
+      {/* <pre>{JSON.stringify({ props, data }, null, 2)}</pre> */}
     </>
   );
 };

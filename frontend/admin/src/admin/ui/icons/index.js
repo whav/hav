@@ -1,5 +1,3 @@
-import React from "react";
-
 export {
   MdCheckBoxOutlineBlank as CheckboxBlankIcon,
   MdCheckBox as CheckboxCheckedIcon,

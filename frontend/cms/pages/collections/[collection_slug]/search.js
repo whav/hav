@@ -6,10 +6,10 @@ const SearchInput = ({ slug }) => {
   return (
     <>
       <h1>Search collection {slug}</h1>
-      <p>This page will alow you to search the collection {slug}</p>
-      <hr />
-      <input type="search" placeholder={`Search collection`} />
-      <Button>Search</Button>
+      <p>This page will soon allow you to search the collection {slug}</p>
+      {/* <hr /> */}
+      {/* <input type="search" placeholder={`Search collection`} /> */}
+      {/* <Button>Search</Button> */}
     </>
   );
 };

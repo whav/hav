@@ -1,23 +1,30 @@
 # HAV frontend projects
 
-This folder, organised as yarn workspaces, holds the frontend parts of the HAV.
+This folder holds the frontend parts of the HAV.
 
-## Some hints on how to get started
+## CMS
 
-List available workspaces
-
-```
-yarn workspaces
-```
-
-Run the admin frontend build server in hot module reloading
+The cms parts of the HAV are built with [Next.js](https://nextjs.org/).
 
 ```
-yarn workspace hav-admin hmr
+cd cms
+yarn install && yarn dev
 ```
 
-Start the CMS against a running django development server:
+Note that you will need the django server running in order to get results.
+
+## Admin UI
 
 ```
-HAV_URL=http://127.0.0.1:8000/ yarn workspace hav-cms start
+cd admin
+yarn install && yarn hmr
 ```
+
+## UI
+
+This will be the basis of a a shared ui library.
+Very early state, use at your own risk.
+
+## Gatsby CMS _deprecated_
+
+This experiment was quite advanced and we will keep it around for now. Mainly for historic reasons.

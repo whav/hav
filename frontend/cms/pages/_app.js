@@ -1,4 +1,3 @@
-import { ThemeProvider } from "hav-ui";
 import Head from "next/head";
 import Link from "next/link";
 import NavBar from "components/navigation/NavBar";
@@ -17,9 +16,7 @@ function HAVApp({ Component, pageProps }) {
           <NavBar />
         </Layout.Nav>
         <Layout.Main>
-          <ThemeProvider>
-            <Component {...pageProps} />
-          </ThemeProvider>
+          <Component {...pageProps} />
         </Layout.Main>
       </Layout.Wrapper>
     </>

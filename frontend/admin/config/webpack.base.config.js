@@ -33,11 +33,6 @@ module.exports = opts => {
       path: output_path,
       filename: "[name]-[hash].js"
     },
-    resolve: {
-      alias: {
-        "hav-ui": path.join(PROJECT_ROOT, "../ui/src")
-      }
-    },
     plugins,
     module: {
       rules: [

@@ -16,10 +16,13 @@ class Node(MP_Node):
     @property
     def collection_ancestors(self):
         root_node_id = self.get_collection().root_node_id
-        ancestors = self.get_ancestors()
+        if self.pk == root_node_id:
+            # we are the actual node!
+            return []
 
-        for index, ancestors in enumerate(ancestors):
-            if ancestors.pk == root_node_id:
+        ancestors = self.get_ancestors()
+        for index, ancestor in enumerate(ancestors):
+            if ancestor.pk == root_node_id:
                 return ancestors[index + 1 :]
 
         return ancestors

@@ -1,8 +1,5 @@
 .filebrowser {
-  display: grid;
-  /* flex-wrap: wrap; */
   width: 100%;
-  grid-template-columns: repeat(5, 1fr);
 }
 
 .filebrowser > * {
@@ -25,4 +22,20 @@
 
 .item > img {
   max-width: 200px;
+}
+
+@media (min-width: 600px) {
+  .filebrowser {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .filebrowser > * {
+    flex: 1 1 200px;
+  }
+
+  .item {
+    max-width: 250px;
+  }
 }

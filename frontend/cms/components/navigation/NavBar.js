@@ -12,7 +12,13 @@ const Link = (props) => {
   return <ActiveLink activeClassName={styles.active_link} {...props} />;
 };
 
-const CollectionNav = ({ collection: { slug, shortName } }) => {
+const CollectionNav = ({
+  collection: {
+    slug,
+    shortName,
+    rootNode: { id },
+  },
+}) => {
   return (
     <ul>
       <li>
@@ -28,7 +34,7 @@ const CollectionNav = ({ collection: { slug, shortName } }) => {
       <li>
         <Link
           href="/collections/[collection_slug]/browse/[[...folder_id]]/"
-          as={`/collections/${slug}/browse/`}
+          as={`/collections/${slug}/browse/${id}/`}
         >
           <a>Browse</a>
         </Link>

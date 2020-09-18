@@ -33,7 +33,7 @@ const CollectionNav = ({
       </li>
       <li>
         <Link
-          href="/collections/[collection_slug]/browse/[[...folder_id]]/"
+          href="/collections/[collection_slug]/browse/[...folder_id]/"
           as={`/collections/${slug}/browse/${id}/`}
         >
           <a>Browse</a>

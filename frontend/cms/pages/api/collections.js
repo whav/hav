@@ -15,5 +15,9 @@ export default async (req, res) => {
   );
 
   res.status = 200;
-  res.json(result);
+  const collections = result.collections.map((c) => ({
+    ...c,
+    rootNode: c.rootNode?.id,
+  }));
+  res.json(collections);
 };

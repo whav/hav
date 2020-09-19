@@ -1,7 +1,8 @@
 /** @jsx jsx */
 import { jsx, Box } from "theme-ui";
+import Wrapper from "./Wrapper";
 
-const MDX = ({ children }) => <>{children}</>;
+const MDX = ({ children }) => <Wrapper>{children}</Wrapper>;
 
 export default MDX;
 

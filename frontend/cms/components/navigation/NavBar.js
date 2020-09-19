@@ -12,13 +12,7 @@ const Link = (props) => {
   return <ActiveLink activeClassName={styles.active_link} {...props} />;
 };
 
-const CollectionNav = ({
-  collection: {
-    slug,
-    shortName,
-    rootNode: { id },
-  },
-}) => {
+const CollectionNav = ({ collection: { slug, shortName, rootNode } }) => {
   return (
     <ul>
       <li>
@@ -34,7 +28,7 @@ const CollectionNav = ({
       <li>
         <Link
           href="/collections/[collection_slug]/browse/[...folder_id]/"
-          as={`/collections/${slug}/browse/${id}/`}
+          as={`/collections/${slug}/browse/${rootNode}/`}
         >
           <a>Browse</a>
         </Link>
@@ -93,7 +87,7 @@ const NavBar = () => {
   const [navVisible, setNavVisibility] = useState(false);
   const collection_slug = useCollection();
   const { data } = useSWR("/api/collections/", fetcher);
-  const collections = data?.collections || [];
+  const collections = data || [];
   const collection = collections.find((c) => c.slug === collection_slug);
 
   return (

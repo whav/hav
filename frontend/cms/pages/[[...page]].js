@@ -10,7 +10,7 @@ import matter from "gray-matter";
 
 export default function ContentPage({ source, frontmatter }) {
   const content = hydrate(source, { components });
-  return <div>{content}</div>;
+  return <MDX>{content}</MDX>;
 }
 
 export async function getStaticProps({ params: { page = [] } }) {
@@ -27,10 +27,10 @@ export async function getStaticProps({ params: { page = [] } }) {
 
   const mdFile = path.join(sourceDirectory, files[0]);
 
-  console.log(`Selected file: ${mdFile}`);
+  // console.log(`Selected file: ${mdFile}`);
   const source = await fs.readFile(mdFile);
   const { content, frontmatter = {} } = matter(source);
-  console.log(frontmatter);
+  // console.log(frontmatter);
   const mdxSource = await renderToString(content, { components });
   return { props: { source: mdxSource, frontmatter } };
 }

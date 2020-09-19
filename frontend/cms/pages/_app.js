@@ -3,6 +3,7 @@ import Link from "next/link";
 import NavBar from "components/navigation/NavBar";
 import Layout from "components/layout/Layout";
 import "../components/styles.css";
+import ThemeProvider from "../components/theme/provider";
 
 function HAVApp({ Component, pageProps }) {
   return (
@@ -16,7 +17,9 @@ function HAVApp({ Component, pageProps }) {
           <NavBar />
         </Layout.Nav>
         <Layout.Main>
-          <Component {...pageProps} />
+          <ThemeProvider>
+            <Component {...pageProps} />
+          </ThemeProvider>
         </Layout.Main>
       </Layout.Wrapper>
     </>

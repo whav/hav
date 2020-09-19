@@ -41,10 +41,10 @@ export const useAPI = (url, query = {}) => {
       query[key] === undefined ? delete query[key] : null
     );
     params = new URLSearchParams(query);
+    if (params) {
+      url = `${url}?${params}`;
+    }
   }
 
-  if (params) {
-    url = `${url}?${params}`;
-  }
   return useSWR(url, fetcher);
 };

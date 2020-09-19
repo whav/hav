@@ -24,7 +24,7 @@
   max-width: 200px;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 400px) {
   .filebrowser {
     display: flex;
     flex-wrap: wrap;

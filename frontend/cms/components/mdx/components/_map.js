@@ -1,8 +1,7 @@
-import React from 'react';
-import { Map, TileLayer, LayersControl } from 'react-leaflet';
-require('leaflet/dist/leaflet.css');
+import React from "react";
+import { Map, TileLayer, LayersControl } from "react-leaflet";
 
-const HAVMap = props => {
+const HAVMap = (props) => {
   const { lat, lng, zoom } = props;
   const viewport = {
     center: [lat, lng],

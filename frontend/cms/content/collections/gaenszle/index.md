@@ -11,4 +11,4 @@ The earlier part of the ethnographic documentation in this collection resulted f
 
 <hr />
 
-<Media id={185} title='Schnee' />
+<Media id="816" title='Schnee' />

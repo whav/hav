@@ -1,4 +1,5 @@
 import React from "react";
+import { useAPI } from "hooks";
 
 const Image = ({ media, caption, title, url }) => {
   return (
@@ -8,23 +9,24 @@ const Image = ({ media, caption, title, url }) => {
         src={media.thumbnailUrl}
         srcSet={media.srcset.join(", ")}
       />
-      <figcaption>
-        {caption || <Link to={url}>{title || media.title}</Link>}
-      </figcaption>
+      <figcaption>{caption}</figcaption>
     </figure>
   );
 };
 
 const MediaSwitch = (props) => {
-  // const { media } = props;
   return <Image {...props} />;
 };
 
-class Media extends React.Component {
-  render() {
-    const { id, title } = this.props;
-    const url = `/collections/${data.media.collection.slug}/browse/media/${id}/`;
+const Media = (props) => {
+  console.log(props);
+  const { id } = props;
+  const { loading, data, ...other } = useAPI("/api/media/", { id });
+  if (!data) {
+    return <h1>Loading...</h1>;
   }
-}
+  console.log(loading, data, other);
+  return <MediaSwitch {...data} />;
+};
 
 export default Media;

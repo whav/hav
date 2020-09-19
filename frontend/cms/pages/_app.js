@@ -1,9 +1,12 @@
 import Head from "next/head";
-import Link from "next/link";
 import NavBar from "components/navigation/NavBar";
 import Layout from "components/layout/Layout";
-import "../components/styles.css";
 import ThemeProvider from "../components/theme/provider";
+
+// css imports
+import "../components/styles.css";
+// TODO: move this somewhere else
+import "leaflet/dist/leaflet.css";
 
 function HAVApp({ Component, pageProps }) {
   return (

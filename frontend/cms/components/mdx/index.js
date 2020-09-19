@@ -1,5 +1,7 @@
 /** @jsx jsx */
 import { jsx, Box } from "theme-ui";
+import Map from "./components/map";
+import Media from "./components/media";
 import Wrapper from "./Wrapper";
 
 const MDX = ({ children }) => <Wrapper>{children}</Wrapper>;
@@ -13,9 +15,9 @@ const Component = ({ title }) => (
 );
 
 const components = {
-  HAVMap: () => <Component title="Map" />,
-  HAVMedia: () => <Component title="HAVMedia" />,
-  Media: () => <Component title="Media" />,
+  HAVMap: (props) => <Map {...props} />,
+  HAVMedia: (props) => <Media {...props} />,
+  Media: (props) => <Media {...props} />,
 };
 
 export { components };

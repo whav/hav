@@ -1,7 +1,9 @@
 import { query } from "lib/graphql";
 
 export default async (req, res) => {
-  const { media_id } = req.query;
+  console.log(res.query);
+  const { id } = req.query;
+
   const result = await query(
     `
       query MediaQuery($mediaId: String!) {
@@ -27,11 +29,13 @@ export default async (req, res) => {
               sourceRef
             }
           }
+          srcset
+          thumbnailUrl
         }
       }
   `,
     {
-      mediaId: media_id,
+      mediaId: id,
     }
   );
   // console.log(result);

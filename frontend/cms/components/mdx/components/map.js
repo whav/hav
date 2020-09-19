@@ -1,15 +1,18 @@
-import React, { Suspense } from 'react';
+import React, { Suspense } from "react";
+import styles from "./map.module.css";
 
-const Map = React.lazy(() => import('./_map.js'));
+const Map = React.lazy(() => import("./_map.js"));
 
-const HAVMap = props => {
-  if (typeof window === 'undefined') {
+const HAVMap = (props) => {
+  if (typeof window === "undefined") {
     return null;
   } else {
     return (
-      <Suspense fallback={<span />}>
-        <Map {...props} />
-      </Suspense>
+      <div className={styles.map}>
+        <Suspense fallback={<span />}>
+          <Map {...props} />
+        </Suspense>
+      </div>
     );
   }
 };

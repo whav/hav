@@ -17,12 +17,14 @@
     "graphql-request": "^3.1.0",
     "graphql-tag": "^2.11.0",
     "gray-matter": "^4.0.2",
+    "leaflet": "^1.7.1",
     "next": "9.5.2",
     "next-mdx-remote": "^1.0.0",
     "node-fetch": "^2.6.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-icons": "^3.11.0",
+    "react-leaflet": "^2.7.0",
     "swr": "^0.3.2",
     "theme-ui": "^0.3.1"
   }

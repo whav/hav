@@ -8,7 +8,11 @@ const HAVMap = (props) => {
     zoom: zoom,
   };
   return (
-    <Map {...props} viewport={viewport}>
+    <Map
+      {...props}
+      viewport={viewport}
+      style={{ width: "100%", height: "300px" }}
+    >
       <LayersControl position="topright">
         <LayersControl.BaseLayer name="OSM">
           <TileLayer

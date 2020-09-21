@@ -7,7 +7,7 @@ import React from "react";
 import { ThemeProvider } from "theme-ui";
 import defaultTheme from "./theme";
 
-export default ({ theme = defaultTheme, children, components = null }) => {
+const Theme = ({ theme = defaultTheme, children, components = null }) => {
   return (
     <ThemeProvider theme={theme}>
       <Global
@@ -24,3 +24,5 @@ export default ({ theme = defaultTheme, children, components = null }) => {
     </ThemeProvider>
   );
 };
+
+export default Theme;

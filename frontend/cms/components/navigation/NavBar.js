@@ -16,28 +16,22 @@ const CollectionNav = ({ collection: { slug, shortName, rootNode } }) => {
   return (
     <ul>
       <li>
-        <Link href="/[[...page]]/" as="/">
+        <Link href="/">
           <a>← All Collections</a>
         </Link>
       </li>
       <li>
-        <Link href="/[[...page]]/" as={`/collections/${slug}/`}>
+        <Link href={`/collections/${slug}/`}>
           <a>{shortName}</a>
         </Link>
       </li>
       <li>
-        <Link
-          href="/collections/[collection_slug]/browse/[...folder_id]/"
-          as={`/collections/${slug}/browse/${rootNode}/`}
-        >
+        <Link href={`/collections/${slug}/browse/`} exact={false}>
           <a>Browse</a>
         </Link>
       </li>
       <li>
-        <Link
-          href="/collections/[collection_slug]/search/"
-          as={`/collections/${slug}/search/`}
-        >
+        <Link href={`/collections/${slug}/search/`}>
           <a>Search</a>
         </Link>
       </li>
@@ -49,18 +43,18 @@ const GlobalNav = ({ collections = [] }) => {
   return (
     <ul>
       <li>
-        <Link href="/[[...page]]/" as="/">
+        <Link href="/">
           <a>Home</a>
         </Link>
         <ul>
           <li>
-            <Link href="/[[...page]]/" as="/cooperation/">
+            <Link href="/cooperation/">
               <a>How to cooperate</a>
             </Link>
           </li>
 
           <li>
-            <Link href="/[[...page]]/" as="/open-knowledge/">
+            <Link href="/open-knowledge/">
               <a>License Models</a>
             </Link>
           </li>
@@ -72,7 +66,7 @@ const GlobalNav = ({ collections = [] }) => {
         <ul>
           {collections.map((c) => (
             <li key={c.slug}>
-              <Link href="/[[...page]]/" as={`/collections/${c.slug}/`}>
+              <Link href={`/collections/${c.slug}/`}>
                 <a>{c.shortName}</a>
               </Link>
             </li>

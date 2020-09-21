@@ -1,6 +1,7 @@
 import React from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import { pathToRegexp } from "path-to-regexp";
 
 const Link = ({
   children,
@@ -8,14 +9,18 @@ const Link = ({
   exact = true,
   ...props
 }) => {
-  const { asPath } = useRouter();
-  // TODO: "as" vs "href", I think "as" has the correct url
-  const { href, as } = props;
-  const path = as || href;
-  const is_active = exact ? asPath === path : path.startswith(asPath);
+  const { asPath, pathname } = useRouter();
+
+  const { href } = props;
 
   let className = children.props.className || "";
-  if (is_active) {
+
+  const isActive = pathToRegexp(href, [], {
+    sensitive: true,
+    end: !!exact,
+  }).test(asPath);
+
+  if (isActive) {
     className = `${className} ${activeClassName}`;
   }
 

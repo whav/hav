@@ -29,8 +29,7 @@ const CollectionBrowser = (props) => {
         {ancestors.map((a) => (
           <Link
             key={`set-${a.id}`}
-            href={router.pathname}
-            as={`/collections/${collection_slug}/browse/${a.id}/`}
+            href={`/collections/${collection_slug}/browse/${a.id}/`}
           >
             <a>{a.name}</a>
           </Link>

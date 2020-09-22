@@ -62,11 +62,7 @@ class MediaType(DjangoObjectType):
         return ""
 
     def resolve_ancestors(self, info):
-        root = self.set.get_collection()
-        if self.set == root:
-            return []
-
-        return self.set.get_ancestors()
+        return self.set.collection_ancestors
 
     @classmethod
     def get_queryset(cls, queryset, info):

@@ -9,12 +9,19 @@ export default async (req, res) => {
       query MediaQuery($mediaId: String!) {
         media(id: $mediaId) {
           title
+          license {
+            name
+            shortName
+            href
+          }
           collection {
             name
             shortName
+            slug
           }
           ancestors {
             name
+            id
           }
           creators {
             firstName

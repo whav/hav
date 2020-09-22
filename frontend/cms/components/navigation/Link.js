@@ -5,11 +5,15 @@ import { pathToRegexp } from "path-to-regexp";
 
 import memoize from "lodash/memoize";
 
-const toRegexp = memoize((href, exact = true) =>
-  pathToRegexp(href, [], {
-    sensitive: true,
-    end: !!exact,
-  })
+const toRegexp = memoize(
+  (href, exact = true) =>
+    pathToRegexp(href, [], {
+      sensitive: true,
+      end: !!exact,
+    }),
+  // a resolver function to generate a cache key
+  // from the 2 args
+  (...args) => args.join("||")
 );
 
 const Link = ({

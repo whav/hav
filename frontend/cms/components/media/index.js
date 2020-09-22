@@ -1,23 +1,37 @@
 import React from "react";
 import Image from "./image";
 import Tags from "./tags";
+import { Link } from "components";
+import Breadcrumbs from "components/navigation/breadcrumbs";
 
 import styles from "./media.module.css";
 
-const MediaDetail = ({ media }) => {
+const MediaDetail = (props) => {
+  const { media } = props;
+  const { ancestors = [], tags = [], collection = {}, title } = media;
+  const collection_slug = collection?.slug;
   return (
     <>
-      <h1>{media.title}</h1>
-
+      <h1>{title}</h1>
+      <Breadcrumbs>
+        {ancestors.map((a) => (
+          <Link
+            key={`set-${a.id}`}
+            href={`/collections/${collection_slug}/browse/${a.id}/`}
+          >
+            <a>{a.name}</a>
+          </Link>
+        ))}
+      </Breadcrumbs>
       <div className={styles.mediaContainer}>
-        <Image {...media} />
+        <Image {...props.media} />
       </div>
-      {media.tags && (
+      {tags && (
         <div className={styles.tags}>
-          <Tags tags={media.tags} />
+          <Tags tags={tags} />
         </div>
       )}
-      <pre>{JSON.stringify(media, null, 2)}</pre>
+      <pre>{JSON.stringify(props.media, null, 2)}</pre>
     </>
   );
 };

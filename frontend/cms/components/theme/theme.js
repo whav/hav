@@ -53,4 +53,9 @@ export default {
       borderColor: "muted",
     },
   },
+  styles: {
+    spinner: {
+      color: "colors.text",
+    },
+  },
 };

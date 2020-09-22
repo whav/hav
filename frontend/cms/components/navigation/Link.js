@@ -3,22 +3,39 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { pathToRegexp } from "path-to-regexp";
 
+import memoize from "lodash/memoize";
+
+const toRegexp = memoize((href, exact = true) =>
+  pathToRegexp(href, [], {
+    sensitive: true,
+    end: !!exact,
+  })
+);
+
 const Link = ({
   children,
   activeClassName = "active",
   exact = true,
+  additionalPaths = [],
   ...props
 }) => {
-  const { asPath, pathname } = useRouter();
+  const { asPath } = useRouter();
 
   const { href } = props;
 
   let className = children.props.className || "";
 
-  const isActive = pathToRegexp(href, [], {
-    sensitive: true,
-    end: !!exact,
-  }).test(asPath);
+  let isActive = toRegexp(href, exact).test(asPath);
+
+  if (!isActive && additionalPaths.length) {
+    for (const path of additionalPaths) {
+      const regexp = toRegexp(path, exact);
+      if (regexp.test(asPath)) {
+        isActive = true;
+        break;
+      }
+    }
+  }
 
   if (isActive) {
     className = `${className} ${activeClassName}`;

@@ -3,6 +3,7 @@ import { jsx } from "theme-ui";
 
 import { useAPI } from "hooks";
 import { Image, Card, Text } from "theme-ui";
+import { Loading } from "components";
 
 const ImageMedia = ({ media, caption, title, url }) => {
   return (
@@ -20,11 +21,11 @@ const MediaSwitch = (props) => {
 
 const Media = (props) => {
   const { id, caption } = props;
-  const { loading, data, ...other } = useAPI("/api/media/", { id });
+  const { data } = useAPI("/api/media/", { mediaId: id });
   if (!data) {
-    return <h1>Loading...</h1>;
+    return null;
   }
-  console.log(loading, data, other);
+
   return (
     <Card
       sx={{

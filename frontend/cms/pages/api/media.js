@@ -2,7 +2,7 @@ import { query } from "lib/graphql";
 
 export default async (req, res) => {
   console.log(res.query);
-  const { id } = req.query;
+  const { mediaId } = req.query;
 
   const result = await query(
     `
@@ -35,11 +35,10 @@ export default async (req, res) => {
       }
   `,
     {
-      mediaId: id,
+      mediaId,
     }
   );
-  // console.log(result);
-  // const { data } = result;
+
   res.status = 200;
   res.json(result);
 };

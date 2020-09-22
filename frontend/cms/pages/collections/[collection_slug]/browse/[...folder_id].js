@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useAPI } from "hooks";
-import { Link } from "components";
+import { Link, Loading } from "components";
 import { Folder, Media, FileBrowser } from "components/filebrowser";
 import Breadcrumbs from "components/navigation/breadcrumbs";
 
@@ -17,7 +17,7 @@ const CollectionBrowser = (props) => {
   });
 
   if (!data) {
-    return <div>Loading</div>;
+    return <Loading />;
   }
 
   const { name = "", children = [], ancestors = [], mediaEntries = [] } = data;

@@ -26,7 +26,11 @@ const CollectionNav = ({ collection: { slug, shortName, rootNode } }) => {
         </Link>
       </li>
       <li>
-        <Link href={`/collections/${slug}/browse/`} exact={false}>
+        <Link
+          href={`/collections/${slug}/browse/`}
+          additionalPaths={[`/collections/${slug}/media/`]}
+          exact={false}
+        >
           <a>Browse</a>
         </Link>
       </li>

@@ -1,9 +1,8 @@
 import React from "react";
 import Image from "./image";
 import Tags from "./tags";
-import { Link } from "components";
-import Breadcrumbs from "components/navigation/breadcrumbs";
 
+import Header from "../Header";
 import styles from "./media.module.css";
 
 const MediaDetail = (props) => {
@@ -12,17 +11,12 @@ const MediaDetail = (props) => {
   const collection_slug = collection?.slug;
   return (
     <>
-      <h1>{title}</h1>
-      <Breadcrumbs>
-        {ancestors.map((a) => (
-          <Link
-            key={`set-${a.id}`}
-            href={`/collections/${collection_slug}/browse/${a.id}/`}
-          >
-            <a>{a.name}</a>
-          </Link>
-        ))}
-      </Breadcrumbs>
+      <Header
+        title={title}
+        collection_slug={collection_slug}
+        ancestors={ancestors}
+      />
+
       <div className={styles.mediaContainer}>
         <Image {...props.media} />
       </div>

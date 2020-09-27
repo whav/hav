@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import { useAPI } from "hooks";
 import { Link, Loading } from "components";
 import { Folder, Media, FileBrowser } from "components/filebrowser";
-import Breadcrumbs from "components/navigation/breadcrumbs";
+import Header from "components/filebrowser/Header";
+import Head from "next/head";
 
 const CollectionBrowser = (props) => {
   const router = useRouter();
@@ -24,17 +25,14 @@ const CollectionBrowser = (props) => {
 
   return (
     <>
-      <h1>{name}</h1>
-      <Breadcrumbs>
-        {ancestors.map((a) => (
-          <Link
-            key={`set-${a.id}`}
-            href={`/collections/${collection_slug}/browse/${a.id}/`}
-          >
-            <a>{a.name}</a>
-          </Link>
-        ))}
-      </Breadcrumbs>
+      <Head>
+        <title>{`${collection_slug}: ${name}`}</title>
+      </Head>
+      <Header
+        title={name}
+        collection_slug={collection_slug}
+        ancestors={ancestors}
+      />
 
       <FileBrowser>
         {children.map((c) => (

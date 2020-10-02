@@ -1,8 +1,6 @@
 import { query, gql } from "lib/graphql";
 
 export default async (req, res) => {
-  console.warn("Query", req.query);
-  const { set, collection } = req.query;
   const result = await query(
     gql`
       query SetQuery($set: String!, $collection: String!) {

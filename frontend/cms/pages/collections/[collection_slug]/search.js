@@ -15,7 +15,10 @@ const SearchInput = ({ slug }) => {
 };
 
 const SearchPage = () => {
-  const { collection_slug } = useCollection();
+  const collection_slug = useCollection();
+  if (!collection_slug) {
+    return null;
+  }
   return <SearchInput slug={collection_slug} />;
 };
 

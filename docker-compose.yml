@@ -11,8 +11,8 @@ x-django: &django
         - ${WEBASSETS_ROOT}:/archive/hav/webassets
         - ${UPLOADS_ROOT}:/archive/hav/media
         - ${INGEST_LOG_DIR}:/archive/hav/ingestlog
-        - /var/run/postgresql/.s.PGSQL.5432:/run/postgres/.s.PGSQL.5432
-        - /run/redis/redis.sock:/run/redis/redis.sock
+#        - /var/run/postgresql/.s.PGSQL.5432:/run/postgres/.s.PGSQL.5432
+#        - /run/redis/redis.sock:/run/redis/redis.sock
     environment:
         - IMAGINARY_SECRET=${IMAGINARY_SECRET}
         - IMAGINARY_URL_PREFIX=${IMAGINARY_URL_PREFIX}
@@ -49,6 +49,14 @@ services:
             - django-asgi
             - django-wsgi
             - imaginary
+            - cms
+
+    cms:
+        build:
+            context: ./frontend/cms
+        image: whav/hav-cms:${TAG}
+        environment:
+            - HAV_URL=http://django-wsgi:8000/
 
     django-asgi:
         <<: *django

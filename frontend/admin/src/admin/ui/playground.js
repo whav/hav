@@ -1,16 +1,14 @@
 import React from "react";
 import { MultiTagField } from "../containers/autocomplete";
-import { Button } from "hav-ui";
-import { H1, H2 } from "hav-ui/components";
+
 import { Alert, Box } from "@theme-ui/components";
-import { from } from "zen-observable";
 
 class Playground extends React.Component {
   state = {
-    multiselect: []
+    multiselect: [],
   };
 
-  submit = e => {
+  submit = (e) => {
     e.preventDefault();
     console.log(JSON.stringify(this.state, null, 2));
   };
@@ -25,7 +23,7 @@ class Playground extends React.Component {
         <form onSubmit={this.submit}>
           <MultiTagField
             value={this.state.multiselect}
-            onChange={values => this.setState({ multiselect: values })}
+            onChange={(values) => this.setState({ multiselect: values })}
           />
           <button className="btn">Submit</button>
         </form>
@@ -33,14 +31,14 @@ class Playground extends React.Component {
 
         <hr />
 
-        <H1>Shared UI Components</H1>
+        <h1>Shared UI Components</h1>
         <Alert variant="primary">Test</Alert>
 
-        <H2>Theme UI Components</H2>
+        <h2>Theme UI Components</h2>
         <Box>
           <p>I am Box!</p>
         </Box>
-        <Button>TestMe</Button>
+        <button>TestMe</button>
       </div>
     );
   }

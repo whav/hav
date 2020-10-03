@@ -22,7 +22,7 @@ class Collection(models.Model):
         Node,
         null=True,
         on_delete=models.PROTECT,
-        limit_choices_to=root_nodes,
+        limit_choices_to={"depth__lte": 3},
         unique=True,
     )
 

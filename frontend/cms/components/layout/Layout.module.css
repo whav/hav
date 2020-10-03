@@ -1,0 +1,28 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  min-height: 100vh;
+}
+
+.nav {
+  background-color: #f8b20c;
+  flex-grow: 0;
+}
+
+.main {
+  padding: 1em;
+  /* background-color: bisque; */
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+@media (min-width: 600px) {
+  .wrapper {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .nav {
+    min-width: 200px;
+  }
+}

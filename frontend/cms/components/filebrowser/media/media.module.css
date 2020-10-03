@@ -1,0 +1,13 @@
+.mediaContainer {
+  width: 80%;
+  max-width: 1000px;
+}
+
+.mediaContainer img {
+  max-width: 100%;
+  height: auto;
+}
+
+.tags {
+  margin-top: 2rem;
+}

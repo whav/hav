@@ -1,13 +1,14 @@
-import graphene
+from itertools import chain
 
+import graphene
+from django.db.models import Q
 from graphene_django.types import DjangoObjectType
 
-from .models import Media, MediaCreator, License
-from apps.sets.schema import NodeType
 from apps.sets.models import Node
+from apps.sets.schema import NodeType
 from apps.tags.schema import TagType
-
 from hav_utils.imaginary import generate_thumbnail_url, generate_srcset_urls
+from .models import Media, MediaCreator, License
 
 
 class MediaType(DjangoObjectType):
@@ -62,11 +63,7 @@ class MediaType(DjangoObjectType):
         return ""
 
     def resolve_ancestors(self, info):
-        root = self.set.get_collection()
-        if self.set == root:
-            return []
-
-        return self.set.get_ancestors()
+        return chain(self.set.collection_ancestors, [self.set])
 
     @classmethod
     def get_queryset(cls, queryset, info):
@@ -88,14 +85,16 @@ class LicenseType(DjangoObjectType):
         model = License
 
 
-class Query(object):
+class Query:
 
     media = graphene.Field(MediaType, id=graphene.String(required=True))
     media_entries = graphene.List(MediaType, nodeID=graphene.String(required=True))
 
     def resolve_media(self, info, **kwargs):
         id = kwargs.get("id")
-        return Media.objects.prefetch_related("files__webasset_set").get(pk=id)
+        return Media.objects.prefetch_related("files__webasset_set").get(
+            Q(pk=id) | Q(original_media_identifier=id) | Q()
+        )
 
     def resolve_media_entries(self, info, nodeID):
         node = Node.objects.get(pk=nodeID)

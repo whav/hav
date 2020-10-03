@@ -1,9 +1,9 @@
 export { default as Button } from "./components/form/button";
 export { default as Breadcrumbs } from "./components/navigation/breadcrumbs";
-export { Folder, FileBrowser } from "./components/filebrowser";
+export { Nav, NavGroup } from "./components/navigation/main_menu";
+export { Folder, FileBrowser } from "./components/filebrowser/index";
 export { default as MainWrapper } from "./layout/wrapper";
 export { default as Main } from "./layout/main";
-export { default as LoremIpsum } from "./dev/loremipsum";
 export { default as ThemeProvider } from "./theme/provider";
 
 import * as ThemeComponents from "@theme-ui/components";

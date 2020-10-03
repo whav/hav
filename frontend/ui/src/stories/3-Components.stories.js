@@ -1,12 +1,12 @@
 import React from "react";
-import { Box, Alert } from "../components";
+import { Box, Alert } from "@theme-ui/components";
 import LoremIpsum from "../dev/loremipsum";
 
 const DummyText = () => <LoremIpsum paragraphs={1} />;
 
 export default {
   title: "Components",
-  exludeStories: ["DummyText"]
+  exludeStories: ["DummyText"],
 };
 
 const pms = { px: [1], py: [1], mx: [1] };

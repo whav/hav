@@ -1,5 +1,5 @@
 import React from "react";
 
-export default props => {
-  return <button>{props.title || "Button"}</button>;
+export default ({ children }) => {
+  return <button>{children}</button>;
 };

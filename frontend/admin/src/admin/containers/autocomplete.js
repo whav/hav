@@ -7,7 +7,7 @@ import reactModal from "@prezly/react-promise-modal";
 // import reactModal from "../../../utils/promiseModal";
 import { fetchTags, createTag } from "../api/tags";
 
-import { icons } from "hav-ui";
+import * as icons from "../ui/icons";
 
 import Modal from "../ui/modal";
 import { Formik, Form } from "formik";
@@ -22,10 +22,10 @@ const mapping = {
   countries: icons.GlobeIcon,
   languages: icons.LanguageIcon,
   unesco: icons.BranchIcon,
-  skosmos: icons.GoGitBranch
+  skosmos: icons.BranchIcon,
 };
 
-const icon_for_type = type => {
+const icon_for_type = (type) => {
   if (!type) {
     return icons.TagsIcon;
   }
@@ -41,18 +41,18 @@ const fetchFancyTags = async (
 ) => {
   let options = await fetchTags(query, collection);
   if (grouped) {
-    const groupedOptions = groupBy(options, o => o.type);
+    const groupedOptions = groupBy(options, (o) => o.type);
     options = Object.entries(groupedOptions).map(([type, options]) => {
       return {
         label: type,
-        options
+        options,
       };
     });
   }
   return options;
 };
 
-const TagModal = props => {
+const TagModal = (props) => {
   const { show, onDismiss, name = "", source = {} } = props;
   // const dispatch = useDispatch();
 
@@ -80,7 +80,7 @@ const TagModal = props => {
         <Formik
           initialValues={{ name }}
           onSubmit={handleSubmit}
-          render={formikProps => (
+          render={(formikProps) => (
             <Form>
               <section className="modal-card-body">
                 <FieldWrapper label="Tag name">
@@ -150,7 +150,7 @@ const MultiValueLabel = ({ data }) => {
   console.log(data);
   return <TagLabel {...data} />;
 };
-const Option = props => {
+const Option = (props) => {
   const { data, children } = props;
   const { crumbs = [] } = data;
   console.log("Option", props);
@@ -165,24 +165,24 @@ const Option = props => {
 
 const customSelectComponents = {
   MultiValueLabel,
-  Option
+  Option,
 };
 
 class MultiTagField extends React.Component {
   state = {
     inputValue: "",
     values: [],
-    isLoading: false
+    isLoading: false,
   };
 
-  handleSearch = async q => {
+  handleSearch = async (q) => {
     this.setState({ isLoading: true });
     let options = await fetchFancyTags(q, this.props.collection_id);
     this.setState({ isLoading: false });
     // for some reason or the other react-select needs label and value
     // and a clever combination of props for AsyncCreatable
     // to actually work the way I want it to
-    const prepOptions = o => {
+    const prepOptions = (o) => {
       const uid = uuid();
       o = o.label ? o : { ...o, label: uid };
       o = o.value ? o : { ...o, value: o.id ? o.id : uid };
@@ -194,25 +194,25 @@ class MultiTagField extends React.Component {
     return options;
   };
 
-  handleCreate = async new_option => {
-    const option = await reactModal(props => (
+  handleCreate = async (new_option) => {
+    const option = await reactModal((props) => (
       <TagModal
         {...props}
         name={new_option}
         collection={this.props.collection_id}
       ></TagModal>
     ));
-    this.setState(state => {
+    this.setState((state) => {
       const values = [...state.values, option];
       this.props.onChange && this.props.onChange(values);
       return {
         inputValue: "",
-        values
+        values,
       };
     });
   };
 
-  handleChange = values => {
+  handleChange = (values) => {
     // values might be null, but we need an array
     values = values || [];
     console.log("Setting values", values);

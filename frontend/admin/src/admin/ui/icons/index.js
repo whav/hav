@@ -1,5 +1,3 @@
-import React from "react";
-
 export {
   MdCheckBoxOutlineBlank as CheckboxBlankIcon,
   MdCheckBox as CheckboxCheckedIcon,
@@ -7,7 +5,8 @@ export {
   MdEdit as EditIcon,
   MdViewModule as GalleryIcon,
   MdViewList as ListIcon,
-  MdFileUpload as UploadIcon
+  MdFileUpload as UploadIcon,
+  MdLanguage as LanguageIcon,
 } from "react-icons/md";
 
 export {
@@ -16,7 +15,9 @@ export {
   GoCheck as SelectFileCheckboxIcon,
   GoDatabase as DatabaseIcon,
   GoPackage as IngestPackageIcon,
-  GoThreeBars as BurgerIcon
+  GoThreeBars as BurgerIcon,
+  GoGitBranch as BranchIcon,
+  GoGlobe as GlobeIcon,
 } from "react-icons/go";
 
 export {
@@ -28,5 +29,7 @@ export {
   FaArchive as ArchiveIcon,
   FaSpinner as SpinnerIcon,
   FaCheck as CheckIcon,
-  FaQuestion as QuestionMarkIcon
+  FaQuestion as QuestionMarkIcon,
 } from "react-icons/fa";
+
+export { IoIosPricetags as TagsIcon } from "react-icons/io";

@@ -190,10 +190,10 @@ class IngestSerializer(serializers.Serializer):
             created_by=user,
             original_media_type=validated_data["media_type"],
             original_media_identifier=validated_data.get("media_identifier", ""),
-            embargo_end_date=validated_data.get("embargo_end_date", ""),
+            embargo_end_date=validated_data.get("embargo_end_date"),
             is_private=validated_data.get("is_private", False),
-            coords_lat=validated_data.get("media_lat", None),
-            coords_lon=validated_data.get("media_lon", None),
+            coords_lat=validated_data.get("media_lat"),
+            coords_lon=validated_data.get("media_lon"),
         )
 
         # save m2m

@@ -4,7 +4,7 @@ from urllib.parse import urlparse, unquote
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.urls import resolve
+from django.urls import resolve, get_script_prefix, Resolver404
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -12,6 +12,13 @@ from apps.sets.models import Node
 from apps.whav.models import ImageCollection, MediaOrdering
 
 logger = logging.getLogger(__name__)
+
+
+def strip_path_prefix(path: str):
+    prefix = get_script_prefix()
+    if path.startswith(prefix):
+        path = path.replace(prefix, "/", 1)
+    return path
 
 
 class IngestHyperlinkField(serializers.Field):
@@ -26,13 +33,13 @@ class IngestHyperlinkField(serializers.Field):
             return reverse(
                 url_name.format("whav_media"),
                 kwargs={"mediaordering_id": obj.pk},
-                **reverse_kwargs
+                **reverse_kwargs,
             )
         elif isinstance(obj, ImageCollection):
             return reverse(
                 url_name.format("whav_collection"),
                 kwargs={"collection_id": obj.pk},
-                **reverse_kwargs
+                **reverse_kwargs,
             )
         elif isinstance(obj, Path):
             path = Path(unquote(str(obj)))
@@ -62,6 +69,7 @@ class IngestHyperlinkField(serializers.Field):
 
     def get_object(self, url):
         path = urlparse(url).path
+        path = strip_path_prefix(path)
         match = resolve(path)
         # whav ingestion
         if match.view_name == "api:v1:whav_media":
@@ -97,6 +105,7 @@ class IngestionReferenceField(serializers.Field):
 
     def get_file_path(self, url):
         path = urlparse(url).path
+        path = strip_path_prefix(path)
         match = resolve(path)
         config = match.func.view_initkwargs.get("source_config")
         fs_path = config.to_fs_path(*match.args, **match.kwargs)
@@ -105,9 +114,9 @@ class IngestionReferenceField(serializers.Field):
     def to_internal_value(self, data):
         # TODO: Error handling
         try:
-            p = self.get_file_path(data)
-        except Exception as e:
-            raise serializers.ValidationError(e.detail)
+            self.get_file_path(data)
+        except Resolver404:
+            raise serializers.ValidationError(f"URL {data} could not be resolved.")
         return data
 
 

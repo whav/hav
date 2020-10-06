@@ -10,7 +10,8 @@ application = ProtocolTypeRouter(
             URLRouter(
                 [
                     path(
-                        "ws/admin/ingest/<uuid:uuid>/", consumers.IngestUpdatesConsumer
+                        "w/ws/admin/ingest/<uuid:uuid>/",
+                        consumers.IngestUpdatesConsumer,
                     ),
                 ]
             )

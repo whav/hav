@@ -2,8 +2,9 @@
  * Created by sean on 08/02/17.
  */
 
+const djPrefix = "/d";
 const apiVersion = "v1";
-let apiPrefix = `/api/${apiVersion}/`;
+let apiPrefix = `${djPrefix}/api/${apiVersion}/`;
 
 if (window && URL && window.location) {
   apiPrefix = new URL(apiPrefix, window.location.origin).href;
@@ -14,28 +15,28 @@ export const file_upload = `${apiPrefix}upload/`;
 export const browser = file_upload;
 export const prepareIngestion = `${apiPrefix}ingestq/`;
 export const ingest = `${apiPrefix}ingest/`;
-export const ingestQueueDetail = uuid => `${apiPrefix}ingest/q/${uuid}/`;
+export const ingestQueueDetail = (uuid) => `${apiPrefix}ingest/q/${uuid}/`;
 export const ingestOptions = `${apiPrefix}ingest/options/`;
 export const ingestSingle = `${apiPrefix}ingest/single/`;
-export const ingestFileEndpoint = uuid =>
+export const ingestFileEndpoint = (uuid) =>
   uuid ? `${ingestQueueDetail(uuid)}ingest/` : ingestSingle;
-export const ingestQueueModifierEndpoint = uuid =>
+export const ingestQueueModifierEndpoint = (uuid) =>
   `${ingestQueueDetail(uuid)}modify/`;
 export const autocompleteURL = `${apiPrefix}models/tags/`;
 export const uploadURL = `${apiPrefix}sources/upload/`;
 
-export const ingestQueueWS = uuid => {
+export const ingestQueueWS = (uuid) => {
   const url = new URL(document.location);
   return `${url.protocol === "https:" ? "wss" : "ws"}://${
     url.host
-  }/ws/admin/ingest/${uuid}/`;
+  }${djPrefix}/ws/admin/ingest/${uuid}/`;
 };
 
-const buildFrontendUrl = url => {
+const buildFrontendUrl = (url) => {
   return url.startsWith(apiPrefix) ? url.slice(apiPrefix.length - 1) : url;
 };
 
-const buildApiUrl = path => {
+const buildApiUrl = (path) => {
   return `${apiPrefix.slice(0, -1)}${path}`;
 };
 

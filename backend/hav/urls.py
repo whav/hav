@@ -20,9 +20,8 @@ hav_admin_patterns = (
     "hav_admin",
 )
 
+
 urlpatterns = [
-    re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
-    # API urls
     re_path(r"^api/", include((api_urls, "api"), namespace="api")),
     re_path(r"^admin/", include(hav_admin_patterns, namespace="hav_admin")),
     re_path(r"^dbadmin/", django_admin.site.urls),
@@ -43,3 +42,10 @@ if settings.DEBUG:
     urlpatterns += static(wa_config["base_url"], document_root=wa_config["location"])
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# namespace the whole django patterns under /d
+urlpatterns = [
+    re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
+    path("d/", include(urlpatterns)),
+]

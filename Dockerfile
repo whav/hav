@@ -3,15 +3,11 @@ FROM node:12 as build-stage
 WORKDIR /code/
 
 # Link up the required build files
-COPY ./frontend/package.json ./frontend/yarn.lock ./frontend/babel.config.json ./
-COPY ./frontend/admin/package.json ./admin/
-COPY ./frontend/ui/package.json ./ui/
-COPY ./frontend/cms/package.json ./cms/
-# install and build the packages
+COPY ./frontend/admin/package.json ./frontend/admin/yarn.lock ./admin/
+
+WORKDIR /code/admin/
 RUN yarn install --production=false
-COPY ./frontend/admin ./admin/
-COPY ./frontend/ui ./ui/
-WORKDIR ./admin/
+COPY ./frontend/admin .
 RUN yarn build
 
 FROM python:3.8-buster

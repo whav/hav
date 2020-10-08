@@ -3,7 +3,10 @@ from django.conf import settings
 from ..sources.skosmos import Source
 from ..sources import TAG_LABEL_TO_SOURCE
 
+import pytest
 
+
+@pytest.mark.skip("Skosmos not working")
 class TestSkosmosSource(SimpleTestCase):
 
     nepal = "http://skos.um.es/unescothes/C02700"

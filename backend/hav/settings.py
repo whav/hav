@@ -105,6 +105,7 @@ if DEBUG:
 
     INTERNAL_IPS = ["127.0.0.1"]
 
+
 ROOT_URLCONF = "hav.urls"
 
 TEMPLATES = [
@@ -192,8 +193,8 @@ STATICFILES_DIRS = (("wp", WEBPACK_BUILD_PATH), ("dj_static", django_root("stati
 
 STATIC_ROOT = project_root(env("STATIC_ROOT", default="dist/static/"))
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 

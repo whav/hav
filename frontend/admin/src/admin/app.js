@@ -18,7 +18,7 @@ const logo = require("../assets/logo.png");
 const Navigation = ({ ...props }) => <Nav navItems={mainNav} {...props} />;
 
 const history = createBrowserHistory({
-  basename: "/admin",
+  basename: "/d/admin",
 });
 
 const HavAdmin = ({ store }) => {

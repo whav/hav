@@ -29,4 +29,4 @@ script:
   - UG_IDS=`id -u`:`id -g` sed s/1000:1000/$UG_IDS/g <./env_files/docker.env >.env
   - cat .env
   - docker-compose config
-  - docker-compose run django-asgi python manage.py test
+  - docker-compose run django-asgi /venv/bin/python manage.py test

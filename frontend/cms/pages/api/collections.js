@@ -13,7 +13,6 @@ export default async (req, res) => {
       }
     }`
   );
-  console.log(result);
   res.status = 200;
   const collections = result.collections.map((c) => ({
     ...c,

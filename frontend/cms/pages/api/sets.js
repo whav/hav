@@ -29,7 +29,6 @@ export default async (req, res) => {
     ...result.node,
     mediaEntries: result.mediaEntries,
   };
-  // console.log(data);
   res.status = 200;
   res.json(data);
 };

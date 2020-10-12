@@ -27,10 +27,8 @@ export async function getStaticProps({ params: { page = [] } }) {
 
   const mdFile = path.join(sourceDirectory, files[0]);
 
-  // console.log(`Selected file: ${mdFile}`);
   const source = await fs.readFile(mdFile);
   const { content, frontmatter = {} } = matter(source);
-  // console.log(frontmatter);
   const mdxSource = await renderToString(content, { components });
   return { props: { source: mdxSource, frontmatter } };
 }

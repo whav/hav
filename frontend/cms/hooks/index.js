@@ -15,19 +15,6 @@ export const useCollection = () => {
     }
   }
 
-  // if (!collection_slug) {
-  //   console.log(
-  //     "hook:",
-  //     collection_slug,
-  //     "query",
-  //     router.query,
-  //     "pathname",
-  //     router.pathname,
-  //     "asPath",
-  //     router.asPath
-  //   );
-  // }
-
   return collection_slug;
 };
 

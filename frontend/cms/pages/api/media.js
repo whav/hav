@@ -1,7 +1,6 @@
 import { query } from "lib/graphql";
 
 export default async (req, res) => {
-  // console.log(res.query);
   const { mediaId } = req.query;
 
   const result = await query(

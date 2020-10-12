@@ -3,10 +3,7 @@ import styles from "./NavBar.module.css";
 import { MenuButton } from "theme-ui";
 
 import ActiveLink from "./Link";
-import { useCollection } from "hooks";
-import useSWR from "swr";
-
-const fetcher = (url) => fetch(url).then((r) => r.json());
+import { useCollection, useAPI } from "hooks";
 
 const Link = (props) => {
   return <ActiveLink activeClassName={styles.active_link} {...props} />;
@@ -84,9 +81,8 @@ const GlobalNav = ({ collections = [] }) => {
 const NavBar = () => {
   const [navVisible, setNavVisibility] = useState(false);
   const collection_slug = useCollection();
-  const { data } = useSWR("/api/collections/", fetcher);
-  const collections = data || [];
-  const collection = collections.find((c) => c.slug === collection_slug);
+  const { data = [] } = useAPI("/api/collections/");
+  const collection = data.find((c) => c.slug === collection_slug);
 
   return (
     <div className={styles.navbar_wrapper}>
@@ -106,7 +102,7 @@ const NavBar = () => {
         {collection ? (
           <CollectionNav collection={collection} />
         ) : (
-          <GlobalNav collections={collections} />
+          <GlobalNav collections={data} />
         )}
         <div className={styles.nav_bottom}>
           <ul>

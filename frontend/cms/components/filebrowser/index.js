@@ -26,4 +26,8 @@ const FileBrowser = ({ children }) => {
   return <div className={styles.filebrowser}>{children}</div>;
 };
 
-export { Folder, Media, FileBrowser };
+const Description = ({ text }) => {
+  return <div className={styles.description}>{text}</div>;
+};
+
+export { Folder, Media, FileBrowser, Description };

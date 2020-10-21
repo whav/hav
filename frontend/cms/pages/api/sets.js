@@ -6,6 +6,7 @@ export default async (req, res) => {
       query SetQuery($set: String!, $collection: String!) {
         node(nodeID: $set, collectionSlug: $collection) {
           name
+          description
           ancestors {
             name
             id

@@ -3,17 +3,21 @@ import graphene
 from graphene_django.types import DjangoObjectType
 
 from .models import Node
+from apps.tags.schema import TagType
 
 
 class NodeType(DjangoObjectType):
 
     children = graphene.List(lambda: NodeType)
     ancestors = graphene.List(lambda: NodeType)
+    tags = graphene.List(TagType)
 
     class Meta:
         model = Node
         only_fields = (
             "name",
+            "description",
+            "tags",
             "depth",
             "id",
         )
@@ -23,6 +27,9 @@ class NodeType(DjangoObjectType):
 
     def resolve_ancestors(self, info):
         return self.collection_ancestors
+
+    def resolve_tags(self, info):
+        return self.tags.all()
 
 
 class Query(object):

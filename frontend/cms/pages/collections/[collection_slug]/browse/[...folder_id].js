@@ -2,7 +2,12 @@ import React from "react";
 import { useRouter } from "next/router";
 import { useAPI } from "hooks";
 import { Link, Loading } from "components";
-import { Folder, Media, FileBrowser } from "components/filebrowser";
+import {
+  Folder,
+  Media,
+  FileBrowser,
+  Description,
+} from "components/filebrowser";
 import Header from "components/filebrowser/Header";
 import Head from "next/head";
 
@@ -21,7 +26,13 @@ const CollectionBrowser = (props) => {
     return <Loading />;
   }
 
-  const { name = "", children = [], ancestors = [], mediaEntries = [] } = data;
+  const {
+    name = "",
+    children = [],
+    ancestors = [],
+    mediaEntries = [],
+    description = "",
+  } = data;
 
   return (
     <>
@@ -33,6 +44,8 @@ const CollectionBrowser = (props) => {
         collection_slug={collection_slug}
         ancestors={ancestors}
       />
+
+      <Description text={description} />
 
       <FileBrowser>
         {children.map((c) => (

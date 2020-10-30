@@ -39,6 +39,7 @@ requests = "*"
 sentry-sdk = "*"
 uwsgi = "*"
 whitenoise = "*"
+dj-rest-auth = "^1.1.2"
 
 [tool.poetry.dev-dependencies]
 django-debug-toolbar = "*"

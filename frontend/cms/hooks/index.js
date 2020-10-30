@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
+import getCsrfCookie from "lib/django/csrf";
+
 const collectionRe = /^\/collections\/(\w+)\/.*$/;
 
 export const useCollection = () => {
@@ -18,7 +20,20 @@ export const useCollection = () => {
   return collection_slug;
 };
 
-const fetcher = (url) => fetch(url).then((r) => r.json());
+const fetcher = async (url) => {
+  const res = await fetch(url, { headers: { "X-CSRFToken": getCsrfCookie() } });
+
+  // If the status code is not in the range 200-299,
+  // we still try to parse and throw it.
+  if (!res.ok) {
+    const error = new Error("An error occurred while fetching the data.");
+    // Attach extra info to the error object.
+    error.info = await res.json();
+    error.status = res.status;
+    throw error;
+  }
+  return await res.json();
+};
 
 export const useAPI = (url, query = {}) => {
   let params;

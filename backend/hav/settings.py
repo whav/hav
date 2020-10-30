@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_rq",
     "graphene_django",
+    "dj_rest_auth",
     "apps.whav",
     "apps.sets",
     "apps.archive",

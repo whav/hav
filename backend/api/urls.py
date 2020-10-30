@@ -20,4 +20,5 @@ api_urls = [
         r"^$", RedirectView.as_view(pattern_name="api:v1:api_root", permanent=False)
     ),
     path(r"public/", include("api.public.urls", namespace="public")),
+    path("auth/", include("dj_rest_auth.urls")),
 ]

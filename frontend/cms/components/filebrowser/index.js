@@ -1,5 +1,5 @@
 import React from "react";
-
+import Image from "next/image";
 import { MdFolder as FolderIcon } from "react-icons/md";
 
 import styles from "./filebrowser.module.css";
@@ -7,7 +7,7 @@ import styles from "./filebrowser.module.css";
 const Media = ({ title, thumbnailUrl }) => {
   return (
     <div className={styles.item}>
-      <img src={thumbnailUrl} alt={title} />
+      <Image src={thumbnailUrl} height={200} width={200} alt={title} />
       <p>{title}</p>
     </div>
   );

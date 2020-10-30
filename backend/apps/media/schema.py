@@ -3,40 +3,57 @@ from itertools import chain
 import graphene
 from django.db.models import Q
 from graphene_django.types import DjangoObjectType
-
+from django.utils.functional import cached_property
 from apps.sets.models import Node
 from apps.sets.schema import NodeType
 from apps.tags.schema import TagType
-from hav_utils.imaginary import generate_thumbnail_url, generate_srcset_urls
+from hav_utils.imaginary import (
+    generate_thumbnail_url,
+    generate_srcset_urls,
+    generate_src_url,
+)
 from .models import Media, MediaCreator, License
 
 
 class MediaType(DjangoObjectType):
 
     ancestors = graphene.List(NodeType)
-    thumbnail_url = graphene.Field(graphene.String)
-    srcset = graphene.List(graphene.String)
+
     type = graphene.Field(graphene.String)
 
     creation_timeframe = graphene.List(graphene.DateTime)
     tags = graphene.List(TagType)
 
+    thumbnail_url = graphene.Field(graphene.String)
+    src = graphene.Field(graphene.String)
+    srcset = graphene.List(graphene.String)
+    height = graphene.Field(graphene.Int, required=False)
+    width = graphene.Field(graphene.Int, required=False)
+
+    def resolve_height(self, info):
+        asset = self.primary_image_webasset
+        if asset:
+            return asset.height
+
+    def resolve_width(self, info):
+        asset = self.primary_image_webasset
+        if asset:
+            return asset.width
+
     def resolve_creation_timeframe(self, info):
         # print(self.creation_date)
         return [self.creation_date.lower, self.creation_date.upper]
 
+    def resolve_src(self, info):
+        asset = self.primary_image_webasset
+        if asset:
+            return generate_src_url(asset)
+        return ""
+
     def resolve_srcset(self, info):
-        if self.primary_file:
-            webasset_images = filter(
-                lambda x: x.mime_type.startswith("image"),
-                self.primary_file.webasset_set.all(),
-            )
-            try:
-                webasset = list(webasset_images)[0]
-            except IndexError:
-                pass
-            else:
-                return [f"{src[1]} {src[0]}w" for src in generate_srcset_urls(webasset)]
+        asset = self.primary_image_webasset
+        if asset:
+            return [f"{src[1]} {src[0]}w" for src in generate_srcset_urls(asset)]
         return []
 
     def resolve_type(self, info):
@@ -48,18 +65,9 @@ class MediaType(DjangoObjectType):
         return self.tags.all()
 
     def resolve_thumbnail_url(self, info):
-        if self.primary_file:
-            webasset_images = filter(
-                lambda x: x.mime_type.startswith("image"),
-                self.primary_file.webasset_set.all(),
-            )
-            webasset_images = list(webasset_images)
-            try:
-                webasset = webasset_images[0]
-            except IndexError:
-                return None
-            else:
-                return generate_thumbnail_url(webasset)
+        asset = self.primary_image_webasset
+        if asset:
+            return generate_thumbnail_url(asset)
         return ""
 
     def resolve_ancestors(self, info):
@@ -67,7 +75,6 @@ class MediaType(DjangoObjectType):
 
     @classmethod
     def get_queryset(cls, queryset, info):
-        print("Filtering QS", queryset)
         return queryset
 
     class Meta:

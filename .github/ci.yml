@@ -1,0 +1,10 @@
+name: HAV-CI
+
+on: push
+
+steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - run: python --version

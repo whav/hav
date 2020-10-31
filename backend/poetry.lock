@@ -846,7 +846,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "PyExifTool"
-version = "0.1"
+version = "0.4.3"
 description = "Python wrapper for exiftool"
 category = "main"
 optional = false
@@ -854,7 +854,7 @@ python-versions = "*"
 
 [package.source]
 type = "url"
-url = "https://github.com/smarnach/pyexiftool/tarball/master"
+url = "https://github.com/sylikc/pyexiftool/archive/master.zip"
 [[package]]
 name = "pygments"
 version = "2.7.2"
@@ -1290,7 +1290,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "==3.7"
-content-hash = "2b4d044729ce94e6ed34842f0fce96d97ea75ff3e11ab53a91944df158aef1c1"
+content-hash = "0f75928f2ddbdadf431854e054057eecd8909cbd92368e8951c774e8cadbf6c6"
 
 [metadata.files]
 aioredis = [

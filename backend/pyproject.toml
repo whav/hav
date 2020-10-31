@@ -30,7 +30,7 @@ pillow = "*"
 pip = "*"
 psycopg2 = "*"
 pycountry = "*"
-pyexiftool = {url = "https://github.com/smarnach/pyexiftool/tarball/master"}
+pyexiftool = {url = "https://github.com/sylikc/pyexiftool/archive/master.zip"}
 pylint = "*"
 python-dotenv = "==0.7.1"
 pyvips = "*"

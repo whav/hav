@@ -117,6 +117,14 @@ def generate_srcset_urls(file_path):
     return results
 
 
+def generate_src_url(file_path):
+
+    path = get_imaginary_path(file_path)
+    if not is_image(path):
+        return ""
+    return generate_imaginary_url(path, operation="thumbnail", width=1024, height=None)
+
+
 def generate_info_url(obj):
     path = get_imaginary_path(obj)
     return generate_thumbnail_url(

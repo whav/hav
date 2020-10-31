@@ -188,6 +188,17 @@ class Media(models.Model):
         except IndexError:
             return None
 
+    @cached_property
+    def primary_image_webasset(self):
+        primary_file = self.primary_file
+        if primary_file is None:
+            return None
+
+        try:
+            return primary_file.webasset_set.filter(mime_type__istartswith="image/")[0]
+        except IndexError:
+            return None
+
     objects = MediaManager()
 
     class Meta:

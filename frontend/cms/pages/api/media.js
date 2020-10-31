@@ -35,8 +35,11 @@ export default async (req, res) => {
               sourceRef
             }
           }
+          src
           srcset
-          thumbnailUrl
+          height
+          width
+
         }
       }
   `,

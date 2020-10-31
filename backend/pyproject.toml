@@ -9,7 +9,7 @@ authors = [
 ]
 
 [tool.poetry.dependencies]
-python = "==3.7"
+python = ">=3.7"
 channels = "*"
 channels-redis = "*"
 dj-database-url = "*"

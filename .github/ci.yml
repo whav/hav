@@ -2,9 +2,18 @@ name: HAV-CI
 
 on: push
 
-steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-    - run: python --version
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-python@v2
+          with:
+            python-version: '3.8'
+        - name: Run image
+          uses: abatilo/actions-poetry@v2.0.0
+          with:
+            poetry-version: ${{ matrix.poetry-version }}
+        - name: View poetry --help
+          run: poetry --help

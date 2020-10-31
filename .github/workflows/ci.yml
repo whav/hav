@@ -17,7 +17,7 @@ jobs:
                 source $HOME/.poetry/env
         - name: install dependencies
           run: |
-            poetry install
+            $HOME/.poetry/bin/poetry install
           working-directory: backend
         - name: View poetry --help
           run: poetry --help

@@ -20,4 +20,4 @@ jobs:
             $HOME/.poetry/bin/poetry install
           working-directory: backend
         - name: View poetry --help
-          run: poetry --help
+          run: $HOME/.poetry/bin/poetry --help

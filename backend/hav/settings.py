@@ -58,6 +58,7 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 DRF_AUTH_TOKEN = env("DRF_AUTH_TOKEN")
 
 INSTALLED_APPS = [
+    "channels",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -69,7 +70,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "treebeard",
-    "channels",
     "channels_redis",
     "corsheaders",
     "django_rq",
@@ -211,7 +211,7 @@ STORAGES = {
 LOGIN_URL = "admin:login"
 
 
-ASGI_APPLICATION = "hav.routing.application"
+ASGI_APPLICATION = "hav.asgi.application"
 
 cache_config = env.cache("CACHE_URL")
 

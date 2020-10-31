@@ -37,6 +37,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(name="managedtag", unique_together=None),
         migrations.RemoveField(model_name="managedtag", name="tag_ptr"),
+        migrations.DeleteModel(name="CollectionTag"),
+        migrations.DeleteModel(name="ManagedTag"),
         migrations.AddField(
             model_name="tag",
             name="collection",
@@ -47,8 +49,6 @@ class Migration(migrations.Migration):
             ),
             preserve_default=False,
         ),
-        migrations.DeleteModel(name="CollectionTag"),
-        migrations.DeleteModel(name="ManagedTag"),
         migrations.AddField(
             model_name="tag",
             name="source",

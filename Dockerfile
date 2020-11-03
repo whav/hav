@@ -28,18 +28,20 @@ WEBASSET_ROOT=/archive/webassets \
 UPLOADS_ROOT=/archive/uploads \
 DJANGO_MEDIA_ROOT=/archive/uploads \
 DJANGO_SECRET_KEY=I_AM_VERY_UNSAFE \
-IMAGINARY_SECRET=UNSAFE
+IMAGINARY_SECRET=UNSAFE \
+POETRY_VERSION=1.1.3
 
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads"]
 
 
-RUN pip install -U poetry
+RUN pip install -U poetry==$POETRY_VERSION
 
 WORKDIR /hav/frontend
 COPY --from=build-stage /code/admin/build ./admin/build
 
 WORKDIR /hav/backend
 COPY backend/pyproject.toml backend/poetry.lock ./
+RUN poetry --version
 RUN poetry export --format requirements.txt --without-hashes --dev -o requirements.txt
 RUN python -m venv /venv
 RUN /venv/bin/pip install -r requirements.txt

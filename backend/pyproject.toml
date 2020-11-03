@@ -30,7 +30,7 @@ pillow = "*"
 pip = "*"
 psycopg2 = "*"
 pycountry = "*"
-pyexiftool = {url = "https://github.com/sylikc/pyexiftool/archive/master.zip"}
+pyexiftool = {git = "https://github.com/whav/pyexiftool.git"}
 pylint = "*"
 python-dotenv = "==0.7.1"
 pyvips = "*"

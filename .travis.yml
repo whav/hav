@@ -13,17 +13,13 @@ env:
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
       echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin ;
-      
-#       docker push whav/hav ;
       docker tag whav/hav whav/hav:$TRAVIS_BUILD_NUMBER ;
-#       docker push whav/hav:$TRAVIS_BUILD_NUMBER ;
       docker tag whav/hav whav/hav:$TRAVIS_COMMIT ;
-#       docker push whav/hav:$TRAVIS_COMMIT ;
       docker push whav/hav ;
-      
+
       docker build -t whav/hav-cms:latest -t whav/hav-cms:$TRAVIS_BUILD_NUMBER -t whav/hav-cms:$TRAVIS_COMMIT -f frontend/cms/Dockerfile frontend/cms/;
       docker push whav/hav-cms ;
-      
+
       docker build -t whav/hav-nginx:latest -t whav/hav-nginx:$TRAVIS_BUILD_NUMBER -t whav/hav-nginx:$TRAVIS_COMMIT -f Dockerfile.nginx . ;
       docker push whav/hav-nginx ;
     fi

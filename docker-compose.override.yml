@@ -17,8 +17,6 @@ services:
           - IPYTHONDIR=${IPYTHONDIR}
         volumes:
           - ./backend:/hav/backend
-#          - .localhistory:${BASHHOMEDIR}
-#          - .localhistory:${IPYTHONDIR}
         command: /venv/bin/python ./manage.py runserver 0.0.0.0:8000
 
     django-wsgi:
@@ -31,8 +29,6 @@ services:
           - IPYTHONDIR=${IPYTHONDIR}
         volumes:
             - ./backend:/hav/backend
-#            - .localhistory:${BASHHOMEDIR}
-#            - .localhistory:${IPYTHONDIR}
         command: /venv/bin/python ./manage.py runserver --noasgi 0.0.0.0:8000
 
     imaginary:
@@ -40,7 +36,7 @@ services:
             - "9000:9000"
 
     hav_db:
-        image: postgres
+        image: postgres:11
         environment:
             - POSTGRES_PASSWORD=opensesame
             - POSTGRES_USER=hav

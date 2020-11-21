@@ -9,7 +9,7 @@ authors = [
 ]
 
 [tool.poetry.dependencies]
-python = "==3.7"
+python = ">=3.7"
 channels = "*"
 channels-redis = "*"
 dj-database-url = "*"
@@ -30,7 +30,7 @@ pillow = "*"
 pip = "*"
 psycopg2 = "*"
 pycountry = "*"
-pyexiftool = {url = "https://github.com/smarnach/pyexiftool/tarball/master"}
+pyexiftool = {git = "https://github.com/whav/pyexiftool.git"}
 pylint = "*"
 python-dotenv = "==0.7.1"
 pyvips = "*"

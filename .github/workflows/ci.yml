@@ -1,0 +1,23 @@
+name: HAV-CI
+
+on: push
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-python@v2
+          with:
+            python-version: '3.7'
+        -   name: Install poetry
+            run: |
+                curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+                source $HOME/.poetry/env
+        - name: install dependencies
+          run: |
+            $HOME/.poetry/bin/poetry install
+          working-directory: backend
+        - name: View poetry --help
+          run: $HOME/.poetry/bin/poetry --help

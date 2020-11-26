@@ -1,4 +1,5 @@
 from decimal import Decimal
+from pathlib import Path
 from django.db import models
 from django.contrib.postgres.fields import DateTimeRangeField
 from django.conf import settings
@@ -94,6 +95,8 @@ class License(models.Model):
     name = models.CharField(max_length=200)
     short_name = models.CharField(max_length=40, unique=True)
     href = models.URLField(blank=True)
+
+    logo = models.ImageField(upload_to="license_logos", blank=True)
 
     def __str__(self):
         return self.short_name

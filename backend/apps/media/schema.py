@@ -88,6 +88,9 @@ class CreatorType(DjangoObjectType):
 
 
 class LicenseType(DjangoObjectType):
+    def resolve_logo(self, info):
+        return info.context.build_absolute_uri(self.logo.url)
+
     class Meta:
         model = License
 

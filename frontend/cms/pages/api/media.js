@@ -12,6 +12,7 @@ export default async (req, res) => {
             name
             shortName
             href
+            logo
           }
           collection {
             name

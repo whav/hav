@@ -8,6 +8,18 @@ export default async (req, res) => {
       query MediaQuery($mediaId: String!) {
         media(id: $mediaId) {
           title
+          description
+          originalMediaDescription
+          originalMediaIdentifier
+          embargoEndDate
+          isPrivate
+          coordsLat
+          coordsLon
+          createdAt
+          modifiedAt
+          type
+          height
+          width
           license {
             name
             shortName

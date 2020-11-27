@@ -7,14 +7,12 @@ const Image = ({ src, title, height, width }) => {
   };
   if (width && height) {
     const ratio = width / height;
-    const base = 800;
     if (width > height) {
-      width = base;
-      height = Math.round(base / ratio);
+      width = 800;
     } else {
-      height = 500;
-      width = Math.round(base / ratio);
+      width = 500;
     }
+    height = Math.round(width / ratio);
 
     dimensionProps = {
       width,

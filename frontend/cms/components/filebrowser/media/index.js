@@ -25,7 +25,7 @@ const MediaDetail = (props) => {
         ancestors={ancestors}
       />
 
-      <div className={styles.mediaContainer}>
+      <div>
         <Image {...props.media} />
       </div>
       <License {...license} />

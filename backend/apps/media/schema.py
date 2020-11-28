@@ -3,7 +3,7 @@ from itertools import chain
 import graphene
 from django.db.models import Q
 from graphene_django.types import DjangoObjectType
-from django.utils.functional import cached_property
+
 from apps.sets.models import Node
 from apps.sets.schema import NodeType
 from apps.tags.schema import TagType
@@ -24,11 +24,13 @@ class MediaType(DjangoObjectType):
     creation_timeframe = graphene.List(graphene.DateTime)
     tags = graphene.List(TagType)
 
-    thumbnail_url = graphene.Field(graphene.String)
     src = graphene.Field(graphene.String)
     srcset = graphene.List(graphene.String)
+
+    thumbnail_url = graphene.Field(graphene.String)
     height = graphene.Field(graphene.Int, required=False)
     width = graphene.Field(graphene.Int, required=False)
+    aspect_ratio = graphene.Field(graphene.Float, required=False)
 
     def resolve_height(self, info):
         asset = self.primary_image_webasset
@@ -39,6 +41,11 @@ class MediaType(DjangoObjectType):
         asset = self.primary_image_webasset
         if asset:
             return asset.width
+
+    def resolve_aspect_ratio(self, info):
+        asset = self.primary_image_webasset
+        if asset and asset.width and asset.height:
+            return asset.width / asset.height
 
     def resolve_creation_timeframe(self, info):
         # print(self.creation_date)
@@ -67,7 +74,9 @@ class MediaType(DjangoObjectType):
     def resolve_thumbnail_url(self, info):
         asset = self.primary_image_webasset
         if asset:
-            return generate_thumbnail_url(asset)
+            return generate_thumbnail_url(
+                asset, width=300, height=None, operation="thumbnail"
+            )
         return ""
 
     def resolve_ancestors(self, info):

@@ -1,5 +1,8 @@
 from django.db import models
+from django.utils.functional import cached_property
 from treebeard.mp_tree import MP_Node
+from itertools import chain
+from typing import Optional
 
 
 class Node(MP_Node):
@@ -49,6 +52,18 @@ class Node(MP_Node):
 
         qs = Tag.objects.filter(node__in=self.get_ancestors()).order_by("node__depth")
         return qs
+
+    @cached_property
+    def representative_media(self):
+        from apps.media.models import Media
+
+        descendant_iterator = chain([self], self.get_descendants().iterator())
+        for node in descendant_iterator:
+            try:
+                # attempt ot get the first media entry
+                return Media.objects.filter(set=node)[0]
+            except IndexError:
+                continue
 
     def __str__(self):
         return self.name

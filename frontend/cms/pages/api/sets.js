@@ -14,12 +14,19 @@ export default async (req, res) => {
           children {
             name
             id
+            representativeMedia {
+              title: originalMediaIdentifier
+              thumbnailUrl
+              aspectRatio
+            }
           }
         }
         mediaEntries(nodeID: $set) {
           id
-          title
+          caption: title
+          title: originalMediaIdentifier
           thumbnailUrl
+          aspectRatio
         }
       }
     `,

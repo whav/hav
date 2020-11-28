@@ -1,47 +1,4 @@
-.filebrowser {
-  margin-top: 2em;
-  width: 100%;
-}
-
-.filebrowser > * {
-  display: block;
-  padding: 0 0.5rem;
-  text-align: center;
-  text-decoration: none;
-  color: inherit;
-}
-
 .description {
   max-width: 65ch;
   white-space: pre-line;
-}
-
-.item {
-  text-align: center;
-  overflow: hidden;
-}
-
-.item > svg {
-  width: 100%;
-  min-height: 100px;
-}
-
-.item > img {
-  max-width: 200px;
-}
-
-@media (min-width: 400px) {
-  .filebrowser {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-
-  .filebrowser > * {
-    flex: 1 1 200px;
-  }
-
-  .item {
-    max-width: 250px;
-  }
 }

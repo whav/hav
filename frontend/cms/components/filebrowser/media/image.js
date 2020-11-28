@@ -10,7 +10,7 @@ const Image = ({ src, title, height, width }) => {
     if (width > height) {
       width = 800;
     } else {
-      width = 500;
+      width = 400;
     }
     height = Math.round(width / ratio);
 

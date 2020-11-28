@@ -97,7 +97,12 @@ def generate_imaginary_url(path, operation="crop", **kwargs):
 
 def generate_thumbnail_url(obj, **kwargs):
     path = get_imaginary_path(obj)
-    thumbnail_kwargs = {"width": 300, "height": 300, "type": "jpeg"}
+    thumbnail_kwargs = {
+        "width": 300,
+        "height": 300,
+        "type": "jpeg",
+        "operation": "crop",
+    }
     thumbnail_kwargs.update(kwargs)
     return generate_imaginary_url(path, **thumbnail_kwargs)
 

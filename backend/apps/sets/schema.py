@@ -12,6 +12,8 @@ class NodeType(DjangoObjectType):
     ancestors = graphene.List(lambda: NodeType)
     tags = graphene.List(TagType)
 
+    representative_media = graphene.Field("apps.media.schema.MediaType", required=False)
+
     class Meta:
         model = Node
         only_fields = (

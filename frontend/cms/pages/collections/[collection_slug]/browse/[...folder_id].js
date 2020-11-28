@@ -1,13 +1,14 @@
 import React from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { useAPI } from "hooks";
-import { Link, Loading } from "components";
+import { Loading } from "components";
+import { Description } from "components/filebrowser";
 import {
-  Folder,
-  Media,
-  FileBrowser,
-  Description,
-} from "components/filebrowser";
+  Gallery,
+  GalleryMedia,
+  GalleryFolder,
+} from "components/filebrowser/gallery";
 import Header from "components/filebrowser/Header";
 import Head from "next/head";
 
@@ -46,32 +47,42 @@ const CollectionBrowser = (props) => {
       />
 
       <Description text={description} />
-
-      <FileBrowser>
-        {children.map((c) => (
-          <Link
-            key={`set-${c.id}`}
-            href={router.pathname}
-            as={`/collections/${collection_slug}/browse/${c.id}/`}
-          >
-            <a>
-              <Folder name={c.name} />
-            </a>
-          </Link>
-        ))}
+      <Gallery>
+        {children.map((c) => {
+          console.log("Node...", c);
+          const media = c.representativeMedia;
+          return (
+            <Link
+              key={`set-${c.id}`}
+              href={`/collections/${collection_slug}/browse/${c.id}/`}
+            >
+              <a>
+                <GalleryFolder
+                  caption={c.name}
+                  src={media.thumbnailUrl}
+                  title={media.title}
+                  aspectRatio={media.aspectRatio}
+                />
+              </a>
+            </Link>
+          );
+        })}
         {mediaEntries.map((media) => (
           <Link
             key={`media-${media.id}`}
-            href={`/collections/[collection_slug]/media/[media_id]/`}
-            as={`/collections/${collection_slug}/media/${media.id}/`}
+            href={`/collections/${collection_slug}/media/${media.id}/`}
           >
             <a>
-              <Media {...media} />
+              <GalleryMedia
+                src={media.thumbnailUrl}
+                title={media.title}
+                caption={media.caption}
+                aspectRatio={media.aspectRatio}
+              />
             </a>
           </Link>
         ))}
-      </FileBrowser>
-      {/* <pre>{JSON.stringify({ props, data }, null, 2)}</pre> */}
+      </Gallery>
     </>
   );
 };

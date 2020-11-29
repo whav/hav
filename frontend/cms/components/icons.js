@@ -1,1 +1,1 @@
-export { MdFolder as FolderIcon } from "react-icons/md";
+export { MdFolderOpen as FolderIcon } from "react-icons/md";

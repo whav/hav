@@ -187,7 +187,7 @@ WEBPACK_LOADER = {
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-STATIC_URL = "/static/"
+STATIC_URL = "static/"
 
 STATICFILES_DIRS = (("wp", WEBPACK_BUILD_PATH), ("dj_static", django_root("static/")))
 
@@ -196,7 +196,7 @@ STATIC_ROOT = project_root(env("STATIC_ROOT", default="dist/static/"))
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
-MEDIA_URL = "/media/"
+MEDIA_URL = "media/"
 
 MEDIA_ROOT = project_root(env("DJANGO_MEDIA_ROOT", default="dist/media/"))
 
@@ -347,3 +347,5 @@ if "test" in sys.argv:
         RQ_QUEUES[key].update({"ASYNC": False, "DB": 5})
 
     FIXTURE_DIRS = (django_root("fixtures"),)
+
+# FORCE_SCRIPT_NAME = "/d/"

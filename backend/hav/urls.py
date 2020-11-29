@@ -41,11 +41,11 @@ if settings.DEBUG:
     wa_config = settings.STORAGES["webassets"]
     urlpatterns += static(wa_config["base_url"], document_root=wa_config["location"])
 
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 
 # namespace the whole django patterns under /d
 urlpatterns = [
     re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
-    path("d/", include(urlpatterns)),
+    path("", include(urlpatterns)),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

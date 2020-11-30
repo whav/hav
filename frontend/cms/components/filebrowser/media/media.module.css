@@ -1,3 +1,24 @@
 .tags {
   margin-top: 2rem;
 }
+
+.inline_dl {
+  display: grid;
+  grid-template-columns: max-content auto;
+}
+
+.inline_dt {
+  grid-column: 1;
+  color: grey;
+}
+
+.inline_dd {
+  grid-column: 2;
+}
+
+.flexbox_row {
+  display: flex;
+  flex-basis: 50%;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

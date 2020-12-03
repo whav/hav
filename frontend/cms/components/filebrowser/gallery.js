@@ -1,19 +1,19 @@
 import React from "react";
 import styles from "./gallery.module.css";
-import { FolderIcon } from "components/icons";
+import { FolderIcon, SoundIcon, VideoIcon, ImageIcon } from "components/icons";
+
+const iconMapping = {
+  folder: FolderIcon,
+  audio: SoundIcon,
+  video: VideoIcon,
+  image: ImageIcon,
+};
 
 const Gallery = ({ children = null }) => {
   return <div className={styles.gallery}>{children}</div>;
 };
 
-const GalleryFolder = ({ caption = "", ...props }) => {
-  caption = (
-    <>
-      <FolderIcon /> {caption}
-    </>
-  );
-  return <GalleryMedia isFolder={true} caption={caption} {...props} />;
-};
+const GalleryFolder = (props) => <GalleryMedia type={"folder"} {...props} />;
 
 const GalleryMedia = ({
   src,
@@ -21,8 +21,11 @@ const GalleryMedia = ({
   caption = "",
   aspectRatio = 1,
   isFolder = false,
+  type = "",
 }) => {
   let classNames = `${styles.figure} ${isFolder ? styles.folder : ""}`;
+
+  const Icon = iconMapping[type] || null;
 
   if (aspectRatio < 1) {
     classNames = `${classNames} ${styles.portrait}`;
@@ -30,7 +33,9 @@ const GalleryMedia = ({
   return (
     <figure className={classNames}>
       <img src={src} title={title || caption} />
-      <figcaption>{caption}</figcaption>
+      <figcaption>
+        {Icon ? <Icon /> : null} {caption}
+      </figcaption>
     </figure>
   );
 };

@@ -12,7 +12,7 @@ from hav_utils.imaginary import (
     generate_srcset_urls,
     generate_src_url,
 )
-from .models import Media, MediaCreator, License
+from .models import Media, MediaCreator, License, MediaType as DBMediaType
 
 
 class MediaType(DjangoObjectType):
@@ -65,7 +65,9 @@ class MediaType(DjangoObjectType):
 
     def resolve_type(self, info):
         if self.primary_file:
-            return self.primary_file.mime_type
+            mime = self.primary_file.mime_type
+            if mime:
+                return mime.split("/")[0]
         return None
 
     def resolve_tags(self, info):
@@ -89,6 +91,15 @@ class MediaType(DjangoObjectType):
     class Meta:
         model = Media
         exclude = ["creation_date"]
+
+
+class OriginalMediaType(DjangoObjectType):
+    def resolve_name(self, info):
+        return str(self)
+
+    class Meta:
+        model = DBMediaType
+        fields = ["name"]
 
 
 class CreatorType(DjangoObjectType):

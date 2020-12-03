@@ -7,8 +7,12 @@ export default async (req, res) => {
     `
       query MediaQuery($mediaId: String!) {
         media(id: $mediaId) {
+          id
           title
           description
+          originalMediaType {
+            name
+          }
           originalMediaDescription
           originalMediaIdentifier
           embargoEndDate
@@ -17,7 +21,6 @@ export default async (req, res) => {
           coordsLon
           createdAt
           modifiedAt
-          type
           height
           width
           license {
@@ -52,9 +55,19 @@ export default async (req, res) => {
           srcset
           height
           width
-
+          files {
+            id
+            originalFilename
+            mimeType
+            webassets {
+              mimeType
+              url
+              width
+              height
+            }
         }
       }
+    }
   `,
     {
       mediaId,

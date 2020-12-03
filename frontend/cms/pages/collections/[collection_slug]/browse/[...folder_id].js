@@ -75,8 +75,9 @@ const CollectionBrowser = (props) => {
             <a>
               <GalleryMedia
                 src={media.thumbnailUrl}
+                type={media.type}
                 title={media.title}
-                caption={media.caption}
+                caption={`${media.caption}`}
                 aspectRatio={media.aspectRatio}
               />
             </a>

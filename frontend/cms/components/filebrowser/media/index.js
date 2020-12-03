@@ -2,6 +2,8 @@ import React from "react";
 import Image from "./image";
 import Tags from "./tags";
 
+import ArchiveFile from "./assets";
+
 import Header from "../Header";
 import styles from "./media.module.css";
 
@@ -25,6 +27,18 @@ const DetailTable = ({ title = "", details = {} }) => {
   );
 };
 
+const CreatorList = ({ creators = [] }) => {
+  return (
+    <ul className={styles.detail_listing}>
+      {creators.map(({ firstName, lastName }, index) => (
+        <li key={index}>
+          {firstName} {lastName}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 const PrimaryDetailTable = ({ media }) => {
   const details = {
     title: media.title || "-",
@@ -41,12 +55,12 @@ const PrimaryDetailTable = ({ media }) => {
 const SecondaryDetailTable = ({ media }) => {
   console.log(media);
   const details = {
-    "hav media handle": "-",
+    "hav media handle": media.id,
     permalink: "-",
     license: "-",
-    "original media type": "-",
+    "original media type": media?.originalMediaType?.name,
     "available formats": "-",
-    creator: "-",
+    "creator(s)": <CreatorList creators={media.creators} />,
     "creation date": (
       <DisplayTimeFrame
         start={media.creationTimeframe[0]}
@@ -56,6 +70,7 @@ const SecondaryDetailTable = ({ media }) => {
     "archived by": "-",
     "archiving date": <DisplayTimeStamp ts={media.createdAt} />,
   };
+
   return <DetailTable title="Media Description" details={details} />;
 };
 
@@ -67,6 +82,7 @@ const MediaDetail = (props) => {
     collection = {},
     title,
     license = {},
+    files = [],
   } = media;
   const collection_slug = collection?.slug;
   return (
@@ -79,7 +95,9 @@ const MediaDetail = (props) => {
 
       <div className={styles.flexbox_row}>
         <div>
-          <Image {...props.media} />
+          {media.files.map((f, index) => (
+            <ArchiveFile key={index} {...f} />
+          ))}
         </div>
         <div style={{ paddingLeft: "2rem" }}>
           <PrimaryDetailTable media={media} />
@@ -88,6 +106,10 @@ const MediaDetail = (props) => {
       <License {...license} />
 
       <SecondaryDetailTable media={media} />
+
+      <hr />
+
+      <h3>Debug</h3>
       {tags && (
         <div className={styles.tags}>
           <Tags tags={tags} />

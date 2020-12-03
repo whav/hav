@@ -27,6 +27,7 @@ export default async (req, res) => {
           title: originalMediaIdentifier
           thumbnailUrl
           aspectRatio
+          type
         }
       }
     `,

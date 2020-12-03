@@ -40,6 +40,7 @@ env = environ.Env(
     IMAGINARY_SECRET=str,
     IMAGINARY_URL_PREFIX=(str, "/images/"),
     WEBASSET_URL_PREFIX=(str, "http://127.0.0.1:9000"),
+    WEBASSET_BASE_URL=(str, "/webassets/"),
     CACHE_URL=(str, "redis://127.0.0.1:6379/0"),
     DATABASE_URL=(str, "postgres:///hav"),
     WHAV_DATABASE_URL=(str, "postgres:///whav"),
@@ -203,10 +204,12 @@ MEDIA_ROOT = project_root(env("DJANGO_MEDIA_ROOT", default="dist/media/"))
 STORAGES = {
     "webassets": {
         "location": project_root(env("WEBASSET_ROOT", default="dist/webassets/")),
-        "base_url": "/webassets/",
+        "base_url": env("WEBASSET_BASE_URL"),
         "storage_class": "hav_utils.storages.ProtectedFileSystemStorage",
     }
 }
+
+print(STORAGES)
 
 LOGIN_URL = "admin:login"
 

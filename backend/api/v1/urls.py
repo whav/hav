@@ -7,7 +7,7 @@ from rest_framework.reverse import reverse as django_reverse
 from sources.filesystem import FSSource
 from sources.whav import WHAVSource
 from sources.uploads import UploadSource
-
+from .views import AuthView
 from .havBrowser.urls import hav_urls
 from .ingest.urls import ingest_urls
 
@@ -53,6 +53,7 @@ source_patterns = [
 
 urlpatterns = [
     url("^$", start, name="api_root"),
+    url(r"^auth/", AuthView.as_view()),
     url(r"^ingest/", include((ingest_urls, "ingest"))),
     url(r"^sources/", include(source_patterns)),
     url(r"^hav/", include((hav_urls("hav"), app_name), namespace="hav_browser")),

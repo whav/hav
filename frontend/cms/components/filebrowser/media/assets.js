@@ -48,6 +48,7 @@ const ArchiveFile = ({ mimeType, webassets, ...props }) => {
   console.log(mimeType, props);
   const type = mimeType.split("/")[0];
   const webasset = getWebassetForType(type, webassets);
+  const poster = getWebassetForType("image", webassets);
   console.log(type, webasset);
 
   if (webasset === undefined) {
@@ -61,9 +62,9 @@ const ArchiveFile = ({ mimeType, webassets, ...props }) => {
 
   switch (type) {
     case "video":
-      return <Video webasset={webasset} />;
+      return <Video webasset={webasset} poster={poster} />;
     case "audio":
-      return <Audio webasset={webasset} />;
+      return <Audio webasset={webasset} poster={poster} />;
     case "image":
       return <Image {...webasset} />;
     default:

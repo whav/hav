@@ -1,0 +1,34 @@
+body {
+    width: 100vw;
+    min-height: 100vh;
+    padding-top: 3em;
+}
+
+.auth-container {
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.auth-container h1 {
+    text-align: center;
+}
+
+.auth-container .logo {
+    max-width: 100%;
+    text-align: center;
+    padding-bottom: 3rem;
+}
+
+.auth-container form {
+    width: 100%;
+}
+
+.auth-container label {
+    width: 100%;
+    font-weight: bolder;
+}
+
+.auth-container input, .auth-container select, .auth-container textarea {
+    width: 100%;
+}

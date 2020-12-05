@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./NavBar.module.css";
 import { MenuButton } from "theme-ui";
-
+import { Username } from "./user";
 import ActiveLink from "./Link";
 import { useCollection, useAPI } from "hooks";
 
@@ -106,6 +106,9 @@ const NavBar = () => {
         )}
         <div className={styles.nav_bottom}>
           <ul>
+            <li>
+              <Username />
+            </li>
             <li>
               <img src="/logos/cirdis.svg" />
             </li>

@@ -8,4 +8,4 @@ const query = async (query, variables) => {
   return client.request(query, variables);
 };
 
-export { query, client, gql };
+export { query, client, gql, url };

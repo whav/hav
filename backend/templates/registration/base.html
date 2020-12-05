@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+{% load static %}
+{% load render_bundle from webpack_loader %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HAV</title>
+    {% render_bundle 'bulma' %}
+    <link rel="stylesheet" href="{% static 'dj_static/registration/auth.css' %}">
+</head>
+<body>
+<div class="auth-container">
+    <div class="logo">
+        <img src="{% static 'dj_static/registration/hav.svg' %}" alt="HAV logo"/>
+    </div>
+    {% block content %}
+{% endblock content %}
+</div>
+</body>
+</html>

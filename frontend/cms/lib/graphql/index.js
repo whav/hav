@@ -1,1 +1,1 @@
-export { query, client, gql } from "./client";
+export { query, client, gql, url } from "./client";

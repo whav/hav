@@ -27,7 +27,8 @@ module.exports = opts => {
   return {
     context: PROJECT_ROOT,
     entry: {
-      havAdmin: ["./src/admin/index"]
+      havAdmin: ["./src/admin/index"],
+      bulma: ["./src/bulma.js"]
     },
     output: {
       path: output_path,

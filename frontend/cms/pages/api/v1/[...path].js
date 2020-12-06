@@ -6,6 +6,7 @@ const proxy = createProxyMiddleware({
   pathRewrite: { "^/api/v1/": "/d/api/v1/" },
   // some other config
   ws: true, // proxy websockets
+  changeOrigin: true,
 });
 
 export default proxy;

@@ -4,6 +4,7 @@ import { MenuButton } from "theme-ui";
 import { Username } from "./user";
 import ActiveLink from "./Link";
 import { useCollection, useAPI } from "hooks";
+import { UserIcon } from "../icons";
 
 const Link = (props) => {
   return <ActiveLink activeClassName={styles.active_link} {...props} />;
@@ -107,12 +108,12 @@ const NavBar = () => {
         <div className={styles.nav_bottom}>
           <ul>
             <li>
+              <UserIcon />
               <Username />
             </li>
             <li>
               <img src="/logos/cirdis.svg" />
             </li>
-
             <li>
               <img src="/logos/univie.svg" />
             </li>

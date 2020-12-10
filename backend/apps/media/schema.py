@@ -12,6 +12,7 @@ from hav_utils.imaginary import (
     generate_srcset_urls,
     generate_src_url,
 )
+from hav_utils.daterange import Resolutions, calculate_date_resolution
 from .models import Media, MediaCreator, License, MediaType as DBMediaType
 
 
@@ -22,6 +23,8 @@ class MediaType(DjangoObjectType):
     type = graphene.Field(graphene.String)
 
     creation_timeframe = graphene.List(graphene.DateTime)
+    creation_timeframe_resolution = graphene.Field(graphene.String, required=False)
+
     tags = graphene.List(TagType)
 
     src = graphene.Field(graphene.String)
@@ -48,8 +51,12 @@ class MediaType(DjangoObjectType):
             return asset.width / asset.height
 
     def resolve_creation_timeframe(self, info):
-        # print(self.creation_date)
         return [self.creation_date.lower, self.creation_date.upper]
+
+    def resolve_creation_timeframe_resolution(self, info):
+        resolution = calculate_date_resolution(self.creation_date.lower, self.creation_date.upper)
+        if resolution:
+            return Resolutions(resolution).name
 
     def resolve_src(self, info):
         asset = self.primary_image_webasset

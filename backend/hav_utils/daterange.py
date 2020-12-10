@@ -1,8 +1,10 @@
 import aniso8601 as iso8601
 from aniso8601.resolution import DateResolution, TimeResolution
-from datetime import datetime, time
+from datetime import datetime, time, date
 import calendar
 import re
+from enum import Enum
+
 
 split_date_time = re.compile(r"(?P<date>[\d\-]+)[\ T]?(?P<time>.*)?")
 
@@ -61,6 +63,43 @@ def parse_date(date_string):
     elif resolution == DateResolution.Day:
         dMax = d
     else:
-        raise NotImplementedError(f'Unable to deal with input "{dt_string}".')
+        raise NotImplementedError(f'Unable to deal with input "{date_string}".')
     dMax = datetime.combine(dMax, time.max)
     return dMin, dMax
+
+
+class Resolutions(Enum):
+    YEAR = 0
+    MONTH = 1
+    DAY = 2
+
+class ReverseDateTimeRange:
+
+
+    def __init__(self, start: datetime, end: datetime):
+        self.start, self.end = sorted([start, end])
+
+
+    def get_resolution(self):
+        if self.start.time() == time.min and self.end.time() == time.max:
+            sd = self.start.date()
+            ed = self.end.date()
+
+            if sd == ed:
+                return Resolutions.DAY
+
+            if (sd.year, sd.month) == (ed.year, ed.month):
+                if sd.day == 1 and ed.day == calendar.monthrange(sd.year, sd.month)[1]:
+                    return Resolutions.MONTH
+
+            if sd.year == ed.year and sd == date(sd.year, 1, 1) and ed == date(sd.year, 12, 31):
+                return Resolutions.YEAR
+
+        return None
+
+def calculate_date_resolution(d1: datetime, d2: datetime):
+    rdtr = ReverseDateTimeRange(d1, d2)
+    return rdtr.get_resolution()
+
+
+

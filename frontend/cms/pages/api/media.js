@@ -44,6 +44,7 @@ export default async (req, res) => {
             id
           }
           creationTimeframe
+          creationTimeframeResolution
           tags {
             name
             source {

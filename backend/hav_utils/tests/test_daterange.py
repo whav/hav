@@ -1,5 +1,5 @@
 import unittest
-from ..daterange import parse, parse_date, parse_time
+from ..daterange import parse, parse_date, parse_time, calculate_date_resolution, Resolutions
 from datetime import date, datetime, time
 
 
@@ -67,6 +67,35 @@ class TestTopLevelParser(unittest.TestCase):
                 datetime.combine(date(2008, 1, 1), time.min),
                 datetime.combine(date(2008, 12, 31), time.max),
             ),
+        )
+
+
+class TestReverseDTRange(unittest.TestCase):
+    def test_year(self):
+        self.assertEqual(
+            calculate_date_resolution(
+                datetime.combine(date(2008, 1, 1), time.min),
+                datetime.combine(date(2008, 12, 31), time.max),
+            ),
+            Resolutions.YEAR,
+        )
+
+    def test_month(self):
+        self.assertEqual(
+            calculate_date_resolution(
+                datetime.combine(date(2008, 3, 1), time.min),
+                datetime.combine(date(2008, 3, 31), time.max),
+            ),
+            Resolutions.MONTH,
+        )
+
+    def test_day(self):
+        self.assertEqual(
+            calculate_date_resolution(
+                datetime.combine(date(2008, 3, 13), time.min),
+                datetime.combine(date(2008, 3, 13), time.max),
+            ),
+            Resolutions.DAY,
         )
 
 

@@ -65,6 +65,7 @@ const SecondaryDetailTable = ({ media }) => {
       <DisplayTimeFrame
         start={media.creationTimeframe[0]}
         end={media.creationTimeframe[1]}
+        resolution={media.creationTimeframeResolution}
       />
     ),
     "archived by": "-",

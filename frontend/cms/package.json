@@ -12,6 +12,7 @@
     "@mdx-js/loader": "^1.6.16",
     "@next/mdx": "^9.5.3",
     "@theme-ui/presets": "^0.3.0",
+    "autoprefixer": "^10.1.0",
     "date-fns": "^2.16.1",
     "fast-glob": "^3.2.4",
     "graphql": "^15.3.0",
@@ -24,11 +25,13 @@
     "next-mdx-remote": "^1.0.0",
     "node-fetch": "^2.6.0",
     "path-to-regexp": "^6.1.0",
+    "postcss": "^8.2.1",
     "react": "17.0.0",
     "react-dom": "17.0.0",
     "react-icons": "^3.11.0",
     "react-leaflet": "^2.7.0",
     "swr": "^0.3.2",
+    "tailwindcss": "^2.0.1",
     "theme-ui": "^0.3.1"
   }
 }

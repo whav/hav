@@ -5,6 +5,7 @@ import ThemeProvider from "../components/theme/provider";
 
 // css imports
 import "../components/styles.css";
+
 // TODO: move this somewhere else
 import "leaflet/dist/leaflet.css";
 

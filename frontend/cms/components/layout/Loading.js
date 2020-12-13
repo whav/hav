@@ -1,11 +1,10 @@
-import styles from "./Loading.module.css";
 import { Spinner } from "theme-ui";
 
 const Loading = () => {
   return (
-    <div className={styles.container}>
+    <div className="w-full h-full flex items-center justify-center">
       <div>
-        <Spinner />
+        <Spinner className="animte-spin" />
       </div>
     </div>
   );

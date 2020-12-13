@@ -49,7 +49,6 @@ const CollectionBrowser = (props) => {
       <Description text={description} />
       <Gallery>
         {children.map((c) => {
-          console.log("Node...", c);
           const media = c.representativeMedia;
           return (
             <Link

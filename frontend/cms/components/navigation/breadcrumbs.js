@@ -2,25 +2,12 @@ import React from "react";
 
 const Breadcrumbs = ({ children, separator = "/" }) => {
   return (
-    <ul>
+    <ul className="list-none">
       {children.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li className="inline-block pr-2" key={index}>
+          {index > 0 ? " / " : ""} {item}
+        </li>
       ))}
-      <style jsx>{`
-        ul {
-          list-style: none;
-          padding-left: 0;
-        }
-        li {
-          display: inline-block;
-        }
-        li:not(:first-child) {
-          padding-left: 0.5rem;
-        }
-        li:not(:first-child)::before {
-          content: "${separator} "
-        }
-      `}</style>
     </ul>
   );
 };

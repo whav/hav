@@ -1,11 +1,9 @@
 import React from "react";
-import Image from "./image";
 import Tags from "./tags";
 
 import ArchiveFile from "./assets";
 
 import Header from "../Header";
-import styles from "./media.module.css";
 
 import License from "../../license";
 import { DisplayTimeFrame, DisplayTimeStamp } from "./details";
@@ -14,14 +12,16 @@ const DetailTable = ({ title = "", details = {} }) => {
   return (
     <>
       <h3>{title}</h3>
-      <dl className={styles.inline_dl}>
+      <dl
+        className="grid gap-x-4"
+        style={{ gridTemplateColumns: "max-content auto" }}
+      >
         {Object.entries(details).map(([name, value]) => (
           <React.Fragment key={name}>
-            <dt className={styles.inline_dt}>{name}</dt>
-            <dd className={styles.inline_dd}>{value}</dd>
+            <dt className="col-start-1 text-gray-400">{name}</dt>
+            <dd className="col-start-2">{value}</dd>
           </React.Fragment>
         ))}
-        <dt></dt>
       </dl>
     </>
   );
@@ -29,7 +29,7 @@ const DetailTable = ({ title = "", details = {} }) => {
 
 const CreatorList = ({ creators = [] }) => {
   return (
-    <ul className={styles.detail_listing}>
+    <ul className="list-none">
       {creators.map(({ firstName, lastName }, index) => (
         <li key={index}>
           {firstName} {lastName}
@@ -94,13 +94,13 @@ const MediaDetail = (props) => {
         ancestors={ancestors}
       />
 
-      <div className={styles.flexbox_row}>
-        <div>
+      <div className="flex flex-row">
+        <div className="flex-initial">
           {media.files.map((f, index) => (
             <ArchiveFile key={index} {...f} />
           ))}
         </div>
-        <div style={{ paddingLeft: "2rem" }}>
+        <div className="flex-none px-10">
           <PrimaryDetailTable media={media} />
         </div>
       </div>
@@ -112,7 +112,7 @@ const MediaDetail = (props) => {
 
       <h3>Debug</h3>
       {tags && (
-        <div className={styles.tags}>
+        <div className="pt-4">
           <Tags tags={tags} />
         </div>
       )}

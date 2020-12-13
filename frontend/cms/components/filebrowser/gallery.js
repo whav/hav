@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./gallery.module.css";
 import { FolderIcon, SoundIcon, VideoIcon, ImageIcon } from "components/icons";
 
 const iconMapping = {
@@ -10,7 +9,11 @@ const iconMapping = {
 };
 
 const Gallery = ({ children = null }) => {
-  return <div className={styles.gallery}>{children}</div>;
+  return (
+    <div className="flex flex-row flex-wrap items-baseline justify-start">
+      {children}
+    </div>
+  );
 };
 
 const GalleryFolder = (props) => <GalleryMedia type={"folder"} {...props} />;
@@ -23,15 +26,10 @@ const GalleryMedia = ({
   isFolder = false,
   type = "",
 }) => {
-  let classNames = `${styles.figure} ${isFolder ? styles.folder : ""}`;
-
   const Icon = iconMapping[type] || null;
 
-  if (aspectRatio < 1) {
-    classNames = `${classNames} ${styles.portrait}`;
-  }
   return (
-    <figure className={classNames}>
+    <figure className="pr-4 pb-6" style={{ maxWidth: 230 }}>
       <img src={src} title={title || caption} />
       <figcaption>
         {Icon ? <Icon /> : null} {caption}

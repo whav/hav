@@ -1,9 +1,7 @@
 import React from "react";
 
-import styles from "./Wrapper.module.css";
-
 const Wrapper = ({ children }) => {
-  return <div className={styles.wrapper}>{children}</div>;
+  return <div className="max-w-prose">{children}</div>;
 };
 
 export default Wrapper;

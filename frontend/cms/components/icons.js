@@ -4,3 +4,5 @@ export {
   MdVolumeUp as SoundIcon,
   MdCameraRoll as ImageIcon,
 } from "react-icons/md";
+
+export { FaSpinner as SpinnerIcon } from "react-icons/fa";

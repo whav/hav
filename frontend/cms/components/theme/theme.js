@@ -1,3 +1,5 @@
-import theme from "@theme-ui/preset-tailwind";
+import { tailwind } from "@theme-ui/presets";
 
-export default theme;
+export default {
+  ...tailwind,
+};

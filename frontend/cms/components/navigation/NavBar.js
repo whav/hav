@@ -84,7 +84,7 @@ const NavBar = () => {
   const collection = data.find((c) => c.slug === collection_slug);
 
   return (
-    <>
+    <div className="md:flex md:flex-col md:h-full p-4">
       <div className="flex flex-row justify-between">
         <div className="flex-grow">
           <Link href="/">
@@ -102,7 +102,7 @@ const NavBar = () => {
       </div>
 
       <nav
-        className={`md:flex md:flex-col md:content-between md:mt-8 md:text-right ${
+        className={`md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right ${
           navVisible ? "" : "hidden"
         }`}
       >
@@ -112,27 +112,27 @@ const NavBar = () => {
           <GlobalNav collections={data} />
         )}
         {/* Bottom nav */}
-        <div className="md:mt-32">
+        <div className="sm:mt-32">
           <ul>
-            <li>
+            <li className="flex flex-row flex-wrap justify-between">
               <img className="block h-8 w-auto" src="/logos/cirdis.svg" />
+              <img className="block h-8 w-auto" src="/logos/univie.svg" />
             </li>
-
-            <li>
-              <img className="h-8 w-auto" src="/logos/univie.svg" />
-            </li>
-            <li>
-              <a href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf">
+            <li className="flex flex-row flex-wrap justify-between md:mt-10">
+              <a
+                className="block"
+                href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf"
+              >
                 Privacy Policy
               </a>{" "}
               <Link href="/imprint/">
-                <a>Imprint</a>
+                <a className="block">Imprint</a>
               </Link>
             </li>
           </ul>
         </div>
       </nav>
-    </>
+    </div>
   );
 };
 

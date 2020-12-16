@@ -1,14 +1,8 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from "theme-ui";
-
 import { useAPI } from "hooks";
-import { Image, Card, Text } from "theme-ui";
-import { Loading } from "components";
 
 const ImageMedia = ({ media, caption, title, url }) => {
   return (
-    <Image
+    <img
       alt={media.title}
       src={media.thumbnailUrl}
       srcSet={media.srcset.join(", ")}
@@ -28,16 +22,12 @@ const Media = (props) => {
   }
 
   return (
-    <Card
-      sx={{
-        maxWidth: "50%",
-        padding: "1rem",
-        marginTop: "1rem",
-      }}
-    >
-      <MediaSwitch {...data} />
-      {caption && <Text>{caption}</Text>}
-    </Card>
+    <div className="flex">
+      <div className="max-w-sm">
+        <MediaSwitch {...data} />
+        {caption && <Text>{caption}</Text>}
+      </div>
+    </div>
   );
 };
 

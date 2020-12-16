@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "theme-ui";
 import { useCollection } from "hooks";
 
 const SearchInput = ({ slug }) => {

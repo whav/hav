@@ -29,7 +29,7 @@ const GalleryMedia = ({
   const Icon = iconMapping[type] || null;
 
   return (
-    <figure className="pr-4 pb-6" style={{ maxWidth: 230 }}>
+    <figure className="pr-4 pb-6 max-w-xs">
       <img src={src} title={title || caption} />
       <figcaption>
         {Icon ? <Icon /> : null} {caption}

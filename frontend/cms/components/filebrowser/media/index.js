@@ -53,7 +53,6 @@ const PrimaryDetailTable = ({ media }) => {
 };
 
 const SecondaryDetailTable = ({ media }) => {
-  console.log(media);
   const details = {
     "hav media handle": media.id,
     permalink: "-",
@@ -94,13 +93,16 @@ const MediaDetail = (props) => {
         ancestors={ancestors}
       />
 
-      <div className="flex flex-row">
-        <div className="flex-initial">
+      <div className="flex flex-row flex-wrap">
+        <div
+          className="flex-initial max-w-full mr-5"
+          style={{ minWidth: "30rem" }}
+        >
           {media.files.map((f, index) => (
             <ArchiveFile key={index} {...f} />
           ))}
         </div>
-        <div className="flex-none px-10">
+        <div className="flex-none">
           <PrimaryDetailTable media={media} />
         </div>
       </div>

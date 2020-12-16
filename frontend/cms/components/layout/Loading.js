@@ -1,4 +1,3 @@
-import { Spinner } from "theme-ui";
 import { SpinnerIcon } from "../icons";
 
 const Loading = () => {

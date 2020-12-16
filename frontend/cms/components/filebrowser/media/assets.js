@@ -25,7 +25,15 @@ const Image = (props) => {
       height,
     };
   }
-  return <NextImage src={url} title={title} alt={title} {...dimensionProps} />;
+  return (
+    <NextImage
+      src={url}
+      title={title}
+      alt={title}
+      layout="responsive"
+      {...dimensionProps}
+    />
+  );
 };
 
 const Debug = ({ name, ...props }) => (
@@ -45,10 +53,10 @@ const Video = ({ webasset, ...props }) => {
 const Audio = (props) => <Debug name="audio" {...props} />;
 
 const ArchiveFile = ({ mimeType, webassets, ...props }) => {
-  console.log(mimeType, props);
+  // console.log(mimeType, props);
   const type = mimeType.split("/")[0];
   const webasset = getWebassetForType(type, webassets);
-  console.log(type, webasset);
+  // console.log(type, webasset);
 
   if (webasset === undefined) {
     console.warn(

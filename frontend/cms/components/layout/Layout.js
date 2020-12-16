@@ -10,7 +10,7 @@ const Wrapper = ({ children }) => {
 
 const Nav = ({ children }) => {
   return (
-    <div className="flex-initial md:w-1/5 md:min-h-screen bg-yellow-400">
+    <div className="flex-initial md:max-w-lg md:min-h-screen bg-yellow-400">
       {children}
     </div>
   );

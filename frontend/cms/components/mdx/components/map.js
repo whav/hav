@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import { Card } from "theme-ui";
 
 const Map = React.lazy(() => import("./_map.js"));
 
@@ -8,11 +7,11 @@ const HAVMap = (props) => {
     return null;
   } else {
     return (
-      <Card>
+      <div>
         <Suspense fallback={<span />}>
           <Map {...props} />
         </Suspense>
-      </Card>
+      </div>
     );
   }
 };

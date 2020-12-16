@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { MenuButton } from "theme-ui";
 
+import { MenuIcon, CloseIcon } from "../icons";
 import ActiveLink from "./Link";
 import { useCollection, useAPI } from "hooks";
 
@@ -84,7 +84,7 @@ const NavBar = () => {
   const collection = data.find((c) => c.slug === collection_slug);
 
   return (
-    <div className="md:flex md:flex-col md:h-full p-4">
+    <div className="md:flex md:flex-col md:h-full p-4 text-xl">
       <div className="flex flex-row justify-between">
         <div className="flex-grow">
           <Link href="/">
@@ -96,8 +96,10 @@ const NavBar = () => {
             </a>
           </Link>
         </div>
-        <div className="flex-none md:hidden">
-          <MenuButton onClick={() => setNavVisibility(!navVisible)} />
+        <div className="flex-none text-2xl md:hidden">
+          <button onClick={() => setNavVisibility(!navVisible)}>
+            {navVisible ? <CloseIcon /> : <MenuIcon />}
+          </button>
         </div>
       </div>
 

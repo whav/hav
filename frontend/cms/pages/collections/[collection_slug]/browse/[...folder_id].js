@@ -9,7 +9,7 @@ import {
   GalleryMedia,
   GalleryFolder,
 } from "components/filebrowser/gallery";
-import Header from "components/filebrowser/Header";
+import { Header } from "components/filebrowser/Header";
 import Head from "next/head";
 
 const CollectionBrowser = (props) => {

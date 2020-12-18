@@ -1,27 +1,25 @@
 import React from "react";
-import Image from "./image";
-import Tags from "./tags";
-
 import ArchiveFile from "./assets";
 
-import Header from "../Header";
-import styles from "./media.module.css";
+import { Header } from "../Header";
 
 import License from "../../license";
 import { DisplayTimeFrame, DisplayTimeStamp } from "./details";
 
-const DetailTable = ({ title = "", details = {} }) => {
+const DetailTable = ({ title = "", details = {}, className = "" }) => {
   return (
     <>
       <h3>{title}</h3>
-      <dl className={styles.inline_dl}>
+      <dl
+        className="grid gap-x-4"
+        style={{ gridTemplateColumns: "max-content auto" }}
+      >
         {Object.entries(details).map(([name, value]) => (
           <React.Fragment key={name}>
-            <dt className={styles.inline_dt}>{name}</dt>
-            <dd className={styles.inline_dd}>{value}</dd>
+            <dt className="col-start-1 text-gray-400">{name}</dt>
+            <dd className="col-start-2">{value}</dd>
           </React.Fragment>
         ))}
-        <dt></dt>
       </dl>
     </>
   );
@@ -29,7 +27,7 @@ const DetailTable = ({ title = "", details = {} }) => {
 
 const CreatorList = ({ creators = [] }) => {
   return (
-    <ul className={styles.detail_listing}>
+    <ul className="list-none">
       {creators.map(({ firstName, lastName }, index) => (
         <li key={index}>
           {firstName} {lastName}
@@ -53,11 +51,10 @@ const PrimaryDetailTable = ({ media }) => {
 };
 
 const SecondaryDetailTable = ({ media }) => {
-  console.log(media);
   const details = {
     "hav media handle": media.id,
     permalink: "-",
-    license: "-",
+    license: <License {...media.license} />,
     "original media type": media?.originalMediaType?.name,
     "available formats": "-",
     "creator(s)": <CreatorList creators={media.creators} />,
@@ -83,7 +80,6 @@ const MediaDetail = (props) => {
     collection = {},
     title,
     license = {},
-    files = [],
   } = media;
   const collection_slug = collection?.slug;
   return (
@@ -92,31 +88,43 @@ const MediaDetail = (props) => {
         title={title}
         collection_slug={collection_slug}
         ancestors={ancestors}
+        search={false}
       />
 
-      <div className={styles.flexbox_row}>
-        <div>
-          {media.files.map((f, index) => (
-            <ArchiveFile key={index} {...f} />
-          ))}
-        </div>
-        <div style={{ paddingLeft: "2rem" }}>
+      <div className="flex flex-row flex-wrap space-x-4 space-y-4 pt-6">
+        {media.files.map((f, index) => (
+          <div
+            className="flex-auto xl:max-w-screen-md"
+            style={{ minWidth: 500 }}
+            key={index}
+          >
+            <figure className="pr-10 pb-10">
+              <ArchiveFile key={index} {...f} />
+              <figcaption>
+                <License {...license} />
+              </figcaption>
+            </figure>
+          </div>
+        ))}
+
+        <div className="flex-none">
           <PrimaryDetailTable media={media} />
         </div>
+        <div className="flex-none">
+          <SecondaryDetailTable media={media} />
+        </div>
       </div>
-      <License {...license} />
 
-      <SecondaryDetailTable media={media} />
-
-      <hr />
-
+      {/* <hr />
+      <div>
       <h3>Debug</h3>
       {tags && (
-        <div className={styles.tags}>
+        <div className="pt-4">
           <Tags tags={tags} />
         </div>
       )}
       <pre>{JSON.stringify(props.media, null, 2)}</pre>
+      </div> */}
     </>
   );
 };

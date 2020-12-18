@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import styles from "./NavBar.module.css";
-import { MenuButton } from "theme-ui";
 
+import { MenuIcon, CloseIcon } from "../icons";
 import ActiveLink from "./Link";
 import { useCollection, useAPI } from "hooks";
 
 const Link = (props) => {
-  return <ActiveLink activeClassName={styles.active_link} {...props} />;
+  return <ActiveLink activeClassName="underline" {...props} />;
 };
 
 const CollectionNav = ({ collection: { slug, shortName, rootNode } }) => {
@@ -62,8 +61,8 @@ const GlobalNav = ({ collections = [] }) => {
         </ul>
       </li>
 
-      <li>
-        Collections
+      <li className="md:mt-2">
+        <span className="text-gray-50">Collections</span>
         <ul>
           {collections.map((c) => (
             <li key={c.slug}>
@@ -85,40 +84,51 @@ const NavBar = () => {
   const collection = data.find((c) => c.slug === collection_slug);
 
   return (
-    <div className={styles.navbar_wrapper}>
-      <div className={styles.navbar}>
-        <div className={styles.navbar_banner}>
+    <div className="md:flex md:flex-col md:h-full p-4 text-xl font-serif">
+      <div className="flex flex-row justify-between">
+        <div className="flex-grow">
           <Link href="/">
             <a>
-              <img src="/logos/hav.svg" />
+              <img
+                className="block h-8 md:h-20 w-auto md:mx-auto"
+                src="/logos/hav.svg"
+              />
             </a>
           </Link>
         </div>
-        <div className={styles.navbar_hamburger}>
-          <MenuButton onClick={() => setNavVisibility(!navVisible)} />
+        <div className="flex-none text-2xl md:hidden">
+          <button onClick={() => setNavVisibility(!navVisible)}>
+            {navVisible ? <CloseIcon /> : <MenuIcon />}
+          </button>
         </div>
       </div>
-      <nav className={`${styles.nav} ${navVisible ? "" : styles.nav_hidden}`}>
+
+      <nav
+        className={`md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right ${
+          navVisible ? "" : "hidden"
+        }`}
+      >
         {collection ? (
           <CollectionNav collection={collection} />
         ) : (
           <GlobalNav collections={data} />
         )}
-        <div className={styles.nav_bottom}>
+        {/* Bottom nav */}
+        <div className="sm:mt-32 text-base text-gray-500">
           <ul>
-            <li>
-              <img src="/logos/cirdis.svg" />
+            <li className="flex flex-row flex-wrap justify-between">
+              <img className="block h-8 w-auto" src="/logos/cirdis.svg" />
+              <img className="block h-8 w-auto" src="/logos/univie.svg" />
             </li>
-
-            <li>
-              <img src="/logos/univie.svg" />
-            </li>
-            <li>
-              <a href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf">
+            <li className="flex flex-row flex-wrap justify-between md:mt-10">
+              <a
+                className="block"
+                href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf"
+              >
                 Privacy Policy
               </a>{" "}
               <Link href="/imprint/">
-                <a>Imprint</a>
+                <a className="block">Imprint</a>
               </Link>
             </li>
           </ul>

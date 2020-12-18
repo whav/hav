@@ -1,7 +1,7 @@
 import React from "react";
 import { parseISO, format as dfn_format } from "date-fns";
 
-const format = (ts, format = "ppp") => dfn_format(ts, format);
+const format = (ts, format = "PPpp") => dfn_format(ts, format);
 
 const CompactTimeFrameDisplay = ({ timestamp, resolution = "" }) => {
   resolution = resolution.toLowerCase();

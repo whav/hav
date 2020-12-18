@@ -1,6 +1,11 @@
+export { MdCameraRoll as VideoIcon } from "react-icons/md";
+
+export { FaSpinner as SpinnerIcon } from "react-icons/fa";
+
 export {
-  MdFolderOpen as FolderIcon,
-  MdCameraRoll as VideoIcon,
-  MdVolumeUp as SoundIcon,
-  MdCameraRoll as ImageIcon,
-} from "react-icons/md";
+  HiMenu as MenuIcon,
+  HiX as CloseIcon,
+  HiCamera as ImageIcon,
+  HiVolumeUp as SoundIcon,
+  HiFolder as FolderIcon,
+} from "react-icons/hi";

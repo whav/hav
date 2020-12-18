@@ -3,15 +3,16 @@ import Image from "next/image";
 
 const License = (props) => {
   const { shortName, name, href, logo } = props;
-  return (
-    <div>
-      {logo ? (
-        <Image width={200} height={100} src={logo} title={name} />
-      ) : (
-        <span title={name}>{shortName}</span>
-      )}
-    </div>
-  );
+  let license = <span title={name}>{shortName}</span>;
+
+  if (href) {
+    license = (
+      <a className="underline" href={href}>
+        {license}
+      </a>
+    );
+  }
+  return license;
 };
 
 export default License;

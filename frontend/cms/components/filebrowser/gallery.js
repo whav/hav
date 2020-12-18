@@ -10,7 +10,7 @@ const iconMapping = {
 
 const Gallery = ({ children = null }) => {
   return (
-    <div className="flex flex-row flex-wrap items-baseline justify-start">
+    <div className="flex flex-row flex-wrap justify-start items-stretch space-x-4 space-y-4">
       {children}
     </div>
   );
@@ -23,16 +23,17 @@ const GalleryMedia = ({
   title,
   caption = "",
   aspectRatio = 1,
-  isFolder = false,
   type = "",
 }) => {
   const Icon = iconMapping[type] || null;
-
   return (
-    <figure className="pr-4 pb-6 max-w-xs">
+    <figure
+      className={`p-4 rounded-sm border-transparent hover:bg-gray-100 border`}
+      style={{ maxWidth: aspectRatio < 1 ? 200 : 250 }}
+    >
       <img src={src} title={title || caption} />
       <figcaption>
-        {Icon ? <Icon /> : null} {caption}
+        {Icon ? <Icon className="inline-block" /> : null} {caption}
       </figcaption>
     </figure>
   );

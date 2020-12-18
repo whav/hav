@@ -6,7 +6,6 @@ const getWebassetForType = (type, webassets = []) => {
 };
 
 const Image = (props) => {
-  console.log(props);
   let { url, title, height, width } = props;
   let dimensionProps = {
     unsized: true,

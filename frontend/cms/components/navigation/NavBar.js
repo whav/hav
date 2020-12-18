@@ -84,7 +84,7 @@ const NavBar = () => {
   const collection = data.find((c) => c.slug === collection_slug);
 
   return (
-    <div className="md:flex md:flex-col md:h-full p-4 text-xl">
+    <div className="md:flex md:flex-col md:h-full p-4 text-xl font-serif">
       <div className="flex flex-row justify-between">
         <div className="flex-grow">
           <Link href="/">
@@ -114,7 +114,7 @@ const NavBar = () => {
           <GlobalNav collections={data} />
         )}
         {/* Bottom nav */}
-        <div className="sm:mt-32">
+        <div className="sm:mt-32 text-base text-gray-500">
           <ul>
             <li className="flex flex-row flex-wrap justify-between">
               <img className="block h-8 w-auto" src="/logos/cirdis.svg" />

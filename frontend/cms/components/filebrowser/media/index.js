@@ -1,14 +1,12 @@
 import React from "react";
-import Tags from "./tags";
-
 import ArchiveFile from "./assets";
 
-import Header from "../Header";
+import { Header } from "../Header";
 
 import License from "../../license";
 import { DisplayTimeFrame, DisplayTimeStamp } from "./details";
 
-const DetailTable = ({ title = "", details = {} }) => {
+const DetailTable = ({ title = "", details = {}, className = "" }) => {
   return (
     <>
       <h3>{title}</h3>
@@ -56,7 +54,7 @@ const SecondaryDetailTable = ({ media }) => {
   const details = {
     "hav media handle": media.id,
     permalink: "-",
-    license: "-",
+    license: <License {...media.license} />,
     "original media type": media?.originalMediaType?.name,
     "available formats": "-",
     "creator(s)": <CreatorList creators={media.creators} />,
@@ -82,7 +80,6 @@ const MediaDetail = (props) => {
     collection = {},
     title,
     license = {},
-    files = [],
   } = media;
   const collection_slug = collection?.slug;
   return (
@@ -91,27 +88,35 @@ const MediaDetail = (props) => {
         title={title}
         collection_slug={collection_slug}
         ancestors={ancestors}
+        search={false}
       />
 
-      <div className="flex flex-row flex-wrap">
-        <div
-          className="flex-initial max-w-full mr-5"
-          style={{ minWidth: "30rem" }}
-        >
-          {media.files.map((f, index) => (
-            <ArchiveFile key={index} {...f} />
-          ))}
-        </div>
+      <div className="flex flex-row flex-wrap space-x-4 space-y-4 pt-6">
+        {media.files.map((f, index) => (
+          <div
+            className="flex-auto xl:max-w-screen-md"
+            style={{ minWidth: 500 }}
+            key={index}
+          >
+            <figure className="pr-10 pb-10">
+              <ArchiveFile key={index} {...f} />
+              <figcaption>
+                <License {...license} />
+              </figcaption>
+            </figure>
+          </div>
+        ))}
+
         <div className="flex-none">
           <PrimaryDetailTable media={media} />
         </div>
+        <div className="flex-none">
+          <SecondaryDetailTable media={media} />
+        </div>
       </div>
-      <License {...license} />
 
-      <SecondaryDetailTable media={media} />
-
-      <hr />
-
+      {/* <hr />
+      <div>
       <h3>Debug</h3>
       {tags && (
         <div className="pt-4">
@@ -119,6 +124,7 @@ const MediaDetail = (props) => {
         </div>
       )}
       <pre>{JSON.stringify(props.media, null, 2)}</pre>
+      </div> */}
     </>
   );
 };

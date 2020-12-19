@@ -41,4 +41,23 @@ const DisplayTimeStamp = ({ ts }) => {
   return format(d);
 };
 
-export { DisplayTimeFrame, DisplayTimeStamp };
+const DisplayYearRange = ({ start, end }) => {
+  start = parseISO(start);
+  end = parseISO(end);
+  let display = (
+    <CompactTimeFrameDisplay timestamp={start} resolution={"year"} />
+  );
+
+  if (start.year == end.year) {
+    return display;
+  } else {
+    return (
+      <>
+        {display} /{" "}
+        <CompactTimeFrameDisplay timestamp={end} resolution={year} />
+      </>
+    );
+  }
+};
+
+export { DisplayTimeFrame, DisplayTimeStamp, DisplayYearRange };

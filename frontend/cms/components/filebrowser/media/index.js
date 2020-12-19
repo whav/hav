@@ -4,7 +4,11 @@ import ArchiveFile from "./assets";
 import { Header } from "../Header";
 
 import License from "../../license";
-import { DisplayTimeFrame, DisplayTimeStamp } from "./details";
+import {
+  DisplayTimeFrame,
+  DisplayTimeStamp,
+  DisplayYearRange,
+} from "./details";
 
 const DetailTable = ({ title = "", details = {}, className = "" }) => {
   return (
@@ -27,7 +31,7 @@ const DetailTable = ({ title = "", details = {}, className = "" }) => {
 
 const CreatorList = ({ creators = [] }) => {
   return (
-    <ul className="list-none">
+    <ul className="inline-block list-none">
       {creators.map(({ firstName, lastName }, index) => (
         <li key={index}>
           {firstName} {lastName}
@@ -100,7 +104,15 @@ const MediaDetail = (props) => {
           >
             <figure className="pr-10 pb-10">
               <ArchiveFile key={index} {...f} />
-              <figcaption>
+              <figcaption className="flex justify-between">
+                <div>
+                  <CreatorList creators={media.creators} /> (
+                  <DisplayYearRange
+                    start={media.creationTimeframe[0]}
+                    end={media.creationTimeframe[1]}
+                  />
+                  )
+                </div>
                 <License {...license} />
               </figcaption>
             </figure>

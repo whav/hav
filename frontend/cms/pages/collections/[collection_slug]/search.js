@@ -5,11 +5,13 @@ import { useAPI } from "hooks";
 const SearchPage = () => {
   const collection_slug = useCollection();
   const [query, setQuery] = useState("");
-
+  console.log({
+    query,
+  });
   const { data, error } = useAPI(
     query.length === 0 ? null : `/api/rest/search/`,
     {
-      query,
+      search: query,
     }
   );
   if (!collection_slug) {
@@ -32,7 +34,12 @@ const SearchPage = () => {
       </form>
       <span>{query}</span>
       {data && !error ? (
-        <pre className="bg-gray-100">{JSON.stringify(data, null, 2)}</pre>
+        <>
+          <h2>
+            Results for query <em>"{query}"</em>
+          </h2>
+          <pre className="bg-gray-100">{JSON.stringify(data, null, 2)}</pre>
+        </>
       ) : null}
     </>
   );

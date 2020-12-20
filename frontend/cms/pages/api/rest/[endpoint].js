@@ -1,12 +1,13 @@
 const fetch = require("node-fetch");
+const { URL, URLSearchParams } = require("url");
 
 export default async (req, res) => {
   const {
-    query: { endpoint },
+    query: { endpoint, search },
   } = req;
-  const url = `${process.env.HAV_URL}d/api/public/${endpoint}`;
-  const params = req.params || {};
-  console.log(url, params);
+  const url = new URL(`/d/api/public/${endpoint}`, process.env.HAV_URL);
+
+  url.search = new URLSearchParams({ query: search }).toString();
 
   // Default options are marked with *
   const response = await fetch(url, {
@@ -15,7 +16,6 @@ export default async (req, res) => {
       "Content-Type": "application/json",
     },
   });
-  const data = await response.json(); // parses JSON response into native JavaScript objects
-  console.log(data);
+  const data = await response.json();
   res.status(200).json(data);
 };

@@ -32,6 +32,5 @@ export const useAPI = (url, query = {}) => {
       url = `${url}?${params}`;
     }
   }
-
   return useSWR(url, fetcher);
 };

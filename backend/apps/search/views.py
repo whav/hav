@@ -13,10 +13,12 @@ class MediaSerializer(serializers.ModelSerializer):
 
 class SearchView(APIView):
     def get(self, request, format=None):
+        query = request.GET.get('query', '')
+        print(query)
         # TODO: stuff like this:
         from django.contrib.postgres.search import SearchVector
         media_hits  = Media.objects.annotate(search=SearchVector('title', 'description', 'collection__name', 'set__name')).filter(
-            search='Kathmandu')
+            search=query)
         media_serializer = MediaSerializer(media_hits, many=True)
         return Response({
             'count': 0,

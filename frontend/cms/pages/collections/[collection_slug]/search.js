@@ -9,9 +9,9 @@ const SearchPage = () => {
     query,
   });
   const { data, error } = useAPI(
-    query.length === 0 ? null : `/api/rest/search/`,
+    query.length === 0 ? null : `/api/rest/public/search/`,
     {
-      search: query,
+      query,
     }
   );
   if (!collection_slug) {

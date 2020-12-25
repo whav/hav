@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     "apps.webassets",
     "apps.hav_collections",
     "apps.tags",
+    "apps.search",
     "sources.uploads",
 ]
 
@@ -208,8 +209,6 @@ STORAGES = {
         "storage_class": "hav_utils.storages.ProtectedFileSystemStorage",
     }
 }
-
-print(STORAGES)
 
 LOGIN_URL = "admin:login"
 

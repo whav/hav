@@ -17,13 +17,13 @@ import environ
 from pathlib import Path
 from dj_database_url import parse as parse_db_url
 
-from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
-
 # this is needed to let daphne install the twisted reactor
 import daphne.server  # noqa
 
 # register custom mimetypes
 import hav_utils.mimetypes  # noqa
+
+from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
 
 project_root = environ.Path(__file__) - 3
 django_root = environ.Path(__file__) - 2
@@ -45,6 +45,9 @@ env = environ.Env(
     DATABASE_URL=(str, "postgres:///hav"),
     WHAV_DATABASE_URL=(str, "postgres:///whav"),
     HAV_SKOSMOS_URL=(str, "https://skosmos-hav.aussereurop.univie.ac.at/rest/v1/"),
+    MEILISEARCH_URL=(str, 'http://127.0.0.1:7700/'),
+    MEILISEARCH_KEY=(str, None),
+    MEILISEARCH_INDEX=(str, 'hav'),
 )
 
 # read the .env file
@@ -342,6 +345,11 @@ TAGGING_SOURCES = {
     "languages": {"source": "apps.tags.sources.iso639_3.Source"},
     "countries": {"source": "apps.tags.sources.iso3166.Source"},
 }
+
+# FTS - Meilisearch
+MEILISEARCH_URL = env('MEILISEARCH_URL')
+MEILISEARCH_KEY = env('MEILISEARCH_KEY')
+MEILISEARCH_INDEX = env('MEILISEARCH_INDEX')
 
 # TEST Setup
 if "test" in sys.argv:

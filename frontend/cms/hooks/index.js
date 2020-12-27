@@ -22,7 +22,7 @@ const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export const useAPI = (url, query = {}) => {
   let params;
-  if (query) {
+  if (url && query) {
     // clean query from undefineds
     Object.keys(query).forEach((key) =>
       query[key] === undefined ? delete query[key] : null
@@ -32,5 +32,6 @@ export const useAPI = (url, query = {}) => {
       url = `${url}?${params}`;
     }
   }
+  console.log(url);
   return useSWR(url, fetcher);
 };

@@ -3,11 +3,13 @@ from enum import Enum
 from typing import List
 import meilisearch
 from django.core.management.base import BaseCommand
+from django.utils.functional import cached_property
 from pydantic import BaseModel
 
 from apps.media.models import Media
 from apps.sets.models import Node
 
+from ...client import get_client, get_index
 
 class ItemType(str, Enum):
     folder = 'folder'
@@ -21,33 +23,62 @@ class SearchIndexItem(BaseModel):
     body: str
 
     type: ItemType
+    pk: int
+    parents: List[int] = []
     last_update: float
 
 
+searchable_attributes = [
+      'title',
+      'additional_titles',
+      'body',
+]
+
 class Command(BaseCommand):
-    help = "Reindex everything!"
+    help = "Re-index everything!"
 
     items = []
     media_pks = set()
 
+    def __init__(self, *args, **kwargs):
+        super(*args, **kwargs)
+        self._client = get_client()
+        self._index = get_index()
+
+    @cached_property
+    def client(self):
+        return self._client
+
+    @property
+    def index(self):
+        return self._index
+
     def index_items(self):
-        # import ipdb;
-        # ipdb.set_trace()
-        client = meilisearch.Client('http://127.0.0.1:7700')
         # attempt to delete index
         try:
-            client.index('hav').delete()
+            self.index.delete()
         except meilisearch.errors.MeiliSearchApiError:
             pass
 
-        client.create_index('hav')
-        index = client.index('hav')
-        index.add_documents([i.dict() for i in self.items])
+        self.client.create_index('hav')
+        self.wait_for_processing(self.index.add_documents([i.dict() for i in self.items]))
+
+        self.wait_for_processing(self.index.update_searchable_attributes(searchable_attributes))
+
 
     def index_collection(self, root_node):
         type = ItemType.folder
         for node in root_node.get_descendants().iterator():
-            item = SearchIndexItem(id=f'{type}_{node.pk}', type=type,title=node.name, body=node.description, last_update=time.time())
+            ancestors = node.get_ancestors().values_list('pk', flat=True)
+            item = SearchIndexItem(
+                id=f'{type}_{node.pk}',
+                type=type,
+                pk=node.pk,
+                title=node.name,
+                body=node.description,
+                last_update=time.time(),
+                parents=list(ancestors)
+            )
             self.items.append(item)
 
     def index_media(self, media):
@@ -55,17 +86,35 @@ class Command(BaseCommand):
             return
 
         type = ItemType.media
-
+        ancestors = media.set.get_ancestors().values_list('pk', flat=True)
+        parents = [*list(ancestors), media.set.pk]
         index_item = SearchIndexItem(
             id=f'{type}_{media.pk}',
             type=type,
+            pk=media.pk,
             title=media.title,
             additional_titles=[media.original_media_identifier] if media.original_media_identifier else [],
             body=media.description,
-            last_update=time.time()
+            last_update=time.time(),
+            parents=parents
         )
         self.items.append(index_item)
         self.media_pks.add(media.pk)
+
+    def wait_for_processing(self, response):
+        update_id = response.get('updateId')
+        while True:
+            response = self.index.get_update_status(update_id)
+            status = response.get('status')
+            if status == 'processed':
+                break
+            if status == 'failed':
+                raise ValueError(response.get('error'), 'Operation failed.')
+            elif status == 'enqueued':
+                time.sleep(0.5)
+                continue
+            raise NotImplementedError(f'Unknown status {status}.')
+
 
     def handle(self, *args, **options):
         # index nodes

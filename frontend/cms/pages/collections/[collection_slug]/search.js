@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { useCollection } from "hooks";
 import { useAPI } from "hooks";
+import { useDebounce } from "use-debounce";
+import { SearchResults } from "components/search";
 
 const SearchPage = () => {
   const collection_slug = useCollection();
   const [query, setQuery] = useState("");
-  console.log({
-    query,
-  });
+
+  const [debouncedQuery] = useDebounce(query, 1000);
+
   const { data, error } = useAPI(
     query.length === 0 ? null : `/api/rest/public/search/`,
     {
-      query,
+      query: debouncedQuery,
     }
   );
   if (!collection_slug) {
@@ -35,9 +37,12 @@ const SearchPage = () => {
       <span>{query}</span>
       {data && !error ? (
         <>
-          <h2>
+          <span className="text-lg font-medium">
             Results for query <em>"{query}"</em>
-          </h2>
+          </span>
+
+          <SearchResults {...data} />
+
           <pre className="bg-gray-100">{JSON.stringify(data, null, 2)}</pre>
         </>
       ) : null}

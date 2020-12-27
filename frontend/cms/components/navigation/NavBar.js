@@ -13,7 +13,7 @@ const CollectionNav = ({ collection: { slug, shortName, rootNode } }) => {
     <ul>
       <li>
         <Link href="/">
-          <a>← All Collections</a>
+          <a className="text-base text-gray-500">← All Collections</a>
         </Link>
       </li>
       <li>
@@ -62,7 +62,7 @@ const GlobalNav = ({ collections = [] }) => {
       </li>
 
       <li className="md:mt-2">
-        <span className="text-gray-50">Collections</span>
+        <span className="text-base text-gray-500">Collections</span>
         <ul>
           {collections.map((c) => (
             <li key={c.slug}>

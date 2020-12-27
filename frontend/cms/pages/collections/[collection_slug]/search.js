@@ -23,7 +23,7 @@ const SearchPage = () => {
   return (
     <>
       <h1>Search collection {collection_slug}</h1>
-      <form>
+      <form className="mb-4">
         <input
           className="border rounded-md inline-block"
           type="search"
@@ -34,17 +34,17 @@ const SearchPage = () => {
           placeholder={`Search collection`}
         />
       </form>
-      <span>{query}</span>
       {data && !error ? (
-        <>
-          <span className="text-lg font-medium">
-            Results for query <em>"{query}"</em>
-          </span>
+        <div className="mt-4">
+          <div className="text-base font-medium text-right">
+            {data.nbHits} Result{data.nbHits === 1 ? "" : "s"} for query{" "}
+            <em>"{query}"</em>
+          </div>
 
           <SearchResults {...data} />
 
           <pre className="bg-gray-100">{JSON.stringify(data, null, 2)}</pre>
-        </>
+        </div>
       ) : null}
     </>
   );

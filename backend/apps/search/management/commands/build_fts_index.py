@@ -1,6 +1,6 @@
 import time
 from enum import Enum
-from typing import List
+from typing import List, Optional
 import meilisearch
 from django.core.management.base import BaseCommand
 from django.utils.functional import cached_property
@@ -18,13 +18,18 @@ class ItemType(str, Enum):
 
 class SearchIndexItem(BaseModel):
     id: str
+
+    # searchable attributes
     title: str
     additional_titles: List[str] = []
     body: str
 
+    # non-searchable attributes
     type: ItemType
+    collection: str
     pk: int
     parents: List[int] = []
+    node: Optional[int]
     last_update: float
 
 
@@ -67,6 +72,8 @@ class Command(BaseCommand):
 
 
     def index_collection(self, root_node):
+        assert root_node in Node.get_collection_roots(), 'Not a collection root node.'
+        collection = root_node.collection
         type = ItemType.folder
         for node in root_node.get_descendants().iterator():
             ancestors = node.get_ancestors().values_list('pk', flat=True)
@@ -77,7 +84,8 @@ class Command(BaseCommand):
                 title=node.name,
                 body=node.description,
                 last_update=time.time(),
-                parents=list(ancestors)
+                parents=list(ancestors),
+                collection=collection.slug,
             )
             self.items.append(item)
 
@@ -96,7 +104,9 @@ class Command(BaseCommand):
             additional_titles=[media.original_media_identifier] if media.original_media_identifier else [],
             body=media.description,
             last_update=time.time(),
-            parents=parents
+            parents=parents,
+            collection=media.collection.slug,
+            node=media.set.pk
         )
         self.items.append(index_item)
         self.media_pks.add(media.pk)
@@ -123,7 +133,7 @@ class Command(BaseCommand):
             self.index_collection(root)
 
         # index media items
-        media_entries = Media.objects.iterator()
+        media_entries = Media.objects.select_related('collection', 'set').iterator()
         for media in media_entries:
             if media.pk not in self.media_pks:
                 self.index_media(media)

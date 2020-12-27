@@ -1,6 +1,6 @@
 import React from "react";
-import { match } from "path-to-regexp";
-
+import Link from "next/link";
+import { FolderIcon } from "../icons";
 const SearchResults = ({ hits = [] }) => {
   return (
     <>
@@ -28,19 +28,20 @@ const HighlightedText = ({ text = "", matches = [] }) => {
       const end = start + length;
       // deal with first iteration
       if (index === 0) {
+        console.log("Initial chunk", start, length);
         previousSegments.push(text.slice(0, start));
       }
 
       // deal with text between this match and the previous one
       const previousMatch = allMatches[index - 1];
       if (previousMatch) {
-        const previousEnd = previousMatch.start + previousMatch.end;
+        const previousEnd = previousMatch.start + previousMatch.length;
         previousSegments.push(text.slice(previousEnd, start));
       }
 
       // add the highlighted segment
       previousSegments.push(
-        <span className="underline">{text.slice(start, end)}</span>
+        <span className="underline bg-blue-100">{text.slice(start, end)}</span>
       );
 
       // deal with last iteration
@@ -51,7 +52,7 @@ const HighlightedText = ({ text = "", matches = [] }) => {
     },
     []
   );
-
+  console.log(matches, results);
   return results;
 };
 
@@ -62,15 +63,33 @@ const SearchResult = ({
   additional_titles = [],
   type,
   _matchesInfo = {},
+  collection,
+  pk,
 }) => {
   additional_titles = additional_titles.flat(10).join(" ");
+  let url = `/collections/${collection}`;
+  let Icon = () => <span />;
+  switch (type) {
+    case "folder":
+      url = `${url}/browse/${pk}/`;
+      Icon = FolderIcon;
+      break;
+    case "media":
+      url = `${url}/media/${pk}/`;
+      break;
+    default:
+      throw `Unknown type ${type}`;
+  }
   return (
     <div className="flex">
       <div className="flex-1 pr-4">
-        <a></a>
-        <h2 className="text-lg font-bold">
-          <HighlightedText matches={_matchesInfo.title} text={title} />
-        </h2>
+        <Link href={url}>
+          <a className="text-lg font-bold">
+            <Icon className="inline" />
+            <HighlightedText matches={_matchesInfo.title} text={title} />
+          </a>
+        </Link>
+
         <p>
           <HighlightedText
             matches={_matchesInfo.additional_titles}

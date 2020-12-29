@@ -13,7 +13,10 @@ export default function ContentPage({ source, frontmatter }) {
   return <MDX>{content}</MDX>;
 }
 
-export async function getStaticProps({ params: { page = [] } }) {
+export async function getStaticProps(props) {
+  const {
+    params: { page = [] },
+  } = props;
   const sourceDirectory = path.join(process.cwd(), "./content/");
   const pathNoExt = page.join(path.sep) || ".";
   const files = await fg(

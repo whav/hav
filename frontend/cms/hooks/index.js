@@ -14,7 +14,6 @@ export const useCollection = () => {
       collection_slug = match[1];
     }
   }
-
   return collection_slug;
 };
 
@@ -32,6 +31,5 @@ export const useAPI = (url, query = {}) => {
       url = `${url}?${params}`;
     }
   }
-  console.log(url);
   return useSWR(url, fetcher);
 };

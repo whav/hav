@@ -1,42 +1,69 @@
-import React, { useState } from "react";
-import { useCollection } from "hooks";
-import { useAPI } from "hooks";
-import { useDebounce } from "use-debounce";
-import { SearchResults } from "components/search";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useCollection, useAPI } from "hooks";
+import { SearchResults, SearchBar } from "components/search";
 
-const SearchPage = () => {
+const SearchPage = ({
+  initialQuery = "",
+  initialRootNode = "",
+  initialCollection = {},
+}) => {
   const collection_slug = useCollection();
-  const [query, setQuery] = useState("");
+  const { data: collections = [], error: collections_error } = useAPI(
+    "/api/collections/",
+    initialCollection
+  );
 
-  const [debouncedQuery] = useDebounce(query, 1000);
+  const collection = collections.find((c) => c.slug === collection_slug);
+  const [query, setQuery] = useState(initialQuery);
+  const node = initialRootNode || collection?.rootNode;
+  const router = useRouter();
 
+  useEffect(() => {
+    const newParams = new URLSearchParams();
+    newParams.set("q", query);
+    if (node !== collection?.rootNode) {
+      newParams.set("node", node);
+    }
+
+    if (newParams.toString() !== window.location.search.substring(1)) {
+      router.replace(
+        {
+          pathname: window.location.pathname,
+          query: { q: query, node },
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [query, node]);
+
+  // actually fetch the results
   const { data, error } = useAPI(
-    query.length === 0 ? null : `/api/rest/public/search/`,
+    query.length > 0 && node ? `/api/rest/public/search/` : null,
     {
-      query: debouncedQuery,
+      query,
+      node,
     }
   );
+
   if (!collection_slug) {
     return null;
   }
 
   return (
     <>
-      <h1>Search collection {collection_slug}</h1>
-      <form className="mb-4">
-        <input
-          className="border rounded-md inline-block"
-          type="search"
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-          }}
-          placeholder={`Search collection`}
-        />
-      </form>
+      <SearchBar
+        query={query}
+        onQuery={(q) => {
+          console.warn(q);
+          setQuery(q);
+        }}
+      />
+      {/* {collection && <pre>{JSON.stringify(collection, null, 2)}</pre>} */}
       {data && !error ? (
         <div className="mt-4">
-          <div className="text-base font-medium text-right">
+          <div className="text-base font-medium">
             {data.nbHits} Result{data.nbHits === 1 ? "" : "s"} for query{" "}
             <em>"{query}"</em>
           </div>
@@ -49,5 +76,21 @@ const SearchPage = () => {
     </>
   );
 };
+
+export async function getServerSideProps({
+  query: { q = "", node = "", collection_slug },
+}) {
+  const getCollectionBySlug = require("../../api/collections")
+    .getCollectionBySlug;
+  const collection = await getCollectionBySlug(collection_slug);
+
+  return {
+    props: {
+      initialQuery: q,
+      initialRootNode: node,
+      initialCollection: {},
+    },
+  };
+}
 
 export default SearchPage;

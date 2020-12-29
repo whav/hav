@@ -31,7 +31,7 @@ const CollectionNav = ({ collection: { slug, shortName, rootNode } }) => {
         </Link>
       </li>
       <li>
-        <Link href={`/collections/${slug}/search/`}>
+        <Link href={`/collections/${slug}/search/`} exact={false}>
           <a>Search</a>
         </Link>
       </li>

@@ -1,20 +1,14 @@
+import React, { useState } from "react";
 import Breadcrumbs from "../navigation/breadcrumbs";
 import { Link } from "components";
+import { SearchBar } from "components/search";
 
 const HeaderBar = ({ title = "", search = true }) => {
+  const [query, setQuery] = useState("");
   return (
     <div className="flex justify-between">
       <h1 className="text-4xl font-bold">{title}</h1>
-      {search ? (
-        <div className="hidden md:block">
-          <input
-            type="search"
-            disabled
-            className="shadow rounded border-0 p-3"
-            placeholder="Search"
-          />
-        </div>
-      ) : null}
+      {search ? <SearchBar query={query} onQuery={setQuery} /> : null}
     </div>
   );
 };

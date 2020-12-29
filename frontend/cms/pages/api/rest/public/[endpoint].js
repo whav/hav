@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-const { URL } = require("url");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 export const config = {

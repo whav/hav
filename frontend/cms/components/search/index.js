@@ -1,6 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { FolderIcon } from "../icons";
+import { FolderIcon, SearchIcon } from "../icons";
+
+const SearchBar = ({ query = "", onQuery }) => {
+  const [value, setQuery] = useState(query);
+
+  return (
+    <form
+      className="shadow flex"
+      onSubmit={(e) => {
+        e.preventDefault();
+        console.log(value);
+        onQuery && onQuery(value);
+      }}
+    >
+      <input
+        className="w-full rounded p-2"
+        type="text"
+        value={value}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={`Search collection`}
+      />
+      <button className="bg-white w-auto flex justify-end items-center text-blue-500 p-2 hover:text-blue-400">
+        <SearchIcon />
+      </button>
+    </form>
+  );
+};
+
 const SearchResults = ({ hits = [] }) => {
   return (
     <>
@@ -28,7 +55,6 @@ const HighlightedText = ({ text = "", matches = [] }) => {
       const end = start + length;
       // deal with first iteration
       if (index === 0) {
-        console.log("Initial chunk", start, length);
         previousSegments.push(text.slice(0, start));
       }
 
@@ -52,7 +78,6 @@ const HighlightedText = ({ text = "", matches = [] }) => {
     },
     []
   );
-  console.log(matches, results);
   return results;
 };
 
@@ -108,4 +133,4 @@ const SearchResult = ({
   );
 };
 
-export { SearchResults, SearchResult };
+export { SearchResults, SearchResult, SearchBar };

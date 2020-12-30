@@ -14,7 +14,6 @@ export const useCollection = () => {
       collection_slug = match[1];
     }
   }
-
   return collection_slug;
 };
 
@@ -22,7 +21,7 @@ const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export const useAPI = (url, query = {}) => {
   let params;
-  if (query) {
+  if (url && query) {
     // clean query from undefineds
     Object.keys(query).forEach((key) =>
       query[key] === undefined ? delete query[key] : null
@@ -32,6 +31,5 @@ export const useAPI = (url, query = {}) => {
       url = `${url}?${params}`;
     }
   }
-
   return useSWR(url, fetcher);
 };

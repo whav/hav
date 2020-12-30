@@ -1,4 +1,5 @@
 const { gql, GraphQLClient } = require("graphql-request");
+const process = require("process");
 
 const url = new URL("/d/api/graphql/", process.env.HAV_URL);
 

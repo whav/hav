@@ -44,6 +44,7 @@ const CollectionBrowser = (props) => {
         title={name}
         collection_slug={collection_slug}
         ancestors={ancestors}
+        folder_id={folder_id}
       />
 
       <Description text={description} />

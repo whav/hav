@@ -1,14 +1,10 @@
-from django.conf.urls import url, include
+from django.urls import re_path, path
 from .views import CollectionListView
+from apps.search.views import SearchView
 
 app_name = "api"
 
 urlpatterns = [
-    # url('^$', start, name='api_root'),
-    url(r"^collections/", CollectionListView.as_view()),
-    # url(r'^sources/', include(source_patterns)),
-    # url(r'^hav/', include(
-    #     (hav_urls('hav'), app_name),
-    #     namespace='hav_browser')
-    # )
+    path("collections/", CollectionListView.as_view()),
+    path("search/", SearchView.as_view()),
 ]

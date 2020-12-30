@@ -1,6 +1,12 @@
 import { query } from "lib/graphql";
 
 export default async (req, res) => {
+  const collections = await getAllCollections();
+  res.status = 200;
+  res.json(collections);
+};
+
+export const getAllCollections = async () => {
   const result = await query(
     `{
         collections {
@@ -13,10 +19,15 @@ export default async (req, res) => {
       }
     }`
   );
-  res.status = 200;
+
   const collections = result.collections.map((c) => ({
     ...c,
     rootNode: c.rootNode?.id,
   }));
-  res.json(collections);
+  return collections;
+};
+
+export const getCollectionBySlug = async (slug) => {
+  const collections = await getAllCollections();
+  return collections.find((c) => c.slug === slug);
 };

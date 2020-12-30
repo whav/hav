@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
     nginx:
@@ -13,20 +13,16 @@ services:
           - whav_db
         environment:
           - DEBUG=True
-          - HOME=${BASHHOMEDIR}
-          - IPYTHONDIR=${IPYTHONDIR}
         volumes:
           - ./backend:/hav/backend
         command: /venv/bin/python ./manage.py runserver 0.0.0.0:8000
 
     django-wsgi:
         depends_on:
-        - hav_db
-        - whav_db
+          - hav_db
+          - whav_db
         environment:
           - DEBUG=True
-          - HOME=${BASHHOMEDIR}
-          - IPYTHONDIR=${IPYTHONDIR}
         volumes:
             - ./backend:/hav/backend
         command: /venv/bin/python ./manage.py runserver --noasgi 0.0.0.0:8000
@@ -42,6 +38,8 @@ services:
             - POSTGRES_USER=hav
         expose:
             - 5432
+        ports:
+            - "5433:5432"
 
     whav_db:
         image: mdillon/postgis:9.4
@@ -50,5 +48,6 @@ services:
             - POSTGRES_USER=whav
         expose:
             - 5432
-
+        ports:
+            - "5434:5432"
 

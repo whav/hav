@@ -8,4 +8,5 @@ export {
   HiCamera as ImageIcon,
   HiVolumeUp as SoundIcon,
   HiFolder as FolderIcon,
+  HiSearch as SearchIcon,
 } from "react-icons/hi";

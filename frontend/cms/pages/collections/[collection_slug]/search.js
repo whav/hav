@@ -21,11 +21,18 @@ const SearchPage = ({
 
   useEffect(() => {
     const newParams = new URLSearchParams();
-    newParams.set("q", query);
+    if (query) {
+      newParams.set("q", query);
+    }
     if (node !== collection?.rootNode) {
       newParams.set("node", node);
     }
-
+    // console.log(
+    //   newParams.toString(),
+    //   window.location.search.substring(1),
+    //   node,
+    //   collection?.rootNode
+    // );
     if (newParams.toString() !== window.location.search.substring(1)) {
       router.replace(
         {

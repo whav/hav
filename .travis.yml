@@ -4,15 +4,20 @@ sudo: required
 language: python
 python: "3.7"
 
+services:
+  - docker
+
 install:
   - sudo pip install docker-compose
 
 env:
   - DOCKER_COMPOSE_VERSION=1.25.0
 
+before_install:
+    - echo "$DOCKER_HUB_KEY" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
-      echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin ;
       docker tag whav/hav whav/hav:$TRAVIS_BUILD_NUMBER ;
       docker tag whav/hav whav/hav:$TRAVIS_COMMIT ;
       docker push whav/hav ;

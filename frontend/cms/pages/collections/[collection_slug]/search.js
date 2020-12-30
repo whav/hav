@@ -27,17 +27,15 @@ const SearchPage = ({
     if (node !== collection?.rootNode) {
       newParams.set("node", node);
     }
-    // console.log(
-    //   newParams.toString(),
-    //   window.location.search.substring(1),
-    //   node,
-    //   collection?.rootNode
-    // );
     if (newParams.toString() !== window.location.search.substring(1)) {
+      const searchParams = {};
+      for (const [key, value] of newParams) {
+        searchParams[key] = value;
+      }
       router.replace(
         {
           pathname: window.location.pathname,
-          query: { q: query, node },
+          query: searchParams,
         },
         undefined,
         { shallow: true }
@@ -95,7 +93,7 @@ export async function getServerSideProps({
     props: {
       initialQuery: q,
       initialRootNode: node,
-      initialCollection: {},
+      initialCollection: collection,
     },
   };
 }

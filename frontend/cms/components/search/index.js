@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { FolderIcon, SearchIcon } from "../icons";
 
-const SearchBar = ({ query = "", onQuery }) => {
+const SearchBar = ({ query = "", node = "", onQuery }) => {
   const [value, setQuery] = useState(query);
 
   return (
@@ -10,7 +10,6 @@ const SearchBar = ({ query = "", onQuery }) => {
       className="shadow flex"
       onSubmit={(e) => {
         e.preventDefault();
-        console.log(value);
         onQuery && onQuery(value);
       }}
     >
@@ -21,6 +20,28 @@ const SearchBar = ({ query = "", onQuery }) => {
         onChange={(e) => setQuery(e.target.value)}
         placeholder={`Search collection`}
       />
+      <input type="hidden" value={node} />
+      <button className="bg-white w-auto flex justify-end items-center text-blue-500 p-2 hover:text-blue-400">
+        <SearchIcon />
+      </button>
+    </form>
+  );
+};
+
+const HeaderSearchBar = ({ target, node }) => {
+  const [query, setQuery] = useState("");
+
+  return (
+    <form className="shadow flex" action={target} method="get">
+      <input
+        className="w-full rounded p-2"
+        type="text"
+        name="q"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={`Search collection`}
+      />
+      <input type="hidden" name="node" value={node} />
       <button className="bg-white w-auto flex justify-end items-center text-blue-500 p-2 hover:text-blue-400">
         <SearchIcon />
       </button>
@@ -107,7 +128,7 @@ const SearchResult = ({
   }
   return (
     <div className="flex">
-      <div className="flex-1 pr-4">
+      <div className="flex-1 pl-4 order-last">
         <Link href={url}>
           <a className="text-lg font-bold">
             <Icon className="inline" />
@@ -133,4 +154,4 @@ const SearchResult = ({
   );
 };
 
-export { SearchResults, SearchResult, SearchBar };
+export { SearchResults, SearchResult, SearchBar, HeaderSearchBar };

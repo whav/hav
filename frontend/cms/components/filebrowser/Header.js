@@ -1,22 +1,25 @@
 import React, { useState } from "react";
 import Breadcrumbs from "../navigation/breadcrumbs";
 import { Link } from "components";
-import { SearchBar } from "components/search";
+import { HeaderSearchBar } from "components/search";
 
-const HeaderBar = ({ title = "", search = true }) => {
-  const [query, setQuery] = useState("");
+const HeaderBar = ({ title = "", children }) => {
   return (
     <div className="flex justify-between">
       <h1 className="text-4xl font-bold">{title}</h1>
-      {search ? <SearchBar query={query} onQuery={setQuery} /> : null}
+      <div>{children}</div>
     </div>
   );
 };
-
-const Header = ({ title, collection_slug, ancestors = [], search = true }) => {
+const Header = ({ title, collection_slug, ancestors = [], folder_id }) => {
   return (
     <>
-      <HeaderBar title={title} search={search} />
+      <HeaderBar title={title}>
+        <HeaderSearchBar
+          target={`/collections/${collection_slug}/search/`}
+          node={folder_id}
+        />
+      </HeaderBar>
 
       <div className="py-4">
         <Breadcrumbs>

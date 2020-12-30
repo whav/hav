@@ -5,6 +5,7 @@ from hav_utils.imaginary import generate_thumbnail_url
 from apps.media.models import Media
 from apps.sets.models import Node
 import meilisearch
+from .client import get_index
 
 
 class QuerySerializer(serializers.Serializer):
@@ -35,8 +36,7 @@ class SearchView(APIView):
         if search_filters:
             search_options.update({'filters': search_filters})
 
-        client = meilisearch.Client('http://127.0.0.1:7700')
-        index = client.index('hav')
+        index = get_index()
         response = index.search(query, search_options)
         hits = response.get('hits', [])
 

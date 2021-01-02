@@ -3,3 +3,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .django-form {
+    @apply p-4 border-gray-500 rounded;
+  }
+
+  .django-form label {
+    @apply block text-base;
+  }
+
+  .django-form > * {
+    @apply mb-2;
+  }
+
+  .django-form input {
+    @apply w-full rounded;
+  }
+
+  .django-form button {
+    @apply m-2 bg-green-300;
+  }
+}

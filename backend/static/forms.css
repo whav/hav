@@ -1,0 +1,16 @@
+.django-form {
+  --tw-border-opacity: 1;
+  border-color: rgba(107, 114, 128, var(--tw-border-opacity));
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+
+.django-form label {
+  display: block;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.django-form p {
+  margin-bottom: 0.5rem;
+}

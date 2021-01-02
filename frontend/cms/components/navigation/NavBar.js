@@ -5,7 +5,13 @@ import ActiveLink from "./Link";
 import { useCollection, useAPI } from "hooks";
 
 const Link = (props) => {
-  return <ActiveLink activeClassName="underline" {...props} />;
+  return (
+    <ActiveLink
+      className="hover:underline"
+      activeClassName="underline"
+      {...props}
+    />
+  );
 };
 
 const CollectionNav = ({ collection: { slug, shortName, rootNode } }) => {

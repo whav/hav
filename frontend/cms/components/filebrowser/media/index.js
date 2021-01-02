@@ -9,6 +9,7 @@ import {
   DisplayTimeStamp,
   DisplayYearRange,
 } from "./details";
+import { TagList } from "../../tags";
 
 const DetailTable = ({ title = "", details = {}, className = "" }) => {
   return (
@@ -125,6 +126,7 @@ const MediaDetail = (props) => {
         <div className="flex-none">
           <SecondaryDetailTable media={media} />
         </div>
+        <TagList tags={tags} />
       </div>
 
       {/* <hr />

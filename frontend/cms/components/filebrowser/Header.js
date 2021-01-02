@@ -11,14 +11,23 @@ const HeaderBar = ({ title = "", children }) => {
     </div>
   );
 };
-const Header = ({ title, collection_slug, ancestors = [], folder_id }) => {
+
+const Header = ({
+  title,
+  collection_slug,
+  ancestors = [],
+  folder_id,
+  search = true,
+}) => {
   return (
     <>
       <HeaderBar title={title}>
-        <HeaderSearchBar
-          target={`/collections/${collection_slug}/search/`}
-          node={folder_id}
-        />
+        {search ? (
+          <HeaderSearchBar
+            target={`/collections/${collection_slug}/search/`}
+            node={folder_id}
+          />
+        ) : null}
       </HeaderBar>
 
       <div className="py-4">

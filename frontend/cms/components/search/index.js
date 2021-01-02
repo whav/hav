@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { FolderIcon, SearchIcon } from "../icons";
+import { Button } from "../buttons";
 
 const SearchBar = ({ query = "", node = "", onQuery }) => {
   const [value, setQuery] = useState(query);
@@ -21,9 +22,9 @@ const SearchBar = ({ query = "", node = "", onQuery }) => {
         placeholder={`Search collection`}
       />
       <input type="hidden" value={node} />
-      <button className="bg-white w-auto flex justify-end items-center text-blue-500 p-2 hover:text-blue-400">
-        <SearchIcon />
-      </button>
+      <Button primary={true}>
+        <SearchIcon /> Search
+      </Button>
     </form>
   );
 };
@@ -42,7 +43,7 @@ const HeaderSearchBar = ({ target, node }) => {
         placeholder={`Search collection`}
       />
       <input type="hidden" name="node" value={node} />
-      <button className="bg-white w-auto flex justify-end items-center text-blue-500 p-2 hover:text-blue-400">
+      <button className="w-auto flex justify-end items-center e-500 p-2 hover:text-blue-400">
         <SearchIcon />
       </button>
     </form>
@@ -51,13 +52,13 @@ const HeaderSearchBar = ({ target, node }) => {
 
 const SearchResults = ({ hits = [] }) => {
   return (
-    <>
+    <div className="divide-y divide-gray-200">
       {hits.map((hit) => (
-        <div className="mb-4 p-2" key={hit.id}>
+        <div className="p-4" key={hit.id}>
           <SearchResult {...hit} />
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
@@ -70,30 +71,36 @@ const HighlightedText = ({ text = "", matches = [] }) => {
     highlightedRanges.push([start, start + length]);
   });
 
+  const build_fragment = (text, key, highlight = false) => {
+    const cn = highlight ? "underline bg-blue-100" : "";
+    return <span className={cn} key={key}></span>;
+  };
   const results = matches.reduce(
     (previousSegments, match, index, allMatches) => {
       const { start, length } = match;
       const end = start + length;
       // deal with first iteration
       if (index === 0) {
-        previousSegments.push(text.slice(0, start));
+        previousSegments.push(build_fragment(text.slice(0, start), index));
       }
 
       // deal with text between this match and the previous one
       const previousMatch = allMatches[index - 1];
       if (previousMatch) {
         const previousEnd = previousMatch.start + previousMatch.length;
-        previousSegments.push(text.slice(previousEnd, start));
+        previousSegments.push(
+          build_fragment(text.slice(previousEnd, start), index)
+        );
       }
 
       // add the highlighted segment
       previousSegments.push(
-        <span className="underline bg-blue-100">{text.slice(start, end)}</span>
+        build_fragment(text.slice(start, end), index, true)
       );
 
       // deal with last iteration
       if (index === allMatches.length - 1) {
-        previousSegments.push(text.slice(end));
+        previousSegments.push(build_fragment(text.slice(end), index));
       }
       return previousSegments;
     },

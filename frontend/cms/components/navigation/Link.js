@@ -18,6 +18,7 @@ const toRegexp = memoize(
 
 const Link = ({
   children,
+  className = "",
   activeClassName = "active",
   exact = true,
   additionalPaths = [],
@@ -27,7 +28,8 @@ const Link = ({
 
   const { href } = props;
 
-  let className = children.props.className || "";
+  let linkClassNames = children.props.className || "";
+  let mergedClassNames = `${className} ${linkClassNames}`;
 
   let isActive = toRegexp(href, exact).test(asPath);
 
@@ -42,12 +44,12 @@ const Link = ({
   }
 
   if (isActive) {
-    className = `${className} ${activeClassName}`;
+    mergedClassNames = `${mergedClassNames} ${activeClassName}`;
   }
 
   return (
     <NextLink {...props}>
-      {React.cloneElement(children, { className })}
+      {React.cloneElement(children, { className: mergedClassNames })}
     </NextLink>
   );
 };

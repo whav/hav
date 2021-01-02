@@ -19,7 +19,7 @@ export const useCollection = () => {
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export const useAPI = (url, query = {}) => {
+export const useAPI = (url, query = {}, initialData) => {
   let params;
   if (url && query) {
     // clean query from undefineds
@@ -31,5 +31,11 @@ export const useAPI = (url, query = {}) => {
       url = `${url}?${params}`;
     }
   }
-  return useSWR(url, fetcher);
+
+  const swrOptions = {};
+  if (initialData) {
+    swrOptions.initialData = initialData;
+  }
+
+  return useSWR(url, fetcher, swrOptions);
 };

@@ -10,7 +10,7 @@ const iconMapping = {
 
 const Gallery = ({ children = null }) => {
   return (
-    <div className="flex flex-row flex-wrap justify-start items-stretch space-x-4">
+    <div className="flex flex-row flex-wrap justify-start items-stretch">
       {children}
     </div>
   );

@@ -7,6 +7,10 @@ export default async (req, res) => {
         node(nodeID: $set, collectionSlug: $collection) {
           name
           description
+          tags {
+            id
+            name
+          }
           ancestors {
             name
             id

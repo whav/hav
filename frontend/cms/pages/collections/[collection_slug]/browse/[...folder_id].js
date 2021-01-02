@@ -9,6 +9,7 @@ import {
   GalleryMedia,
   GalleryFolder,
 } from "components/filebrowser/gallery";
+import { TagList } from "components/tags";
 import { Header } from "components/filebrowser/Header";
 import Head from "next/head";
 
@@ -33,6 +34,7 @@ const CollectionBrowser = (props) => {
     ancestors = [],
     mediaEntries = [],
     description = "",
+    tags = [],
   } = data;
 
   return (
@@ -48,6 +50,7 @@ const CollectionBrowser = (props) => {
       />
 
       <Description text={description} />
+      <TagList tags={tags} />
       <Gallery>
         {children.map((c) => {
           const media = c.representativeMedia;

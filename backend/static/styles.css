@@ -2071,10 +2071,23 @@ select{
   padding: 1rem;
 }
 
+.django-form h1 {
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  text-align: center;
+}
+
+.django-form p {
+  margin-top: 0.25rem;
+}
+
 .django-form label {
   display: block;
+  font-weight: 600;
   font-size: 1rem;
   line-height: 1.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .django-form > * {
@@ -2082,14 +2095,62 @@ select{
 }
 
 .django-form input {
+  --tw-border-opacity: 1;
+  border-color: rgba(209, 213, 219, var(--tw-border-opacity));
   border-radius: 0.25rem;
+}
+
+.django-form input:focus{
+  --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgba(96, 165, 250, var(--tw-ring-opacity));
+}
+
+.django-form input{
   width: 100%;
+}
+
+.django-form .field .errorlist.nonfield {
+  --tw-bg-opacity: 1;
+  background-color: rgba(254, 202, 202, var(--tw-bg-opacity));
+  padding: 0.5rem;
+  --tw-text-opacity: 1;
+  color: rgba(0, 0, 0, var(--tw-text-opacity));
+}
+
+.django-form .field.erroneous input {
+  --tw-bg-opacity: 1;
+  background-color: rgba(254, 226, 226, var(--tw-bg-opacity));
+}
+
+.django-form .errorlist {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  list-style-type: none;
+  margin-top: 0.25rem;
+  --tw-text-opacity: 1;
+  color: rgba(220, 38, 38, var(--tw-text-opacity));
+}
+
+.django-form .submit-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem;
 }
 
 .django-form button {
   --tw-bg-opacity: 1;
-  background-color: rgba(110, 231, 183, var(--tw-bg-opacity));
-  margin: 0.5rem;
+  background-color: rgba(209, 213, 219, var(--tw-bg-opacity));
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.django-form button[type="submit"] {
+  --tw-bg-opacity: 1;
+  background-color: rgba(52, 211, 153, var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
 }
 
 .space-y-0 > :not([hidden]) ~ :not([hidden]){

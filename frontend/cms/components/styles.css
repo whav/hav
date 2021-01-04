@@ -9,8 +9,16 @@
     @apply p-4 border-gray-500 rounded;
   }
 
+  .django-form h1 {
+    @apply text-lg font-bold text-center;
+  }
+
+  .django-form p {
+    @apply mt-1;
+  }
+
   .django-form label {
-    @apply block text-base;
+    @apply block text-base mb-1 font-semibold;
   }
 
   .django-form > * {
@@ -18,10 +26,30 @@
   }
 
   .django-form input {
-    @apply w-full rounded;
+    @apply w-full rounded border-gray-300 focus:ring-blue-400 focus:shadow-md;
+  }
+
+  .django-form .field .errorlist.nonfield {
+    @apply p-2 bg-red-200 text-black;
+  }
+
+  .django-form .field.erroneous input {
+    @apply bg-red-100;
+  }
+
+  .django-form .errorlist {
+    @apply list-none text-red-600 mt-1 text-sm;
+  }
+
+  .django-form .submit-row {
+    @apply flex justify-between mt-3;
   }
 
   .django-form button {
-    @apply m-2 bg-green-300;
+    @apply p-2 rounded bg-gray-300;
+  }
+
+  .django-form button[type="submit"] {
+    @apply bg-green-400 text-white;
   }
 }

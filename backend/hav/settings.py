@@ -213,8 +213,8 @@ STORAGES = {
     }
 }
 
-LOGIN_URL = "admin:login"
-
+LOGIN_URL = "auth:login"
+LOGIN_REDIRECT_URL = "/"
 
 ASGI_APPLICATION = "hav.asgi.application"
 

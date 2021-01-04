@@ -1,8 +1,11 @@
 {% extends './base.html' %}
 {% block content %}
-    <h1 class="text-xl">Login...</h1>
-    <form class="django-form">
-        {{ form.as_p }}
-        <button>Login</button>
+    <form class="django-form" method="post" novalidate>
+        <h1>Login</h1>
+        {% include './form.html' %}
+        <div class="submit-row">
+            <button type="reset">Reset</button>
+            <button type="submit">Login</button>
+        </div>
     </form>
 {% endblock content %}

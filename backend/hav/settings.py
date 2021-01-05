@@ -177,7 +177,7 @@ REST_FRAMEWORK = {
 }
 
 WEBPACK_BUILD_PATH = project_root("frontend/admin/build/")
-
+DJANGO_STYLES_BUILD_PATH = project_root("frontend/django-styles/build/")
 
 WEBPACK_LOADER = {
     "DEFAULT": {
@@ -194,7 +194,11 @@ WEBPACK_LOADER = {
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = (("wp", WEBPACK_BUILD_PATH), ("dj_static", django_root("static/")))
+STATICFILES_DIRS = (
+    ("wp", WEBPACK_BUILD_PATH),
+    ("dj_static", django_root("static/")),
+    ("tailwind", DJANGO_STYLES_BUILD_PATH)
+)
 
 STATIC_ROOT = project_root(env("STATIC_ROOT", default="dist/static/"))
 

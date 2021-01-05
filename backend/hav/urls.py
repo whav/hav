@@ -3,7 +3,7 @@ from django.contrib import admin as django_admin
 from django.conf import settings
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.views import LoginView
+from django.contrib.auth import views as auth_views
 
 from api.urls import api_urls
 
@@ -21,7 +21,8 @@ hav_admin_patterns = (
 )
 
 account_patterns = [
-    path("login/", LoginView.as_view())
+    path("login/", auth_views.LoginView.as_view(), name='login'),
+    path("logout/", auth_views.LogoutView.as_view(), name='logout')
 ]
 
 urlpatterns = [

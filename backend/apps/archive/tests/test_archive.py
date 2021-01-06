@@ -1,7 +1,7 @@
 import os
 from unittest.mock import patch
 from django.test import TestCase
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 
 from apps.archive.operations import archive_file
 from .test_hash import file_hash, file_path

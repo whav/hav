@@ -2,15 +2,14 @@ import uuid
 from pathlib import Path
 from mimetypes import guess_type
 
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import filesizeformat
 
 from hav_utils.fields import LanguageField
 from .storage import ArchiveStorage
-from ..media.models import CreatorBase, MediaCreator, License
-
+from apps.media.models import CreatorBase, MediaCreator, License
+from apps.accounts.models import User
 
 class FileCreator(CreatorBase):
     file = models.ForeignKey("ArchiveFile", on_delete=models.CASCADE)
@@ -33,7 +32,7 @@ class ArchiveFile(models.Model):
     size = models.BigIntegerField(default=0)
     archived_at = models.DateTimeField(null=True)
 
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(null=True)
 
     creators = models.ManyToManyField(

@@ -1,5 +1,4 @@
 from decimal import Decimal
-from pathlib import Path
 from django.db import models
 from django.contrib.postgres.fields import DateTimeRangeField
 from django.conf import settings
@@ -9,6 +8,7 @@ from model_utils.models import TimeStampedModel
 from apps.sets.models import Node
 from apps.hav_collections.models import Collection
 from apps.tags.models import Tag
+from apps.accounts.models import User
 
 class MediaType(models.Model):
     TYPE_CHOICES = [(1, "analog"), (2, "digital")]
@@ -34,7 +34,7 @@ class MediaCreator(TimeStampedModel):
     email = models.EmailField(blank=True)
 
     created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.PROTECT,
         null=True,
         editable=False,
@@ -42,7 +42,7 @@ class MediaCreator(TimeStampedModel):
         related_query_name="+",
     )
     modified_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.PROTECT,
         null=True,
         editable=False,
@@ -162,12 +162,12 @@ class Media(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="created_media"
+        User, on_delete=models.PROTECT, related_name="created_media"
     )
 
     modified_at = models.DateTimeField(auto_now=True, null=True)
     modified_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         null=True,
         on_delete=models.PROTECT,
         related_name="modified_media",

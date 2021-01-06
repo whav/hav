@@ -5,7 +5,7 @@ from shutil import copyfile
 from apps.archive.models import ArchiveFile
 from apps.archive.operations.hash import generate_hash
 
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 
 testdata_dir = Path(__file__).parent.joinpath("./testdata/")
 

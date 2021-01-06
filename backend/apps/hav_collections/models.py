@@ -1,8 +1,7 @@
 from django.db import models
-from django.conf import settings
 
 from apps.sets.models import Node
-
+from apps.accounts.models import User
 
 def root_nodes():
     return {"pk__in": Node.objects.filter(depth__lte=2).values_list("pk", flat=True)}
@@ -14,7 +13,7 @@ class Collection(models.Model):
     name = models.CharField(unique=True, max_length=200)
     short_name = models.CharField(unique=True, max_length=30, blank=True)
 
-    administrators = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    administrators = models.ManyToManyField(User)
 
     public = models.BooleanField(default=True)
 

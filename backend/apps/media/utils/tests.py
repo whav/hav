@@ -1,6 +1,6 @@
 from datetime import timedelta
 from django.utils import timezone
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 
 from apps.media.models import Media, MediaCreator, License, MediaType
 from apps.sets.models import Node

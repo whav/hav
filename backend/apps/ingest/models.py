@@ -2,11 +2,10 @@ import uuid
 
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from django.conf import settings
 
 from apps.sets.models import Node
 from apps.media.models import Media
-
+from apps.accounts.models import User
 
 class IngestQueue(models.Model):
 
@@ -21,7 +20,7 @@ class IngestQueue(models.Model):
     created_media_entries = models.ManyToManyField(Media, blank=True, editable=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     @property
     def ingestion_queue_length(self):

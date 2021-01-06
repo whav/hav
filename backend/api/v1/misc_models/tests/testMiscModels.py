@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase

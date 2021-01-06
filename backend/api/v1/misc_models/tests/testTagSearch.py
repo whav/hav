@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from django.urls import reverse
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 from apps.tags.models import Tag
 from apps.hav_collections.models import Collection
 

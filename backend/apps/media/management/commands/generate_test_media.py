@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from apps.media.models import Media, License, MediaCreator, MediaType
 from apps.hav_collections.models import Collection
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 from django.utils import timezone
 
 import random

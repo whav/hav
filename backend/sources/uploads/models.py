@@ -1,13 +1,12 @@
 from django.db import models
-from django.conf import settings
-
+from apps.accounts.models import User
 
 class FileUpload(models.Model):
 
     file = models.FileField(upload_to="%Y/%m/%d/")
 
     created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.PROTECT,
         related_name="uploaded_files",
     )

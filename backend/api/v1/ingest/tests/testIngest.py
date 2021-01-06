@@ -1,7 +1,7 @@
 from uuid import uuid4
 import os
 from decimal import Decimal
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 from django.conf import settings
 from django.urls import reverse
 from rest_framework import status

@@ -5,7 +5,11 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import views as auth_views
 
+
 from api.urls import api_urls
+
+django_admin.site.site_header = 'HAV Administration'
+django_admin.site.site_title = 'HAV Admin'
 
 hav_admin_patterns = (
     [

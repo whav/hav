@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     "apps.hav_collections",
     "apps.tags",
     "apps.search",
+    "apps.accounts",
     "sources.uploads",
 ]
 
@@ -142,6 +143,7 @@ DATABASE_ROUTERS = ["hav.db_router.WhavDBRouter"]
 
 CACHES = {"default": env.cache()}
 
+AUTH_USER_MODEL = 'accounts.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

@@ -1,5 +1,5 @@
 from uuid import uuid4
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 from datetime import datetime
 from django.urls import reverse
 from rest_framework import status

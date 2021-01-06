@@ -8,7 +8,7 @@ from pathlib import Path
 from rest_framework.authtoken.models import Token
 from django.test import TransactionTestCase, override_settings
 from django.core.management import call_command, CommandError
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 from django.conf import settings
 
 from apps.hav_collections.models import Collection

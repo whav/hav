@@ -1,5 +1,3 @@
-from mimetypes import guess_type
-
 from treebeard.mp_tree import MP_Node
 from django.db import models
 from django.utils.functional import cached_property

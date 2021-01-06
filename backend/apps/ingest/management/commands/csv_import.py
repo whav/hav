@@ -6,7 +6,7 @@ from pathlib import Path
 from rest_framework import status
 from rest_framework.test import RequestsClient
 from django.conf import settings
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 from django.core.management.base import BaseCommand, CommandError
 from django.urls import reverse
 

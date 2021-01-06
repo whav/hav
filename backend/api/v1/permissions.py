@@ -1,6 +1,6 @@
 from rest_framework.permissions import IsAdminUser
 from apps.hav_collections.models import Collection
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 
 
 class IncomingBaseMixin(object):

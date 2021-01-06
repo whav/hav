@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from django.contrib.auth.models import User
+from apps.accounts.models import User
 from apps.hav_collections.models import Collection
 from .permissions import has_collection_permission
 

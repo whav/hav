@@ -54,7 +54,7 @@ if settings.DEBUG:
 
 # namespace the whole django patterns under /d
 urlpatterns = [
-    re_path(r"^$", TemplateView.as_view(template_name="tw/base.html")),
+    re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
     path("d/", include(urlpatterns)),
     path("account/", include((account_patterns, 'auth'), namespace='auth'))
 ]

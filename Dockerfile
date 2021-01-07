@@ -1,4 +1,4 @@
-FROM node:12 as build-stage
+FROM node:12 as admin-ui
 
 WORKDIR /code/
 
@@ -9,6 +9,20 @@ WORKDIR /code/admin/
 RUN yarn install --production=false
 COPY ./frontend/admin .
 RUN yarn build
+
+FROM node:12 as django-styles
+
+WORKDIR /code/
+
+# Link up the required build files
+COPY ./frontend/django-styles/package.json ./frontend/django-styles/package-lock.json ./styles/
+
+WORKDIR /code/styles/
+RUN npm install
+COPY ./frontend/django-styles .
+COPY ./backend/templates ./templates
+ENV NODE_ENV "production"
+RUN npm run build
 
 FROM python:3.8-buster
 ENV PYTHONUNBUFFERED 1
@@ -33,11 +47,15 @@ POETRY_VERSION=1.1.3
 
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads"]
 
-
-RUN pip install -U poetry==$POETRY_VERSION
-
+# copy the frontend files
 WORKDIR /hav/frontend
-COPY --from=build-stage /code/admin/build ./admin/build
+COPY --from=admin-ui /code/admin/build ./admin/build
+
+# copy the npm generated styles
+COPY --from=django-styles /code/styles/build/ ./django-styles/build
+
+# install all the python stuff
+RUN pip install -U poetry==$POETRY_VERSION
 
 WORKDIR /hav/backend
 COPY backend/pyproject.toml backend/poetry.lock ./

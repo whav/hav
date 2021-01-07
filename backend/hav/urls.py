@@ -3,6 +3,8 @@ from django.contrib import admin as django_admin
 from django.conf import settings
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth import views as auth_views
+
 
 from api.urls import api_urls
 
@@ -22,6 +24,10 @@ hav_admin_patterns = (
     "hav_admin",
 )
 
+account_patterns = [
+    path("login/", auth_views.LoginView.as_view(), name='login'),
+    path("logout/", auth_views.LogoutView.as_view(), name='logout')
+]
 
 urlpatterns = [
     re_path(r"^api/", include((api_urls, "api"), namespace="api")),
@@ -48,6 +54,7 @@ if settings.DEBUG:
 
 # namespace the whole django patterns under /d
 urlpatterns = [
-    re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
+    re_path(r"^$", TemplateView.as_view(template_name="tw/base.html")),
     path("d/", include(urlpatterns)),
+    path("account/", include((account_patterns, 'auth'), namespace='auth'))
 ]

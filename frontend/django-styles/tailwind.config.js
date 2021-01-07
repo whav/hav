@@ -2,10 +2,9 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   purge: [
-    "pages/**/*",
-    "components/**/*",
-    "content/**/*",
     "../../backend/templates/**/*.html",
+    // this is the directory used during the docker build
+    "./templates/**/*.html",
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {

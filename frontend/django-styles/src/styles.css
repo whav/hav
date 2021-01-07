@@ -52,4 +52,12 @@
   .django-form button[type="submit"] {
     @apply bg-green-400 text-white;
   }
+
+  .button {
+    @apply m-2 p-2 rounded bg-gray-300 inline-block;
+  }
+
+  .button.primary {
+    @apply bg-green-300;
+  }
 }

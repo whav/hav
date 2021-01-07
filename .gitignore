@@ -63,3 +63,4 @@ dist/*
 # dont' track local bash/ipyhton history
 .localhistory/*
 
+frontend/*/build/

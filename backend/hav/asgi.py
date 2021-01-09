@@ -1,16 +1,22 @@
 import os
 
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 from django.conf.urls import url, re_path
-from api.v1.ingest import consumers
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hav.settings")
 
+django_app = get_asgi_application()
+
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+from api.v1.ingest import consumers
+
 application = ProtocolTypeRouter(
     {
-        "http": get_asgi_application(),
+        # Django's ASGI application to handle traditional HTTP requests
+        "http": django_app,
+
+        # WebSocket handler
         "websocket": AuthMiddlewareStack(
             URLRouter(
                 [

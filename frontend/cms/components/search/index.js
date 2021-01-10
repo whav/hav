@@ -33,9 +33,9 @@ const HeaderSearchBar = ({ target, node }) => {
   const [query, setQuery] = useState("");
 
   return (
-    <form className="shadow flex" action={target} method="get">
+    <form className="flex rounded shadow" action={target} method="get">
       <input
-        className="w-full rounded p-2"
+        className="w-full p-2 unstyled"
         type="text"
         name="q"
         value={query}

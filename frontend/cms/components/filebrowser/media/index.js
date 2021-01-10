@@ -11,22 +11,34 @@ import {
 } from "./details";
 import { TagList } from "../../tags";
 
-const DetailTable = ({ title = "", details = {}, className = "" }) => {
+const DetailTable = ({ title = "", subtitle = "", details = {} }) => {
   return (
-    <>
-      <h3>{title}</h3>
-      <dl
-        className="grid gap-x-4"
-        style={{ gridTemplateColumns: "max-content auto" }}
-      >
-        {Object.entries(details).map(([name, value]) => (
-          <React.Fragment key={name}>
-            <dt className="col-start-1 text-gray-400">{name}</dt>
-            <dd className="col-start-2">{value}</dd>
-          </React.Fragment>
-        ))}
-      </dl>
-    </>
+    <div class="bg-white shadow overflow-hidden sm:rounded">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">{title}</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">{subtitle}</p>
+      </div>
+      <div class="border-t border-gray-200">
+        <dl>
+          {Object.entries(details).map(([name, value], index) => {
+            const gray = index % 2 === 0;
+            return (
+              <div
+                class={`px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 ${
+                  gray ? "bg-gray-50" : "bg-white"
+                }`}
+                key={name}
+              >
+                <dt class="text-sm font-medium text-gray-500">{name}</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {value}
+                </dd>
+              </div>
+            );
+          })}
+        </dl>
+      </div>
+    </div>
   );
 };
 
@@ -47,7 +59,7 @@ const PrimaryDetailTable = ({ media }) => {
     title: media.title || "-",
     description: media.description || "-",
     affiliation: "-",
-    keywords: "-",
+    keywords: <TagList tags={media.tags || []} />,
     country: "-",
     location: "-",
     "description author": "-",
@@ -96,13 +108,9 @@ const MediaDetail = (props) => {
         search={false}
       />
 
-      <div className="flex flex-row flex-wrap space-x-4 space-y-4 pt-6">
+      <div className="flex flex-row flex-wrap pt-6">
         {media.files.map((f, index) => (
-          <div
-            className="flex-auto xl:max-w-screen-md"
-            style={{ minWidth: 500 }}
-            key={index}
-          >
+          <div className="flex-auto m-4 max-w-lg" key={index}>
             <figure className="pr-10 pb-10">
               <ArchiveFile key={index} {...f} />
               <figcaption className="flex justify-between">
@@ -119,26 +127,16 @@ const MediaDetail = (props) => {
             </figure>
           </div>
         ))}
-
-        <div className="flex-none">
+        <div className="w-full md:max-w-md m-4">
           <PrimaryDetailTable media={media} />
         </div>
-        <div className="flex-none">
+        <div className="w-full md:max-w-md m-4">
           <SecondaryDetailTable media={media} />
         </div>
-        <TagList tags={tags} />
-      </div>
-
-      {/* <hr />
-      <div>
-      <h3>Debug</h3>
-      {tags && (
-        <div className="pt-4">
-          <Tags tags={tags} />
+        <div className="w-full md:max-w-md m-4">
+          <TagList tags={tags} />
         </div>
-      )}
-      <pre>{JSON.stringify(props.media, null, 2)}</pre>
-      </div> */}
+      </div>
     </>
   );
 };

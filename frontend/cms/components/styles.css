@@ -52,4 +52,9 @@
   .django-form button[type="submit"] {
     @apply bg-green-400 text-white;
   }
+
+  input.unstyled,
+  input.unstyled:focus {
+    @apply shadow-none ring-0 border-0;
+  }
 }

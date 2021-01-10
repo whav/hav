@@ -32,7 +32,7 @@ const GalleryMedia = ({
       style={{ maxWidth: aspectRatio < 1 ? 200 : 250 }}
     >
       <img src={src} title={title || caption} />
-      <figcaption>
+      <figcaption className="text-sm">
         {Icon ? <Icon className="inline-block" /> : null} {caption}
       </figcaption>
     </figure>

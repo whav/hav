@@ -2,7 +2,7 @@ import React from "react";
 
 const Tag = ({ name }) => {
   return (
-    <span className="m-1 bg-gray-200 hover:bg-gray-300 rounded-full px-2 font-bold text-sm leading-loose cursor-pointer">
+    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mr-2 mb-2">
       {name}
     </span>
   );

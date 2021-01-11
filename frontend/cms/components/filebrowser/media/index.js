@@ -108,10 +108,10 @@ const MediaDetail = (props) => {
         search={false}
       />
 
-      <div className="flex flex-row flex-wrap pt-6">
+      <div className="md:flex md:flex-row md:flex-wrap pt-6">
         {media.files.map((f, index) => (
-          <div className="flex-auto m-4 max-w-lg" key={index}>
-            <figure className="pr-10 pb-10">
+          <div className="flex-auto max-w-2xl mr-4 mb-4" key={index}>
+            <figure className="md:pr-10 md:pb-10">
               <ArchiveFile key={index} {...f} />
               <figcaption className="flex justify-between">
                 <div>
@@ -127,14 +127,11 @@ const MediaDetail = (props) => {
             </figure>
           </div>
         ))}
-        <div className="w-full md:max-w-md m-4">
+        <div className="md:max-w-lg mr-4 mb-4">
           <PrimaryDetailTable media={media} />
         </div>
-        <div className="w-full md:max-w-md m-4">
+        <div className="md:max-w-lg mr-4 mb-4">
           <SecondaryDetailTable media={media} />
-        </div>
-        <div className="w-full md:max-w-md m-4">
-          <TagList tags={tags} />
         </div>
       </div>
     </>

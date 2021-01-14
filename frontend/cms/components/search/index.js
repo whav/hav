@@ -8,14 +8,14 @@ const SearchBar = ({ query = "", node = "", onQuery }) => {
 
   return (
     <form
-      className="shadow flex"
+      className="flex"
       onSubmit={(e) => {
         e.preventDefault();
         onQuery && onQuery(value);
       }}
     >
       <input
-        className="w-full rounded p-2"
+        className="w-full p-2 unstyled"
         type="text"
         value={value}
         onChange={(e) => setQuery(e.target.value)}
@@ -81,7 +81,7 @@ const HighlightedText = ({ text = "", matches = [] }) => {
       const end = start + length;
       // deal with first iteration
       if (index === 0) {
-        previousSegments.push(build_fragment(text.slice(0, start), index));
+        previousSegments.push(build_fragment(text.slice(0, start), -1));
       }
 
       // deal with text between this match and the previous one
@@ -89,7 +89,7 @@ const HighlightedText = ({ text = "", matches = [] }) => {
       if (previousMatch) {
         const previousEnd = previousMatch.start + previousMatch.length;
         previousSegments.push(
-          build_fragment(text.slice(previousEnd, start), index)
+          build_fragment(text.slice(previousEnd, start), index * -1)
         );
       }
 
@@ -100,7 +100,7 @@ const HighlightedText = ({ text = "", matches = [] }) => {
 
       // deal with last iteration
       if (index === allMatches.length - 1) {
-        previousSegments.push(build_fragment(text.slice(end), index));
+        previousSegments.push(build_fragment(text.slice(end), index + 1));
       }
       return previousSegments;
     },

@@ -35,6 +35,7 @@ const SearchPage = ({
   const router = useRouter();
 
   useEffect(() => {
+    console.log(router.isReady);
     const newParams = new URLSearchParams();
     if (query) {
       newParams.set("q", query);

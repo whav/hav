@@ -4,7 +4,8 @@ from datetime import datetime, time, date
 import calendar
 import re
 from enum import Enum
-
+from datetime import datetime
+from django.utils import formats
 
 split_date_time = re.compile(r"(?P<date>[\d\-]+)[\ T]?(?P<time>.*)?")
 
@@ -103,3 +104,7 @@ class ReverseDateTimeRange:
 def calculate_date_resolution(d1: datetime, d2: datetime):
     rdtr = ReverseDateTimeRange(d1, d2)
     return rdtr.get_resolution()
+
+
+def format_datetime(dt: datetime, resolution=Resolutions.DAY):
+    return formats.date_format(dt, "DATE_FORMAT")

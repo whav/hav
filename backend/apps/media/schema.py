@@ -1,10 +1,11 @@
 from itertools import chain
-
+from datetime import datetime, date
 import graphene
-from django.db.models import Q
+from django.db.models import Q, F
+from django.db.models.functions import Lower
 from graphene_django.types import DjangoObjectType
 
-from apps.sets.models import Node
+from apps.sets.models import Node, group_media_queryset
 from apps.sets.schema import NodeType
 from apps.tags.schema import TagType
 from hav_utils.imaginary import (
@@ -12,7 +13,7 @@ from hav_utils.imaginary import (
     generate_srcset_urls,
     generate_src_url,
 )
-from hav_utils.daterange import Resolutions, calculate_date_resolution
+from hav_utils.daterange import Resolutions, calculate_date_resolution, format_datetime
 from .models import Media, MediaCreator, License, MediaType as DBMediaType
 
 
@@ -34,6 +35,8 @@ class MediaType(DjangoObjectType):
     height = graphene.Field(graphene.Int, required=False)
     width = graphene.Field(graphene.Int, required=False)
     aspect_ratio = graphene.Field(graphene.Float, required=False)
+
+    grouper = graphene.Field(graphene.String, required=False)
 
     def resolve_height(self, info):
         asset = self.primary_image_webasset
@@ -93,6 +96,12 @@ class MediaType(DjangoObjectType):
     def resolve_ancestors(self, info):
         return chain(self.set.collection_ancestors, [self.set])
 
+    def resolve_grouper(self, info):
+        grouper = getattr(self, "grouper", "")
+        if isinstance(grouper, (datetime, date)):
+            return format_datetime(grouper)
+        return grouper
+
     @classmethod
     def get_queryset(cls, queryset, info):
         return queryset
@@ -139,4 +148,6 @@ class Query:
 
     def resolve_media_entries(self, info, node_id):
         node = Node.objects.get(pk=node_id)
-        return Media.objects.prefetch_related("files__webasset_set").filter(set=node)
+        qs = Media.objects.prefetch_related("files__webasset_set").filter(set=node)
+
+        return group_media_queryset(qs, node.display_type)

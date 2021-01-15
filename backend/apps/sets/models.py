@@ -1,15 +1,30 @@
 from django.db import models
+from django.db.models import F
+from django.db.models.functions import Lower
 from django.utils.functional import cached_property
+
 from treebeard.mp_tree import MP_Node
 from itertools import chain
 
 
 class Node(MP_Node):
+    class DisplayOptions(models.TextChoices):
+        DEFAULT = "", "Default"
+        GROUPED_CREATION_DATE = "grouped_creation_day", "Grouped by date"
+        GROUPED_TITLE = "grouped_title", "Grouped by media title"
 
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
 
     tags = models.ManyToManyField("tags.Tag", blank=True)
+
+    display_type = models.CharField(
+        max_length=20,
+        db_index=True,
+        choices=DisplayOptions.choices,
+        blank=True,
+        default=DisplayOptions.DEFAULT,
+    )
 
     @property
     def children(self):
@@ -68,4 +83,12 @@ class Node(MP_Node):
         return self.name
 
 
-#
+def group_media_queryset(qs, display_type=Node.DisplayOptions.DEFAULT):
+    dtypes = Node.DisplayOptions
+    if display_type == dtypes.GROUPED_TITLE:
+        qs = qs.order_by("title").annotate(grouper=F("title"))
+    elif display_type == dtypes.GROUPED_CREATION_DATE:
+        qs = qs.order_by(Lower("creation_date")).annotate(
+            grouper=Lower("creation_date")
+        )
+    return qs

@@ -8,10 +8,15 @@ const iconMapping = {
   image: ImageIcon,
 };
 
-const Gallery = ({ children = null }) => {
+const Gallery = ({ title, children = null, divide = false }) => {
   return (
-    <div className="flex flex-row flex-wrap justify-start items-stretch">
-      {children}
+    <div className={`mt-2 ${divide ? "sm:border-l" : "border-0"}`}>
+      {title && (
+        <h2 className={`inline-block text-lg text-gray-500`}>{title}</h2>
+      )}
+      <div className={`flex flex-row flex-wrap justify-start items-stretch`}>
+        {children}
+      </div>
     </div>
   );
 };

@@ -12,6 +12,7 @@ import {
 import { TagList } from "components/tags";
 import { Header } from "components/filebrowser/Header";
 import Head from "next/head";
+import groupBy from "lodash/groupBy";
 
 const CollectionBrowser = (props) => {
   const router = useRouter();
@@ -36,6 +37,12 @@ const CollectionBrowser = (props) => {
     description = "",
     tags = [],
   } = data;
+
+  let groupedMedia = { "": mediaEntries };
+  const isGrouped = mediaEntries.every((m) => m.grouper);
+  if (isGrouped) {
+    groupedMedia = groupBy(mediaEntries, (m) => m.grouper);
+  }
 
   return (
     <>
@@ -70,6 +77,28 @@ const CollectionBrowser = (props) => {
             </Link>
           );
         })}
+      </Gallery>
+      {Object.entries(groupedMedia).map(([title, mediaItems], index) => (
+        <Gallery title={title} divide={isGrouped}>
+          {mediaItems.map((media) => (
+            <Link
+              key={`media-${media.id}`}
+              href={`/collections/${collection_slug}/media/${media.id}/`}
+            >
+              <a>
+                <GalleryMedia
+                  src={media.thumbnailUrl}
+                  type={media.type}
+                  title={media.title}
+                  caption={`${media.caption}`}
+                  aspectRatio={media.aspectRatio}
+                />
+              </a>
+            </Link>
+          ))}
+        </Gallery>
+      ))}
+      {/* <Gallery>
         {mediaEntries.map((media) => (
           <Link
             key={`media-${media.id}`}
@@ -86,7 +115,7 @@ const CollectionBrowser = (props) => {
             </a>
           </Link>
         ))}
-      </Gallery>
+      </Gallery> */}
     </>
   );
 };

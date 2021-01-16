@@ -94,7 +94,7 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
 
             source_id = (
                 base_url
-                + "/api/v1/sources/incoming/"
+                + reverse("api:v1:filebrowser_root")
                 + str(encodePath(rel_file_path))
                 + "=/"
             )

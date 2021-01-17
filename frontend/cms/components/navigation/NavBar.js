@@ -4,6 +4,10 @@ import { MenuIcon, CloseIcon } from "../icons";
 import ActiveLink from "./Link";
 import { useCollection, useAPI } from "hooks";
 
+const MutedText = ({ children }) => (
+  <span className="text-base text-gray-500">{children}</span>
+);
+
 const Link = (props) => {
   return (
     <ActiveLink
@@ -14,13 +18,42 @@ const Link = (props) => {
   );
 };
 
+const AccountNav = () => {
+  const { data = {} } = useAPI("/api/rest/v1/auth/");
+  console.log("Auth", data);
+  const { loginURL = "", logoutURL = "" } = data;
+  const { username, email } = data?.user || {};
+  return (
+    <>
+      <MutedText>Account</MutedText>
+
+      <ul>
+        {username ? (
+          <>
+            <li>{username}</li>
+            <li>
+              <a href={logoutURL}>Logout</a>
+            </li>
+          </>
+        ) : (
+          <li>
+            <a href={loginURL}>Login</a>
+          </li>
+        )}
+      </ul>
+    </>
+  );
+};
+
 const CollectionNav = ({ collection: { slug, shortName, rootNode } }) => {
   return (
     <ul>
       <li>
-        <Link href="/">
-          <a className="text-base text-gray-500">← All Collections</a>
-        </Link>
+        <MutedText>
+          <Link href="/">
+            <a>← All Collections</a>
+          </Link>
+        </MutedText>
       </li>
       <li>
         <Link href={`/collections/${slug}/`}>
@@ -68,7 +101,7 @@ const GlobalNav = ({ collections = [] }) => {
       </li>
 
       <li className="md:mt-2">
-        <span className="text-base text-gray-500">Collections</span>
+        <MutedText>Collections</MutedText>
         <ul>
           {collections.map((c) => (
             <li key={c.slug}>
@@ -119,25 +152,31 @@ const NavBar = () => {
         ) : (
           <GlobalNav collections={data} />
         )}
+
         {/* Bottom nav */}
-        <div className="sm:mt-32 text-base text-gray-500">
-          <ul>
-            <li className="flex flex-row flex-wrap justify-between">
-              <img className="block h-8 w-auto" src="/logos/cirdis.svg" />
-              <img className="block h-8 w-auto" src="/logos/univie.svg" />
-            </li>
-            <li className="flex flex-row flex-wrap justify-between md:mt-10">
-              <a
-                className="block"
-                href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf"
-              >
-                Privacy Policy
-              </a>{" "}
-              <Link href="/imprint/">
-                <a className="block">Imprint</a>
-              </Link>
-            </li>
-          </ul>
+        <div>
+          <div className="md-mb-4">
+            <AccountNav />
+          </div>
+          <div className="sm:mt-32 text-base text-gray-500">
+            <ul>
+              <li className="flex flex-row flex-wrap justify-between">
+                <img className="block h-8 w-auto" src="/logos/cirdis.svg" />
+                <img className="block h-8 w-auto" src="/logos/univie.svg" />
+              </li>
+              <li className="flex flex-row flex-wrap justify-between md:mt-10">
+                <a
+                  className="block"
+                  href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf"
+                >
+                  Privacy Policy
+                </a>{" "}
+                <Link href="/imprint/">
+                  <a className="block">Imprint</a>
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
     </div>

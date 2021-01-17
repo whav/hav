@@ -10,7 +10,7 @@ from sources.uploads import UploadSource
 
 from .havBrowser.urls import hav_urls
 from .ingest.urls import ingest_urls
-
+from .auth import AuthStatusView
 from .misc_models.urls import urlpatterns as model_url_patterns
 
 # TODO: this is a duplication of the sources defined in settings.py
@@ -53,6 +53,7 @@ source_patterns = [
 
 urlpatterns = [
     url("^$", start, name="api_root"),
+    url("^auth/", AuthStatusView.as_view(), name="auth_status"),
     url(r"^ingest/", include((ingest_urls, "ingest"))),
     url(r"^sources/", include(source_patterns)),
     url(r"^hav/", include((hav_urls("hav"), app_name), namespace="hav_browser")),

@@ -77,7 +77,7 @@ def validate_source(url):
         media_entries = archived_file.media_set.all()
         error_msg = f"A file with the hash '{hash_value}' is already archived."
         if len(media_entries):
-            error_msg += f" Check media {', '.join(media_entries)}."
+            error_msg += f" Check media {', '.join([str(m) for m in media_entries])}."
         else:
             error_msg += " No media entry related to this file found."
         raise serializers.ValidationError(error_msg)

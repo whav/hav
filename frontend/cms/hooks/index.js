@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
-const collectionRe = /^\/collections\/(\w+)\/.*$/;
+const collectionRe = /^\/collections\/([\w\-]+)\/.*$/;
 
 export const useCollection = () => {
   const router = useRouter();

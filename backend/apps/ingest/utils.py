@@ -59,10 +59,13 @@ def get_pk_from_csvfield(querystring, model):
     try:
         if model == MediaCreator:
             # CSV data comes as string in the form "name surname"
-            try:
-                first_name, last_name = querystring.split()
-            except ValueError:
-                first_name, last_name = "", querystring
+            if ',' in querystring:
+                last_name, first_name = querystring.split(', ')
+            else:
+                try:
+                    first_name, last_name = querystring.split()
+                except ValueError:
+                    first_name, last_name = "", querystring
             return model.objects.get(first_name=first_name, last_name=last_name).pk
         elif model == MediaType:
             # CSV data comes as string in the form "type:name" (e.g. analoge:trans_35)

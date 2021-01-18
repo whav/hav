@@ -41,6 +41,8 @@ uwsgi = "*"
 whitenoise = "*"
 meilisearch = "^0.14.0"
 pydantic = "^1.7.3"
+rawpy = "^0.16.0"
+imageio = "^2.9.0"
 
 [tool.poetry.dev-dependencies]
 django-debug-toolbar = "*"
@@ -48,3 +50,4 @@ ipdb = "*"
 pytest = "*"
 pytest-django = "*"
 black = {version = "^20.8b1", allow-prereleases = true}
+jedi = "0.17.2"

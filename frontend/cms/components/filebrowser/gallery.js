@@ -31,7 +31,11 @@ const GalleryMedia = ({
       className={`p-4 rounded-sm border-transparent hover:bg-gray-100 border`}
       style={{ maxWidth: aspectRatio < 1 ? 200 : 250 }}
     >
-      <img src={src} title={title || caption} />
+      <img
+        src={src}
+        title={title || caption}
+        className="border border-gray-100"
+      />
       <figcaption className="text-sm">
         {Icon ? <Icon className="inline-block" /> : null} {caption}
       </figcaption>

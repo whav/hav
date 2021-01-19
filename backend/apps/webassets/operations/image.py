@@ -21,9 +21,9 @@ def convert(source, target, *args, **kwargs):
     try:
         if mimetypes.guess_type(source)[0] in raw_formats:
             with rawpy.imread(source) as raw:
-                rgb = raw.postprocess()
+                rgb = raw.postprocess(use_camera_wb=True)
 
-            tmp_file = NamedTemporaryFile(suffix='tiff')
+            tmp_file = NamedTemporaryFile(suffix='.tiff')
             imageio.imsave(tmp_file, rgb, format='tiff')
             tmp_file.seek(0)
             logger.debug(f"Image convert created temp file at {tmp_file.name}.")

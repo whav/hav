@@ -42,6 +42,7 @@ services:
         volumes:
             - thumbnail-cache:/www/cache
             - ${WEBASSETS_ROOT}:/www/webassets:ro
+            - ${HAV_ARCHIVE_ROOT}:/www/archive:ro
         depends_on:
             - django-asgi
             - django-wsgi

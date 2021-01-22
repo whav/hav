@@ -1,5 +1,6 @@
 import graphene
 from graphene_django.types import DjangoObjectType
+from django.urls import reverse
 from hav_utils.imaginary import generate_src_url, generate_thumbnail_url
 
 from .models import WebAsset, ArchiveFile
@@ -22,12 +23,17 @@ class ArchiveFileType(DjangoObjectType):
 
     mime_type = graphene.String()
     webassets = graphene.List(WebAssetType)
+    download_url = graphene.String()
 
     def resolve_mime_type(self, info):
         return self.mime_type
 
     def resolve_webassets(self, info):
         return self.webasset_set.all()
+
+    def resolve_download_url(self, info):
+        url = reverse('archive:download', kwargs={'pk': self.pk})
+        return url
 
     class Meta:
         model = ArchiveFile

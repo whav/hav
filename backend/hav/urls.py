@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import views as auth_views
 
-
+from apps.archive.urls import urlpatterns as archive_urls
 from api.urls import api_urls
 
 django_admin.site.site_header = 'HAV Administration'
@@ -33,6 +33,7 @@ urlpatterns = [
     re_path(r"^api/", include((api_urls, "api"), namespace="api")),
     re_path(r"^admin/", include(hav_admin_patterns, namespace="hav_admin")),
     re_path(r"^dbadmin/", django_admin.site.urls),
+    path("archive/", include((archive_urls, "archive"), namespace='archive')),
     path("rq/", include("django_rq.urls")),
 ]
 

@@ -12,4 +12,5 @@ class ArchiveFileDownloadView(DetailView):
         # url = request.build_absolute_uri(url)
         response =  HttpResponse()
         response['X-Accel-Redirect'] = url
+        response['Content-Type'] = ''
         return response

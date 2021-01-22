@@ -73,6 +73,10 @@ const SecondaryDetailTable = ({ media }) => {
     permalink: "-",
     license: <License {...media.license} />,
     "original media type": media?.originalMediaType?.name,
+    "original file name": media.files
+      .map((f) => f.originalFilename)
+      .filter((n) => n)
+      .join(", "),
     "available formats": "-",
     "creator(s)": <CreatorList creators={media.creators} />,
     "creation date": (

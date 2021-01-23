@@ -10,6 +10,7 @@ import {
   DisplayYearRange,
 } from "./details";
 import { TagList } from "../../tags";
+import { DownloadIcon } from "../../icons";
 
 const DetailTable = ({ title = "", subtitle = "", details = {} }) => {
   return (
@@ -54,6 +55,21 @@ const CreatorList = ({ creators = [] }) => {
   );
 };
 
+const FileTable = ({ files = [] }) => {
+  return (
+    <ul className="inline-block list-none">
+      {files.map((f) => (
+        <li key={f.id}>
+          {f.originalFilename}{" "}
+          <a href={f.downloadUrl}>
+            <DownloadIcon className="inline" />{" "}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 const PrimaryDetailTable = ({ media }) => {
   const details = {
     title: media.title || "-",
@@ -73,10 +89,7 @@ const SecondaryDetailTable = ({ media }) => {
     permalink: "-",
     license: <License {...media.license} />,
     "original media type": media?.originalMediaType?.name,
-    "original file name": media.files
-      .map((f) => f.originalFilename)
-      .filter((n) => n)
-      .join(", "),
+    "original file name": <FileTable files={media.files} />,
     "available formats": "-",
     "creator(s)": <CreatorList creators={media.creators} />,
     "creation date": (

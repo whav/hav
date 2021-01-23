@@ -9,4 +9,5 @@ export {
   HiVolumeUp as SoundIcon,
   HiFolder as FolderIcon,
   HiSearch as SearchIcon,
+  HiOutlineDownload as DownloadIcon,
 } from "react-icons/hi";

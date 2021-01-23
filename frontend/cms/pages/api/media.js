@@ -60,6 +60,8 @@ export default async (req, res) => {
           files {
             id
             originalFilename
+            size
+            downloadUrl
             mimeType
             webassets {
               mimeType

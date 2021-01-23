@@ -15,6 +15,6 @@ class ArchiveFileDownloadView(DetailView):
         # url = request.build_absolute_uri(url)
         response =  HttpResponse()
         response['X-Accel-Redirect'] = url
-        response['Content-Type'] = mimetypes.guess_type(filename)[0]
-        response['Content-Disposition'] = Path(filename).name
+        response['Content-Type'] = mimetypes.guess_type(filename)[0] or ''
+        response['Content-Disposition'] = f'attachment; filename="{Path(archive_file.original_filename or filename).name}"'
         return response

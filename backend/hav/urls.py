@@ -33,8 +33,8 @@ urlpatterns = [
     re_path(r"^api/", include((api_urls, "api"), namespace="api")),
     re_path(r"^admin/", include(hav_admin_patterns, namespace="hav_admin")),
     re_path(r"^dbadmin/", django_admin.site.urls),
-    path("archive/", include((archive_urls, "archive"), namespace='archive')),
     path("rq/", include("django_rq.urls")),
+    path("account/", include((account_patterns, 'auth'), namespace='auth'))
 ]
 
 
@@ -56,6 +56,6 @@ if settings.DEBUG:
 # namespace the whole django patterns under /d
 urlpatterns = [
     re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
+    path("archive/", include((archive_urls, "archive"), namespace='archive')),
     path("d/", include(urlpatterns)),
-    path("account/", include((account_patterns, 'auth'), namespace='auth'))
 ]

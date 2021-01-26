@@ -35,7 +35,6 @@ const SearchPage = ({
   const router = useRouter();
 
   useEffect(() => {
-    console.log(router.isReady);
     const newParams = new URLSearchParams();
     if (query) {
       newParams.set("q", query);
@@ -61,7 +60,7 @@ const SearchPage = ({
 
   // actually fetch the results
   const { data, error } = useAPI(
-    query.length > 0 && node ? `/api/rest/public/search/` : null,
+    query.length > 0 && node ? `/api/public/search/` : null,
     {
       query,
       node,

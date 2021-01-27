@@ -19,7 +19,10 @@ const Link = (props) => {
 };
 
 const AccountNav = () => {
-  const { data = {} } = useAPI("/api/v1/auth/");
+  const { data } = useAPI("/api/v1/auth/");
+  if (data === undefined) {
+    return null;
+  }
   const { loginURL = "", logoutURL = "" } = data;
   const { username, email } = data?.user || {};
   return (

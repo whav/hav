@@ -1,36 +1,17 @@
 import time
-from enum import Enum
-from typing import List, Optional
+
 import meilisearch
 from django.core.management.base import BaseCommand
 from django.utils.functional import cached_property
-from pydantic import BaseModel
 
 from apps.media.models import Media
 from apps.sets.models import Node
 
 from ...client import get_client, get_index
-
-class ItemType(str, Enum):
-    folder = 'folder'
-    media = 'media'
+from ...indexer.media import index as index_media
+from ...indexer.nodes import index as index_node
 
 
-class SearchIndexItem(BaseModel):
-    id: str
-
-    # searchable attributes
-    title: str
-    additional_titles: List[str] = []
-    body: str
-
-    # non-searchable attributes
-    type: ItemType
-    collection: str
-    pk: int
-    parents: List[int] = []
-    node: Optional[int]
-    last_update: float
 
 
 searchable_attributes = [
@@ -73,41 +54,15 @@ class Command(BaseCommand):
 
     def index_collection(self, root_node):
         assert root_node in Node.get_collection_roots(), 'Not a collection root node.'
-        collection = root_node.collection
-        type = ItemType.folder
         for node in root_node.get_descendants().iterator():
-            ancestors = node.get_ancestors().values_list('pk', flat=True)
-            item = SearchIndexItem(
-                id=f'{type}_{node.pk}',
-                type=type,
-                pk=node.pk,
-                title=node.name,
-                body=node.description,
-                last_update=time.time(),
-                parents=list(ancestors),
-                collection=collection.slug,
-            )
+            item = index_node(node)
             self.items.append(item)
 
     def index_media(self, media):
         if media.pk in self.media_pks:
             return
 
-        type = ItemType.media
-        ancestors = media.set.get_ancestors().values_list('pk', flat=True)
-        parents = [*list(ancestors), media.set.pk]
-        index_item = SearchIndexItem(
-            id=f'{type}_{media.pk}',
-            type=type,
-            pk=media.pk,
-            title=media.title,
-            additional_titles=[media.original_media_identifier] if media.original_media_identifier else [],
-            body=media.description,
-            last_update=time.time(),
-            parents=parents,
-            collection=media.collection.slug,
-            node=media.set.pk
-        )
+        index_item = index_media(media)
         self.items.append(index_item)
         self.media_pks.add(media.pk)
 

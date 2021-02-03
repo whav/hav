@@ -83,10 +83,14 @@ const PrimaryDetailTable = ({ media }) => {
   return <DetailTable title="Content Description" details={details} />;
 };
 
-const SecondaryDetailTable = ({ media }) => {
+const SecondaryDetailTable = ({ media, file }) => {
   const details = {
     "hav media handle": media.id,
-    permalink: "-",
+    permalink: file.permalink ? (
+      <a href={file.permalink}>{file.permalink}</a>
+    ) : (
+      "-"
+    ),
     license: <License {...media.license} />,
     "original media type": media?.originalMediaType?.name,
     "original file name": <FileTable files={media.files} />,
@@ -115,6 +119,8 @@ const MediaDetail = (props) => {
     title,
     license = {},
   } = media;
+  const primaryFile = media.files[0];
+
   const collection_slug = collection?.slug;
   return (
     <>
@@ -145,10 +151,10 @@ const MediaDetail = (props) => {
           </div>
         ))}
         <div className="md:max-w-lg mr-4 mb-4">
-          <PrimaryDetailTable media={media} />
+          <PrimaryDetailTable media={media} file={primaryFile} />
         </div>
         <div className="md:max-w-lg mr-4 mb-4">
-          <SecondaryDetailTable media={media} />
+          <SecondaryDetailTable media={media} file={primaryFile} />
         </div>
       </div>
     </>

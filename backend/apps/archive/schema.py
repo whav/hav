@@ -10,6 +10,7 @@ class ArchiveFileType(DjangoObjectType):
     mime_type = graphene.String()
     webassets = graphene.List(lambda: WebAssetType)
     download_url = graphene.String()
+    permalink = graphene.String()
 
     def resolve_mime_type(self, info):
         return self.mime_type
@@ -20,6 +21,10 @@ class ArchiveFileType(DjangoObjectType):
     def resolve_download_url(self, info):
         url = reverse('archive:download', kwargs={'pk': self.pk})
         return url
+
+    def resolve_permalink(self, info):
+        url = reverse('archive:file_by_hash', kwargs={'hash': self.hash})
+        return info.context.build_absolute_uri(url)
 
     class Meta:
         model = ArchiveFile

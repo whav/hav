@@ -57,4 +57,12 @@
   input.unstyled:focus {
     @apply shadow-none ring-0 border-0;
   }
+
+  table.table {
+    @apply min-w-full divide-y divide-gray-200 border-separate border;
+  }
+
+  table.table thead {
+    @apply bg-gray-50;
+  }
 }

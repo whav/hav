@@ -1,0 +1,36 @@
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Original filename</td>
+      <td>{{ file.original_filename }}</td>
+    </tr>
+    <tr>
+      <td>File size</td>
+      <td>{{ file.size|filesizeformat }}</td>
+    </tr>
+    <tr>
+      <td>Hash (SHA-256)</td>
+      <td>{{ file.hash }}</td>
+    </tr>
+    <tr>
+      <td>Archived at</td>
+      <td>{{ file.archived_at|default_if_none:'' }}</td>
+    </tr>
+    {% with file.get_license as license %}
+    <tr>
+        <td>License</td>
+        <td>{{ license.name }}</td>
+    </tr>
+    {% endwith %}
+    {% with file.get_license as license %}
+    <tr>
+        <td>License</td>
+        <td>{{ license.name }}</td>
+    </tr>
+    {% endwith %}
+    <tr>
+        <td>Download</td>
+        <td><a href="{% url 'archive:download' pk=file.pk %}">{{ file.original_filename }}</a></td>
+    </tr>
+  </tbody>
+</table>

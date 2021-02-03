@@ -63,6 +63,7 @@ export default async (req, res) => {
             size
             downloadUrl
             mimeType
+            permalink
             webassets {
               mimeType
               url

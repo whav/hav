@@ -11,6 +11,7 @@ import {
 } from "./details";
 import { TagList } from "../../tags";
 import { DownloadIcon } from "../../icons";
+import { Table } from "../../shared/table";
 
 const DetailTable = ({ title = "", subtitle = "", details = {} }) => {
   return (
@@ -70,6 +71,19 @@ const FileTable = ({ files = [] }) => {
   );
 };
 
+const AllFiles = ({ files = [] }) => {
+  const headers = ["filename", "size", "permalink"];
+  const rows = files.map((f) => [
+    f.originalFilename,
+    f.size,
+    <a href={f.permalink}>
+      <DownloadIcon className="inline" />{" "}
+    </a>,
+  ]);
+
+  return <Table headers={headers} rows={rows} />;
+};
+
 const PrimaryDetailTable = ({ media }) => {
   const details = {
     title: media.title || "-",
@@ -86,11 +100,6 @@ const PrimaryDetailTable = ({ media }) => {
 const SecondaryDetailTable = ({ media, file }) => {
   const details = {
     "hav media handle": media.id,
-    permalink: file.permalink ? (
-      <a href={file.permalink}>{file.permalink}</a>
-    ) : (
-      "-"
-    ),
     license: <License {...media.license} />,
     "original media type": media?.originalMediaType?.name,
     "original file name": <FileTable files={media.files} />,
@@ -112,13 +121,7 @@ const SecondaryDetailTable = ({ media, file }) => {
 
 const MediaDetail = (props) => {
   const { media } = props;
-  const {
-    ancestors = [],
-    tags = [],
-    collection = {},
-    title,
-    license = {},
-  } = media;
+  const { ancestors = [], collection = {}, title, license = {} } = media;
   const primaryFile = media.files[0];
 
   const collection_slug = collection?.slug;
@@ -132,29 +135,30 @@ const MediaDetail = (props) => {
       />
 
       <div className="md:flex md:flex-row md:flex-wrap pt-6">
-        {media.files.map((f, index) => (
-          <div className="flex-auto max-w-2xl mr-4 mb-4" key={index}>
-            <figure className="md:pr-10 md:pb-10">
-              <ArchiveFile key={index} {...f} />
-              <figcaption className="flex justify-between">
-                <div>
-                  <CreatorList creators={media.creators} /> (
-                  <DisplayYearRange
-                    start={media.creationTimeframe[0]}
-                    end={media.creationTimeframe[1]}
-                  />
-                  )
-                </div>
-                <License {...license} />
-              </figcaption>
-            </figure>
-          </div>
-        ))}
+        <div className="flex-auto max-w-2xl mr-4 mb-4">
+          <figure className="md:pr-10 md:pb-10">
+            <ArchiveFile {...primaryFile} />
+            <figcaption className="flex justify-between">
+              <div>
+                <CreatorList creators={media.creators} /> (
+                <DisplayYearRange
+                  start={media.creationTimeframe[0]}
+                  end={media.creationTimeframe[1]}
+                />
+                )
+              </div>
+              <License {...license} />
+            </figcaption>
+          </figure>
+        </div>
         <div className="md:max-w-lg mr-4 mb-4">
           <PrimaryDetailTable media={media} file={primaryFile} />
         </div>
         <div className="md:max-w-lg mr-4 mb-4">
           <SecondaryDetailTable media={media} file={primaryFile} />
+          <div className="pt-4">
+            <AllFiles files={media.files} />
+          </div>
         </div>
       </div>
     </>

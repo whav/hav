@@ -7,50 +7,50 @@
 @layer components {
   .django-form {
     @apply p-4 border-gray-500 rounded;
-  }
 
-  .django-form h1 {
-    @apply text-lg font-bold text-center;
-  }
+    h1 {
+      @apply text-lg font-bold text-center;
+    }
 
-  .django-form p {
-    @apply mt-1;
-  }
+    p {
+      @apply mt-1;
+    }
 
-  .django-form label {
-    @apply block text-base mb-1 font-semibold;
-  }
+    label {
+      @apply block text-base mb-1 font-semibold;
+    }
+    /* 
+    > * {
+      @apply mb-2;
+    } */
 
-  .django-form > * {
-    @apply mb-2;
-  }
+    input {
+      @apply w-full rounded border-gray-300 focus:ring-blue-400 focus:shadow-md;
+    }
 
-  .django-form input {
-    @apply w-full rounded border-gray-300 focus:ring-blue-400 focus:shadow-md;
-  }
+    .field .errorlist.nonfield {
+      @apply p-2 bg-red-200 text-black;
+    }
 
-  .django-form .field .errorlist.nonfield {
-    @apply p-2 bg-red-200 text-black;
-  }
+    .field.erroneous input {
+      @apply bg-red-100;
+    }
 
-  .django-form .field.erroneous input {
-    @apply bg-red-100;
-  }
+    .errorlist {
+      @apply list-none text-red-600 mt-1 text-sm;
+    }
 
-  .django-form .errorlist {
-    @apply list-none text-red-600 mt-1 text-sm;
-  }
+    .submit-row {
+      @apply flex justify-between mt-3;
+    }
 
-  .django-form .submit-row {
-    @apply flex justify-between mt-3;
-  }
+    button {
+      @apply p-2 rounded bg-gray-300;
+    }
 
-  .django-form button {
-    @apply p-2 rounded bg-gray-300;
-  }
-
-  .django-form button[type="submit"] {
-    @apply bg-green-400 text-white;
+    button[type="submit"] {
+      @apply bg-green-400 text-white;
+    }
   }
 
   input.unstyled,
@@ -60,9 +60,9 @@
 
   table.table {
     @apply min-w-full divide-y divide-gray-200 border-separate border;
-  }
 
-  table.table thead {
-    @apply bg-gray-50;
+    thead {
+      @apply bg-gray-50;
+    }
   }
 }

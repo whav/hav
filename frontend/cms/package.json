@@ -33,6 +33,7 @@
     "postcss": "^8.2.1",
     "postcss-cli": "^8.3.1",
     "postcss-import": "^14.0.0",
+    "postcss-nested": "^5.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-icons": "^3.11.0",

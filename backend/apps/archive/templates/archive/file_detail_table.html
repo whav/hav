@@ -22,12 +22,6 @@
         <td>{{ license.name }}</td>
     </tr>
     {% endwith %}
-    {% with file.get_license as license %}
-    <tr>
-        <td>License</td>
-        <td>{{ license.name }}</td>
-    </tr>
-    {% endwith %}
     <tr>
         <td>Download</td>
         <td><a href="{% url 'archive:download' pk=file.pk %}">{{ file.original_filename }}</a></td>

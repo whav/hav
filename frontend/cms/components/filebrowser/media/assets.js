@@ -49,13 +49,19 @@ const Video = ({ webasset, ...props }) => {
     </video>
   );
 };
-const Audio = (props) => <Debug name="audio" {...props} />;
+const Audio = ({ webasset, ...props }) => (
+  <audio controls src={webasset.url}>
+    Your browser does not support the
+    <code>audio</code> element.
+  </audio>
+);
 
 const ArchiveFile = ({ mimeType, webassets, ...props }) => {
   // console.log(mimeType, props);
   const type = mimeType.split("/")[0];
   const webasset = getWebassetForType(type, webassets);
-  // console.log(type, webasset);
+  const imageWebasset = getWebassetForType("image", webassets);
+  console.log(type, webassets);
 
   if (webasset === undefined) {
     console.warn(

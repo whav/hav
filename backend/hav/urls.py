@@ -53,9 +53,14 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
+def dummy_view(request):
+    from django.http import Http404
+    raise Http404('This should never hit the server.')
+
 # namespace the whole django patterns under /d
 urlpatterns = [
     re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
     path("archive/", include((archive_urls, "archive"), namespace='archive')),
     path("d/", include(urlpatterns)),
+    path("protected/download/<path:path>", dummy_view, name='protected_download')
 ]

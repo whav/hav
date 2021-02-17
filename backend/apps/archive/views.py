@@ -1,4 +1,5 @@
 from django.views.generic import DetailView
+from django.urls import reverse
 from .models import ArchiveFile
 from django.http.response import HttpResponse, Http404
 import mimetypes
@@ -34,7 +35,8 @@ class ArchiveFileDownloadView(DetailView):
     def get(self, request, *args, **kwargs):
         archive_file = self.get_object()
         filename = archive_file.file.name
-        url = f'/archive/{filename}'
+        # url = f'/protected/download/{filename}'
+        url = reverse('protected_download', kwargs={'path':filename})
         # url = request.build_absolute_uri(url)
         response =  HttpResponse()
         response['X-Accel-Redirect'] = url

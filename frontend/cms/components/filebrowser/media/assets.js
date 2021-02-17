@@ -42,19 +42,14 @@ const Debug = ({ name, ...props }) => (
   </div>
 );
 
-const Video = ({ webasset, ...props }) => {
+const Video = ({ webasset, imageWebasset = {}, ...props }) => {
   return (
-    <video controls>
+    <video controls poster={imageWebasset.url}>
       <source src={webasset.url} type={webasset.mimeType} />;
     </video>
   );
 };
-const Audio = ({ webasset, ...props }) => (
-  <audio controls src={webasset.url}>
-    Your browser does not support the
-    <code>audio</code> element.
-  </audio>
-);
+const Audio = (props) => <Video {...props} />;
 
 const ArchiveFile = ({ mimeType, webassets, ...props }) => {
   // console.log(mimeType, props);
@@ -74,9 +69,9 @@ const ArchiveFile = ({ mimeType, webassets, ...props }) => {
 
   switch (type) {
     case "video":
-      return <Video webasset={webasset} />;
+      return <Video webasset={webasset} imageWebasset={imageWebasset} />;
     case "audio":
-      return <Audio webasset={webasset} />;
+      return <Audio webasset={webasset} imageWebasset={imageWebasset} />;
     case "image":
       return <Image {...webasset} />;
     default:

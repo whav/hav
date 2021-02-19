@@ -3,8 +3,8 @@ import { query, gql } from "lib/graphql";
 export default async (req, res) => {
   const result = await query(
     gql`
-      query SetQuery($set: String!, $collection: String!) {
-        node(nodeID: $set, collectionSlug: $collection) {
+      query SetQuery($set: String!, $collection: String) {
+        node(nodeId: $set, collectionSlug: $collection) {
           name
           description
           tags {
@@ -24,8 +24,13 @@ export default async (req, res) => {
               aspectRatio
             }
           }
+          collection {
+            id
+            slug
+            name
+          }
         }
-        mediaEntries(nodeID: $set) {
+        mediaEntries(nodeId: $set) {
           id
           caption: title
           title: originalMediaIdentifier

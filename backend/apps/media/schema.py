@@ -127,7 +127,7 @@ class LicenseType(DjangoObjectType):
 class Query:
 
     media = graphene.Field(MediaType, id=graphene.String(required=True))
-    media_entries = graphene.List(MediaType, nodeID=graphene.String(required=True))
+    media_entries = graphene.List(MediaType, node_id=graphene.String(required=True))
 
     def resolve_media(self, info, **kwargs):
         id = kwargs.get("id")
@@ -135,6 +135,6 @@ class Query:
             Q(pk=id) | Q(original_media_identifier=id) | Q()
         )
 
-    def resolve_media_entries(self, info, nodeID):
-        node = Node.objects.get(pk=nodeID)
+    def resolve_media_entries(self, info, node_id):
+        node = Node.objects.get(pk=node_id)
         return Media.objects.prefetch_related("files__webasset_set").filter(set=node)

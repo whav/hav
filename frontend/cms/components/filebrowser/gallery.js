@@ -33,6 +33,7 @@ const GalleryMedia = ({
     >
       <img
         src={src}
+        loading="lazy"
         title={title || caption}
         className="border border-gray-100"
       />

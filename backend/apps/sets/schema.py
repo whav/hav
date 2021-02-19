@@ -4,7 +4,7 @@ from graphene_django.types import DjangoObjectType
 
 from .models import Node
 from apps.tags.schema import TagType
-
+from apps.hav_collections.schema import CollectionType
 
 class NodeType(DjangoObjectType):
 
@@ -12,6 +12,7 @@ class NodeType(DjangoObjectType):
     ancestors = graphene.List(lambda: NodeType)
     tags = graphene.List(TagType)
 
+    collection = graphene.Field(CollectionType)
     representative_media = graphene.Field("apps.media.schema.MediaType", required=False)
 
     class Meta:
@@ -33,15 +34,18 @@ class NodeType(DjangoObjectType):
     def resolve_tags(self, info):
         return self.tags.all()
 
+    def resolve_collection(self, info):
+        return self.get_collection()
+
 
 class Query(object):
     node = graphene.Field(
-        NodeType, nodeID=graphene.String(), collection_slug=graphene.String()
+        NodeType, node_id=graphene.String(required=False), collection_slug=graphene.String(required=False)
     )
 
-    def resolve_node(self, info, nodeID, collection_slug):
-        if nodeID:
-            return Node.objects.get(pk=nodeID)
+    def resolve_node(self, info, node_id=None, collection_slug=None, **kwargs):
+        if node_id:
+            return Node.objects.get(pk=node_id)
         if collection_slug:
             return Node.objects.get(collection__slug=collection_slug)
         raise NotImplementedError()

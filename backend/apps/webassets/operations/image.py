@@ -8,7 +8,7 @@ import rawpy
 logger = logging.getLogger(__name__)
 
 raw_formats = set([
-    "image/x-nikon-nef",
+    # "image/x-nikon-nef",
     "image/x-adobe-dng"
 ])
 

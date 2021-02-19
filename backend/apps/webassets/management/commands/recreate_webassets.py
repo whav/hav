@@ -4,6 +4,7 @@ from django.template.defaultfilters import filesizeformat
 from apps.media.models import Media
 from apps.hav_collections.models import Collection
 from apps.archive.models import ArchiveFile
+from ...operations  import create_webassets
 
 class Command(BaseCommand):
     help = 'Forces the recreation of webassets.'
@@ -64,6 +65,10 @@ class Command(BaseCommand):
 
     def process_file(self, archived_file):
         # TODO: actually implement this stuff
+        previously_generated_webassets = list(archived_file.webasset_set.all())
+        create_webassets(archived_file.pk)
+        # TODO: remove the webasset files?
+        previously_generated_webassets.delete()
         pass
 
     def handle(self, *args, **options):

@@ -45,6 +45,8 @@ class ArchiveFile(models.Model):
         License, null=True, blank=True, on_delete=models.PROTECT
     )
 
+    _webasset_hints = models.JSONField(default=dict)
+
     def get_license(self):
         if self.license:
             return self.license
@@ -83,6 +85,18 @@ class ArchiveFile(models.Model):
         if hash != self.hash:
             raise ValidationError("Calculated hash does not match stored hash.")
         return True
+
+    def clean(self):
+        from apps.webassets.hints import validate_webasset_hints
+        if self._webasset_hints:
+            try:
+                self._webasset_hints = validate_webasset_hints(self.mime_type, self._webasset_hints)
+            except ValidationError as e:
+                raise ValidationError({
+                    '_webasset_hints': e
+                })
+
+
 
     class Meta:
         ordering = ("archived_at",)

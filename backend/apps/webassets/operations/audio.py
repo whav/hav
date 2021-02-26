@@ -29,7 +29,7 @@ def convert(source, target, *args):
 convert.extension = ".m4a"
 
 
-def create_waveform(source, target):
+def create_waveform(source, target, *args, **hints):
     logger.info("Creating audio waveform.")
     return subprocess.run(
         [
@@ -45,3 +45,6 @@ def create_waveform(source, target):
         ],
         check=True,
     )
+
+
+create_waveform.extension = 'png'

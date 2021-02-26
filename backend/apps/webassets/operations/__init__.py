@@ -1,6 +1,7 @@
+from typing import Literal
 import mimetypes
 import os
-
+from django.core.exceptions import ObjectDoesNotExist
 from apps.archive.models import ArchiveFile
 from apps.webassets.models import WebAsset
 
@@ -23,23 +24,31 @@ def prepare_webasset(archive_file, extension):
     return wa
 
 
-def create_audio_thumbnail(af):
-    wa = prepare_webasset(af, "png")
-    create_waveform(af.file.path, wa.file.path)
-    wa.save()
-    logger.info("Audio waveform webasset {} successfully generated.".format(wa.pk))
+def resolve_converter(media_type: Literal['image', 'video', 'audio'], collection_slug: str=None):
+    if media_type == "image":
+        return [image_convert]
+    if media_type == "video":
+        return [create_thumbnail, video_convert]
+    if media_type == "audio":
+        return [create_waveform, audio_convert]
 
-
-def create_video_thumbnail(af):
-    wa = prepare_webasset(af, "jpg")
-    create_thumbnail(af.file.path, wa.file.path)
-    wa.save()
-    logger.info("Video thumbnail webasset {} successfully created.".format(wa.pk))
-
+    raise NotImplementedError(
+        "Webasset creation not yet implemented for type {}".format(source_mime)
+    )
 
 def create_webassets(archived_file_id):
     logger.info("Processing archive file %s" % archived_file_id)
-    af = ArchiveFile.objects.get(pk=archived_file_id)
+    af = ArchiveFile.objects.prefetch_related('media_set__collection').get(pk=archived_file_id)
+
+    try:
+        collection_slug = af.media_set.get().collection.slug
+    except ObjectDoesNotExist:
+        logger.warning(f'''
+            No collection found for archive file {archived_file_id}.
+            This leads to collection specific converters to be ignored.
+        ''')
+        collection_slug = None
+
     source_file_name = af.file.path
     source_mime = mimetypes.guess_type(source_file_name)[0]
     if source_mime is None:
@@ -47,45 +56,41 @@ def create_webassets(archived_file_id):
             "Could not determine mime type of file {}".format(source_file_name)
         )
 
-    type = source_mime.split("/")[0]
+    media_type = source_mime.split("/")[0]
 
-    if type not in ["image", "video", "audio"]:
+    if media_type not in ["image", "video", "audio"]:
         raise AssertionError(
             "Unable to process file {} of type {}.".format(
                 source_file_name, source_mime
             )
         )
 
-    if type == "image":
-        convert = image_convert
-    elif type == "video":
-        convert = video_convert
-        # create a video thumbnail before processing
-        create_video_thumbnail(af)
-    elif type == "audio":
-        convert = audio_convert
-        create_audio_thumbnail(af)
-    else:
-        raise NotImplementedError(
-            "Webasset creation not yet implemented for type {}".format(source_mime)
-        )
+    converters = resolve_converter(media_type, collection_slug)
+    logger.debug(f'Using the following converters: {converters}')
 
-    logger.info("Determined converter:  {}".format(convert.__name__))
+    # get the optional hints
+    hints = af._webasset_hints or {}
 
-    wa = prepare_webasset(af, convert.extension)
+    webassets = []
+    for convert in converters:
+        logger.info("Determined converter:  {}".format(convert.__name__))
 
-    target_file_name = wa.get_available_file_name(convert.extension)
+        wa = prepare_webasset(af, convert.extension)
 
-    # create intermediate directories
-    os.makedirs(os.path.dirname(target_file_name), exist_ok=True)
+        target_file_name = wa.get_available_file_name(convert.extension)
 
-    logger.info("Source {}, target {}".format(source_file_name, target_file_name))
+        # create intermediate directories
+        os.makedirs(os.path.dirname(target_file_name), exist_ok=True)
 
-    convert(source_file_name, target_file_name, af)
+        logger.info("Source {}, target {}".format(source_file_name, target_file_name))
 
-    logger.info("Conversion completed.")
-    wa.file = os.path.relpath(target_file_name, start=wa.file.storage.location)
-    wa.mime_type = mimetypes.guess_type(target_file_name)[0]
-    wa.save()
-    logger.info("WebAsset {} successfully created.".format(wa.pk))
-    return wa
+        convert(source_file_name, target_file_name, af, **hints)
+
+        logger.info("Conversion completed.")
+        wa.file = os.path.relpath(target_file_name, start=wa.file.storage.location)
+        wa.mime_type = mimetypes.guess_type(target_file_name)[0]
+        wa.save()
+        logger.info("WebAsset {} successfully created.".format(wa.pk))
+        webassets.append(wa)
+
+    return webassets

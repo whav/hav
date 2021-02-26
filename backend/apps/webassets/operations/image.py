@@ -27,11 +27,11 @@ def extract_thumbnail(source, target):
         imageio.imsave(target, thumb.data)
 
 
-def convert(source, target, *args, **kwargs):
+def convert(source, target, *args, **hints):
     logger.debug(f"Image convert called with source {source} ({mimetypes.guess_type(source)[0]}), target {target}.")
 
     tmp_file = None
-
+    rotation = hints.get('rotation', None)
     try:
         if mimetypes.guess_type(source)[0] in raw_formats:
             with rawpy.imread(source) as raw:
@@ -45,6 +45,8 @@ def convert(source, target, *args, **kwargs):
 
         # actually do the conversion
         image = pyvips.Image.new_from_file(source)
+        if rotation:
+            image = image.rotate(rotation)
         image.write_to_file(target)
     finally:
         if tmp_file:

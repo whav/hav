@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 FFMPEG = find_executable("ffmpeg")
 
 
-def convert(source, target, *args):
+def convert(source, target, *args, **hints):
     logger.info(
         "Converting video. Source file: {}, target file: {}".format(source, target)
     )
@@ -67,7 +67,7 @@ def convert(source, target, *args):
 convert.extension = ".mp4"
 
 
-def create_thumbnail(source, target):
+def create_thumbnail(source, target, *args, **hints):
     logger.info(
         "Creating video thumbnail. Source file: {}, target file: {}".format(
             source, target
@@ -86,3 +86,5 @@ def create_thumbnail(source, target):
         target,
     ]
     subprocess.run([FFMPEG, *args], check=True)
+
+create_thumbnail.extension = 'jpg'

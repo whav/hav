@@ -18,11 +18,12 @@ def validate_webasset_hints(mime_type, value):
 
     if model:
         try:
-            model(**value)
+            validated = model(**value)
         except ValidationError as e:
             raise DjangoValidationError(str(e))
-    else:
-        raise DjangoValidationError(f'Invalid hints for mime type {mime_type}.')
+        else:
+            return validated.dict()
 
-    return value
+    raise DjangoValidationError(f'Invalid hints for mime type {mime_type}.')
+
 

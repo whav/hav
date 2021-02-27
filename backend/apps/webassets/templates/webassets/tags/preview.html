@@ -1,0 +1,8 @@
+{%  if preview_template %}
+    {% include preview_template %}
+{% else %}
+<pre>
+    {{ webasset.file.name }}
+</pre>
+{% endif %}
+

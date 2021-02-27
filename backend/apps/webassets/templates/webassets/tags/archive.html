@@ -1,0 +1,4 @@
+{% load webassets %}
+{% for webasset in archive_file.webasset_set.all %}
+    {%  webasset_preview webasset %}
+{% endfor %}

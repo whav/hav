@@ -1,4 +1,5 @@
 {% extends './base.html' %}
+{% load webassets %}
 {% block content %}
 <div>
 
@@ -12,6 +13,15 @@ This file is associated with the media entry {{ media.pk }}.
 Please go to the media detail page to see all available metadata.
 </p>
 {% endif %}
+{% with webassets=object.webasset_set.all %}
+The following webassets have been generated for this file:
+
+{% for wa in object.webasset_set.all %}
+    <h3>{{ wa.mime_type }}</h3>
+    {% webasset_preview wa %}
+    <hr />
+{% endfor %}
+{% endwith %}
 
 {% include './file_detail_table.html' with file=object %}
 </div>

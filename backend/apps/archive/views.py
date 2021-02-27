@@ -4,6 +4,9 @@ from .models import ArchiveFile
 from django.http.response import HttpResponse, Http404
 import mimetypes
 from pathlib import Path
+from apps.media.models import Media
+from apps.sets.models import Node
+from apps.webassets.templatetags.frontend_urls import frontend_url
 
 
 class ArchiveFileBaseView(DetailView):
@@ -25,6 +28,16 @@ class ArchiveFileByHashView(ArchiveFileBaseView):
 
 class ArchiveFileByIDView(ArchiveFileBaseView):
     pass
+
+
+class ArchiveNodeView(DetailView):
+    model = Node
+    template_name = "archive/redirect.html"
+
+
+class ArchiveMediaView(DetailView):
+    model = Media
+    template_name = "archive/redirect.html"
 
 
 class ArchiveFileDownloadView(DetailView):

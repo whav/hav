@@ -6,6 +6,7 @@
     <title>{% block title %}HAV{% endblock title %}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{% static "dj_static/favicon.ico" %}">
     <link rel="stylesheet" href="{% static 'tailwind/styles.css' %}" >
+    {% block extra_head %}{% endblock %}
 </head>
 <body class="w-full min-h-screen">
 {% block navbar %}

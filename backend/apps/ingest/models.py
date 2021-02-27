@@ -7,6 +7,7 @@ from apps.sets.models import Node
 from apps.media.models import Media
 from apps.accounts.models import User
 
+
 class IngestQueue(models.Model):
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

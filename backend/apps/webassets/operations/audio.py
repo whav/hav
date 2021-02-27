@@ -47,4 +47,4 @@ def create_waveform(source, target, *args, **hints):
     )
 
 
-create_waveform.extension = 'png'
+create_waveform.extension = "png"

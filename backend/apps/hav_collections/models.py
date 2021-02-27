@@ -3,6 +3,7 @@ from django.db import models
 from apps.sets.models import Node
 from apps.accounts.models import User
 
+
 def root_nodes():
     return {"pk__in": Node.objects.filter(depth__lte=2).values_list("pk", flat=True)}
 

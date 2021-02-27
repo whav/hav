@@ -9,14 +9,19 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('hav_collections', '0001_initial'),
-        ('sets', '0001_initial'),
+        ("hav_collections", "0001_initial"),
+        ("sets", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='collection',
-            name='root_node',
-            field=models.OneToOneField(limit_choices_to={'depth__lte': 3}, null=True, on_delete=django.db.models.deletion.PROTECT, to='sets.node'),
+            model_name="collection",
+            name="root_node",
+            field=models.OneToOneField(
+                limit_choices_to={"depth__lte": 3},
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="sets.node",
+            ),
         ),
     ]

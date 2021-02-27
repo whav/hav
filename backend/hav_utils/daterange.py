@@ -73,12 +73,10 @@ class Resolutions(Enum):
     MONTH = 1
     DAY = 2
 
+
 class ReverseDateTimeRange:
-
-
     def __init__(self, start: datetime, end: datetime):
         self.start, self.end = sorted([start, end])
-
 
     def get_resolution(self):
         if self.start.time() == time.min and self.end.time() == time.max:
@@ -92,14 +90,16 @@ class ReverseDateTimeRange:
                 if sd.day == 1 and ed.day == calendar.monthrange(sd.year, sd.month)[1]:
                     return Resolutions.MONTH
 
-            if sd.year == ed.year and sd == date(sd.year, 1, 1) and ed == date(sd.year, 12, 31):
+            if (
+                sd.year == ed.year
+                and sd == date(sd.year, 1, 1)
+                and ed == date(sd.year, 12, 31)
+            ):
                 return Resolutions.YEAR
 
         return None
 
+
 def calculate_date_resolution(d1: datetime, d2: datetime):
     rdtr = ReverseDateTimeRange(d1, d2)
     return rdtr.get_resolution()
-
-
-

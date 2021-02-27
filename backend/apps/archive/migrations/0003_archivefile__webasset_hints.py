@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0002_auto_20210106_2044'),
+        ("archive", "0002_auto_20210106_2044"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='archivefile',
-            name='_webasset_hints',
+            model_name="archivefile",
+            name="_webasset_hints",
             field=models.JSONField(default=dict),
         ),
     ]

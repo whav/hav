@@ -4,8 +4,8 @@ from pydantic import BaseModel
 
 
 class ItemType(str, Enum):
-    folder = 'folder'
-    media = 'media'
+    folder = "folder"
+    media = "media"
 
 
 class SearchIndexItem(BaseModel):

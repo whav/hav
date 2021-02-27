@@ -4,42 +4,43 @@ from django.template.defaultfilters import filesizeformat
 from apps.media.models import Media
 from apps.hav_collections.models import Collection
 from apps.archive.models import ArchiveFile
-from ...operations  import create_webassets
+from ...operations import create_webassets
 from ...models import WebAsset
 
+
 class Command(BaseCommand):
-    help = 'Forces the recreation of webassets.'
+    help = "Forces the recreation of webassets."
 
     def add_arguments(self, parser):
         # Named (optional) arguments
         parser.add_argument(
-            '--dry-run',
-            action='store_true',
+            "--dry-run",
+            action="store_true",
             default=False,
-            help='Only display which files would be affected.',
+            help="Only display which files would be affected.",
         )
         parser.add_argument(
-            '--media',
+            "--media",
             type=int,
             default=[],
-            action='append',
-            help='Limit to media with given pk'
+            action="append",
+            help="Limit to media with given pk",
         )
 
         parser.add_argument(
-            '--collection',
+            "--collection",
             type=str,
             default=[],
-            action='append',
-            help='Limit to media in specific collection'
+            action="append",
+            help="Limit to media in specific collection",
         )
 
         parser.add_argument(
-            '--extension',
+            "--extension",
             type=str,
-            action='append',
+            action="append",
             default=[],
-            help='Filter by file extension (archived file)'
+            help="Filter by file extension (archived file)",
         )
 
     def get_queryset(self, media_ids, collection_slugs, extensions):
@@ -53,7 +54,11 @@ class Command(BaseCommand):
             media = media.filter(collection__in=collections)
 
         # now move down to the archived files
-        archived_files = ArchiveFile.objects.filter(media__in=media).prefetch_related('media_set', 'media_set__collection').order_by('media__set__id')
+        archived_files = (
+            ArchiveFile.objects.filter(media__in=media)
+            .prefetch_related("media_set", "media_set__collection")
+            .order_by("media__set__id")
+        )
 
         if len(extensions):
             q = Q()
@@ -63,10 +68,11 @@ class Command(BaseCommand):
 
         return archived_files
 
-
     def process_file(self, archived_file):
         # TODO: actually implement this stuff
-        previously_generated_webassets = list(archived_file.webasset_set.values_list('pk', flat=True))
+        previously_generated_webassets = list(
+            archived_file.webasset_set.values_list("pk", flat=True)
+        )
         create_webassets(archived_file.pk)
         # TODO: remove the webasset files?
         WebAsset.objects.filter(pk__in=previously_generated_webassets).delete()
@@ -74,19 +80,21 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # gather all options to limit the resulting queryset
-        media_ids = options.get('media', [])
-        collection_slugs = options.get('collection', [])
-        extensions=options.get('extension', [])
+        media_ids = options.get("media", [])
+        collection_slugs = options.get("collection", [])
+        extensions = options.get("extension", [])
         archived_files = self.get_queryset(media_ids, collection_slugs, extensions)
         af_count = archived_files.count()
 
-        self.stdout.write(f'Operating {af_count} files.')
+        self.stdout.write(f"Operating {af_count} files.")
 
-        dry_run = options.get('dry_run')
+        dry_run = options.get("dry_run")
 
         for af in archived_files:
-            self.stdout.write(f'Processing file {af.file} (original name: {af.original_filename}, media: {af.media_set.get().id}, size: {filesizeformat(af.size)}, collection: {af.media_set.get().collection.slug})')
+            self.stdout.write(
+                f"Processing file {af.file} (original name: {af.original_filename}, media: {af.media_set.get().id}, size: {filesizeformat(af.size)}, collection: {af.media_set.get().collection.slug})"
+            )
             if not dry_run:
                 self.process_file(af)
 
-        self.stdout.write(f'Processed {af_count} files.')
+        self.stdout.write(f"Processed {af_count} files.")

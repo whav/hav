@@ -10,51 +10,69 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('archive', '0001_initial'),
+        ("archive", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('media', '0001_initial'),
+        ("media", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='filecreator',
-            name='creator',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='media.mediacreator'),
+            model_name="filecreator",
+            name="creator",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="media.mediacreator"
+            ),
         ),
         migrations.AddField(
-            model_name='filecreator',
-            name='file',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='archive.archivefile'),
+            model_name="filecreator",
+            name="file",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="archive.archivefile"
+            ),
         ),
         migrations.AddField(
-            model_name='filecreator',
-            name='role',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='media.mediacreatorrole'),
+            model_name="filecreator",
+            name="role",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="media.mediacreatorrole",
+            ),
         ),
         migrations.AddField(
-            model_name='archivefile',
-            name='created_by',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL),
+            model_name="archivefile",
+            name="created_by",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddField(
-            model_name='archivefile',
-            name='creators',
-            field=models.ManyToManyField(through='archive.FileCreator', to='media.MediaCreator', verbose_name='creators'),
+            model_name="archivefile",
+            name="creators",
+            field=models.ManyToManyField(
+                through="archive.FileCreator",
+                to="media.MediaCreator",
+                verbose_name="creators",
+            ),
         ),
         migrations.AddField(
-            model_name='archivefile',
-            name='license',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='media.license'),
+            model_name="archivefile",
+            name="license",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="media.license",
+            ),
         ),
         migrations.CreateModel(
-            name='AttachmentFile',
-            fields=[
-            ],
+            name="AttachmentFile",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
-                'constraints': [],
+                "proxy": True,
+                "indexes": [],
+                "constraints": [],
             },
-            bases=('archive.archivefile',),
+            bases=("archive.archivefile",),
         ),
     ]

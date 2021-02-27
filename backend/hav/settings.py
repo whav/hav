@@ -45,9 +45,9 @@ env = environ.Env(
     DATABASE_URL=(str, "postgres:///hav"),
     WHAV_DATABASE_URL=(str, "postgres:///whav"),
     HAV_SKOSMOS_URL=(str, "https://skosmos-hav.aussereurop.univie.ac.at/rest/v1/"),
-    MEILISEARCH_URL=(str, 'http://127.0.0.1:7700/'),
+    MEILISEARCH_URL=(str, "http://127.0.0.1:7700/"),
     MEILISEARCH_KEY=(str, None),
-    MEILISEARCH_INDEX=(str, 'hav'),
+    MEILISEARCH_INDEX=(str, "hav"),
 )
 
 # read the .env file
@@ -143,7 +143,7 @@ DATABASE_ROUTERS = ["hav.db_router.WhavDBRouter"]
 
 CACHES = {"default": env.cache()}
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = "accounts.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -199,7 +199,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = (
     ("wp", WEBPACK_BUILD_PATH),
     ("dj_static", django_root("static/")),
-    ("tailwind", DJANGO_STYLES_BUILD_PATH)
+    ("tailwind", DJANGO_STYLES_BUILD_PATH),
 )
 
 STATIC_ROOT = project_root(env("STATIC_ROOT", default="dist/static/"))
@@ -354,9 +354,9 @@ TAGGING_SOURCES = {
 }
 
 # FTS - Meilisearch
-MEILISEARCH_URL = env('MEILISEARCH_URL')
-MEILISEARCH_KEY = env('MEILISEARCH_KEY')
-MEILISEARCH_INDEX = env('MEILISEARCH_INDEX')
+MEILISEARCH_URL = env("MEILISEARCH_URL")
+MEILISEARCH_KEY = env("MEILISEARCH_KEY")
+MEILISEARCH_INDEX = env("MEILISEARCH_INDEX")
 
 # TEST Setup
 if "test" in sys.argv:

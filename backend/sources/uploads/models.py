@@ -1,6 +1,7 @@
 from django.db import models
 from apps.accounts.models import User
 
+
 class FileUpload(models.Model):
 
     file = models.FileField(upload_to="%Y/%m/%d/")

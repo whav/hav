@@ -14,14 +14,25 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Collection',
+            name="Collection",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('slug', models.SlugField()),
-                ('name', models.CharField(max_length=200, unique=True)),
-                ('short_name', models.CharField(blank=True, max_length=30, unique=True)),
-                ('public', models.BooleanField(default=True)),
-                ('administrators', models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("slug", models.SlugField()),
+                ("name", models.CharField(max_length=200, unique=True)),
+                (
+                    "short_name",
+                    models.CharField(blank=True, max_length=30, unique=True),
+                ),
+                ("public", models.BooleanField(default=True)),
+                ("administrators", models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

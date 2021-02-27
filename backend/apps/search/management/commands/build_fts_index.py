@@ -12,13 +12,12 @@ from ...indexer.media import index as index_media
 from ...indexer.nodes import index as index_node
 
 
-
-
 searchable_attributes = [
-      'title',
-      'additional_titles',
-      'body',
+    "title",
+    "additional_titles",
+    "body",
 ]
+
 
 class Command(BaseCommand):
     help = "Re-index everything!"
@@ -46,14 +45,17 @@ class Command(BaseCommand):
         except meilisearch.errors.MeiliSearchApiError:
             pass
 
-        self.client.create_index('hav')
-        self.wait_for_processing(self.index.add_documents([i.dict() for i in self.items]))
+        self.client.create_index("hav")
+        self.wait_for_processing(
+            self.index.add_documents([i.dict() for i in self.items])
+        )
 
-        self.wait_for_processing(self.index.update_searchable_attributes(searchable_attributes))
-
+        self.wait_for_processing(
+            self.index.update_searchable_attributes(searchable_attributes)
+        )
 
     def index_collection(self, root_node):
-        assert root_node in Node.get_collection_roots(), 'Not a collection root node.'
+        assert root_node in Node.get_collection_roots(), "Not a collection root node."
         for node in root_node.get_descendants().iterator():
             item = index_node(node)
             self.items.append(item)
@@ -67,19 +69,18 @@ class Command(BaseCommand):
         self.media_pks.add(media.pk)
 
     def wait_for_processing(self, response):
-        update_id = response.get('updateId')
+        update_id = response.get("updateId")
         while True:
             response = self.index.get_update_status(update_id)
-            status = response.get('status')
-            if status == 'processed':
+            status = response.get("status")
+            if status == "processed":
                 break
-            if status == 'failed':
-                raise ValueError(response.get('error'), 'Operation failed.')
-            elif status == 'enqueued':
+            if status == "failed":
+                raise ValueError(response.get("error"), "Operation failed.")
+            elif status == "enqueued":
                 time.sleep(0.5)
                 continue
-            raise NotImplementedError(f'Unknown status {status}.')
-
+            raise NotImplementedError(f"Unknown status {status}.")
 
     def handle(self, *args, **options):
         # index nodes
@@ -88,7 +89,7 @@ class Command(BaseCommand):
             self.index_collection(root)
 
         # index media items
-        media_entries = Media.objects.select_related('collection', 'set').iterator()
+        media_entries = Media.objects.select_related("collection", "set").iterator()
         for media in media_entries:
             if media.pk not in self.media_pks:
                 self.index_media(media)

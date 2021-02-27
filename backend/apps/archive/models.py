@@ -11,6 +11,7 @@ from .storage import ArchiveStorage
 from apps.media.models import CreatorBase, MediaCreator, License
 from apps.accounts.models import User
 
+
 class FileCreator(CreatorBase):
     file = models.ForeignKey("ArchiveFile", on_delete=models.CASCADE)
 
@@ -56,8 +57,6 @@ class ArchiveFile(models.Model):
             except ObjectDoesNotExist:
                 pass
 
-
-
     @property
     def mime_type(self):
         return guess_type(self.original_filename)[0]
@@ -88,15 +87,14 @@ class ArchiveFile(models.Model):
 
     def clean(self):
         from apps.webassets.hints import validate_webasset_hints
+
         if self._webasset_hints:
             try:
-                self._webasset_hints = validate_webasset_hints(self.mime_type, self._webasset_hints)
+                self._webasset_hints = validate_webasset_hints(
+                    self.mime_type, self._webasset_hints
+                )
             except ValidationError as e:
-                raise ValidationError({
-                    '_webasset_hints': e
-                })
-
-
+                raise ValidationError({"_webasset_hints": e})
 
     class Meta:
         ordering = ("archived_at",)

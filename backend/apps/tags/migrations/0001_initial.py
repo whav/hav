@@ -11,32 +11,65 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('hav_collections', '0001_initial'),
+        ("hav_collections", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TagSource',
+            name="TagSource",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('source', apps.tags.fields.TagSourceChoiceField(db_index=True, max_length=20)),
-                ('source_ref', models.CharField(db_index=True, max_length=50)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "source",
+                    apps.tags.fields.TagSourceChoiceField(db_index=True, max_length=20),
+                ),
+                ("source_ref", models.CharField(db_index=True, max_length=50)),
             ],
             options={
-                'unique_together': {('source', 'source_ref')},
+                "unique_together": {("source", "source_ref")},
             },
         ),
         migrations.CreateModel(
-            name='Tag',
+            name="Tag",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=200)),
-                ('collection', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='hav_collections.collection')),
-                ('source', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='tags.tagsource')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                (
+                    "collection",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="hav_collections.collection",
+                    ),
+                ),
+                (
+                    "source",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="tags.tagsource",
+                    ),
+                ),
             ],
             options={
-                'ordering': ('name',),
-                'unique_together': {('name', 'collection')},
+                "ordering": ("name",),
+                "unique_together": {("name", "collection")},
             },
         ),
     ]

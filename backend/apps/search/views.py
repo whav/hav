@@ -10,70 +10,77 @@ from .client import get_index
 
 class QuerySerializer(serializers.Serializer):
     query = serializers.CharField(required=True)
-    node = serializers.PrimaryKeyRelatedField(queryset=Node.objects.all(), required=False)
+    node = serializers.PrimaryKeyRelatedField(
+        queryset=Node.objects.all(), required=False
+    )
+
 
 class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
-        fields = ('id', 'title', 'description')
-
-
+        fields = ("id", "title", "description")
 
 
 class SearchView(APIView):
     def get(self, request, format=None):
         query_serializer = QuerySerializer(data=request.GET)
         query_serializer.is_valid()
-        query = query_serializer.data.get('query')
-        node = query_serializer.data.get('node')
+        query = query_serializer.data.get("query")
+        node = query_serializer.data.get("node")
 
-        search_filters = ''
+        search_filters = ""
         if node:
-            search_filters += f'parents = {node}'
+            search_filters += f"parents = {node}"
 
         # build valid search options
-        search_options = {'matches': True, 'attributesToCrop': ['*'], 'cropLength': 200}
+        search_options = {"matches": True, "attributesToCrop": ["*"], "cropLength": 200}
         if search_filters:
-            search_options.update({'filters': search_filters})
+            search_options.update({"filters": search_filters})
 
         index = get_index()
         response = index.search(query, search_options)
-        hits = response.get('hits', [])
+        hits = response.get("hits", [])
 
         # get all folder and media pks in one go
         media_pks = []
         node_pks = []
         for hit in hits:
-            type = hit.get('type')
-            pk = hit.get('pk')
-            if type == 'media':
+            type = hit.get("type")
+            pk = hit.get("pk")
+            if type == "media":
                 media_pks.append(pk)
-            elif type == 'folder':
+            elif type == "folder":
                 node_pks.append(pk)
             else:
-                raise NotImplementedError(f'Unknown type "{type}" returned from search query.')
+                raise NotImplementedError(
+                    f'Unknown type "{type}" returned from search query.'
+                )
 
         # and fetch in one query per type
-        media_items = {media.pk: media for media in Media.objects.filter(pk__in=media_pks)}
+        media_items = {
+            media.pk: media for media in Media.objects.filter(pk__in=media_pks)
+        }
         nodes = {node.pk: node for node in Node.objects.filter(pk__in=node_pks)}
 
         # decorate search results with thumbnails
         for hit in hits:
-            type = hit.get('type')
-            pk = hit.get('pk')
-            if type == 'media':
+            type = hit.get("type")
+            pk = hit.get("pk")
+            if type == "media":
                 m = media_items[pk]
-            elif type == 'folder':
+            elif type == "folder":
                 m = nodes[pk].representative_media
 
             asset = m.primary_image_webasset
             if asset:
-                formatted = hit.pop('_formatted', {})
-                hit.update({
-                    'thumbnail': generate_thumbnail_url(asset, width=300, height=None, operation="thumbnail")
-                })
+                formatted = hit.pop("_formatted", {})
+                hit.update(
+                    {
+                        "thumbnail": generate_thumbnail_url(
+                            asset, width=300, height=None, operation="thumbnail"
+                        )
+                    }
+                )
                 hit.update(formatted)
 
         return Response(response)
-
-

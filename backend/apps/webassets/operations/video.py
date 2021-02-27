@@ -87,4 +87,5 @@ def create_thumbnail(source, target, *args, **hints):
     ]
     subprocess.run([FFMPEG, *args], check=True)
 
-create_thumbnail.extension = 'jpg'
+
+create_thumbnail.extension = "jpg"

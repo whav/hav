@@ -10,6 +10,7 @@ from apps.hav_collections.models import Collection
 from apps.tags.models import Tag
 from apps.accounts.models import User
 
+
 class MediaType(models.Model):
     TYPE_CHOICES = [(1, "analog"), (2, "digital")]
 
@@ -200,7 +201,6 @@ class Media(models.Model):
             return primary_file.webasset_set.filter(mime_type__istartswith="image/")[0]
         except IndexError:
             return None
-
 
     objects = MediaManager()
 

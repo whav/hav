@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from .models import ArchiveFile
 
+
 class ArchiveFileType(DjangoObjectType):
 
     mime_type = graphene.String()
@@ -19,11 +20,11 @@ class ArchiveFileType(DjangoObjectType):
         return self.webasset_set.all()
 
     def resolve_download_url(self, info):
-        url = reverse('archive:download', kwargs={'pk': self.pk})
+        url = reverse("archive:download", kwargs={"pk": self.pk})
         return url
 
     def resolve_permalink(self, info):
-        url = reverse('archive:file_by_hash', kwargs={'hash': self.hash})
+        url = reverse("archive:file_by_hash", kwargs={"hash": self.hash})
         return info.context.build_absolute_uri(url)
 
     class Meta:
@@ -38,4 +39,3 @@ class Query:
     def resolve_archived_files(self, info, **kwargs):
         media_id = kwargs.get("mediaId")
         return ArchiveFile.objects.filter(media=media_id)
-

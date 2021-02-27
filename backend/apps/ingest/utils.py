@@ -59,8 +59,8 @@ def get_pk_from_csvfield(querystring, model):
     try:
         if model == MediaCreator:
             # CSV data comes as string in the form "name surname"
-            if ',' in querystring:
-                last_name, first_name = querystring.split(', ')
+            if "," in querystring:
+                last_name, first_name = querystring.split(", ")
             else:
                 try:
                     first_name, last_name = querystring.split()

@@ -18,11 +18,9 @@ class WebAssetType(DjangoObjectType):
         model = WebAsset
 
 
-
 class Query:
 
     webassets = graphene.List(WebAssetType, mediaId=graphene.String(required=True))
-
 
     def resolve_webassets(self, info, **kwargs):
         media_id = kwargs.get("mediaId")

@@ -24,7 +24,9 @@ def prepare_webasset(archive_file, extension):
     return wa
 
 
-def resolve_converter(media_type: Literal['image', 'video', 'audio'], collection_slug: str=None):
+def resolve_converter(
+    media_type: Literal["image", "video", "audio"], collection_slug: str = None
+):
     if media_type == "image":
         return [image_convert]
     if media_type == "video":
@@ -36,17 +38,22 @@ def resolve_converter(media_type: Literal['image', 'video', 'audio'], collection
         "Webasset creation not yet implemented for type {}".format(source_mime)
     )
 
+
 def create_webassets(archived_file_id):
     logger.info("Processing archive file %s" % archived_file_id)
-    af = ArchiveFile.objects.prefetch_related('media_set__collection').get(pk=archived_file_id)
+    af = ArchiveFile.objects.prefetch_related("media_set__collection").get(
+        pk=archived_file_id
+    )
 
     try:
         collection_slug = af.media_set.get().collection.slug
     except ObjectDoesNotExist:
-        logger.warning(f'''
+        logger.warning(
+            f"""
             No collection found for archive file {archived_file_id}.
             This leads to collection specific converters to be ignored.
-        ''')
+        """
+        )
         collection_slug = None
 
     source_file_name = af.file.path
@@ -66,7 +73,7 @@ def create_webassets(archived_file_id):
         )
 
     converters = resolve_converter(media_type, collection_slug)
-    logger.debug(f'Using the following converters: {converters}')
+    logger.debug(f"Using the following converters: {converters}")
 
     # get the optional hints
     hints = af._webasset_hints or {}

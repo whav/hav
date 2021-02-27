@@ -54,7 +54,9 @@ class MediaType(DjangoObjectType):
         return [self.creation_date.lower, self.creation_date.upper]
 
     def resolve_creation_timeframe_resolution(self, info):
-        resolution = calculate_date_resolution(self.creation_date.lower, self.creation_date.upper)
+        resolution = calculate_date_resolution(
+            self.creation_date.lower, self.creation_date.upper
+        )
         if resolution:
             return Resolutions(resolution).name
 

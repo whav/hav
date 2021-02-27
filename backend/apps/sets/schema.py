@@ -6,6 +6,7 @@ from .models import Node
 from apps.tags.schema import TagType
 from apps.hav_collections.schema import CollectionType
 
+
 class NodeType(DjangoObjectType):
 
     children = graphene.List(lambda: NodeType)
@@ -40,7 +41,9 @@ class NodeType(DjangoObjectType):
 
 class Query(object):
     node = graphene.Field(
-        NodeType, node_id=graphene.String(required=False), collection_slug=graphene.String(required=False)
+        NodeType,
+        node_id=graphene.String(required=False),
+        collection_slug=graphene.String(required=False),
     )
 
     def resolve_node(self, info, node_id=None, collection_slug=None, **kwargs):

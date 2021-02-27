@@ -2,7 +2,7 @@ from django.urls import reverse
 import pytest
 
 
-@pytest.mark.skip('not protected yet')
+@pytest.mark.skip("not protected yet")
 def test_graphql_view_permissions(client, admin_client):
     graphql_endpoint = reverse("api:graphql")
     resp = client.get(graphql_endpoint)

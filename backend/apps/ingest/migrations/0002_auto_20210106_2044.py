@@ -9,20 +9,22 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('media', '0001_initial'),
-        ('ingest', '0001_initial'),
-        ('sets', '0001_initial'),
+        ("media", "0001_initial"),
+        ("ingest", "0001_initial"),
+        ("sets", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='ingestqueue',
-            name='created_media_entries',
-            field=models.ManyToManyField(blank=True, editable=False, to='media.Media'),
+            model_name="ingestqueue",
+            name="created_media_entries",
+            field=models.ManyToManyField(blank=True, editable=False, to="media.Media"),
         ),
         migrations.AddField(
-            model_name='ingestqueue',
-            name='target',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='sets.node'),
+            model_name="ingestqueue",
+            name="target",
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.SET_NULL, to="sets.node"
+            ),
         ),
     ]

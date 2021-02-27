@@ -11,19 +11,39 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('archive', '0001_initial'),
+        ("archive", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='WebAsset',
+            name="WebAsset",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(storage=hav_utils.storages.ProtectedFileSystemStorage(), upload_to=apps.webassets.models.upload_to)),
-                ('mime_type', models.CharField(max_length=20)),
-                ('width', models.PositiveIntegerField(blank=True, null=True)),
-                ('height', models.PositiveIntegerField(blank=True, null=True)),
-                ('archivefile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='archive.archivefile')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "file",
+                    models.FileField(
+                        storage=hav_utils.storages.ProtectedFileSystemStorage(),
+                        upload_to=apps.webassets.models.upload_to,
+                    ),
+                ),
+                ("mime_type", models.CharField(max_length=20)),
+                ("width", models.PositiveIntegerField(blank=True, null=True)),
+                ("height", models.PositiveIntegerField(blank=True, null=True)),
+                (
+                    "archivefile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="archive.archivefile",
+                    ),
+                ),
             ],
         ),
     ]

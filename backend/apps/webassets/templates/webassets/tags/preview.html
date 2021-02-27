@@ -1,5 +1,11 @@
 {%  if preview_template %}
+    <figure>
     {% include preview_template %}
+    <figcaption>
+        {{ webasset.mime_type }}
+    </figcaption>
+    </figure>
+
 {% else %}
 <pre>
     {{ webasset.file.name }}

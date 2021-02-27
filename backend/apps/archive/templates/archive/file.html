@@ -1,5 +1,5 @@
 {% extends './base.html' %}
-{% load webassets %}
+{% load webassets frontend_urls %}
 {% block content %}
 <div>
 
@@ -10,20 +10,21 @@
 {% if media %}
 <p>
 This file is associated with the media entry {{ media.pk }}.
-Please go to the media detail page to see all available metadata.
+    Please go to the <a href="{% frontend_url media %}">media detail page</a> to see all available metadata.
 </p>
 {% endif %}
+
+{% include './file_detail_table.html' with file=object %}
+
 {% with webassets=object.webasset_set.all %}
 The following webassets have been generated for this file:
 
 {% for wa in object.webasset_set.all %}
-    <h3>{{ wa.mime_type }}</h3>
     {% webasset_preview wa %}
     <hr />
 {% endfor %}
 {% endwith %}
 
-{% include './file_detail_table.html' with file=object %}
 </div>
 
 {% endblock %}

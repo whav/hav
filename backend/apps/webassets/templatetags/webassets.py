@@ -22,7 +22,6 @@ def webasset_preview(webasset: WebAsset):
         context.update({
             'preview_template': f'{template_base}/video.html'
         })
-    # TODO: handling for other media types
     return context
 
 

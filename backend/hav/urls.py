@@ -4,12 +4,12 @@ from django.conf import settings
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import views as auth_views
-
+from django.http import HttpResponseRedirect
 from apps.archive.urls import urlpatterns as archive_urls
 from api.urls import api_urls
 
-django_admin.site.site_header = 'HAV Administration'
-django_admin.site.site_title = 'HAV Admin'
+django_admin.site.site_header = "HAV Administration"
+django_admin.site.site_title = "HAV Admin"
 
 hav_admin_patterns = (
     [
@@ -25,8 +25,8 @@ hav_admin_patterns = (
 )
 
 account_patterns = [
-    path("login/", auth_views.LoginView.as_view(), name='login'),
-    path("logout/", auth_views.LogoutView.as_view(), name='logout')
+    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
 ]
 
 urlpatterns = [
@@ -34,7 +34,7 @@ urlpatterns = [
     re_path(r"^admin/", include(hav_admin_patterns, namespace="hav_admin")),
     re_path(r"^dbadmin/", django_admin.site.urls),
     path("rq/", include("django_rq.urls")),
-    path("account/", include((account_patterns, 'auth'), namespace='auth'))
+    path("account/", include((account_patterns, "auth"), namespace="auth")),
 ]
 
 
@@ -55,12 +55,24 @@ if settings.DEBUG:
 
 def dummy_view(request):
     from django.http import Http404
-    raise Http404('This should never hit the server.')
+
+    raise Http404("This should never hit the server.")
+
+
+def frontend_redirect(request, *args, **kwargs):
+    if settings.DEBUG and request.headers.get("host") in [
+        "localhost:8000",
+        "127.0.0.1:8000",
+    ]:
+        return HttpResponseRedirect("http://127.0.0.1:3000" + request.path)
+    raise NotImplementedError()
+
 
 # namespace the whole django patterns under /d
 urlpatterns = [
     re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
-    path("archive/", include((archive_urls, "archive"), namespace='archive')),
+    path("collections/<path:p>", frontend_redirect),
+    path("archive/", include((archive_urls, "archive"), namespace="archive")),
     path("d/", include(urlpatterns)),
-    path("protected/download/<path:path>", dummy_view, name='protected_download')
+    path("protected/download/<path:path>", dummy_view, name="protected_download"),
 ]

@@ -1,6 +1,7 @@
 from typing import Literal
 import mimetypes
 import os
+import copy
 from django.core.exceptions import ObjectDoesNotExist
 from apps.archive.models import ArchiveFile
 from apps.webassets.models import WebAsset
@@ -8,7 +9,7 @@ from apps.webassets.models import WebAsset
 from .image import convert as image_convert
 from .audio import convert as audio_convert, create_waveform
 from .video import convert as video_convert, create_thumbnail
-
+from .hints import get_hints_from_tags
 
 import logging
 
@@ -35,15 +36,16 @@ def resolve_converter(
         return [create_waveform, audio_convert]
 
     raise NotImplementedError(
-        "Webasset creation not yet implemented for type {}".format(source_mime)
+        "Webasset creation not yet implemented for type {}".format(media_type)
     )
 
 
-def create_webassets(archived_file_id):
+def create_webassets(archived_file_id: int):
     logger.info("Processing archive file %s" % archived_file_id)
     af = ArchiveFile.objects.prefetch_related("media_set__collection").get(
         pk=archived_file_id
     )
+    hints = {}
 
     try:
         collection_slug = af.media_set.get().collection.slug
@@ -55,6 +57,18 @@ def create_webassets(archived_file_id):
         """
         )
         collection_slug = None
+
+    try:
+        media = af.media_set.get()
+    except ObjectDoesNotExist:
+        logger.warning(
+            f"""
+            No media item found for archive file {archived_file_id}.
+            We will be unable to generate hints from tags.
+        """
+        )
+    else:
+        hints = get_hints_from_tags(media.tags.all())
 
     source_file_name = af.file.path
     source_mime = mimetypes.guess_type(source_file_name)[0]
@@ -75,8 +89,8 @@ def create_webassets(archived_file_id):
     converters = resolve_converter(media_type, collection_slug)
     logger.debug(f"Using the following converters: {converters}")
 
-    # get the optional hints
-    hints = af._webasset_hints or {}
+    # hints set on the archived file override hints from tags
+    hints.update(af._webasset_hints or {})
 
     webassets = []
     for convert in converters:

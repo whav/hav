@@ -1,8 +1,34 @@
 import uuid
 from django.db import models
+from django.utils.functional import cached_property
 from apps.hav_collections.models import Collection
 from .sources import TAG_LABEL_TO_SOURCE, search_tag_sources
 from .fields import TagSourceChoiceField
+
+
+class TagManager(models.Manager):
+    private_prefixes = set(
+        [
+            "rotate:",
+        ]
+    )
+
+    @cached_property
+    def prefixes(self):
+        prefixes = models.Q()
+        for prefix in self.private_prefixes:
+            prefixes |= models.Q(name__startswith=prefix)
+        return prefixes
+
+
+class PublicTagManager(TagManager):
+    def get_queryset(self):
+        return super().get_queryset().exclude(self.prefixes)
+
+
+class PrivateTagManager(TagManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(self.prefixes)
 
 
 class TagSource(models.Model):
@@ -35,6 +61,10 @@ class Tag(models.Model):
     source = models.ForeignKey(
         TagSource, blank=True, null=True, on_delete=models.PROTECT
     )
+
+    objects = models.Manager()
+    public = PublicTagManager()
+    private = PrivateTagManager()
 
     @property
     def has_source(self):

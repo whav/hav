@@ -76,7 +76,6 @@ class Command(BaseCommand):
         create_webassets(archived_file.pk)
         # TODO: remove the webasset files?
         WebAsset.objects.filter(pk__in=previously_generated_webassets).delete()
-        pass
 
     def handle(self, *args, **options):
         # gather all options to limit the resulting queryset

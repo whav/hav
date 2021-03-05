@@ -170,6 +170,7 @@ class Media(models.Model):
     modified_by = models.ForeignKey(
         User,
         null=True,
+        blank=True,
         on_delete=models.PROTECT,
         related_name="modified_media",
     )

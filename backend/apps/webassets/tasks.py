@@ -21,8 +21,8 @@ def create_webassets_after_archive_task():
     previous_job_id = current_job.dependency.id
     archive_queue = get_queue("archive")
     archived_file_id = archive_queue.fetch_job(previous_job_id).result
-    webasset = create_webassets(archived_file_id)
-    return webasset.pk
+    webassets = create_webassets(archived_file_id)
+    return [wa.pk for wa in webassets]
 
 
 # @job('webassets')

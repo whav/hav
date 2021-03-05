@@ -7,6 +7,8 @@ class MediaAdmin(admin.ModelAdmin):
         "pk",
         "title",
     ]
+    list_filter = ["collection"]
+    date_hierarchy = "created_at"
 
 
 admin.site.register(MediaType)

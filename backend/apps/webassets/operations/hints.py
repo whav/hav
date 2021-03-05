@@ -26,4 +26,4 @@ def get_hints_from_tags(tags: List[Tag]):
         if result:
             hints.update(result)
 
-    return result
+    return hints

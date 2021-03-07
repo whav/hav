@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('archive', '0003_archivefile__webasset_hints'),
+        ("archive", "0003_archivefile__webasset_hints"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='archivefile',
-            name='created_at',
+            model_name="archivefile",
+            name="created_at",
             field=models.DateTimeField(auto_created=True, null=True),
         ),
     ]

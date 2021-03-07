@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 @job("webassets")
 def create(archived_file_id):
-    webasset = create_webassets(archived_file_id)
-    return webasset.pk
+    webassets = create_webassets(archived_file_id)
+    return [wa.pk for wa in webassets]
 
 
 @job("webassets")

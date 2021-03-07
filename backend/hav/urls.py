@@ -10,6 +10,7 @@ from api.urls import api_urls
 
 django_admin.site.site_header = "HAV Administration"
 django_admin.site.site_title = "HAV Admin"
+django_admin.site.disable_action("delete_selected")
 
 hav_admin_patterns = (
     [

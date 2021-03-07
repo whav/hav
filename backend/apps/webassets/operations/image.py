@@ -36,6 +36,7 @@ def convert(source, target, *args, **hints):
 
     tmp_file = None
     rotation = hints.get("rotation", None)
+
     try:
         if mimetypes.guess_type(source)[0] in raw_formats:
             with rawpy.imread(source) as raw:

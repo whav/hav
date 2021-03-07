@@ -34,7 +34,7 @@ class ArchiveFile(models.Model):
     archived_at = models.DateTimeField(null=True)
 
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
-    created_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_created=True, null=True)
 
     creators = models.ManyToManyField(
         MediaCreator, through=FileCreator, verbose_name="creators"

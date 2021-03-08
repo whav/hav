@@ -7,57 +7,71 @@ import rawpy
 
 logger = logging.getLogger(__name__)
 
-raw_formats = set(
-    [
-        # "image/x-nikon-nef",
-        "image/x-adobe-dng"
-    ]
-)
+
+def magickload(source):
+    return pyvips.Image.magickload(source)
 
 
-def extract_thumbnail(source, target):
+def extract_thumbnail(source):
     with rawpy.imread(source) as raw:
         # raises rawpy.LibRawNoThumbnailError if thumbnail missing
         # raises rawpy.LibRawUnsupportedThumbnailError if unsupported format
         thumb = raw.extract_thumb()
-    if thumb.format == rawpy.ThumbFormat.JPEG:
-        # thumb.data is already in JPEG format, save as-is
-        with open(target, "wb") as f:
-            f.write(thumb.data)
-    elif thumb.format == rawpy.ThumbFormat.BITMAP:
-        # thumb.data is an RGB numpy array, convert with imageio
-        imageio.imsave(target, thumb.data)
+
+    return pyvips.Image.new_from_buffer(thumb.data, "")
+
+
+def raw_loader(source):
+    with rawpy.imread(source) as raw:
+        rgb = raw.postprocess(
+            output_bps=16, no_auto_scale=True, no_auto_bright=True, gamma=(1, 1)
+        )
+    return pyvips.Image.new_from_buffer(rgb, "")
+
+
+def default_loader(source):
+    return pyvips.Image.new_from_file(source)
+
+
+collection_loaders = {
+    "nebesky": {
+        "image/x-nikon-nef": magickload,
+    },
+    "dumi": {"image/x-adobe-dng": extract_thumbnail},
+    # for reference: something like this should also work
+    # it will use the specified loader for all mime-types
+    # that are not defined via collection and mime-type
+    # "image/x-adobe-dng": raw_loader
+}
 
 
 def convert(source, target, *args, **hints):
+
+    format = mimetypes.guess_type(source)[0]
+
     logger.debug(
-        f"Image convert called with source {source} ({mimetypes.guess_type(source)[0]}), target {target}."
+        f"Image convert called with source {source} (mime: {format}), target {target}."
     )
 
-    tmp_file = None
     rotation = hints.get("rotation", None)
+    collection = hints.get("collection", None)
 
     try:
-        if mimetypes.guess_type(source)[0] in raw_formats:
-            with rawpy.imread(source) as raw:
-                rgb = raw.postprocess(
-                    output_bps=16, no_auto_scale=True, no_auto_bright=True, gamma=(1, 1)
-                )
+        loader = collection_loaders[collection][format]
+    except KeyError:
+        # try again with just the format as a hint
+        # and the default loader as a fallback
+        loader = collection_loaders.get(format, default_loader)
 
-            tmp_file = NamedTemporaryFile(suffix=".tiff")
-            imageio.imsave(tmp_file, rgb, format="tiff")
-            tmp_file.seek(0)
-            logger.debug(f"Image convert created temp file at {tmp_file.name}.")
-            source = tmp_file.name
+    logger.debug(f"Determined image loader: {loader}")
+    image = loader(source)
 
-        # actually do the conversion
-        image = pyvips.Image.new_from_file(source)
-        if rotation:
-            image = image.rotate(rotation)
-        image.write_to_file(target)
-    finally:
-        if tmp_file:
-            tmp_file.close()
+    # apply hints
+    if rotation:
+        image = image.rotate(rotation)
+
+    # write to target
+    image.write_to_file(target)
 
 
 convert.extension = ".jpg"

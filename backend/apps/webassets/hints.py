@@ -1,10 +1,10 @@
-from typing import Literal
+from typing import Literal, Optional
 from pydantic import BaseModel, ValidationError
 from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 class ImageHints(BaseModel):
-    rotation: Literal[0, 90, 180, 270]
+    rotation: Optional[Literal[0, 90, 180, 270]]
 
 
 def validate_webasset_hints(mime_type, value):

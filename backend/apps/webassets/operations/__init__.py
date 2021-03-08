@@ -45,7 +45,6 @@ def create_webassets(archived_file_id: int):
     af = ArchiveFile.objects.prefetch_related("media_set__collection").get(
         pk=archived_file_id
     )
-    hints = {}
 
     try:
         collection_slug = af.media_set.get().collection.slug
@@ -58,6 +57,8 @@ def create_webassets(archived_file_id: int):
         )
         collection_slug = None
 
+    hints = {"collection": collection_slug}
+
     try:
         media = af.media_set.get()
     except ObjectDoesNotExist:
@@ -68,7 +69,7 @@ def create_webassets(archived_file_id: int):
         """
         )
     else:
-        hints = get_hints_from_tags(media.tags.all())
+        hints.update(get_hints_from_tags(media.tags.all()))
 
     source_file_name = af.file.path
     source_mime = mimetypes.guess_type(source_file_name)[0]

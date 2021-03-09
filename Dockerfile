@@ -29,7 +29,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y libpq-dev gcc ffmpeg libimage-exiftool-perl libvips-dev && \
+    apt-get install -y libpq-dev gcc ffmpeg libimage-exiftool-perl libvips-dev ufraw-batch && \
     apt-get autoremove && \
     apt-get autoclean
 

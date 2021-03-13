@@ -10,10 +10,8 @@ const iconMapping = {
 
 const Gallery = ({ title, children = null, divide = false }) => {
   return (
-    <div className={`mt-2 ${divide ? "sm:border-l" : "border-0"}`}>
-      {title && (
-        <h2 className={`inline-block text-lg text-gray-500`}>{title}</h2>
-      )}
+    <div className={`mt-2 pl-4`}>
+      {title && <h2 className={`inline-block text-lg font-bold`}>{title}</h2>}
       <div className={`flex flex-row flex-wrap justify-start items-stretch`}>
         {children}
       </div>
@@ -29,6 +27,7 @@ const GalleryMedia = ({
   caption = "",
   aspectRatio = 1,
   type = "",
+  displayCaption = true,
 }) => {
   const Icon = iconMapping[type] || null;
   return (
@@ -43,7 +42,8 @@ const GalleryMedia = ({
         className="border border-gray-100"
       />
       <figcaption className="text-sm">
-        {Icon ? <Icon className="inline-block" /> : null} {caption}
+        {displayCaption && Icon ? <Icon className="inline-block" /> : null}{" "}
+        {displayCaption ? caption : null}
       </figcaption>
     </figure>
   );

@@ -38,10 +38,20 @@ const CollectionBrowser = (props) => {
     tags = [],
   } = data;
 
+  // initial grouping: all media entries in one (empty) key
   let groupedMedia = { "": mediaEntries };
+
+  // check if all media entries have a grouper attribute
   const isGrouped = mediaEntries.every((m) => m.grouper);
+  // TODO: find a better way to remove captions
+  let displayMediaCaption = true;
+
+  // and if so, group by it
   if (isGrouped) {
     groupedMedia = groupBy(mediaEntries, (m) => m.grouper);
+    displayMediaCaption = !mediaEntries.every(
+      (ma) => ma.caption === ma.grouper
+    );
   }
 
   return (
@@ -89,8 +99,9 @@ const CollectionBrowser = (props) => {
                 <GalleryMedia
                   src={media.thumbnailUrl}
                   type={media.type}
-                  title={media.title}
+                  title={media.title === media.grouper ? "" : media.title}
                   caption={`${media.caption}`}
+                  displayCaption={displayMediaCaption}
                   aspectRatio={media.aspectRatio}
                 />
               </a>

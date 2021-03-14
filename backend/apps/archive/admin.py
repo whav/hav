@@ -51,6 +51,7 @@ class ArchiveFileModelAdmin(admin.ModelAdmin):
     ]
     list_filter = [CollectionListFilter, FileExtensionFilter]
     actions = ["recreate_webassets"]
+    search_fields = ["original_filename"]
 
     def get_queryset(self, request):
         return ArchiveFile.objects.prefetch_related("media_set__collection").all()

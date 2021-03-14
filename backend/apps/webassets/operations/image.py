@@ -37,7 +37,7 @@ collection_loaders = {
     "nebesky": {
         "image/x-nikon-nef": magickload,
     },
-    "dumi": {"image/x-adobe-dng": extract_thumbnail},
+    "ritual-space-mimesis": {"image/x-adobe-dng": extract_thumbnail},
     # for reference: something like this should also work
     # it will use the specified loader for all mime-types
     # that are not defined via collection and mime-type

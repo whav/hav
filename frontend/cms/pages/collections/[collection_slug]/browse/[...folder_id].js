@@ -88,6 +88,7 @@ const CollectionBrowser = (props) => {
           );
         })}
       </Gallery>
+
       {Object.entries(groupedMedia).map(([title, mediaItems], index) => (
         <Gallery title={title} divide={isGrouped}>
           {mediaItems.map((media) => (

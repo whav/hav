@@ -35,14 +35,21 @@ const GalleryMedia = ({
       className={`p-4 rounded-sm border-transparent hover:bg-gray-100 border`}
       style={{ maxWidth: aspectRatio < 1 ? 200 : 250 }}
     >
-      <img
-        src={src}
-        loading="lazy"
-        title={title || caption}
-        className="border border-gray-100"
-      />
+      <div className={`relative`}>
+        <img
+          src={src}
+          loading="lazy"
+          title={title || caption}
+          className="border border-gray-100"
+        />
+        <div
+          className={`absolute top-0 left-0 bg-gray-100 bg-opacity-90 rounded-full p-1 transform -translate-x-1/4 -translate-y-1/4 border border-gray-100`}
+        >
+          <Icon />
+        </div>
+      </div>
+
       <figcaption className="text-sm">
-        {displayCaption && Icon ? <Icon className="inline-block" /> : null}{" "}
         {displayCaption ? caption : null}
       </figcaption>
     </figure>

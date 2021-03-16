@@ -69,7 +69,8 @@ def convert(source, target, *args, **hints):
     # apply hints
     if rotation:
         image = image.rotate(rotation)
-
+    else:
+        image = image.autorot()
     # write to target
     image.write_to_file(target)
 

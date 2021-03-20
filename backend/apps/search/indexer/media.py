@@ -7,12 +7,17 @@ def index(media: Media):
     type = ItemType.media
     ancestors = media.set.get_ancestors().values_list("pk", flat=True)
     parents = [*list(ancestors), media.set.pk]
+    archivefiles = media.files.all()
+    filenames = set()
+    for file in archivefiles:
+        filenames.add(file.original_filename)
+
     return SearchIndexItem(
         id=f"{type}_{media.pk}",
         type=type,
         pk=media.pk,
         title=media.title,
-        additional_titles=[media.original_media_identifier]
+        additional_titles=[media.original_media_identifier, *list(filenames)]
         if media.original_media_identifier
         else [],
         body=media.description,

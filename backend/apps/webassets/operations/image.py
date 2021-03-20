@@ -5,37 +5,46 @@ import mimetypes
 import imageio
 import rawpy
 
+
 logger = logging.getLogger(__name__)
 
 
-def magickload(source):
-    return pyvips.Image.magickload(source)
+def magickload(source, pipeline):
+    img = pyvips.Image.magickload(source)
+    return pipeline(img)
 
 
-def extract_thumbnail(source):
+def extract_thumbnail(source, pipeline):
     with rawpy.imread(source) as raw:
         # raises rawpy.LibRawNoThumbnailError if thumbnail missing
         # raises rawpy.LibRawUnsupportedThumbnailError if unsupported format
         thumb = raw.extract_thumb()
 
-    return pyvips.Image.new_from_buffer(thumb.data, "")
+    img = pyvips.Image.new_from_buffer(thumb.data, "")
+    return pipeline(img)
 
 
-def raw_loader(source):
-    with rawpy.imread(source) as raw:
-        rgb = raw.postprocess(
-            output_bps=16, no_auto_scale=True, no_auto_bright=True, gamma=(1, 1)
-        )
-    return pyvips.Image.new_from_buffer(rgb, "")
+def raw_loader(source, pipeline):
+    with NamedTemporaryFile(suffix=".tiff") as output:
+        with rawpy.imread(source) as raw:
+            rgb = raw.postprocess(
+                use_camera_wb=True,
+            )
+
+            imageio.imsave(output.name, rgb)
+            img = pyvips.Image.new_from_file(output.name)
+
+            return pipeline(img)
 
 
-def default_loader(source):
-    return pyvips.Image.new_from_file(source)
+def default_loader(source, pipeline):
+    img = pyvips.Image.new_from_file(source)
+    return pipeline(img)
 
 
 collection_loaders = {
     "nebesky": {
-        "image/x-nikon-nef": magickload,
+        "image/x-nikon-nef": extract_thumbnail,
     },
     "ritual-space-mimesis": {"image/x-adobe-dng": extract_thumbnail},
     # for reference: something like this should also work
@@ -57,6 +66,7 @@ def convert(source, target, *args, **hints):
     collection = hints.get("collection", None)
 
     try:
+        # try to get a collection specific loader for this mime type
         loader = collection_loaders[collection][format]
     except KeyError:
         # try again with just the format as a hint
@@ -64,15 +74,17 @@ def convert(source, target, *args, **hints):
         loader = collection_loaders.get(format, default_loader)
 
     logger.debug(f"Determined image loader: {loader}")
-    image = loader(source)
 
-    # apply hints
-    if rotation:
-        image = image.rotate(rotation)
-    else:
-        image = image.autorot()
-    # write to target
-    image.write_to_file(target)
+    def vips_pipeline(image):
+        # apply hints
+        if rotation:
+            image = image.rotate(rotation)
+        else:
+            image = image.autorot()
+        # write to target
+        image.write_to_file(target)
+
+    loader(source, vips_pipeline)
 
 
 convert.extension = ".jpg"

@@ -85,7 +85,7 @@ services:
         command: /venv/bin/python manage.py rqworker default
 
     imaginary:
-        image: h2non/imaginary:1.0.18
+        image: h2non/imaginary:1.2.4
         user: ${DJANGO_UID}
         environment:
             - URL_SIGNATURE_KEY=${IMAGINARY_SECRET}

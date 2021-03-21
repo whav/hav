@@ -125,62 +125,65 @@ const NavBar = () => {
   const collection = data.find((c) => c.slug === collection_slug);
 
   return (
-    <div className="md:flex md:flex-col md:h-full p-4 text-xl font-serif">
-      <div className="flex flex-row justify-between">
-        <div className="flex-grow">
-          <Link href="/">
-            <a>
-              <img
-                className="block h-8 md:h-20 w-auto md:mx-auto"
-                src="/logos/hav.svg"
-              />
-            </a>
-          </Link>
+    <div className="md:h-full flex flex-col">
+      <div className="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl font-serif">
+        <div className="flex flex-row justify-between">
+          <div className="flex-grow">
+            <Link href="/">
+              <a>
+                <img
+                  className="block h-8 md:h-20 w-auto md:mx-auto"
+                  src="/logos/hav.svg"
+                />
+              </a>
+            </Link>
+          </div>
+          <div className="flex-none text-2xl md:hidden">
+            <button onClick={() => setNavVisibility(!navVisible)}>
+              {navVisible ? <CloseIcon /> : <MenuIcon />}
+            </button>
+          </div>
         </div>
-        <div className="flex-none text-2xl md:hidden">
-          <button onClick={() => setNavVisibility(!navVisible)}>
-            {navVisible ? <CloseIcon /> : <MenuIcon />}
-          </button>
-        </div>
+
+        <nav
+          className={`md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right ${
+            navVisible ? "" : "hidden"
+          }`}
+        >
+          {collection ? (
+            <CollectionNav collection={collection} />
+          ) : (
+            <GlobalNav collections={data} />
+          )}
+
+          {/* Bottom nav */}
+          <div>
+            <div className="md-mb-4">
+              <AccountNav />
+            </div>
+            <div className="sm:mt-32 text-base text-gray-500">
+              <ul>
+                <li className="flex flex-row flex-wrap justify-between">
+                  <img className="block h-8 w-auto" src="/logos/cirdis.svg" />
+                  <img className="block h-8 w-auto" src="/logos/univie.svg" />
+                </li>
+                <li className="flex flex-row flex-wrap justify-between md:mt-10">
+                  <a
+                    className="block"
+                    href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf"
+                  >
+                    Privacy Policy
+                  </a>{" "}
+                  <Link href="/imprint/">
+                    <a className="block">Imprint</a>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
       </div>
-
-      <nav
-        className={`md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right ${
-          navVisible ? "" : "hidden"
-        }`}
-      >
-        {collection ? (
-          <CollectionNav collection={collection} />
-        ) : (
-          <GlobalNav collections={data} />
-        )}
-
-        {/* Bottom nav */}
-        <div>
-          <div className="md-mb-4">
-            <AccountNav />
-          </div>
-          <div className="sm:mt-32 text-base text-gray-500">
-            <ul>
-              <li className="flex flex-row flex-wrap justify-between">
-                <img className="block h-8 w-auto" src="/logos/cirdis.svg" />
-                <img className="block h-8 w-auto" src="/logos/univie.svg" />
-              </li>
-              <li className="flex flex-row flex-wrap justify-between md:mt-10">
-                <a
-                  className="block"
-                  href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf"
-                >
-                  Privacy Policy
-                </a>{" "}
-                <Link href="/imprint/">
-                  <a className="block">Imprint</a>
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+      <div className="flex-grow">{/* I am needed for sticky to work */}</div>
     </div>
   );
 };

@@ -12,15 +12,20 @@ RUN yarn build
 
 FROM node:12 as django-styles
 
-WORKDIR /code/
+WORKDIR /code/frontend/django-styles/
 
 # Link up the required build files
-COPY ./frontend/django-styles/package.json ./frontend/django-styles/package-lock.json ./styles/
-
-WORKDIR /code/styles/
+COPY ./frontend/django-styles/package.json ./frontend/django-styles/package-lock.json ./
 RUN npm install
-COPY ./frontend/django-styles .
-COPY ./backend/templates ./templates
+
+# now copy the backend folder where the django
+# templates live
+WORKDIR /code
+COPY . .
+RUN ls -lah
+
+WORKDIR /code/frontend/django-styles/
+
 ENV NODE_ENV "production"
 RUN npm run build
 

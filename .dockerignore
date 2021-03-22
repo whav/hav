@@ -9,4 +9,8 @@ compose/
 .idea
 **/*.pyc
 **/__pycache__/**
-
+**/.venv
+**/.pytest_cache
+**/*.egg-info
+.env
+env_files/

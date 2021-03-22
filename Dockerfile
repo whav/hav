@@ -21,6 +21,7 @@ RUN npm install
 # now copy the backend folder where the django
 # templates live
 WORKDIR /code
+# copy the whole source folder
 COPY . .
 RUN ls -lah
 
@@ -57,7 +58,7 @@ WORKDIR /hav/frontend
 COPY --from=admin-ui /code/admin/build ./admin/build
 
 # copy the npm generated styles
-COPY --from=django-styles /code/styles/build/ ./django-styles/build
+COPY --from=django-styles /code/frontend/django-styles/build ./django-styles/build
 
 # install all the python stuff
 RUN pip install -U poetry==$POETRY_VERSION

@@ -8,10 +8,10 @@ from .indexer.nodes import index as index_node
 
 
 @receiver(post_save, sender=Media)
-def media_update(sender, **kwargs):
-    django_rq.enqueue(index_media, sender.pk)
+def media_update(sender, instance, **kwargs):
+    django_rq.enqueue(index_media, instance.pk)
 
 
 @receiver(post_save, sender=Node)
-def node_update(sender, **kwargs):
-    django_rq.enqueue(index_node, sender.pk)
+def node_update(sender, instance, **kwargs):
+    django_rq.enqueue(index_node, instance.pk)

@@ -1,9 +1,13 @@
 from apps.sets.models import Node
 import time
+from typing import Union
 from . import SearchIndexItem, ItemType
 
 
-def index(node: Node):
+def index(node: Union[Node, int]):
+    if isinstance(node, int):
+        node = Node.objects.get(pk=node)
+
     type = ItemType.folder
     ancestors = node.get_ancestors().values_list("pk", flat=True)
     collection = node.get_collection()

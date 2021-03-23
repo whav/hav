@@ -1,9 +1,12 @@
 from apps.media.models import Media
 import time
+from typing import Union
 from . import SearchIndexItem, ItemType
 
 
-def index(media: Media):
+def index(media: Union[Media, int]):
+    if isinstance(media, int):
+        media = Media.objects.get(pk=media)
     type = ItemType.media
     ancestors = media.set.get_ancestors().values_list("pk", flat=True)
     parents = [*list(ancestors), media.set.pk]

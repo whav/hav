@@ -18,7 +18,10 @@ cd_description = "HAV:ContentDescription:Description"
 cd_tags = "HAV:ContentDescription:Tags"
 cd_country = "HAV:ContentDescription:Country"
 cd_provincestate = "HAV:ContentDescription:Province-State"
+cd_municipality = "HAV:ContentDescription:Municipality"
 cd_city = "HAV:ContentDescription:City"
+cd_location = "HAV:ContentDescription:Location"
+cd_locationdetail = "HAV:ContentDescription:LocationDetail"
 cd_author = "HAV:Description:Author"
 # new stuff
 md_embargoend = "HAV:MediaDescription:EmbargoEndDate"
@@ -26,6 +29,7 @@ md_isprivate = "HAV:MediaDescription:IsPrivate"
 cd_gpsdata = "HAV:ContentDescription:GPSData"
 md_rotate = "HAV:MediaDescription:Rotate"
 md_maxres = "HAV:MediaDescription:MaxResolution"
+md_shorthandle = "HAV:MediaDescription:ShortHandleOverride"
 
 
 class SanityCheckError(Exception):
@@ -116,7 +120,7 @@ def get_or_create_subnodes_from_path(relative_path, target_node):
     """take string containing a relative path and a targed parent node;
     get/create subnodes for each path segment and return the last node
     """
-    for path_segment in os.path.dirname(os.path.normpath(relative_path)).split(os.sep):
+    for path_segment in relative_path.split(os.sep):
         new_node, created = get_or_create_node(path_segment, target_node)
         if created:
             print(f"Node {new_node} has been created in parent-node {target_node}")
@@ -126,20 +130,26 @@ def get_or_create_subnodes_from_path(relative_path, target_node):
 
 def media_data_from_csv(source_id, csv_line_dict, collection):
     # throw all extra fields into tags for the time being
-    tags = csv_line_dict.get(cd_tags, []).split(", ")
+    tags = csv_line_dict.get(cd_tags, []).split("\n")
     extratags = [
         ("country", csv_line_dict.get(cd_country)),
         ("province/state", csv_line_dict.get(cd_provincestate)),
+        ("municipality", csv_line_dict.get(cd_municipality)),
         ("city", csv_line_dict.get(cd_city)),
-        ("description_author", csv_line_dict.get(cd_author)),
+        ("location", csv_line_dict.get(cd_location)),
+        ("location_detail", csv_line_dict.get(cd_locationdetail)),
+        ("media_shorthandle", csv_line_dict.get(md_shorthandle)),
         ("rotate", csv_line_dict.get(md_rotate)),
-        ("maxres", csv_line_dict.get(md_maxres)),
+        ("resolution_limit", csv_line_dict.get(md_maxres)),
     ]
+    extratags.extend([("description_author", _da) for _da
+                     in csv_line_dict.get(cd_author).split("\n") if _da])
     tags.extend(f"{e[0]}:{e[1]}" for e in extratags if e[1])
 
     # try splitting cd_gpsdata in lat and lon
     try:
         lat, lon = csv_line_dict[cd_gpsdata].split(", ")
+        lat, lon = round(float(lat), 6), round(float(lon), 6)
     except ValueError as err:
         print(err)
         lat, lon = None, None

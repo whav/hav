@@ -43,9 +43,6 @@ class Command(BaseCommand):
             action="store_true",
             help="continue import run despite Error 500 return-codes",
         )
-        parser.add_argument(
-            "--dry-run", nargs="?", dest="dry_run", const=True, default=False
-        )
 
     def handle(self, *args, **options):
         timestamp = int(datetime.now().timestamp())
@@ -90,7 +87,7 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
                     )
 
             # clean up Sourcefile path given in CSV
-            rel_file_path = str(Path(line["SourceFile"]))
+            rel_file_path = os.path.normpath(line["SourceFile"])
 
             source_id = (
                 base_url
@@ -99,8 +96,10 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
                 + "=/"
             )
             media_data = media_data_from_csv(source_id, line, collection)
+            target_node_path = os.path.normpath(line["TargetNodePath"]) if line.get("TargetNodePath") \
+                else os.path.dirname(rel_file_path)
             target_file_node = get_or_create_subnodes_from_path(
-                rel_file_path, target_parent_node
+                target_node_path, target_parent_node
             )
             if not target_q or not target_q.target == target_file_node:
                 target_q = IngestQueue.objects.create(

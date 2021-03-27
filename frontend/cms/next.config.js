@@ -31,6 +31,7 @@ const config = withMDX({
     return [
       ...build_redirects("d"),
       ...build_redirects("archive"),
+      ...build_redirects("media"),
       ...build_redirects("account"),
       ...build_redirects("media"),
       ...build_redirects("static"),

@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import views as auth_views
 from django.http import HttpResponseRedirect
 from apps.archive.urls import urlpatterns as archive_urls
+from apps.media.urls import urlpatterns as media_urls
 from api.urls import api_urls
 
 django_admin.site.site_header = "HAV Administration"
@@ -74,6 +75,7 @@ urlpatterns = [
     re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
     path("collections/<path:p>", frontend_redirect),
     path("archive/", include((archive_urls, "archive"), namespace="archive")),
+    path("media/", include((media_urls, "media"), namespace="media")),
     path("d/", include(urlpatterns)),
     path("protected/download/<path:path>", dummy_view, name="protected_download"),
 ]

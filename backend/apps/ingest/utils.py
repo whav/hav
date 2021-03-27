@@ -142,8 +142,13 @@ def media_data_from_csv(source_id, csv_line_dict, collection):
         ("rotate", csv_line_dict.get(md_rotate)),
         ("resolution_limit", csv_line_dict.get(md_maxres)),
     ]
-    extratags.extend([("description_author", _da) for _da
-                     in csv_line_dict.get(cd_author).split("\n") if _da])
+    extratags.extend(
+        [
+            ("description_author", _da)
+            for _da in csv_line_dict.get(cd_author).split("\n")
+            if _da
+        ]
+    )
     tags.extend(f"{e[0]}:{e[1]}" for e in extratags if e[1])
 
     # try splitting cd_gpsdata in lat and lon

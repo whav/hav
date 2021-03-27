@@ -96,8 +96,11 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
                 + "=/"
             )
             media_data = media_data_from_csv(source_id, line, collection)
-            target_node_path = os.path.normpath(line["TargetNodePath"]) if line.get("TargetNodePath") \
+            target_node_path = (
+                os.path.normpath(line["TargetNodePath"])
+                if line.get("TargetNodePath")
                 else os.path.dirname(rel_file_path)
+            )
             target_file_node = get_or_create_subnodes_from_path(
                 target_node_path, target_parent_node
             )

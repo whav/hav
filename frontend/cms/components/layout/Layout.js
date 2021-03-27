@@ -2,9 +2,7 @@ import React from "react";
 
 const Wrapper = ({ children }) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-stretch overflow-x-hidden">
-      {children}
-    </div>
+    <div className="flex flex-col md:flex-row md:items-stretch">{children}</div>
   );
 };
 

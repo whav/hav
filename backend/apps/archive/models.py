@@ -46,6 +46,8 @@ class ArchiveFile(models.Model):
         License, null=True, blank=True, on_delete=models.PROTECT
     )
 
+    prohibit_download = models.BooleanField(default=False, blank=True)
+
     _webasset_hints = models.JSONField(default=dict)
 
     def get_license(self):

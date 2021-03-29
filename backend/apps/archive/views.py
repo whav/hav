@@ -1,7 +1,7 @@
 from django.views.generic import DetailView
 from django.urls import reverse
 from .models import ArchiveFile
-from django.http.response import HttpResponse, Http404
+from django.http.response import HttpResponse, Http404, HttpResponseForbidden
 import mimetypes
 from pathlib import Path
 from apps.media.models import Media
@@ -46,6 +46,15 @@ class ArchiveFileDownloadView(DetailView):
 
     def get(self, request, *args, **kwargs):
         archive_file = self.get_object()
+
+        if archive_file.prohibit_download:
+            return HttpResponseForbidden(
+                """
+                Downloading of this archived file has been blocked by the administrators.
+                Please contact the collection administrator for more information on this issue.
+            """
+            )
+
         filename = archive_file.file.name
         # url = f'/protected/download/{filename}'
         url = reverse("protected_download", kwargs={"path": filename})

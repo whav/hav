@@ -112,7 +112,9 @@ class MediaManager(models.Manager):
 
 class Media(models.Model):
 
-    short_code = models.SlugField(null=True, default=None, unique=True, blank=True)
+    short_code = models.SlugField(
+        null=True, default=None, unique=True, blank=True, max_length=6
+    )
     title = models.CharField("title", max_length=255, blank=True)
     description = models.TextField("description", blank=True)
 

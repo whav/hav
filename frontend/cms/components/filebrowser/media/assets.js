@@ -52,11 +52,9 @@ const Video = ({ webasset, imageWebasset = {}, ...props }) => {
 const Audio = (props) => <Video {...props} />;
 
 const ArchiveFile = ({ mimeType, webassets, ...props }) => {
-  // console.log(mimeType, props);
-  const type = mimeType.split("/")[0];
+  const type = mimeType?.split("/")[0];
   const webasset = getWebassetForType(type, webassets);
   const imageWebasset = getWebassetForType("image", webassets);
-  console.log(type, webassets);
 
   if (webasset === undefined) {
     console.warn(

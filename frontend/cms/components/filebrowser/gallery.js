@@ -1,5 +1,11 @@
 import React from "react";
-import { FolderIcon, SoundIcon, VideoIcon, ImageIcon } from "components/icons";
+import {
+  FolderIcon,
+  SoundIcon,
+  VideoIcon,
+  ImageIcon,
+  QuestionMarkIcon,
+} from "components/icons";
 
 const iconMapping = {
   folder: FolderIcon,
@@ -10,7 +16,7 @@ const iconMapping = {
 
 const Gallery = ({ title, children = null, divide = false }) => {
   return (
-    <div className={`mt-2 pl-4`}>
+    <div className={`mt-2 -mx-4`}>
       {title && <h2 className={`inline-block text-lg font-bold`}>{title}</h2>}
       <div className={`flex flex-row flex-wrap justify-start items-stretch`}>
         {children}
@@ -29,7 +35,8 @@ const GalleryMedia = ({
   type = "",
   displayCaption = true,
 }) => {
-  const Icon = iconMapping[type] || null;
+  const Icon = iconMapping[type] || QuestionMarkIcon;
+
   return (
     <figure
       className={`p-4 rounded-sm border-transparent hover:bg-gray-100 border`}

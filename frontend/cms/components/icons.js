@@ -10,4 +10,5 @@ export {
   HiFolder as FolderIcon,
   HiSearch as SearchIcon,
   HiOutlineDownload as DownloadIcon,
+  HiQuestionMarkCircle as QuestionMarkIcon,
 } from "react-icons/hi";

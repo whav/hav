@@ -40,7 +40,7 @@ const GalleryMedia = ({
   return (
     <figure
       className={`p-4 rounded-sm border-transparent hover:bg-gray-100 border`}
-      style={{ maxWidth: aspectRatio < 1 ? 200 : 250 }}
+      style={{ maxWidth: aspectRatio < 1 ? 200 : 250, minWidth: 200 }}
     >
       <div className={`relative`}>
         <img

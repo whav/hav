@@ -14,6 +14,12 @@ import { Header } from "components/filebrowser/Header";
 import Head from "next/head";
 import groupBy from "lodash/groupBy";
 
+const FallbackMedia = {
+  thumbnailUrl: "/fallback.svg",
+  title: "fallback image",
+  aspectRatio: 1,
+};
+
 const CollectionBrowser = (props) => {
   const router = useRouter();
 
@@ -70,7 +76,7 @@ const CollectionBrowser = (props) => {
       <TagList tags={tags} />
       <Gallery>
         {children.map((c) => {
-          const media = c.representativeMedia;
+          const media = c.representativeMedia || FallbackMedia;
           return (
             <Link
               key={`set-${c.id}`}

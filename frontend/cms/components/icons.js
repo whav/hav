@@ -11,4 +11,5 @@ export {
   HiSearch as SearchIcon,
   HiOutlineDownload as DownloadIcon,
   HiQuestionMarkCircle as QuestionMarkIcon,
+  HiLockClosed as LockIcon,
 } from "react-icons/hi";

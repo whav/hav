@@ -1,5 +1,6 @@
 import React from "react";
 import { default as NextImage } from "next/image";
+import { FallbackMedia } from "../../shared/fallback";
 
 const getWebassetForType = (type, webassets = []) => {
   return webassets.find((wa) => type === wa.mimeType.split("/")[0]);
@@ -26,7 +27,7 @@ const Image = (props) => {
   }
   return (
     <NextImage
-      src={url}
+      src={url || FallbackMedia.thumbnailUrl}
       title={title}
       alt={title}
       layout="responsive"

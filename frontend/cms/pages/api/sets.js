@@ -37,6 +37,7 @@ export default async (req, res) => {
           thumbnailUrl
           aspectRatio
           type
+          locked
           grouper
         }
       }

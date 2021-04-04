@@ -9,6 +9,7 @@ from apps.sets.models import Node
 from apps.hav_collections.models import Collection
 from apps.tags.models import Tag
 from apps.accounts.models import User
+from datetime import date
 
 
 class MediaType(models.Model):
@@ -187,6 +188,15 @@ class Media(models.Model):
 
     def __str__(self):
         return "Media ID {}".format(self.pk)
+
+    @cached_property
+    def is_public(self):
+        if self.is_private:
+            return False
+        if self.embargo_end_date and self.embargo_end_date <= date.today():
+            return False
+
+        return True
 
     @cached_property
     def primary_file(self):

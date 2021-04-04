@@ -2,7 +2,6 @@ from itertools import chain
 from datetime import datetime, date
 import graphene
 from django.db.models import Q, F
-from django.db.models.functions import Lower
 from graphene_django.types import DjangoObjectType
 
 from apps.sets.models import Node, group_media_queryset
@@ -15,6 +14,9 @@ from hav_utils.imaginary import (
 )
 from hav_utils.daterange import Resolutions, calculate_date_resolution, format_datetime
 from .models import Media, MediaCreator, License, MediaType as DBMediaType
+from django.templatetags.static import static
+
+fallback_url = static("webassets/no_image_available.svg")
 
 
 class MediaType(DjangoObjectType):
@@ -25,6 +27,8 @@ class MediaType(DjangoObjectType):
 
     creation_timeframe = graphene.List(graphene.DateTime)
     creation_timeframe_resolution = graphene.Field(graphene.String, required=False)
+
+    locked = graphene.Field(graphene.Boolean)
 
     tags = graphene.List(TagType)
 
@@ -38,42 +42,33 @@ class MediaType(DjangoObjectType):
 
     grouper = graphene.Field(graphene.String, required=False)
 
-    def resolve_height(self, info):
+    def resolve_locked(self, _):
+        return not self.is_public
+
+    def resolve_height(self, _):
         asset = self.primary_image_webasset
         if asset:
             return asset.height
 
-    def resolve_width(self, info):
+    def resolve_width(self, _):
         asset = self.primary_image_webasset
         if asset:
             return asset.width
 
-    def resolve_aspect_ratio(self, info):
+    def resolve_aspect_ratio(self, _):
         asset = self.primary_image_webasset
         if asset and asset.width and asset.height:
             return asset.width / asset.height
 
-    def resolve_creation_timeframe(self, info):
+    def resolve_creation_timeframe(self, _):
         return [self.creation_date.lower, self.creation_date.upper]
 
-    def resolve_creation_timeframe_resolution(self, info):
+    def resolve_creation_timeframe_resolution(self, _):
         resolution = calculate_date_resolution(
             self.creation_date.lower, self.creation_date.upper
         )
         if resolution:
             return Resolutions(resolution).name
-
-    def resolve_src(self, info):
-        asset = self.primary_image_webasset
-        if asset:
-            return generate_src_url(asset)
-        return ""
-
-    def resolve_srcset(self, info):
-        asset = self.primary_image_webasset
-        if asset:
-            return [f"{src[1]} {src[0]}w" for src in generate_srcset_urls(asset)]
-        return []
 
     def resolve_type(self, info):
         if self.primary_file:
@@ -85,13 +80,31 @@ class MediaType(DjangoObjectType):
     def resolve_tags(self, info):
         return self.tags.all()
 
+    # TODO: clean up the is_private / is_public handling in these methods
     def resolve_thumbnail_url(self, info):
+        if not self.is_public:
+            return fallback_url
+
         asset = self.primary_image_webasset
         if asset:
             return generate_thumbnail_url(
                 asset, width=300, height=None, operation="thumbnail"
             )
-        return ""
+        return fallback_url
+
+    def resolve_src(self, _):
+        if self.is_public:
+            asset = self.primary_image_webasset
+            if asset:
+                return generate_src_url(asset)
+        return fallback_url
+
+    def resolve_srcset(self, _):
+        if self.is_public:
+            asset = self.primary_image_webasset
+            if asset:
+                return [f"{src[1]} {src[0]}w" for src in generate_srcset_urls(asset)]
+        return []
 
     def resolve_ancestors(self, info):
         return chain(self.set.collection_ancestors, [self.set])

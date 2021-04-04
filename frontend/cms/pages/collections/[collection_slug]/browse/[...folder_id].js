@@ -13,12 +13,7 @@ import { TagList } from "components/tags";
 import { Header } from "components/filebrowser/Header";
 import Head from "next/head";
 import groupBy from "lodash/groupBy";
-
-const FallbackMedia = {
-  thumbnailUrl: "/fallback.svg",
-  title: "fallback image",
-  aspectRatio: 1,
-};
+import { FallbackMedia } from "components/shared/fallback";
 
 const CollectionBrowser = (props) => {
   const router = useRouter();
@@ -97,43 +92,28 @@ const CollectionBrowser = (props) => {
 
       {Object.entries(groupedMedia).map(([title, mediaItems], index) => (
         <Gallery title={title} divide={isGrouped}>
-          {mediaItems.map((media) => (
-            <Link
-              key={`media-${media.id}`}
-              href={`/collections/${collection_slug}/media/${media.id}/`}
-            >
-              <a>
-                <GalleryMedia
-                  src={media.thumbnailUrl}
-                  type={media.type}
-                  title={media.title === media.grouper ? "" : media.title}
-                  caption={`${media.caption}`}
-                  displayCaption={displayMediaCaption}
-                  aspectRatio={media.aspectRatio}
-                />
-              </a>
-            </Link>
-          ))}
+          {mediaItems.map((media) => {
+            return (
+              <Link
+                key={`media-${media.id}`}
+                href={`/collections/${collection_slug}/media/${media.id}/`}
+              >
+                <a>
+                  <GalleryMedia
+                    src={media.thumbnailUrl || FallbackMedia.thumbnailUrl}
+                    type={media.type}
+                    title={media.title === media.grouper ? "" : media.title}
+                    caption={`${media.caption}`}
+                    displayCaption={displayMediaCaption}
+                    aspectRatio={media.aspectRatio}
+                    locked={media.locked}
+                  />
+                </a>
+              </Link>
+            );
+          })}
         </Gallery>
       ))}
-      {/* <Gallery>
-        {mediaEntries.map((media) => (
-          <Link
-            key={`media-${media.id}`}
-            href={`/collections/${collection_slug}/media/${media.id}/`}
-          >
-            <a>
-              <GalleryMedia
-                src={media.thumbnailUrl}
-                type={media.type}
-                title={media.title}
-                caption={`${media.caption}`}
-                aspectRatio={media.aspectRatio}
-              />
-            </a>
-          </Link>
-        ))}
-      </Gallery> */}
     </>
   );
 };

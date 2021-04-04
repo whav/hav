@@ -17,6 +17,7 @@ export default async (req, res) => {
           originalMediaIdentifier
           embargoEndDate
           isPrivate
+          locked
           coordsLat
           coordsLon
           createdAt

@@ -123,7 +123,6 @@ const MediaDetail = (props) => {
   const { media } = props;
   const { ancestors = [], collection = {}, title, license = {} } = media;
   const primaryFile = media.files[0];
-  console.log(primaryFile);
   const collection_slug = collection?.slug;
   return (
     <>

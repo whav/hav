@@ -15,7 +15,7 @@ const SearchBar = ({ query = "", node = "", onQuery }) => {
       }}
     >
       <input
-        className="w-full p-2 unstyled"
+        className="w-full p-3 shadow rounded border-0 focus:bg-gray-500 ml-4"
         type="text"
         value={value}
         onChange={(e) => setQuery(e.target.value)}
@@ -63,6 +63,7 @@ const SearchResults = ({ hits = [] }) => {
 };
 
 const HighlightedText = ({ text = "", matches = [] }) => {
+  console.log(text, matches);
   if (matches.length === 0) {
     return <>{text}</>;
   }
@@ -133,13 +134,17 @@ const SearchResult = ({
     default:
       throw `Unknown type ${type}`;
   }
+  console.log(title);
   return (
     <div className="flex">
       <div className="flex-1 pl-4 order-last">
         <Link href={url}>
           <a className="text-lg font-bold">
             <Icon className="inline" />
-            <HighlightedText matches={_matchesInfo.title} text={title} />
+            <HighlightedText
+              matches={_matchesInfo.title}
+              text={title || "Untitled"}
+            />
           </a>
         </Link>
 

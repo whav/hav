@@ -1,12 +1,8 @@
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework import serializers
 from apps.hav_collections.models import Collection
-
-
-class CollectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Collection
-        fields = ["name", "short_name", "slug"]
+from apps.sets.models import Node
+from .serializers import CollectionSerializer, NodeSerializer
 
 
 class CollectionListView(ListAPIView):
@@ -14,3 +10,11 @@ class CollectionListView(ListAPIView):
 
     def get_queryset(self):
         return Collection.objects.all().order_by("root_node__numchild")
+
+
+class NodeView(RetrieveAPIView):
+    serializer_class = NodeSerializer
+    lookup_url_kwarg = "node_id"
+
+    def get_queryset(self):
+        return Node.objects.all()

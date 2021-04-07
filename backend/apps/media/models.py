@@ -110,6 +110,12 @@ class MediaManager(models.Manager):
             MediaToCreator.objects.create(creator=c, media=media)
         return media
 
+    def publicly_available(self):
+        return self.exclude(is_private=True).exclude(
+            models.Q(embargo_end_date__isnull=False)
+            | models.Q(embargo_end_date__gte=date.today())
+        )
+
 
 class Media(models.Model):
 

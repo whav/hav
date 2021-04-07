@@ -74,8 +74,8 @@ class Node(MP_Node):
         descendant_iterator = chain([self], self.get_descendants().iterator())
         for node in descendant_iterator:
             try:
-                # attempt ot get the first media entry
-                return Media.objects.filter(set=node)[0]
+                # attempt to get the first media entry
+                return Media.objects.publicly_available().filter(set=node)[0]
             except IndexError:
                 continue
 

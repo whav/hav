@@ -77,7 +77,11 @@ class SearchView(APIView):
                 hit.update(
                     {
                         "thumbnail": generate_thumbnail_url(
-                            asset, width=300, height=None, operation="thumbnail"
+                            asset,
+                            width=300,
+                            height=None,
+                            operation="thumbnail",
+                            user=request.user,
                         )
                     }
                 )

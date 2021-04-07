@@ -7,6 +7,10 @@ from django.conf import settings
 from mimetypes import guess_type
 from urllib.parse import urlencode, urlparse, urljoin
 
+from django.templatetags.static import static
+
+fallback_url = static("webassets/no_image_available.svg")
+
 SECRET = settings.IMAGESERVER_CONFIG["secret"]
 URL_PREFIX = settings.IMAGESERVER_CONFIG["prefix"]
 INCOMING_ROOT = Path(settings.INCOMING_FILES_ROOT)
@@ -34,7 +38,14 @@ def is_image(filename):
     return t.split("/")[0] == "image"
 
 
-def get_imaginary_path(obj_or_path):
+def protected_src(media, user, path):
+    if media.is_public:
+        return path
+
+    return fallback_url
+
+
+def get_imaginary_path(obj_or_path, user=None):
     # TODO: this is ugly. But it should be the only place to deal with mapping
     # database stored file paths to imaginary mounted volumes and such
 
@@ -45,10 +56,14 @@ def get_imaginary_path(obj_or_path):
 
     if isinstance(obj_or_path, WebAsset):
         # Webassets
-        return Path("webassets/").joinpath(obj_or_path.file.name).as_posix()
+        media = obj_or_path.archivefile.media_set.get()
+        path = Path("webassets/").joinpath(obj_or_path.file.name).as_posix()
+        return protected_src(media, user, path)
     elif isinstance(obj_or_path, ArchiveFile):
         # Archivefile
-        return Path("archive/").joinpath(obj_or_path.file.name).as_posix()
+        media = obj_or_path.media_set.get()
+        path = Path("archive/").joinpath(obj_or_path.file.name).as_posix()
+        return protected_src(media, user, path)
     elif isinstance(obj_or_path, str) and is_absolute(obj_or_path):
         # url case
         return obj_or_path

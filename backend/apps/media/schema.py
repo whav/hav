@@ -88,7 +88,11 @@ class MediaType(DjangoObjectType):
         asset = self.primary_image_webasset
         if asset:
             return generate_thumbnail_url(
-                asset, width=300, height=None, operation="thumbnail"
+                asset,
+                width=300,
+                height=None,
+                operation="thumbnail",
+                user=info.context.user,
             )
         return fallback_url
 

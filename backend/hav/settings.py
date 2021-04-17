@@ -141,6 +141,8 @@ DATABASES = {
 
 DATABASE_ROUTERS = ["hav.db_router.WhavDBRouter"]
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 CACHES = {"default": env.cache()}
 
 AUTH_USER_MODEL = "accounts.User"

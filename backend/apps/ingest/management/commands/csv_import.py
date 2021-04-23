@@ -138,12 +138,9 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
                 success_cnt += 1
             else:
                 line["csv_import_mediapk"] = "failed"
+                line["csv_import_additionalinfo"] = resp.reason
                 failed_cnt += 1
             tracklog.append(line)
-
-        print("\nImport Summary:")
-        print("===" * 10)
-        print(f"Successful imports: {success_cnt}\nFailed imports: {failed_cnt}\n")
 
         print("saving tracklog…")
         logfile = Path(settings.INGEST_LOG_DIR).joinpath(
@@ -153,11 +150,19 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
             + "_importtracklog.csv"
         )
 
-        with open(logfile, "w") as of:
-            fieldnames.append("csv_import_status")
-            fieldnames.append("csv_import_mediapk")
-            csvwriter = csv.DictWriter(of, fieldnames)
-            csvwriter.writeheader()
-            for row in tracklog:
-                print(row)
-                csvwriter.writerow(row)
+        try:
+            with open(logfile, "w") as of:
+                fieldnames.append("csv_import_status")
+                fieldnames.append("csv_import_additionalinfo")
+                fieldnames.append("csv_import_mediapk")
+                csvwriter = csv.DictWriter(of, fieldnames)
+                csvwriter.writeheader()
+                for row in tracklog:
+                    csvwriter.writerow(row)
+        except Exception:
+            print("ERROR: Writing LogFile failed: ", )
+
+        print("===" * 10)
+        print("\nImport Summary:")
+        print("===" * 10)
+        print(f"Successful imports: {success_cnt}\nFailed imports: {failed_cnt}\n")

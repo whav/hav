@@ -15,6 +15,7 @@ services:
           - DEBUG=True
         volumes:
           - ./backend:/hav/backend
+          - ./dist/ingestlog:/archive/hav/ingestlog
         command: /venv/bin/python ./manage.py runserver 0.0.0.0:8000
 
     django-wsgi:
@@ -25,6 +26,7 @@ services:
           - DEBUG=True
         volumes:
             - ./backend:/hav/backend
+            - ./dist/ingestlog:/archive/hav/ingestlog
         command: /venv/bin/python ./manage.py runserver --noasgi 0.0.0.0:8000
 
     imaginary:

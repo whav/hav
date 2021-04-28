@@ -138,7 +138,7 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
                 success_cnt += 1
             else:
                 line["csv_import_mediapk"] = "failed"
-                line["csv_import_additionalinfo"] = resp.reason
+                line["csv_import_additionalinfo"] = resp.content.decode("UTF-8")
                 failed_cnt += 1
             tracklog.append(line)
 

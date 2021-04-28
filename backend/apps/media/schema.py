@@ -17,6 +17,7 @@ from .models import Media, MediaCreator, License, MediaType as DBMediaType
 from django.templatetags.static import static
 
 fallback_url = static("webassets/no_image_available.svg")
+fallback_url_is_private = static("webassets/no_public_media_available.svg")
 
 
 class MediaType(DjangoObjectType):
@@ -83,7 +84,7 @@ class MediaType(DjangoObjectType):
     # TODO: clean up the is_private / is_public handling in these methods
     def resolve_thumbnail_url(self, info):
         if not self.is_public:
-            return fallback_url
+            return fallback_url_is_private
 
         asset = self.primary_image_webasset
         if asset:
@@ -101,7 +102,7 @@ class MediaType(DjangoObjectType):
             asset = self.primary_image_webasset
             if asset:
                 return generate_src_url(asset)
-        return fallback_url
+        return fallback_url_is_private
 
     def resolve_srcset(self, _):
         if self.is_public:

@@ -10,6 +10,7 @@ from urllib.parse import urlencode, urlparse, urljoin
 from django.templatetags.static import static
 
 fallback_url = static("webassets/no_image_available.svg")
+fallback_url_is_private = static("webassets/no_public_media_available.svg")
 
 SECRET = settings.IMAGESERVER_CONFIG["secret"]
 URL_PREFIX = settings.IMAGESERVER_CONFIG["prefix"]
@@ -42,7 +43,7 @@ def protected_src(media, user, path):
     if media.is_public:
         return path
 
-    return fallback_url
+    return fallback_url_is_private
 
 
 def get_imaginary_path(obj_or_path, user=None):

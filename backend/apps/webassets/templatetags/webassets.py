@@ -9,16 +9,27 @@ template_base = "webassets/tags"
 
 @register.inclusion_tag(f"{template_base}/preview.html")
 def webasset_preview(webasset: WebAsset):
-    media_type = webasset.mime_type.split("/")[0]
+    archive_file = webasset.archivefile
+    media = archive_file.media_set.get()
+
     context = {
         "webasset": webasset,
         "preview_template": None,
         "poster": None,
     }
-    if media_type == "image":
-        context.update({"preview_template": f"{template_base}/image.html"})
-    if media_type in ["audio", "video"]:
-        context.update({"preview_template": f"{template_base}/video.html"})
+
+    if media.is_public:
+
+        media_type = webasset.mime_type.split("/")[0]
+
+        if media_type == "image":
+            context.update({"preview_template": f"{template_base}/image.html"})
+        if media_type in ["audio", "video"]:
+            context.update({"preview_template": f"{template_base}/video.html"})
+    else:
+        del context["webasset"]
+        context.update({"preview_template": f"{template_base}/prohibited.html"})
+
     return context
 
 

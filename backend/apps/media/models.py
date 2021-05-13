@@ -199,7 +199,7 @@ class Media(models.Model):
     def is_public(self):
         if self.is_private:
             return False
-        if self.embargo_end_date and self.embargo_end_date <= date.today():
+        if self.embargo_end_date and self.embargo_end_date > date.today():
             return False
 
         return True

@@ -83,6 +83,7 @@ class MediaType(DjangoObjectType):
 
     # TODO: clean up the is_private / is_public handling in these methods
     def resolve_thumbnail_url(self, info):
+
         if not self.is_public:
             return fallback_url_is_private
 

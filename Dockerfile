@@ -49,7 +49,8 @@ UPLOADS_ROOT=/archive/uploads \
 DJANGO_MEDIA_ROOT=/archive/uploads \
 DJANGO_SECRET_KEY=I_AM_VERY_UNSAFE \
 IMAGINARY_SECRET=UNSAFE \
-POETRY_VERSION=1.1.3
+POETRY_VERSION=1.1.3 \
+PYTHONPATH=/venv/lib/python3.8/site-packages
 
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads"]
 

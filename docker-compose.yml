@@ -10,6 +10,8 @@ x-django: &django
         - ${INCOMING_FILES_ROOT}:/archive/hav/incoming
         - ${WEBASSETS_ROOT}:/archive/hav/webassets
         - ${UPLOADS_ROOT}:/archive/hav/media
+        - ${LOCAL_BASH_HISTORY_DIR}:/hav/.localhistory/bash
+        - ${LOCAL_IPYTHON_HISTORY_DIR}:/hav/.localhistory/ipython
     environment:
         - IMAGINARY_SECRET=${IMAGINARY_SECRET}
         - IMAGINARY_URL_PREFIX=${IMAGINARY_URL_PREFIX}
@@ -27,6 +29,9 @@ x-django: &django
         - SENTRY_DSN=${SENTRY_DSN}
         - RQ_SENTRY_DSN=${SENTRY_DSN}
         - DRF_AUTH_TOKEN=${DRF_AUTH_TOKEN}
+        - BASHHOMEDIR=/hav/.localhistory/bash
+        - HISTFILE=/hav/.localhistory/bash/.bash_history
+        - IPYTHONDIR=/hav/.localhistory/ipython
     working_dir: /hav/backend
     depends_on:
         - redis

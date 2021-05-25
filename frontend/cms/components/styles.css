@@ -58,7 +58,11 @@
     @apply shadow-none ring-0 border-0;
   }
 
-  table.table {
+	#__next .prose, #__next .max-w-prose {
+		max-width: 93ch;
+	}
+  
+	table.table {
     @apply min-w-full divide-y divide-gray-200 border-separate border;
 
     thead {

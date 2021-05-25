@@ -37,7 +37,7 @@ const Gallery = ({ title, children = null, divide = false }) => {
   return (
     <div className={`mt-2 -mx-4`}>
       {title && <h2 className={`inline-block text-lg font-bold`}>{title}</h2>}
-      <div className={`flex flex-row flex-wrap justify-start items-stretch`}>
+      <div className={`gallery flex flex-row flex-wrap justify-start items-stretch`}>
         {children}
       </div>
     </div>

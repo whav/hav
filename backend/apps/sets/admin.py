@@ -12,7 +12,9 @@ class NodeAdmin(TreeAdmin):
         "display_type",
         "_position",
         "_ref_node_id",
+        "tags",
     ]
+    filter_horizontal = ["tags"]
     form = movenodeform_factory(Node)
 
 

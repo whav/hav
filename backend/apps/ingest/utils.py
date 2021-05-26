@@ -99,15 +99,17 @@ def cached_get_or_create_tags(tagname, target_collection):
 
 
 # simple get_or_create-like helper for treebeard child-nodes
-def get_or_create_node(nodename, parentnode):
+def get_or_create_node(nodename, parentnode, create_new_node=True):
     """get or create a child named "nodename" for given parentnode; return
     a tuple containing the childnode and "True" or "False" depending if it
     has been newly created or not
     """
     matches = [n for n in parentnode.get_children() if n.name == nodename]
-    if not matches:
+    if not matches and create_new_node:
         newnode = parentnode.add_child(name=nodename)
         return newnode, True
+    elif not matches:
+        return None, False
     elif len(matches) == 1:
         return matches[0], False
     else:
@@ -116,14 +118,18 @@ def get_or_create_node(nodename, parentnode):
         )
 
 
-def get_or_create_subnodes_from_path(relative_path, target_node):
+def get_or_create_subnodes_from_path(relative_path, target_node, 
+                                     create_new_nodes=True):
     """take string containing a relative path and a targed parent node;
     get/create subnodes for each path segment and return the last node
     """
     for path_segment in relative_path.split(os.sep):
-        new_node, created = get_or_create_node(path_segment, target_node)
+        new_node, created = get_or_create_node(path_segment, target_node,
+                                               create_new_node=create_new_nodes)
         if created:
             print(f"Node {new_node} has been created in parent-node {target_node}")
+        if not new_node:
+            return None
         target_node = new_node
     return target_node
 

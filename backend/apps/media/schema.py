@@ -58,8 +58,10 @@ class MediaType(DjangoObjectType):
 
     def resolve_aspect_ratio(self, _):
         asset = self.primary_image_webasset
-        if asset and asset.width and asset.height:
+        # don't use media aspect ratio for "no-image" or fallback-images
+        if self.is_public and asset and asset.width and asset.height:
             return asset.width / asset.height
+        return 1
 
     def resolve_creation_timeframe(self, _):
         return [self.creation_date.lower, self.creation_date.upper]

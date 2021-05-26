@@ -6,10 +6,13 @@ class MediaAdmin(admin.ModelAdmin):
     list_display = [
         "pk",
         "title",
+        "original_media_identifier",
     ]
     list_filter = ["collection"]
+    filter_horizontal = ["tags"]
     date_hierarchy = "created_at"
-    exclude = ["files", "attachments", "tags"]
+    exclude = ["files", "attachments"]
+    search_fields = ["original_media_identifier"]
 
 
 admin.site.register(MediaType)

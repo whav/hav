@@ -28,7 +28,7 @@ class Command(BaseCommand):
 
         if collection:
             while True:
-                i = input(f"About to import node-data to collection: "{collection}".\
+                i = input(f"About to import node-data to collection: '{collection}'.\
  Continue? [Y/N]\n").lower()
                 if i == 'n' or i == 'no':
                     sys.exit('Operation aborted by user.')

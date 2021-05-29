@@ -37,7 +37,7 @@ const Gallery = ({ title, children = null, divide = false }) => {
   return (
     <div className={`mt-2 -mx-4`}>
       {title && <h2 className={`inline-block text-lg font-bold`}>{title}</h2>}
-      <div className={`gallery flex flex-row flex-wrap justify-start items-stretch`}>
+      <div className={`flex flex-row flex-wrap justify-start items-stretch`}>
         {children}
       </div>
     </div>
@@ -58,7 +58,7 @@ const GalleryMedia = ({
   const Icon = iconMapping[type] || QuestionMarkIcon;
   return (
     <figure
-      className={`p-4 rounded-sm border-transparent hover:bg-gray-100 border`}
+      className={`p-0 m-4 rounded-sm border-transparent hover:bg-gray-100 border`}
       style={{ width: Math.sqrt(48000 * aspectRatio) }}
     >
       <div className={`relative`}>

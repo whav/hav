@@ -12,7 +12,16 @@ module.exports = {
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: "93ch",
+          },
+        },
+      },
+    },
+
     fontFamily: {
       sans: ["Noto Sans", ...defaultTheme.fontFamily.sans],
       serif: ["Noto Serif", ...defaultTheme.fontFamily.serif],

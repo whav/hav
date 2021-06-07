@@ -73,8 +73,12 @@ const HighlightedText = ({ text = "", matches = [] }) => {
   });
 
   const build_fragment = (text, key, highlight = false) => {
-    const cn = highlight ? "underline bg-blue-100" : "";
-    return <span className={cn} key={key}></span>;
+    const cn = highlight ? "bg-blue-100" : "";
+    return (
+      <span className={cn} key={key}>
+        {text}
+      </span>
+    );
   };
   const results = matches.reduce(
     (previousSegments, match, index, allMatches) => {
@@ -134,7 +138,7 @@ const SearchResult = ({
     default:
       throw `Unknown type ${type}`;
   }
-  console.log(title);
+
   return (
     <div className="flex">
       <div className="flex-1 pl-4 order-last">

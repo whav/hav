@@ -63,7 +63,6 @@ const SearchResults = ({ hits = [] }) => {
 };
 
 const HighlightedText = ({ text = "", matches = [] }) => {
-  console.log(text, matches);
   if (matches.length === 0) {
     return <>{text}</>;
   }

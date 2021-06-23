@@ -33,9 +33,9 @@ const GalleryItemIconList = ({ children }) => {
   );
 };
 
-const Gallery = ({ title, children = null, divide = false }) => {
+const Gallery = ({ title, children = null, divide = false, isFolder=false }) => {
   return (
-    <div className={`mt-2 -mx-4`}>
+    <div className={isFolder ? `mt-2 -mx-4 bg-gray-200` : `mt-2 -mx-4`}>
       {title && <h2 className={`inline-block text-lg font-bold`}>{title}</h2>}
       <div className={`flex flex-row flex-wrap justify-start items-stretch`}>
         {children}
@@ -59,7 +59,7 @@ const GalleryMedia = ({
   return (
     <figure
       className={`p-0 m-4 rounded-sm border-transparent hover:bg-gray-100 border`}
-      style={{ width: Math.sqrt(48000 * aspectRatio) }}
+      style={type=="folder" ? { width: 150 } : { width: Math.sqrt(48000 * aspectRatio) }}
     >
       <div className={`relative`}>
         <img
@@ -67,6 +67,7 @@ const GalleryMedia = ({
           loading="lazy"
           title={title || caption}
           className="border border-gray-100"
+          style={type=="folder" ? { height: 150, objectFit: "contain" } : {}}
         />
 
         <GalleryItemIconList>

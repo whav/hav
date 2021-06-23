@@ -69,7 +69,7 @@ const CollectionBrowser = (props) => {
 
       <Description text={description} />
       <TagList tags={tags} />
-      <Gallery>
+      <Gallery isFolder={true}>
         {children.map((c) => {
           const media = c.representativeMedia || FallbackMedia;
           return (

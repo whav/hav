@@ -56,6 +56,7 @@ export default async (req, res) => {
           }
           src
           srcset
+		  thumbnailUrl
           height
           width
           files {

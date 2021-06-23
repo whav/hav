@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from apps.hav_collections.models import Collection
 from apps.ingest.utils import (
     cached_get_or_create_tags,
-    get_or_create_subnodes_from_path
+    get_or_create_subnodes_from_path,
 )
 
 
@@ -28,11 +28,13 @@ class Command(BaseCommand):
 
         if collection:
             while True:
-                i = input(f"About to import node-data to collection: '{collection}'.\
- Continue? [Y/N]\n").lower()
-                if i == 'n' or i == 'no':
-                    sys.exit('Operation aborted by user.')
-                elif i == 'y' or i == 'yes':
+                i = input(
+                    f"About to import node-data to collection: '{collection}'.\
+ Continue? [Y/N]\n"
+                ).lower()
+                if i == "n" or i == "no":
+                    sys.exit("Operation aborted by user.")
+                elif i == "y" or i == "yes":
                     break
 
         for line in csv.DictReader(csv_file):
@@ -40,8 +42,9 @@ class Command(BaseCommand):
             target_node_path = os.path.normpath(line["HAV:Node"]).strip("/")
 
             target_node = get_or_create_subnodes_from_path(
-                target_node_path, collection.root_node,
-                create_new_nodes=options["create_nodes"]
+                target_node_path,
+                collection.root_node,
+                create_new_nodes=options["create_nodes"],
             )
 
             if not target_node:
@@ -54,8 +57,7 @@ class Command(BaseCommand):
                 edited = True
             tags = line.get("HAV:Node:Tags", []).split("\n")
             if tags:
-                tag_list = [cached_get_or_create_tags(t, collection)[0]
-                            for t in tags]
+                tag_list = [cached_get_or_create_tags(t, collection)[0] for t in tags]
                 target_node.tags.set(tag_list)
                 edited = True
             if edited:

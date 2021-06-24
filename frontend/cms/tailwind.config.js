@@ -20,6 +20,9 @@ module.exports = {
           },
         },
       },
+      textColor: {
+        orange: "#e65825",
+      },
     },
 
     fontFamily: {

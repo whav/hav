@@ -6,7 +6,7 @@ import { HeaderSearchBar } from "components/search";
 const HeaderBar = ({ title = "", children }) => {
   return (
     <div className="flex justify-between">
-      <h1 className="text-4xl font-bold">{title}</h1>
+      <h1 className="text-xl font-bold">{title}</h1>
       <div>{children}</div>
     </div>
   );
@@ -21,7 +21,7 @@ const Header = ({
 }) => {
   return (
     <>
-      <div>
+      <div className="flex justify-between">
         <Breadcrumbs>
           {ancestors.map((a) => (
             <Link
@@ -32,16 +32,15 @@ const Header = ({
             </Link>
           ))}
         </Breadcrumbs>
-      </div>
-
-      <HeaderBar title={title}>
         {search ? (
           <HeaderSearchBar
             target={`/collections/${collection_slug}/search/`}
             node={folder_id}
           />
         ) : null}
-      </HeaderBar>
+      </div>
+
+      <HeaderBar title={title}></HeaderBar>
     </>
   );
 };

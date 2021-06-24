@@ -21,6 +21,19 @@ const Header = ({
 }) => {
   return (
     <>
+      <div>
+        <Breadcrumbs>
+          {ancestors.map((a) => (
+            <Link
+              key={`set-${a.id}`}
+              href={`/collections/${collection_slug}/browse/${a.id}/`}
+            >
+              <a>{a.name}</a>
+            </Link>
+          ))}
+        </Breadcrumbs>
+      </div>
+
       <HeaderBar title={title}>
         {search ? (
           <HeaderSearchBar
@@ -29,19 +42,6 @@ const Header = ({
           />
         ) : null}
       </HeaderBar>
-
-      <div className="py-4">
-        <Breadcrumbs>
-          {ancestors.map((a) => (
-            <Link
-              key={`set-${a.id}`}
-              href={`/collections/${collection_slug}/browse/${a.id}/`}
-            >
-              <a className="text-blue-500">{a.name}</a>
-            </Link>
-          ))}
-        </Breadcrumbs>
-      </div>
     </>
   );
 };

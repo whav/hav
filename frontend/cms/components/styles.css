@@ -7,6 +7,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "DejaVu Sans Condensed Bold";
+  src: url(../fonts/DejaVuSansCondensed-Bold.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

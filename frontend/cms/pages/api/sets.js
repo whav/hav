@@ -28,6 +28,7 @@ export default async (req, res) => {
             id
             slug
             name
+            shortName
           }
         }
         mediaEntries(nodeId: $set) {

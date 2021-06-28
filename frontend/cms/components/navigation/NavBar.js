@@ -39,17 +39,14 @@ const AccountNav = () => {
             <a href={loginURL}>Login</a>
           </li>
         )}
-        <li>
-          <a
-            className="text-sm"
-            href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf"
-          >
+        <li className="text-sm">
+          <a href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf">
             Privacy Policy
           </a>
         </li>
-        <li>
+        <li className="text-sm">
           <Link href="/imprint/">
-            <a className="text-sm">Imprint</a>
+            <a>Imprint</a>
           </Link>
         </li>
       </ul>
@@ -134,7 +131,7 @@ const NavBar = () => {
 
   return (
     <div className="md:h-full flex flex-col">
-      <div className="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl font-serif">
+      <div className="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl">
         <div className="flex flex-row justify-between">
           <div className="flex-grow">
             <Link href="/">
@@ -165,7 +162,7 @@ const NavBar = () => {
               <GlobalNav collections={data} />
             )}
 
-            <div className="md:mt-8">
+            <div className="md:mt-20">
               <AccountNav />
             </div>
           </div>

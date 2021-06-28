@@ -37,6 +37,7 @@ const CollectionBrowser = (props) => {
     mediaEntries = [],
     description = "",
     tags = [],
+    collection = {},
   } = data;
 
   // initial grouping: all media entries in one (empty) key
@@ -62,6 +63,7 @@ const CollectionBrowser = (props) => {
       </Head>
       <Header
         title={name}
+        collection={collection}
         collection_slug={collection_slug}
         ancestors={ancestors}
         folder_id={folder_id}

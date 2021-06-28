@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useCollection, useAPI } from "hooks";
 import { SearchResults, SearchBar } from "components/search";
 import Breadcrumbs from "components/navigation/breadcrumbs";
-import { Header } from "components/filebrowser/Header";
 
 const SearchPage = ({
   initialQuery = "",
@@ -73,7 +72,7 @@ const SearchPage = ({
 
   return (
     <>
-      <h1 className="text-3xl font-extrabold mb-4">
+      <h1 className="text-xl font-extrabold mb-4">
         Search in collection "<em>{collection.name}"</em>
       </h1>
       <Breadcrumbs>

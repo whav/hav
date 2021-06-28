@@ -1,5 +1,12 @@
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Serif&display=swap");
 
+@font-face {
+  font-family: "DejaVu Sans Condensed";
+  src: url(../fonts/DejaVuSansCondensed.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

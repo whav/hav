@@ -14,6 +14,7 @@ const HeaderBar = ({ title = "", children }) => {
 
 const Header = ({
   title,
+  collection,
   collection_slug,
   ancestors = [],
   folder_id,
@@ -23,6 +24,17 @@ const Header = ({
     <>
       <div className="flex justify-between">
         <Breadcrumbs>
+          <Link key="home" href="/">
+            <a>Collections</a>
+          </Link>
+          {collection ? (
+            <Link
+              key="collection-root"
+              href={`/collections/${collection_slug}/`}
+            >
+              <a>{collection.shortName}</a>
+            </Link>
+          ) : null}
           {ancestors.map((a) => (
             <Link
               key={`set-${a.id}`}

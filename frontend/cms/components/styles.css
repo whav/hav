@@ -2,15 +2,17 @@
 
 @font-face {
   font-family: "DejaVu Sans Condensed";
-  src: url(../fonts/DejaVuSansCondensed.ttf) format("truetype");
+  src: url("../fonts/DejaVuSansCondensed.woff2") format("woff2"),
+    url("../fonts/DejaVuSansCondensed.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "DejaVu Sans Condensed Bold";
-  src: url(../fonts/DejaVuSansCondensed-Bold.ttf) format("truetype");
-  font-weight: normal;
+  font-family: "DejaVu Sans Condensed";
+  src: url("../fonts/DejaVuSansCondensed-Bold.woff2") format("woff2"),
+    url("../fonts/DejaVuSansCondensed-Bold.ttf") format("truetype");
+  font-weight: bold;
   font-style: normal;
 }
 

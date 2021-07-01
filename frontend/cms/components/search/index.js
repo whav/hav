@@ -8,23 +8,27 @@ const SearchBar = ({ query = "", node = "", onQuery }) => {
 
   return (
     <form
-      className="flex"
       onSubmit={(e) => {
         e.preventDefault();
         onQuery && onQuery(value);
       }}
+      className="mt-1 flex rounded-md shadow-sm"
     >
-      <input
-        className="w-full p-3 shadow rounded border-0 focus:bg-gray-500 ml-4"
-        type="text"
-        value={value}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder={`Search collection`}
-      />
       <input type="hidden" value={node} />
-      <Button primary={true}>
-        <SearchIcon /> Search
-      </Button>
+      <div className="relative flex items-stretch flex-grow focus-within:z-10">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setQuery(e.target.value)}
+          name="query"
+          className="focus:ring-grey-500 focus:border-grey-500 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300"
+          placeholder={`Search collection`}
+        />
+      </div>
+      <button className="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+        <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+        <span>Search</span>
+      </button>
     </form>
   );
 };

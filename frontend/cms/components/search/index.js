@@ -21,7 +21,7 @@ const SearchBar = ({ query = "", node = "", onQuery }) => {
           value={value}
           onChange={(e) => setQuery(e.target.value)}
           name="query"
-          className="focus:ring-grey-500 focus:border-grey-500 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300"
+          className="block w-full rounded-none rounded-l-md sm:text-sm border-gray-300"
           placeholder={`Search collection`}
         />
       </div>

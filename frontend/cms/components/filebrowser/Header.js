@@ -6,7 +6,7 @@ import { HeaderSearchBar } from "components/search";
 const HeaderBar = ({ title = "", children }) => {
   return (
     <div className="flex justify-between">
-      <h1 className="text-4xl font-bold">{title}</h1>
+      <h1 className="text-xl font-bold">{title}</h1>
       <div>{children}</div>
     </div>
   );
@@ -14,6 +14,7 @@ const HeaderBar = ({ title = "", children }) => {
 
 const Header = ({
   title,
+  collection,
   collection_slug,
   ancestors = [],
   folder_id,
@@ -21,27 +22,37 @@ const Header = ({
 }) => {
   return (
     <>
-      <HeaderBar title={title}>
+      <div className="flex justify-between">
+        <Breadcrumbs>
+          <Link key="home" href="/">
+            <a>Collections</a>
+          </Link>
+          {collection ? (
+            <Link
+              key="collection-root"
+              href={`/collections/${collection_slug}/`}
+            >
+              <a>{collection.shortName}</a>
+            </Link>
+          ) : null}
+          {ancestors.map((a) => (
+            <Link
+              key={`set-${a.id}`}
+              href={`/collections/${collection_slug}/browse/${a.id}/`}
+            >
+              <a>{a.name}</a>
+            </Link>
+          ))}
+        </Breadcrumbs>
         {search ? (
           <HeaderSearchBar
             target={`/collections/${collection_slug}/search/`}
             node={folder_id}
           />
         ) : null}
-      </HeaderBar>
-
-      <div className="py-4">
-        <Breadcrumbs>
-          {ancestors.map((a) => (
-            <Link
-              key={`set-${a.id}`}
-              href={`/collections/${collection_slug}/browse/${a.id}/`}
-            >
-              <a className="text-blue-500">{a.name}</a>
-            </Link>
-          ))}
-        </Breadcrumbs>
       </div>
+
+      <HeaderBar title={title}></HeaderBar>
     </>
   );
 };

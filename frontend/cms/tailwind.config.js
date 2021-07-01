@@ -20,15 +20,22 @@ module.exports = {
           },
         },
       },
+      textColor: {
+        orange: "#e65825",
+      },
     },
 
     fontFamily: {
-      sans: ["Noto Sans", ...defaultTheme.fontFamily.sans],
+      sans: [
+        "DejaVu Sans Condensed",
+        "Noto Sans",
+        ...defaultTheme.fontFamily.sans,
+      ],
       serif: ["Noto Serif", ...defaultTheme.fontFamily.serif],
     },
   },
-  variants: {
-    extend: {},
-  },
+  // variants: {
+  //   extend: {},
+  // },
   plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
 };

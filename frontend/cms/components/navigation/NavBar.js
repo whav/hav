@@ -27,14 +27,11 @@ const AccountNav = () => {
   const { username, email } = data?.user || {};
   return (
     <>
-      <MutedText>Account</MutedText>
-
       <ul>
         {username ? (
           <>
-            <li>{username}</li>
             <li>
-              <a href={logoutURL}>Logout</a>
+              {username} (<a href={logoutURL}>Logout</a>)
             </li>
           </>
         ) : (
@@ -42,6 +39,16 @@ const AccountNav = () => {
             <a href={loginURL}>Login</a>
           </li>
         )}
+        <li className="text-sm">
+          <a href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf">
+            Privacy Policy
+          </a>
+        </li>
+        <li className="text-sm">
+          <Link href="/imprint/">
+            <a>Imprint</a>
+          </Link>
+        </li>
       </ul>
     </>
   );
@@ -50,18 +57,16 @@ const AccountNav = () => {
 const CollectionNav = ({ collection: { slug, shortName, rootNode } }) => {
   return (
     <ul>
-      <li>
-        <MutedText>
-          <Link href="/">
-            <a>← All Collections</a>
-          </Link>
-        </MutedText>
+      <li className="font-bold">
+        <Link href="/">
+          <a>Collections</a>
+        </Link>
       </li>
-      <li>
+      {/* <li>
         <Link href={`/collections/${slug}/`}>
           <a>{shortName}</a>
         </Link>
-      </li>
+      </li> */}
       <li>
         <Link
           href={`/collections/${slug}/browse/`}
@@ -126,7 +131,7 @@ const NavBar = () => {
 
   return (
     <div className="md:h-full flex flex-col">
-      <div className="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl font-serif">
+      <div className="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl">
         <div className="flex flex-row justify-between">
           <div className="flex-grow">
             <Link href="/">
@@ -146,38 +151,30 @@ const NavBar = () => {
         </div>
 
         <nav
-          className={`md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right ${
+          className={`text-lg tracking-tight md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right ${
             navVisible ? "" : "hidden"
           }`}
         >
-          {collection ? (
-            <CollectionNav collection={collection} />
-          ) : (
-            <GlobalNav collections={data} />
-          )}
-
-          {/* Bottom nav */}
           <div>
-            <div className="md-mb-4">
+            {collection ? (
+              <CollectionNav collection={collection} />
+            ) : (
+              <GlobalNav collections={data} />
+            )}
+
+            <div className="md:mt-20">
               <AccountNav />
             </div>
+          </div>
+          {/* Bottom nav */}
+          <div>
             <div className="sm:mt-32 text-base text-gray-500">
               <ul>
                 <li className="flex flex-row flex-wrap justify-between">
                   <img className="block h-8 w-auto" src="/logos/cirdis.svg" />
                   <img className="block h-8 w-auto" src="/logos/univie.svg" />
                 </li>
-                <li className="flex flex-row flex-wrap justify-between md:mt-10">
-                  <a
-                    className="block"
-                    href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf"
-                  >
-                    Privacy Policy
-                  </a>{" "}
-                  <Link href="/imprint/">
-                    <a className="block">Imprint</a>
-                  </Link>
-                </li>
+                <li className="flex flex-row flex-wrap justify-between md:mt-10"></li>
               </ul>
             </div>
           </div>

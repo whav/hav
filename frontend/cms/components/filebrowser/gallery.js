@@ -19,7 +19,6 @@ const GalleryItemIconList = ({ children }) => {
   return (
     <div className={`absolute top-0 left-0 flex flex-row`}>
       {React.Children.map(children, (child, index) => {
-        console.log(child);
         return child ? (
           <div
             key={index}

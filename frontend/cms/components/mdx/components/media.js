@@ -22,12 +22,10 @@ const Media = (props) => {
   }
 
   return (
-    <div className="flex">
-      <div className="max-w-sm">
-        <MediaSwitch {...data} />
+      <div className="max-w-sm m-4">
         {caption && <div>{caption}</div>}
+        <MediaSwitch {...data} />
       </div>
-    </div>
   );
 };
 

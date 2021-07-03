@@ -133,7 +133,7 @@ const NavBar = () => {
     <div className="md:h-full flex flex-col">
       <div className="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl">
         <div className="flex flex-row justify-between">
-          <div className="flex-grow">
+          <div className="flex-grow md:h-20">
             <Link href="/">
               <a>
                 <img

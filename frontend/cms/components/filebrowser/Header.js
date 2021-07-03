@@ -5,7 +5,7 @@ import { HeaderSearchBar } from "components/search";
 
 const HeaderBar = ({ title = "", children }) => {
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between md:mt-8">
       <h1 className="text-xl font-bold">{title}</h1>
       <div>{children}</div>
     </div>
@@ -22,7 +22,7 @@ const Header = ({
 }) => {
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between md:h-20 md:items-end">
         <Breadcrumbs>
           <Link key="home" href="/">
             <a>Collections</a>

@@ -7,7 +7,3 @@ Its over-arching archive structure houses multi-disciplinary data originating fr
 The HAV is currently still under development but—after some delays—expected to go public in the first half of 2018. The following pages are to provide a first glimpse into the thematic and geographical width and depth of the material currently being archived and a series of advanced representational features planned to be integrated later on. At the time of writing a number of further collections are already being evaluated and/or prepared for ingestion.
 
 Further information about us, our ongoing research initiatives and related news can be found on the website of [CIRDIS](http://www.univie.ac.at/cirdis).
-
-## The HAV's Core Area
-
-<HAVMap lat={35.6037} lng={82.4853} zoom={5} />

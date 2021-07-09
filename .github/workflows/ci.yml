@@ -7,17 +7,46 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-python@v2
-          with:
-            python-version: '3.9'
-        -   name: Install poetry
-            run: |
-                curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-                source $HOME/.poetry/env
-        - name: install dependencies
-          run: |
-            $HOME/.poetry/bin/poetry install
-          working-directory: backend
-        - name: View poetry --help
-          run: $HOME/.poetry/bin/poetry --help
+      - name: Checkout Repo
+        id: checkout
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push Django
+        id: docker_django_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hav:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/hav:${{ github.run_id }}
+
+      - name: Build and push CMS
+        id: docker_cms_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./frontend/cms/
+          file: ./frontend/cms/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hav-cms:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/hav-cms:${{ github.run_id }}
+
+      - name: Build and push Nginx
+        id: docker_nginx_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile.nginx
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hav-nginx:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/hav-nginx:${{ github.run_id }}
+
+      - name: Image digest
+        run: echo ${{ steps.docker_django_build.outputs.digest }}

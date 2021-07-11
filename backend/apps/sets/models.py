@@ -26,6 +26,14 @@ class Node(MP_Node):
         default=DisplayOptions.DEFAULT,
     )
 
+    representative_media = models.ForeignKey(
+        "media.Media",
+        on_delete=models.SET_NULL,
+        default=None,
+        null=True,
+        blank=True,
+    )
+
     @property
     def children(self):
         return self.get_children()
@@ -67,8 +75,10 @@ class Node(MP_Node):
         qs = Tag.objects.filter(node__in=self.get_ancestors()).order_by("node__depth")
         return qs
 
-    @cached_property
-    def representative_media(self):
+    def get_representative_media(self):
+        if self.representative_media:
+            return self.representative_media
+
         from apps.media.models import Media
 
         descendant_iterator = chain([self], self.get_descendants().iterator())

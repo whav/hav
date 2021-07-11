@@ -10,8 +10,8 @@ The earlier part of the ethnographic documentation in this collection resulted f
 ### Featured Archive Entries
 <div class="featured_media_set">
 
-[<Media id="5997" caption='Bhaktapur' />](/collections/gaenszle/browse/217)
-[<Media id="6024" caption='Kathmandu' />](/collections/nebesky/browse/221)
-[<Media id="6081" caption='Mewahang (Sankhuwa Sabha)' />](/collections/nebesky/browse/224)
+[<Media id="5997" caption='Bhaktapur' sizes='16rem' />](/collections/gaenszle/browse/217)
+[<Media id="6024" caption='Kathmandu'  sizes='16rem' />](/collections/gaenszle/browse/221)
+[<Media id="6081" caption='Mewahang (Sankhuwa Sabha)'  sizes='16rem' />](/collections/gaenszle/browse/224)
 
 </div>

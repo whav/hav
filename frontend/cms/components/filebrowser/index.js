@@ -5,11 +5,15 @@ import {ReadMoreMore} from "read-more-more";
 const Description = ({ text }) => {
   return <>
 		{ text.length > 700 ?
+		<>
 		<ReadMoreMore text={<ReactMarkDown className="prose mb-10">{text}</ReactMarkDown>}
           parseHTML='true'
 	      linesToShow='10'
 		  btnStyles={{ float: "right" }}
           transDuration='.5' />
+		<div className="clear-both">
+			</div>
+		</>
 		: <ReactMarkDown className="prose mb-10">{text}</ReactMarkDown>}
 	</>;
 };

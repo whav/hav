@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
@@ -75,7 +77,7 @@ class Node(MP_Node):
         qs = Tag.objects.filter(node__in=self.get_ancestors()).order_by("node__depth")
         return qs
 
-    def get_representative_media(self):
+    def get_representative_media(self) -> Optional["apps.media.models"]:
         if self.representative_media:
             return self.representative_media
 

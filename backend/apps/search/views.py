@@ -69,7 +69,7 @@ class SearchView(APIView):
             if type == "media":
                 m = media_items[pk]
             elif type == "folder":
-                m = nodes[pk].representative_media
+                m = nodes[pk].get_representative_media()
 
             asset = m.primary_image_webasset
             if asset:

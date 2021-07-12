@@ -35,7 +35,7 @@ const GalleryItemIconList = ({ children }) => {
 const Gallery = ({ title, children = null, divide = false, isFolder=false }) => {
   return (
     <div className={isFolder ? `mt-2 -mx-4 bg-gray-200` : `mt-2 -mx-4`}>
-      {title && <h2 className={`inline-block text-lg font-bold`}>{title}</h2>}
+      {title && <h2 className={`inline-block text-lg font-bold ml-4`}>{title}</h2>}
       <div className={`flex flex-row flex-wrap justify-start items-stretch`}>
         {children}
       </div>

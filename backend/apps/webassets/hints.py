@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 
 class ImageHints(BaseModel):
     rotation: Optional[Literal[0, 90, 180, 270]]
+    maxResolution: Optional[int]
 
 
 def validate_webasset_hints(mime_type, value):

@@ -1,6 +1,12 @@
+from pathlib import Path
+
 import pytest
+
+import tempfile
+from PIL import Image
 from ..hints import validate_webasset_hints
 from ..operations.hints import get_hints_from_tags, rotation_tags
+from ..operations.image import convert
 from django.core.exceptions import ValidationError
 from apps.tags.models import Tag
 from apps.hav_collections.models import Collection
@@ -31,3 +37,12 @@ def test_hints_from_tags():
     tag = Tag(name="rotate:270")
     assert rotation_tags([tag]) == {"rotation": 270}
     assert get_hints_from_tags([tag]) == {"rotation": 270}
+
+
+def test_max_resolution_hints():
+    image_path = Path(__file__).parent / "testdata/image.jpg"
+    with tempfile.NamedTemporaryFile(suffix=".jpg") as f:
+        convert(image_path.as_posix(), f.name, max_resolution=500)
+        img = Image.open(f.name)
+        print(img.height, img.width)
+        assert max(img.width, img.height) <= 500

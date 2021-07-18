@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
@@ -24,6 +26,14 @@ class Node(MP_Node):
         choices=DisplayOptions.choices,
         blank=True,
         default=DisplayOptions.DEFAULT,
+    )
+
+    representative_media = models.ForeignKey(
+        "media.Media",
+        on_delete=models.SET_NULL,
+        default=None,
+        null=True,
+        blank=True,
     )
 
     @property
@@ -67,8 +77,10 @@ class Node(MP_Node):
         qs = Tag.objects.filter(node__in=self.get_ancestors()).order_by("node__depth")
         return qs
 
-    @cached_property
-    def representative_media(self):
+    def get_representative_media(self) -> Optional["apps.media.models"]:
+        if self.representative_media:
+            return self.representative_media
+
         from apps.media.models import Media
 
         descendant_iterator = chain([self], self.get_descendants().iterator())

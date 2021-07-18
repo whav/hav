@@ -16,11 +16,17 @@ def rotation_tags(tags: List[Tag]):
             return {"rotation": int((match.group(1)))}
 
 
+def max_resolution(tags: List[Tag]):
+    pattern = re.compile("^maxResolution:(\d+)")
+
+    for tag in tags:
+        if (match := pattern.match(tag.name)) :
+            return {"max_resolution": int((match.group(1)))}
+
+
 def get_hints_from_tags(tags: List[Tag]):
     hints = {}
-    operations = [
-        rotation_tags,
-    ]
+    operations = [rotation_tags, max_resolution]
     for func in operations:
         result = func(tags)
         if result:

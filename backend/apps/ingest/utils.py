@@ -118,14 +118,14 @@ def get_or_create_node(nodename, parentnode, create_new_node=True):
         )
 
 
-def get_or_create_subnodes_from_path(relative_path, target_node, 
-                                     create_new_nodes=True):
+def get_or_create_subnodes_from_path(relative_path, target_node, create_new_nodes=True):
     """take string containing a relative path and a targed parent node;
     get/create subnodes for each path segment and return the last node
     """
     for path_segment in relative_path.split(os.sep):
-        new_node, created = get_or_create_node(path_segment, target_node,
-                                               create_new_node=create_new_nodes)
+        new_node, created = get_or_create_node(
+            path_segment, target_node, create_new_node=create_new_nodes
+        )
         if created:
             print(f"Node {new_node} has been created in parent-node {target_node}")
         if not new_node:

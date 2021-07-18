@@ -63,6 +63,7 @@ def convert(source, target, *args, **hints):
     )
 
     rotation = hints.get("rotation", None)
+    max_resolution = hints.get("max_resolution", None)
     collection = hints.get("collection", None)
 
     try:
@@ -81,6 +82,13 @@ def convert(source, target, *args, **hints):
             image = image.rotate(rotation)
         else:
             image = image.autorot()
+
+        if max_resolution:
+            max_side = max(image.width, image.height)
+            if max_side > max_resolution:
+                factor = max_resolution / max_side
+                image = image.resize(factor)
+
         # write to target
         image.write_to_file(target)
 

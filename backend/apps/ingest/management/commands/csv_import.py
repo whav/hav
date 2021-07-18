@@ -160,7 +160,9 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
                 for row in tracklog:
                     csvwriter.writerow(row)
         except Exception:
-            print("ERROR: Writing LogFile failed: ", )
+            print(
+                "ERROR: Writing LogFile failed: ",
+            )
 
         print("===" * 10)
         print("\nImport Summary:")

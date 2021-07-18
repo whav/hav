@@ -1,10 +1,11 @@
 import { useAPI } from "hooks";
 
-const ImageMedia = ({ media, sizes }) => {
+const ImageMedia = ({ media, sizes, width }) => {
   return (
     <img
       alt={media.title}
       sizes={sizes}
+      width={width}
       src={media.thumbnailUrl}
       srcSet={media.srcset.join(", ")}
     />
@@ -12,11 +13,11 @@ const ImageMedia = ({ media, sizes }) => {
 };
 
 const MediaSwitch = (data, props) => {
-  return <ImageMedia {...data} {...props.sizes} />;
+  return <ImageMedia {...data} {...props.sizes} {...props.width}  />;
 };
 
 const Media = (props) => {
-  const { id, caption, sizes } = props;
+  const { id, caption, sizes, width } = props;
   const { data } = useAPI("/api/media/", { mediaId: id });
   if (!data) {
     return null;

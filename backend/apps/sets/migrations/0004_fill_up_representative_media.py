@@ -1,5 +1,6 @@
 from django.db import migrations
 from django.core.exceptions import ObjectDoesNotExist
+import warnings
 
 
 def forwards(apps, schema_editor):
@@ -17,12 +18,12 @@ def forwards(apps, schema_editor):
         try:
             af = ArchiveFile.objects.get(original_filename__iendswith=media_ref)
         except ObjectDoesNotExist:
-            print(f"No file found from tag: {tag.name}, node {node.name} ({node.pk})")
+            warnings.warn(
+                f"No file found from tag: {tag.name}, node {node.name} ({node.pk})"
+            )
         else:
             node.representative_media = af.media_set.get()
             node.save()
-
-    raise NotImplementedError("Not there yet")
 
 
 class Migration(migrations.Migration):

@@ -8,9 +8,21 @@ Nebesky-Wojkowitz's material to be analysed from different perspectives and with
 
 ### Featured Sets
 <div class="featured_media_set">
+<h4>Places</h4>
 
-[<Media id="40" caption='Test 1' />](/collections/gaenszle/browse/66)
-[<Media id="58" caption='Test 2' />](/collections/nebesky/browse/66)
-[<Media id="23" caption='Test 2' />](/collections/nebesky/browse/123)
+[<Media id="11615" caption='Kalimpong' sizes='16rem' />](/collections/nebesky/browse/190)
+[<Media id="13027" caption='Darjeeling' sizes='16rem' />](/collections/nebesky/browse/254)
+[<Media id="8182" caption='Gangtok' sizes='16rem' />](/collections/nebesky/browse/84)
+
+<h4>Monasteries & Temples</h4>
+
+[<Media id="13078" caption='Bhutia Busti Monastery' sizes='16rem' />](/collections/nebesky/browse/255)
+[<Media id="13189" caption='Drug Sangnag Choling Monstery' sizes='16rem' />](/collections/nebesky/browse/256)
+[<Media id="13240" caption='Latta Lama Gompa' sizes='11rem' width='170px' />](/collections/nebesky/browse/257)
+[<Media id="13243" caption='Magdhog Yolmowa Monastery' sizes='16rem' />](/collections/nebesky/browse/258)
+[<Media id="11814" caption='Samten Choling Monastery' sizes='16rem' />](/collections/nebesky/browse/204)
+[<Media id="11281" caption='Sangchen Dorje Gompa' sizes='16rem' />](/collections/nebesky/browse/39)
+[<Media id="13535" caption='Tashi Dargyaling Monastery' sizes='11rem' width='170px' />](/collections/nebesky/browse/276)
+[<Media id="7926" caption='Tsuglagkhang Monastery' sizes='16rem' />](/collections/nebesky/browse/85)
 
 </div>

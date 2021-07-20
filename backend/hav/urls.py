@@ -8,10 +8,11 @@ from django.http import HttpResponseRedirect
 from apps.archive.urls import urlpatterns as archive_urls
 from apps.media.urls import urlpatterns as media_urls
 from api.urls import api_urls
+from .ui_urls import urlpatterns as dj_urlpatterns
 
 django_admin.site.site_header = "HAV Administration"
 django_admin.site.site_title = "HAV Admin"
-django_admin.site.disable_action("delete_selected")
+# django_admin.site.disable_action("delete_selected")
 
 hav_admin_patterns = (
     [
@@ -78,4 +79,5 @@ urlpatterns = [
     path("media/", include((media_urls, "media"), namespace="media")),
     path("d/", include(urlpatterns)),
     path("protected/download/<path:path>", dummy_view, name="protected_download"),
+    path("ui/", include((dj_urlpatterns, "hav"), namespace="hav")),
 ]

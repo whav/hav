@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Serif&display=swap");
+
+@font-face {
+  font-family: "DejaVu Sans Condensed";
+  src: url("./fonts/DejaVuSansCondensed.woff2") format("woff2"),
+    url("./fonts/DejaVuSansCondensed.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DejaVu Sans Condensed";
+  src: url("./fonts/DejaVuSansCondensed-Bold.woff2") format("woff2"),
+    url("./fonts/DejaVuSansCondensed-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .django-form {
+    @apply p-4 border-gray-500 rounded;
+
+    h1 {
+      @apply text-lg font-bold text-center;
+    }
+
+    p {
+      @apply mt-1;
+    }
+
+    label {
+      @apply block text-base mb-1 font-semibold;
+    }
+    /*
+    > * {
+      @apply mb-2;
+    } */
+
+    input {
+      @apply w-full rounded border-gray-300 focus:ring-blue-400 focus:shadow-md;
+    }
+
+    .field .errorlist.nonfield {
+      @apply p-2 bg-red-200 text-black;
+    }
+
+    .field.erroneous input {
+      @apply bg-red-100;
+    }
+
+    .errorlist {
+      @apply list-none text-red-600 mt-1 text-sm;
+    }
+
+    .submit-row {
+      @apply flex justify-between mt-3;
+    }
+
+    button {
+      @apply p-2 rounded bg-gray-300;
+    }
+
+    button[type="submit"] {
+      @apply bg-green-400 text-white;
+    }
+  }
+
+  input.unstyled,
+  input.unstyled:focus {
+    @apply shadow-none ring-0 border-0;
+  }
+
+  table.table {
+    @apply min-w-full divide-y divide-gray-200 border-separate border;
+
+    thead {
+      @apply bg-gray-50;
+    }
+  }
+	.featured_media_set {
+		margin: 0;
+		padding: 0;
+	}
+	.featured_media_set p{
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		padding: 0;
+		margin: 0;
+	}
+	.featured_media_set a {
+		color: #2d5d80;
+		text-decoration: none;
+	}
+	.featured_media_set .max-w-sm.m-4 {
+		margin: 0 1.5rem 2rem 0;
+		max-width: 16rem;
+	}
+	.featured_media_set img {
+		margin: 0;
+	}
+}

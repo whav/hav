@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_rq",
     "graphene_django",
+    "tailwind",
     "apps.whav",
     "apps.sets",
     "apps.archive",
@@ -88,6 +89,7 @@ INSTALLED_APPS = [
     "apps.tags",
     "apps.search",
     "apps.accounts",
+    "apps.theme",
     "sources.uploads",
 ]
 
@@ -113,6 +115,8 @@ if DEBUG:
 
 
 ROOT_URLCONF = "hav.urls"
+
+TAILWIND_APP_NAME = "apps.theme"
 
 TEMPLATES = [
     {
@@ -199,6 +203,7 @@ WEBPACK_LOADER = {
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = (
+    django_root("static/"),
     ("wp", WEBPACK_BUILD_PATH),
     ("dj_static", django_root("static/")),
     ("tailwind", DJANGO_STYLES_BUILD_PATH),

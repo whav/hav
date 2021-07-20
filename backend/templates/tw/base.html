@@ -1,18 +1,29 @@
 <!DOCTYPE html>
-{%  load static %}
+{% load static %}
+{% load tailwind_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}HAV{% endblock title %}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{% static "dj_static/favicon.ico" %}">
-    <link rel="stylesheet" href="{% static 'tailwind/styles.css' %}" >
+    {% tailwind_css %}
     {% block extra_head %}{% endblock %}
 </head>
 <body class="w-full min-h-screen">
-{% block navbar %}
-{% include './nav.html' %}
-{% endblock navbar %}
-{% block body %}
-{% endblock body %}
+      <div class="flex flex-col md:flex-row md:items-stretch">
+        <div class="flex-none md:w-44 md:min-h-screen lg:w-64 bg-yellow-400">
+            {% block navbar %}
+            {% include './nav.html' %}
+            {% endblock navbar %}
+        </div>
+        <div className="flex-grow p-4  min-h-screen">
+            {% block body %}
+            {% endblock body %}
+        </div>
+      </div>
+
+<script type="application/javascript"  src="{% static 'js/init.js' %}" />
 </body>
 </html>
+
+

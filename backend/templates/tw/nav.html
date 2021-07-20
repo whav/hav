@@ -1,15 +1,93 @@
 {%  load static %}
-<div class="relative bg-yellow-400">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
-      <div class="flex justify-start lg:w-0 lg:flex-1">
-        <a href="#">
-          <span class="sr-only">HAV</span>
-            <a href="/">
-              <img class="h-8 w-auto sm:h-10" src="{% static 'dj_static/hav-logo.svg' %}" alt="hav logo">
-            </a>
-        </a>
+
+<div class="md:h-full flex flex-col">
+  <div class="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl">
+    <div class="flex flex-row justify-between">
+      <div class="flex-grow md:h-20">
+        <Link href="/">
+          <a href="/">
+            <img
+              class="block h-8 md:h-20 w-auto md:mx-auto"
+              src="{%  static 'logos/hav.svg' %}"
+            />
+          </a>
+      </div>
+      <div class="flex-none text-2xl md:hidden">
+        <button class="js-hamburger">
+            <div class="block h-6 w-6">
+                {% include 'svg/hamburger.svg' %}
+            </div>
+        </button>
       </div>
     </div>
+
+    <nav id="js-menu"
+      class="text-lg tracking-tight md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right md:hidden"
+    >
+      <div>
+           <ul>
+      <li>
+
+          <a href="/">Home</a>
+        <ul>
+          <li>
+              <a href="/cooperation/">How to cooperate</a>
+          </li>
+
+          <li>
+              <a href="/open-knowledge/">License Models</a>
+          </li>
+        </ul>
+      </li>
+
+      <li className="md:mt-2">
+        <span className="text-base text-gray-500">Collections</span>
+{#        <ul>#}
+{#          {collections.map((c) => (#}
+{#            <li key={c.slug}>#}
+{#              <Link href={`/collections/${c.slug}/`}>#}
+{#                <a>{c.shortName}</a>#}
+{#              </Link>#}
+{#            </li>#}
+{#          ))}#}
+{#        </ul>#}
+      </li>
+    </ul>
+        <div class="md:mt-20">
+           <ul>
+           {% if user.is_authenticated %}
+            <li>
+              {{ user.username }} (<a href="{% url 'auth:logout' %}">Logout</a>)
+            </li>
+           {% else %}
+             <li>
+                <a href="{% url 'auth:login' %}">Login</a>
+            </li>
+           {% endif %}
+
+        <li class="text-sm">
+          <a href="https://dsba.univie.ac.at/fileadmin/user_upload/p_dsba/datenschutzerklaerung_websites_V04_26062020_EN.pdf">
+            Privacy Policy
+          </a>
+        </li>
+        <li class="text-sm">
+            <a href="/imprint/">Imprint</a>
+        </li>
+      </ul>
+        </div>
+      </div>
+      <div>
+        <div class="sm:mt-32 text-base text-gray-500">
+          <ul>
+            <li class="flex flex-row flex-wrap justify-between">
+              <img class="block h-8 w-auto" src="{% static 'logos/cirdis.svg' %}" >
+              <img class="block h-8 w-auto" src="{% static 'logos/univie.svg' %}" >
+            </li>
+            <li class="flex flex-row flex-wrap justify-between md:mt-10"></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   </div>
+  <div class="flex-grow"></div>
 </div>

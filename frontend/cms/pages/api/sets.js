@@ -7,6 +7,9 @@ export default async (req, res) => {
         node(nodeId: $set, collectionSlug: $collection) {
           name
           description
+          representativeMedia {
+            id
+          }
           tags {
             id
             name
@@ -19,6 +22,7 @@ export default async (req, res) => {
             name
             id
             representativeMedia {
+              id
               title: originalMediaIdentifier
               thumbnailUrl
               aspectRatio

@@ -1,4 +1,5 @@
 import graphene
+
 from graphene_django.types import DjangoObjectType
 from apps.webassets.schema import WebAssetType
 from django.urls import reverse

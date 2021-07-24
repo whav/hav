@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from apps.hav_collections.models import Collection
 from apps.sets.models import Node
+from apps.media.models import Media
+from apps.hav_collections.models import Collection
+from hav_utils.imaginary import generate_thumbnail_url
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -46,3 +49,35 @@ class NodeSerializer(SimpleNodeSerializer):
             "ancestors",
             "collection",
         ]
+
+
+class MediaLinkSerializer(serializers.ModelSerializer):
+    src = serializers.SerializerMethodField()
+
+    def get_src(self, media: Media):
+        wa = media.primary_image_webasset
+        return generate_thumbnail_url(wa)
+
+    class Meta:
+        model = Media
+        fields = ["id", "title", "src"]
+
+
+class CollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Collection
+        fields = ["id", "slug", "name"]
+
+
+class NodeLinkSerializer(serializers.ModelSerializer):
+
+    media = serializers.SerializerMethodField()
+    collection = CollectionSerializer(source="get_collection")
+
+    def get_media(self, node):
+        media = self.context["media"]
+        return MediaLinkSerializer(instance=media).data
+
+    class Meta:
+        model = Node
+        fields = ["id", "name", "media", "collection"]

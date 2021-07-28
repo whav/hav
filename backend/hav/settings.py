@@ -78,7 +78,6 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_rq",
     "graphene_django",
-    "tailwind",
     "apps.whav",
     "apps.sets",
     "apps.archive",
@@ -89,7 +88,6 @@ INSTALLED_APPS = [
     "apps.tags",
     "apps.search",
     "apps.accounts",
-    "apps.theme",
     "sources.uploads",
 ]
 
@@ -207,6 +205,7 @@ STATICFILES_DIRS = (
     ("wp", WEBPACK_BUILD_PATH),
     ("dj_static", django_root("static/")),
     ("tailwind", DJANGO_STYLES_BUILD_PATH),
+    ("theme", django_root("../frontend/theme/dist")),
 )
 
 STATIC_ROOT = project_root(env("STATIC_ROOT", default="dist/static/"))

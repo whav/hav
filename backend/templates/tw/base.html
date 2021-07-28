@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 {% load static %}
-{% load tailwind_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}HAV{% endblock title %}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{% static "dj_static/favicon.ico" %}">
-    {% tailwind_css %}
-{#    <link rel="stylesheet" href="{% static 'styles.css' %}" >#}
+    <link rel="stylesheet" href="{% static 'theme/styles.css' %}" >
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {% block extra_head %}{% endblock %}
 </head>

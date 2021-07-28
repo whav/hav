@@ -1,6 +1,6 @@
 {%  load static %}
 
-<div class="md:h-full flex flex-col">
+<div class="md:h-full flex flex-col" x-init="console.log('I\'m being initialized!')" x-data="{ open: false, toggle() { this.open = ! this.open } }"">
   <div class="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl">
     <div class="flex flex-row justify-between">
       <div class="flex-grow md:h-20">
@@ -13,7 +13,7 @@
           </a>
       </div>
       <div class="flex-none text-2xl md:hidden">
-        <button class="js-hamburger">
+        <button class="js-hamburger" @click="toggle()">
             <div class="block h-6 w-6">
                 {% include 'svg/hamburger.svg' %}
             </div>
@@ -21,8 +21,9 @@
       </div>
     </div>
 
-    <nav id="js-menu"
-      class="text-lg tracking-tight md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right md:hidden"
+    <nav :class="{ 'sm:hidden': ! open }"
+
+      class="text-lg tracking-tight md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right sm:hidden md:block"
     >
       <div>
            <ul>
@@ -40,8 +41,8 @@
         </ul>
       </li>
 
-      <li className="md:mt-2">
-        <span className="text-base text-gray-500">Collections</span>
+      <li class="md:mt-2">
+        <span class="text-base text-gray-500">Collections</span>
 {#        <ul>#}
 {#          {collections.map((c) => (#}
 {#            <li key={c.slug}>#}

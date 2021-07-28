@@ -7,9 +7,11 @@
     <title>{% block title %}HAV{% endblock title %}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{% static "dj_static/favicon.ico" %}">
     {% tailwind_css %}
+{#    <link rel="stylesheet" href="{% static 'styles.css' %}" >#}
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="w-full min-h-screen">
+<body class="w-full min-h-screen font-sans">
       <div class="flex flex-col md:flex-row md:items-stretch">
         <div class="flex-none md:w-44 md:min-h-screen lg:w-64 bg-yellow-400">
             {% block navbar %}
@@ -21,8 +23,6 @@
             {% endblock body %}
         </div>
       </div>
-
-<script type="application/javascript"  src="{% static 'js/init.js' %}" />
 </body>
 </html>
 

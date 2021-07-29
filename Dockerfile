@@ -30,6 +30,28 @@ WORKDIR /code/frontend/django-styles/
 ENV NODE_ENV "production"
 RUN npm run build
 
+
+FROM node:12 as theme
+
+WORKDIR /code/frontend/theme/
+
+# Link up the required build files
+COPY ./frontend/theme/package.json ./frontend/theme/package-lock.json ./
+RUN npm ci
+
+# now copy the backend folder where the django
+# templates live
+WORKDIR /code
+# copy the whole source folder
+COPY . .
+RUN ls -lah
+
+WORKDIR /code/frontend/theme/
+
+ENV NODE_ENV "production"
+RUN npm run build
+
+
 FROM python:3.8-buster
 ENV PYTHONUNBUFFERED 1
 
@@ -48,7 +70,7 @@ WEBASSET_ROOT=/archive/webassets \
 UPLOADS_ROOT=/archive/uploads \
 DJANGO_MEDIA_ROOT=/archive/uploads \
 DJANGO_SECRET_KEY=I_AM_VERY_UNSAFE \
-BASHHOMEDIR=/hav/.localhistory/bash \ 
+BASHHOMEDIR=/hav/.localhistory/bash \
 HISTFILE=$BASHHOMEDIR/.bash_history \
 IPYTHONDIR=/hav/.localhistory/ipython \
 IMAGINARY_SECRET=UNSAFE \
@@ -63,6 +85,10 @@ COPY --from=admin-ui /code/admin/build ./admin/build
 
 # copy the npm generated styles
 COPY --from=django-styles /code/frontend/django-styles/build ./django-styles/build
+
+# copy the npm generated styles
+COPY --from=theme /code/frontend/theme/dist ./theme/dist
+
 
 # install all the python stuff
 RUN pip install -U poetry==$POETRY_VERSION

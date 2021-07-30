@@ -80,9 +80,13 @@ def thumbnail_width(webasset: WebAsset, base: int = 150, unit: str = "px"):
 
 @register.inclusion_tag("webassets/tags/icons.html")
 def icons(object: Union[Node, Media]):
-
+    icons = []
     if isinstance(object, Node):
-        print(object)
+        icons.append("node")
     elif isinstance(object, Media):
-        print("media", object)
-    return {"icons": [type(object)]}
+        if object.primary_file:
+            mime = object.primary_file.mime_type
+            if mime:
+                icons.append(mime.split("/")[0])
+        # TODO: protected
+    return {"icons": icons}

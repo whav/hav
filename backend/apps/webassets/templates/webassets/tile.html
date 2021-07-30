@@ -3,16 +3,10 @@
 <figure class="p-0 m-4 rounded-sm border-transparent hover:bg-gray-100 border" {% if thumbnail_width %}style="width: {{ thumbnail_width }}"{% endif %}>
 <div class="relative">
     <img src="{% thumbnail_url webasset %}" loading="lazy" title="{% firstof title caption %}" class="border border-gray-100">
-    {%  if type == 'node' %}
-        node...
-    {% else %}
-        {% icons media %}
-    {%  endif %}
-{#    <div class="absolute top-0 left-0 flex flex-row">#}
-{#        <div class="bg-gray-100 bg-opacity-90 rounded-full p-1 transform -translate-x-1/4 -translate-y-1/4 border border-gray-100">#}
-{#            #}
-{#        </div>#}
-{#    </div>#}
+    <div class="absolute top-0 left-0 flex flex-row">
+        {% icons represents %}
+    </div>
+
 </div>
 <figcaption class="text-sm">
     {{ caption }}

@@ -2,7 +2,7 @@ import os
 import mimetypes
 from PIL import Image
 from django.db import models
-
+from django.utils.functional import cached_property
 from apps.archive.models import ArchiveFile
 from hav_utils.storages import getStorage
 
@@ -29,6 +29,11 @@ class WebAsset(models.Model):
     # these fields are used for images
     width = models.PositiveIntegerField(null=True, blank=True)
     height = models.PositiveIntegerField(null=True, blank=True)
+
+    @cached_property
+    def aspect_ratio(self):
+        if self.width and self.height:
+            return self.width / self.height
 
     def __str__(self):
         return "%s %s" % (self.file.name, self.mime_type)

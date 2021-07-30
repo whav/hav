@@ -10,27 +10,6 @@ RUN yarn install --production=false
 COPY ./frontend/admin .
 RUN yarn build
 
-FROM node:12 as django-styles
-
-WORKDIR /code/frontend/django-styles/
-
-# Link up the required build files
-COPY ./frontend/django-styles/package.json ./frontend/django-styles/package-lock.json ./
-RUN npm install
-
-# now copy the backend folder where the django
-# templates live
-WORKDIR /code
-# copy the whole source folder
-COPY . .
-RUN ls -lah
-
-WORKDIR /code/frontend/django-styles/
-
-ENV NODE_ENV "production"
-RUN npm run build
-
-
 FROM node:12 as theme
 
 WORKDIR /code/frontend/theme/
@@ -82,9 +61,6 @@ RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/arch
 # copy the frontend files
 WORKDIR /hav/frontend
 COPY --from=admin-ui /code/admin/build ./admin/build
-
-# copy the npm generated styles
-COPY --from=django-styles /code/frontend/django-styles/build ./django-styles/build
 
 # copy the npm generated styles
 COPY --from=theme /code/frontend/theme/dist ./theme/dist

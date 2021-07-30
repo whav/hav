@@ -127,6 +127,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "hav_utils.context_processors.collections",
             ]
         },
     }
@@ -183,7 +184,6 @@ REST_FRAMEWORK = {
 }
 
 WEBPACK_BUILD_PATH = project_root("frontend/admin/build/")
-DJANGO_STYLES_BUILD_PATH = project_root("frontend/django-styles/build/")
 
 WEBPACK_LOADER = {
     "DEFAULT": {
@@ -204,7 +204,6 @@ STATICFILES_DIRS = (
     django_root("static/"),
     ("wp", WEBPACK_BUILD_PATH),
     ("dj_static", django_root("static/")),
-    ("tailwind", DJANGO_STYLES_BUILD_PATH),
     ("theme", django_root("../frontend/theme/dist")),
 )
 

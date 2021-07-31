@@ -117,6 +117,20 @@ class MediaManager(models.Manager):
         )
 
 
+class MediaPreviewManager(models.Manager):
+
+    image_preview_attr = "_primary_image_webasset"
+
+    def with_image_previews(self):
+        from apps.webassets.models import WebAsset
+
+        qs = WebAsset.objects.filter(mime_type__istartswith="image/")
+        prefetch = models.Prefetch(
+            "files__webasset_set", queryset=qs, to_attr=self.image_preview_attr
+        )
+        return self.prefetch_related(prefetch)
+
+
 class Media(models.Model):
 
     short_code = models.SlugField(
@@ -192,6 +206,9 @@ class Media(models.Model):
 
     tags = models.ManyToManyField(Tag)
 
+    objects = models.Manager()
+    preview_manager = MediaPreviewManager()
+
     def __str__(self):
         return "Media ID {}".format(self.pk)
 
@@ -217,6 +234,11 @@ class Media(models.Model):
         if primary_file is None:
             return None
 
+        # performance optimization if the special manager was used
+        if hasattr(primary_file, MediaPreviewManager.image_preview_attr):
+            return getattr(primary_file, MediaPreviewManager.image_preview_attr)[0]
+
+        # else hit the database
         try:
             return primary_file.webasset_set.filter(mime_type__istartswith="image/")[0]
         except IndexError:

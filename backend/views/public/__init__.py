@@ -1,5 +1,4 @@
 from django.views.generic import TemplateView, DetailView
-
 from apps.hav_collections.models import Collection
 from apps.sets.models import Node
 from apps.media.models import Media
@@ -40,7 +39,11 @@ class CollectionNodeMixin:
         return node.get_children()
 
     def get_media_entries(self):
-        return self.node.media_set.all()
+        return (
+            Media.preview_manager.with_image_previews()
+            .filter(set=self.node)
+            .select_related("collection")
+        )
 
     def get_shared_context(self):
         return {

@@ -40,6 +40,7 @@ def is_image(filename):
 
 
 def protected_src(media, user, path):
+    raise NotImplementedError("This should not be used anymore")
     if media.is_public:
         return path
 
@@ -56,15 +57,11 @@ def get_imaginary_path(obj_or_path, user=None):
     from sources.uploads.models import FileUpload
 
     if isinstance(obj_or_path, WebAsset):
-        # Webassets
-        media = obj_or_path.archivefile.media_set.get()
         path = Path("webassets/").joinpath(obj_or_path.file.name).as_posix()
-        return protected_src(media, user, path)
+        return path
     elif isinstance(obj_or_path, ArchiveFile):
-        # Archivefile
-        media = obj_or_path.media_set.get()
         path = Path("archive/").joinpath(obj_or_path.file.name).as_posix()
-        return protected_src(media, user, path)
+        return path
     elif isinstance(obj_or_path, str) and is_absolute(obj_or_path):
         # url case
         return obj_or_path

@@ -53,7 +53,6 @@ BASHHOMEDIR=/hav/.localhistory/bash \
 HISTFILE=$BASHHOMEDIR/.bash_history \
 IPYTHONDIR=/hav/.localhistory/ipython \
 IMAGINARY_SECRET=UNSAFE \
-POETRY_VERSION=1.1.3 \
 PYTHONPATH=/venv/lib/python3.8/site-packages
 
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads", "/hav/.localhistory/bash", "/hav/.localhistory/ipython"]
@@ -67,12 +66,12 @@ COPY --from=theme /code/frontend/theme/dist ./theme/dist
 
 
 # install all the python stuff
-RUN pip install -U poetry==$POETRY_VERSION
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
 
 WORKDIR /hav/backend
 COPY backend/pyproject.toml backend/poetry.lock ./
-RUN poetry --version
-RUN poetry export --format requirements.txt --without-hashes --dev -o requirements.txt
+RUN ~/.local/bin/poetry --version
+RUN ~/.local/bin/poetry export --format requirements.txt --without-hashes --dev -o requirements.txt
 RUN python -m venv /venv
 RUN /venv/bin/pip install -r requirements.txt
 

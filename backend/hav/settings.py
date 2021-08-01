@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     "apps.tags",
     "apps.search",
     "apps.accounts",
+    "apps.theme",
     "sources.uploads",
 ]
 

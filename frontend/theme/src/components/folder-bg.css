@@ -1,0 +1,20 @@
+/* 
+  this is an implementation of a trick found here
+  https://www.exratione.com/2011/09/how-to-overflow-a-background-image-using-css3/ 
+  sadly a styling wrapper is required.
+  and it only works because overflow is hidden on the main content  area
+  */
+
+.folder-bg {
+  position: relative;
+}
+
+.folder-bg::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  left: -50%;
+  z-index: -1;
+  @apply bg-gray-200;
+}

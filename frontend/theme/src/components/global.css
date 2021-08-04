@@ -1,0 +1,39 @@
+input.unstyled,
+input.unstyled:focus {
+  @apply shadow-none ring-0 border-0;
+}
+
+table.table {
+  @apply min-w-full divide-y divide-gray-200 border-separate border;
+
+  thead {
+    @apply bg-gray-50;
+  }
+}
+
+.featured_media_set {
+  margin: 0;
+  padding: 0;
+}
+
+.featured_media_set p {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+}
+
+.featured_media_set a {
+  color: #2d5d80;
+  text-decoration: none;
+}
+
+.featured_media_set .max-w-sm.m-4 {
+  margin: 0 1.5rem 2rem 0;
+  max-width: 16rem;
+}
+
+.featured_media_set img {
+  margin: 0;
+}

@@ -1,7 +1,33 @@
 {% extends 'tw/base.html' %}
 {% block body %}
 <div class="mx-auto prose max-w-xl py-4">
-    {% block content %}
-    {% endblock content %}
+{% block content %}
+<div>
+
+<h1>{{ object.original_filename }}</h1>
+
+<p>This is the permanent representation of the file <span class="font-bold">{{ object.original_filename }}</span> ({{ object.size|filesizeformat }}, SHA-256 hash: {{ object.hash }}).</p>
+
+{% if media %}
+<p>
+This file is associated with the media entry {{ media.pk }}.
+    Please go to the <a href="{% frontend_url media %}">media detail page</a> to see all available metadata.
+</p>
+{% endif %}
+
+{% include './file_detail_table.html' with file=object %}
+
+{% with webassets=object.webasset_set.all %}
+The following webassets have been generated for this file:
+
+{% for wa in object.webasset_set.all %}
+    {% webasset_preview wa %}
+    <hr />
+{% endfor %}
+{% endwith %}
+
+</div>
+
+{% endblock %}
 </div>
 {% endblock body %}

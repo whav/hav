@@ -1,10 +1,62 @@
+from typing import Union
 from django import template
-from ..models import WebAsset
-from ...archive.models import ArchiveFile
+from mimetypes import guess_type
+from apps.webassets.models import WebAsset
+from apps.archive.models import ArchiveFile
+from apps.media.models import Media
+from hav_utils.imaginary import (
+    generate_thumbnail_url,
+    generate_srcset_urls,
+    get_imaginary_path,
+)
 
 register = template.Library()
 
 template_base = "webassets/tags"
+
+
+@register.inclusion_tag(f"{template_base}/webasset.html", takes_context=True)
+def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media]):
+    if isinstance(obj, Media):
+        media = obj
+        webasset = media.primary_file.webasset_set.first()
+        # breakpoint()
+    elif isinstance(obj, WebAsset):
+        media = obj.archivefile.media_set.get()
+        webasset = obj
+    elif isinstance(obj, ArchiveFile):
+        media = obj.media_set.get()
+        webasset = obj.webasset_set.get()
+    else:
+        raise ValueError(f"Can not find webasset for object {obj}")
+
+    # TODO: access control
+    user = context.get("user")
+    if user and user.is_authenticated:
+        pass
+
+    media_type = None
+    template = None
+    mt = webasset.mime_type or guess_type(webasset.file)[0]
+    if mt:
+        media_type = mt.split("/")[0]
+        template = f"{template_base}/webassets/{media_type}.html"
+
+    context = {
+        "webasset": webasset,
+        "media": media,
+        "media_type": media_type,
+        "template": template,
+    }
+
+    if media_type == "image":
+        context.update(
+            {
+                "thumbnail_url": generate_thumbnail_url(webasset),
+                "srcset": generate_srcset_urls(webasset),
+            }
+        )
+    return context
 
 
 @register.inclusion_tag(f"{template_base}/preview.html")

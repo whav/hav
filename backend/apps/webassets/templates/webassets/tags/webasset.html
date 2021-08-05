@@ -1,0 +1,13 @@
+{%  if template %}
+    {% include template %}
+{% else %}
+<h3>Unknown Webasset: {{ webasset }}</h3>
+<pre>
+    {{ media }}
+
+    {{ webasset }}
+
+    {{ media_type }}
+</pre>
+{% endif %}
+

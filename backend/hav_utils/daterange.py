@@ -78,9 +78,11 @@ class Resolutions(Enum):
 class ReverseDateTimeRange:
     def __init__(self, start: datetime, end: datetime):
         self.start, self.end = sorted([start, end])
+        self.min_time = time.min
+        self.max_time = time(time.max.hour, time.max.minute, time.max.second)
 
     def get_resolution(self):
-        if self.start.time() == time.min and self.end.time() == time.max:
+        if self.start.time() == self.min_time and self.end.time() == self.max_time:
             sd = self.start.date()
             ed = self.end.date()
 

@@ -1,0 +1,4 @@
+<img src="{{ thumbnail_url }}"
+    {% if srcset %}
+     srcset="{% for width, src in srcset %}{{ src }} {{ width }}w{% if not forloop.last %}, {% endif %}{% endfor %}" />
+    {% endif %}

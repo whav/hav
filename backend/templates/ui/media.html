@@ -1,13 +1,27 @@
-{% extends '../tw/base.html' %}
-{% load static daterange %}
-{% block body %}
+{% extends './base.html' %}
+{% load static daterange breadcrumbs webassets cache %}
 
-<h1>{{ media }}</h1>
+{%  block breadcrumbs %}
+    {% cache 60 'media' media.pk 'true' %}
+    {% render_breadcrumbs media include_last=True %}
+    {% endcache %}
+{% endblock breadcrumbs %}
+
+
+{% block title %}
+    {%  firstof  media.title media %}
+{% endblock title %}
+
+{% block  description %}{% endblock description %}
+
+
+{%  block content %}
 {% with license=media.license %}
 <div class="md:flex md:flex-row md:flex-wrap pt-6">
     <div class="flex-auto max-w-2xl mr-4 mb-4">
         <figure class="md:pr-10 md:pb-10">
-            <img src="{% static 'webassets/image.svg' %}"/>
+{#            <img src="{% static 'webassets/image.svg' %}"/>#}
+            {% render_webasset media %}
             <figcaption class="flex justify-between">
                 <div>
                     <ul class="inline-block list-none">
@@ -180,4 +194,4 @@
 
             </div>
 
-{% endblock body %}
+{% endblock content %}

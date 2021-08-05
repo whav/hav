@@ -1,0 +1,28 @@
+{% extends '../tw/base.html' %}
+
+{% block body %}
+    <div class="flex justify-between md:h-20 md:items-end">
+        {%  block breadcrumbs %}
+        {% include './components/breadcrumbs.html' with collection=collection ancestors=ancestors only%}
+        {% endblock breadcrumbs %}
+        {%  block searchbar %}
+        <div>{% include './components/search.html' %}</div>
+        {% endblock searchbar %}
+    </div>
+
+    <div class="md:mt-8 mb-10">
+        <h1 class="text-xl font-bold">
+            {%  block title %}Here be the title
+            {% endblock title %}
+        </h1>
+        <div class="prose">
+            {% block description %}
+                Here be the description
+            {% endblock description %}
+        </div>
+    </div>
+    {% block content %}
+
+    {% endblock content %}
+
+{% endblock body %}

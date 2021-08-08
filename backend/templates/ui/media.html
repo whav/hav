@@ -56,10 +56,6 @@
                         <dt class="text-sm font-medium text-gray-500">description</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ media.description }}</dd>
                     </div>
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">#}
-{#                        <dt class="text-sm font-medium text-gray-500">affiliation</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>#}
-{#                    </div>#}
 
                     <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">
                         <dt class="text-sm font-medium text-gray-500">keywords</dt>
@@ -124,28 +120,30 @@
 {#                        <dt class="text-sm font-medium text-gray-500">available formats</dt>#}
 {#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>#}
 {#                    </div>#}
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">#}
-{#                        <dt class="text-sm font-medium text-gray-500">creator(s)</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">#}
-{#                            <ul class="inline-block list-none">#}
-{#                                <li>Martin Gaenszle</li>#}
-{#                            </ul>#}
-{#                        </dd>#}
-{#                    </div>#}
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">#}
-{#                        <dt class="text-sm font-medium text-gray-500">creation date</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><span#}
-{#                                title="Sep 14, 2019, 2:00:00 AM - Sep 15, 2019, 1:59:59 AM (DAY)">Sep 14, 2019</span>#}
-{#                        </dd>#}
-{#                    </div>#}
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">#}
-{#                        <dt class="text-sm font-medium text-gray-500">archived by</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>#}
-{#                    </div>#}
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">#}
-{#                        <dt class="text-sm font-medium text-gray-500">archiving date</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">May 12, 2021, 8:13:58 AM</dd>#}
-{#                    </div>#}
+                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">
+                        <dt class="text-sm font-medium text-gray-500">creator(s)</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <ul class="inline-block list-none">
+                                {% for creator in media.creators.all %}
+                                <li>{{ creator }}</li>
+                                {% endfor %}
+                            </ul>
+                        </dd>
+                    </div>
+                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
+                        <dt class="text-sm font-medium text-gray-500">creation date</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <span title="{{ media.creation_date.lower }} - {{ media.creation_date.upper }}">{{ media.creation_date|daterange }}</span>
+                        </dd>
+                    </div>
+                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">
+                        <dt class="text-sm font-medium text-gray-500">archived by</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ media.created_by }}</dd>
+                    </div>
+                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
+                        <dt class="text-sm font-medium text-gray-500">archiving date</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ media.created_at }}</dd>
+                    </div>
                 </dl>
             </div>
 {#        </div>#}

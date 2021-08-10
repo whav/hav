@@ -1,5 +1,11 @@
 {% extends './base.html' %}
-{% load gallery_tags markdown breadcrumbs %}
+{% load static gallery_tags markdown breadcrumbs %}
+
+{% block extra_head %}
+    {{ block.super }}
+    <script defer src="{% static 'mdx/mdx_client.js' %}" ></script>
+{% endblock %}
+
 
 {%  block breadcrumbs %}
 {% render_breadcrumbs node %}
@@ -8,7 +14,9 @@
 {%  block title %}{% firstof title node.name %}{% endblock title %}
 
 {%  block description %}
-            {{ node.description|markdown }}
+    <div class="prose">
+        {% mdx node.description %}
+    </div>
 {% endblock description %}
 
 {% block content %}

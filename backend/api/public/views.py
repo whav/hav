@@ -1,8 +1,8 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView
-from rest_framework import serializers
 from apps.hav_collections.models import Collection
 from apps.sets.models import Node
-from .serializers import CollectionSerializer, NodeSerializer
+from apps.media.models import Media
+from .serializers import CollectionSerializer, NodeSerializer, MediaSerializer
 
 
 class CollectionListView(ListAPIView):
@@ -18,3 +18,10 @@ class NodeView(RetrieveAPIView):
 
     def get_queryset(self):
         return Node.objects.all()
+
+
+class MediaView(RetrieveAPIView):
+    serializer_class = MediaSerializer
+    lookup_url_kwarg = "media_id"
+
+    queryset = Media.objects.all()

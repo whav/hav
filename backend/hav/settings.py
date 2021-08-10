@@ -206,6 +206,7 @@ STATICFILES_DIRS = (
     ("wp", WEBPACK_BUILD_PATH),
     ("dj_static", django_root("static/")),
     ("theme", django_root("../frontend/theme/dist")),
+    ("mdx", django_root("../frontend/xdm-server/dist")),
 )
 
 STATIC_ROOT = project_root(env("STATIC_ROOT", default="dist/static/"))

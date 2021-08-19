@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently -n mdx-server,mdx-client,tailwind \"npm:dev:mdx-server\" \"npm:dev:client\" \"npm:dev:tw\"",
+    "build": "concurrently -n mdx-client,tailwind \"npm:build:client\" \"npm:build:tw\"",
     "dev:mdx-server": "nodemon src/mdx/server.mjs",
     "dev:client": "esbuild --watch --loader:.js=jsx --bundle src/mdx/client.jsx --outfile=static/theme/mdx_client.js",
     "build:client": "esbuild --bundle --loader:.js=jsx src/mdx/client.jsx --outfile=static/theme/mdx_client.js",

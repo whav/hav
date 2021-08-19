@@ -1,31 +1,19 @@
-FROM node:12 as admin-ui
-
-WORKDIR /code/
-
-# Link up the required build files
-COPY ./frontend/admin/package.json ./frontend/admin/yarn.lock ./admin/
-
-WORKDIR /code/admin/
-RUN yarn install --production=false
-COPY ./frontend/admin .
-RUN yarn build
-
 FROM node:12 as theme
 
-WORKDIR /code/frontend/theme/
+WORKDIR /code/backend/apps/theme/
 
 # Link up the required build files
-COPY ./frontend/theme/package.json ./frontend/theme/package-lock.json ./
+COPY ./backend/apps/theme/package.json ./backend/apps/theme/package-lock.json ./
 RUN npm ci
 
 # now copy the backend folder where the django
 # templates live
-WORKDIR /code
-# copy the whole source folder
-COPY . .
-RUN ls -lah
+WORKDIR /code/backend/
 
-WORKDIR /code/frontend/theme/
+# copy the whole source folder
+COPY ./backend .
+
+WORKDIR /code/backend/apps/theme/
 
 ENV NODE_ENV "production"
 RUN npm run build
@@ -58,11 +46,8 @@ PYTHONPATH=/venv/lib/python3.8/site-packages
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads", "/hav/.localhistory/bash", "/hav/.localhistory/ipython"]
 
 # copy the frontend files
-WORKDIR /hav/frontend
-COPY --from=admin-ui /code/admin/build ./admin/build
-
-# copy the npm generated styles
-COPY --from=theme /code/frontend/theme/dist ./theme/dist
+WORKDIR /hav/backend/apps/theme/
+COPY --from=theme /code/backend/apps/theme/static ./static
 
 
 # install all the python stuff

@@ -3,8 +3,12 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   // mode: "jit",
   purge: [
-    "../../backend/apps/**/templates/**/*.html",
-    "../../backend/templates/**/*.html",
+    // js templates
+    "./src/mdx/",
+    // app templates
+    "../**/templates/**/*.html",
+    // project template dir
+    "../../templates/**/*.html",
   ],
 
   darkMode: false, // or 'media' or 'class'

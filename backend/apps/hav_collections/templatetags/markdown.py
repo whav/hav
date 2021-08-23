@@ -3,11 +3,12 @@ from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 
 from markdown_it import MarkdownIt
+from mdit_py_plugins import front_matter
 
 register = template.Library()
 
 
-md = MarkdownIt()
+md = MarkdownIt().use(front_matter.front_matter_plugin)
 
 
 @register.filter

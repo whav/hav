@@ -1,8 +1,17 @@
-import bundleMDX from "./mdx.mjs";
 import express from "express";
+import { URL } from 'url';
+import {join} from "path";
+import {readFile, stat} from "fs/promises";
+import path from 'path'
+
+import { bundleMDX } from "mdx-bundler";
+
+const __dirname = path.resolve(decodeURIComponent(new URL('.', import.meta.url).pathname));
 
 const app = express();
 const port = 3000;
+
+console.log('CWD will be set to:', __dirname);
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -11,12 +20,32 @@ app.get("/", (req, res) => {
   res.send("Don't get me!");
 });
 
-app.post("/", async (req, resp) => {
-  const code = await bundleMDX(req.body.mdx || "");
-  resp.type(".js");
-  resp.send(code);
+app.post("/", async (req, resp, next) => {
+  try {
+      const mdx_content = req.body.mdx || "";
+      const bundle = await bundleMDX(mdx_content || "", {
+        cwd: __dirname,
+        esbuildOptions: (options) => {
+            options.loader = {
+                '.js': 'jsx'
+            };
+            options.minify = false;
+            options.target = [
+                'es2020',
+            ];
+          return options;
+            return options;
+        }
+      });
+      resp.type(".js");
+      resp.send(bundle.code);
+  } catch (e) {
+      next(e);
+  }
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`MDX Server running at http://localhost:${port}`);
 });
+
+

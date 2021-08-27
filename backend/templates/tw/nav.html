@@ -27,14 +27,14 @@
            <ul>
       <li>
 
-          <a href="/">Home</a>
+          <a href="{% url 'hav:landing_page' %}">Home</a>
         <ul>
           <li>
-              <a href="/cooperation/">How to cooperate</a>
+              <a href="{% url 'hav:flatpage' slug='cooperation' %}">How to cooperate</a>
           </li>
 
           <li>
-              <a href="/open-knowledge/">License Models</a>
+              <a href="{% url 'hav:flatpage' slug='cooperation' %}">License Models</a>
           </li>
         </ul>
       </li>
@@ -69,7 +69,7 @@
           </a>
         </li>
         <li class="text-sm">
-            <a href="/imprint/">Imprint</a>
+            <a href="{% url 'hav:flatpage' slug='imprint' %}">Imprint</a>
         </li>
       </ul>
         </div>

@@ -1,9 +1,11 @@
 from django.urls import path, include
 
 from views.public import LandingPage, CollectionRoot, FolderView, MediaView
+from views.public.flatpages import FlatpageView
+from django.views.generic import TemplateView
 
 urlpatterns = [
-    path("", LandingPage.as_view(), name="landing_page"),
+    path("", FlatpageView.as_view(slug="index"), name="landing_page"),
     path(
         "collections/<slug:collection_slug>/",
         include(
@@ -14,4 +16,6 @@ urlpatterns = [
             ]
         ),
     ),
+    # flatpages...
+    path("<slug:slug>/", FlatpageView.as_view(), name="flatpage"),
 ]

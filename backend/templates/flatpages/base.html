@@ -1,0 +1,9 @@
+{% extends 'tw/base.html' %}
+
+{% load  markdown %}
+
+{% block body %}
+    <div class="prose">
+        {% mdx content %}
+    </div>
+{% endblock body %}

@@ -1,12 +1,9 @@
 import express from "express";
 import { URL } from 'url';
-import {join} from "path";
-import {readFile, stat} from "fs/promises";
-import path from 'path'
 
 import { bundleMDX } from "mdx-bundler";
 
-const __dirname = path.resolve(decodeURIComponent(new URL('.', import.meta.url).pathname));
+const __dirname = decodeURIComponent(new URL('.', import.meta.url).pathname);
 
 const app = express();
 const port = 3000;

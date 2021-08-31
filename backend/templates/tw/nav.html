@@ -1,4 +1,4 @@
-{%  load static cache %}
+{%  load static cache nav_links %}
 <div class="md:h-full flex flex-col"  x-data="{ open: false, toggle() { this.open = ! this.open } }">
   <div class="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl">
     <div class="flex flex-row justify-between">
@@ -23,34 +23,38 @@
     <nav :class="{ 'block': open, 'hidden': ! open }"
          x-transition
       class="text-lg tracking-tight md:flex-grow md:flex md:flex-col md:justify-between md:mt-8 md:text-right hidden md:block"
+         id="nav-main"
     >
       <div>
            <ul>
       <li>
+          {% url 'hav:landing_page' as to %}
+          {% active_link 'Home' to %}
 
-          <a href="{% url 'hav:landing_page' %}">Home</a>
         <ul>
           <li>
-              <a href="{% url 'hav:flatpage' slug='cooperation' %}">How to cooperate</a>
+              {% url 'hav:flatpage' slug='cooperation' as to %}
+              {% active_link 'How to cooperate' to %}
           </li>
 
           <li>
-              <a href="{% url 'hav:flatpage' slug='cooperation' %}">License Models</a>
+              {% url 'hav:flatpage' slug='open-knowledge' as to %}
+              {% active_link 'License Models' to %}
           </li>
         </ul>
       </li>
-      {% cache 60 collection_sidebar %}
       <li class="md:mt-2">
         <span class="text-base text-gray-500">Collections</span>
         <ul>
         {% for collection in all_collections %}
             <li>
-              <a href="{% url 'hav:collection_root' collection_slug=collection.slug %}">{{ collection.short_name }}</a>
+                {% url 'hav:collection_root' collection_slug=collection.slug as collection_root_url %}
+                {% active_link collection.short_name collection_root_url "true" %}
+
             </li>
         {% endfor %}
         </ul>
       </li>
-       {% endcache %}
     </ul>
         <div class="md:mt-20">
            <ul>
@@ -70,7 +74,8 @@
           </a>
         </li>
         <li class="text-sm">
-            <a href="{% url 'hav:flatpage' slug='imprint' %}">Imprint</a>
+          {% url 'hav:flatpage' slug='imprint' as to %}
+          {% active_link 'Imprint' to %}
         </li>
       </ul>
         </div>

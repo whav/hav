@@ -1,9 +1,15 @@
-{% extends 'tw/base.html' %}
+{% extends 'ui/base.html' %}
 
 {% load  markdown %}
 
-{% block body %}
-    <div class="prose">
-        {% mdx content %}
-    </div>
-{% endblock body %}
+{% block breadcrumbs %}
+    <div></div>
+{% endblock breadcrumbs %}
+
+{%  block title %}
+
+{% endblock title %}
+
+{% block description %}
+    {% mdx content %}
+{% endblock %}

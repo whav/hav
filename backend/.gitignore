@@ -93,7 +93,7 @@ ENV/
 hav/settings/secrets.py
 .pytest_cache/
 
-apps/theme/static/*
+apps/theme/static/theme/
 !apps/theme/static/theme/.gitkeep
 !apps/theme/static/theme/fonts*
 

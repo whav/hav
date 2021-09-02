@@ -21,8 +21,9 @@ const Media = (props) => {
   return (
     <a href={data.url}>
       <div className="max-w-sm m-4">
-        {caption && <div>{caption}</div>}
         <MediaSwitch {...data} {...props} />
+          {caption && <div>{caption}</div>}
+
       </div>
     </a>
   );

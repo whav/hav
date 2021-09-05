@@ -1,0 +1,22 @@
+.gallery {
+    @apply flex flex-row flex-wrap justify-start items-stretch;
+
+    .tile {
+        @apply p-0 m-4 rounded-sm border-transparent hover:bg-gray-100 border;
+
+        .preview {
+            @apply relative;
+
+            .preview-image {
+                @apply border border-gray-100;
+            }
+
+            .preview-icon {
+                @apply absolute top-0 left-0 flex flex-row;
+            }
+        }
+        .caption {
+            @apply text-sm;
+        }
+    }
+}

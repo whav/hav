@@ -1,13 +1,13 @@
 {% load gallery_tags %}
 {% thumbnail_width webasset as thumbnail_width %}
-<figure class="p-0 m-4 rounded-sm border-transparent hover:bg-gray-100 border" {% if thumbnail_width %}style="width: {{ thumbnail_width }}"{% endif %}>
-    <div class="relative">
-        <img src="{% thumbnail_url webasset %}" loading="lazy" title="{% firstof title caption %}" class="border border-gray-100">
-        <div class="absolute top-0 left-0 flex flex-row">
+<figure class="tile" {% if thumbnail_width %}style="width: {{ thumbnail_width }}"{% endif %}>
+    <div class="preview">
+        <img src="{% thumbnail_url webasset %}" loading="lazy" title="{% firstof title caption %}" class="preview-image">
+        <div class="preview-icon">
             {% icons represents %}
         </div>
     </div>
-    <figcaption class="text-sm">
+    <figcaption class="caption">
         {{ caption }}
     </figcaption>
 </figure>

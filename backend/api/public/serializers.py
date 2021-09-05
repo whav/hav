@@ -4,7 +4,8 @@ from rest_framework import serializers
 from apps.hav_collections.models import Collection
 from apps.sets.models import Node
 from apps.media.models import Media
-from hav_utils.imaginary import generate_thumbnail_url
+from hav_utils.imaginary import generate_thumbnail_url, generate_srcset_urls
+import math
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -57,8 +58,10 @@ class MediaSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
     thumbnail = serializers.SerializerMethodField()
     srcset = serializers.SerializerMethodField()
+    media_type = serializers.SerializerMethodField()
+    aspect_ratio = serializers.SerializerMethodField()
 
-    @property
+    @cached_property
     def webasset(self):
         return self.instance.primary_image_webasset
 
@@ -69,11 +72,38 @@ class MediaSerializer(serializers.ModelSerializer):
         )
 
     def get_thumbnail(self, media):
-        return generate_thumbnail_url(self.webasset, user=self.context["request"].user)
+        return generate_thumbnail_url(
+            self.webasset,
+            width=300,
+            height=None,
+            operation="thumbnail",
+        )
 
     def get_srcset(self, media):
-        return []
+        return generate_srcset_urls(self.webasset)
+
+    def get_display_width(self, media):
+        webasset = self.webasset
+        if webasset.aspect_ratio:
+            width = math.floor(math.sqrt(48000 * webasset.aspect_ratio))
+            return f"{width}px"
+        return ""
+
+    def get_media_type(self, media):
+        mime = media.primary_file.mime_type
+        if mime:
+            return mime.split("/")[0]
+
+    def get_aspect_ratio(self, media):
+        return self.webasset.aspect_ratio
 
     class Meta:
         model = Media
-        fields = ["title", "url", "thumbnail", "srcset"]
+        fields = [
+            "title",
+            "url",
+            "aspect_ratio",
+            "thumbnail",
+            "srcset",
+            "media_type",
+        ]

@@ -1,4 +1,5 @@
-@import "./components//global.css";
+@import "./components/global.css";
 @import "./components/folder-bg.css";
 @import "./components/form.css";
 @import "./components/nav.css";
+@import "./components/gallery.css";

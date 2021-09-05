@@ -2,8 +2,19 @@ import React from "react";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 
-const ImageMedia = ({ title, thumbnail }) => {
-  return <img alt={title} src={thumbnail} />;
+const ImageMedia = ({ title, thumbnail, aspect_ratio, srcset=[] }) => {
+    let srcset_attr = '';
+    if (srcset.length) {
+        srcset_attr = srcset.map(([width, url]) => `${url} ${width}w`).join(', ')
+    }
+    let width = 'auto';
+    if (aspect_ratio) {
+        width = Math.floor(
+            Math.sqrt(4800 * 6 * aspect_ratio)
+        )
+        width = `${width}px`
+    }
+    return <img className={"preview-image"} alt={title} style={{width}} src={thumbnail} srcSet={srcset_attr}/>;
 };
 
 const MediaSwitch = (props) => {
@@ -20,11 +31,12 @@ const Media = (props) => {
   // return <ImageMedia {...data} />;
   return (
     <a href={data.url}>
-      <div className="max-w-sm m-4">
-        <MediaSwitch {...data} {...props} />
-          {caption && <div>{caption}</div>}
-
-      </div>
+        <figure className="tile">
+            <div className="preview">
+                <MediaSwitch {...data} {...props} />
+            </div>
+            <figcaption className={"caption"}>{caption}</figcaption>
+        </figure>
     </a>
   );
 };

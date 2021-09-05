@@ -21,13 +21,13 @@
 
 {% block content %}
 <div class="folder-bg">
-    <div class="flex flex-row flex-wrap justify-start items-stretch">
+    <div class="gallery">
     {% for node in children %}
        {% node_tile node=node %}
     {% endfor %}
     </div>
 </div>
-<div class="flex flex-row flex-wrap justify-start items-stretch">
+<div class="gallery">
 {% for media in media_entries %}
     {% media_tile media=media %}
 {% endfor %}

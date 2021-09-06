@@ -14,7 +14,7 @@ const ImageMedia = ({ title, thumbnail, aspect_ratio, srcset=[] }) => {
         )
         width = `${width}px`
     }
-    return <img className={"preview-image"} alt={title} style={{width}} src={thumbnail} srcSet={srcset_attr}/>;
+    return <img className={"preview-image"} alt={title} src={thumbnail} srcSet={srcset_attr}/>;
 };
 
 const MediaSwitch = (props) => {
@@ -31,12 +31,12 @@ const Media = (props) => {
   // return <ImageMedia {...data} />;
   return (
     <a href={data.url}>
-        <figure className="tile">
+        <div className="tile">
             <div className="preview">
                 <MediaSwitch {...data} {...props} />
             </div>
-            <figcaption className={"caption"}>{caption}</figcaption>
-        </figure>
+            <div className={"caption"}>{caption}</div>
+        </div>
     </a>
   );
 };

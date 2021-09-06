@@ -11,7 +11,15 @@
 {% render_breadcrumbs node %}
 {% endblock breadcrumbs %}
 
-{%  block title %}{% firstof title node.name %}{% endblock title %}
+{% block adminlinks %}
+{% if user and user.is_staff %}
+    <a href="{% url 'admin:sets_node_change' object_id=node.pk %}">Edit node</a>
+{% endif %}
+{% endblock %}
+
+{%  block title %}
+    {% firstof title node.name %}
+{% endblock title %}
 
 {%  block description %}
     <div class="prose">

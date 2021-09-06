@@ -1,14 +1,19 @@
 .gallery {
-    @apply flex flex-row flex-wrap justify-start items-stretch;
+    a {
+        @apply no-underline;
+    }
+    @apply flex flex-row flex-wrap justify-start items-stretch gap-6 gap-6;
 
     .tile {
-        @apply p-0 m-4 rounded-sm border-transparent hover:bg-gray-100 border;
+        @apply pt-3 rounded-sm border-transparent hover:bg-gray-100 border;
 
         .preview {
             @apply relative;
 
             .preview-image {
-                @apply border border-gray-100;
+                @apply border border-gray-100 m-0;
+                max-width: 250px;
+                min-width: 150px;
             }
 
             .preview-icon {
@@ -16,7 +21,7 @@
             }
         }
         .caption {
-            @apply text-sm;
+            @apply text-sm no-underline;
         }
     }
 }

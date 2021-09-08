@@ -7,14 +7,14 @@ const ImageMedia = ({ title, thumbnail, aspect_ratio, srcset=[] }) => {
     if (srcset.length) {
         srcset_attr = srcset.map(([width, url]) => `${url} ${width}w`).join(', ')
     }
-    let width = 'auto';
-    if (aspect_ratio) {
-        width = Math.floor(
-            Math.sqrt(4800 * 6 * aspect_ratio)
-        )
-        width = `${width}px`
-    }
-    return <img className={"preview-image"} alt={title} src={thumbnail} srcSet={srcset_attr}/>;
+    // let width = 'auto';
+    // if (aspect_ratio) {
+    //     width = Math.floor(
+    //         Math.sqrt(4800 * 6 * aspect_ratio)
+    //     )
+    //     width = `${width}px`
+    // }
+    return <img className={"preview-image"} alt={title} src={thumbnail} srcSet={srcset_attr} sizes="400px" />;
 };
 
 const MediaSwitch = (props) => {

@@ -1,12 +1,12 @@
 {% extends '../tw/base.html' %}
 
 {% block body %}
-    <div class="flex justify-between md:h-20 md:items-end">
+    <div class="md:flex md:justify-between md:h-20 md:items-end">
         {%  block breadcrumbs %}
         {% include './components/breadcrumbs.html' with collection=collection ancestors=ancestors only%}
         {% endblock breadcrumbs %}
         {%  block searchbar %}
-        <div>{% include './components/search.html' %}</div>
+        <div class="hidden lg:block">{% include './components/search.html' %}</div>
         {% endblock searchbar %}
     </div>
 

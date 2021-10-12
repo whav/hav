@@ -1,4 +1,5 @@
 from django import template
+from django.conf import settings
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 
@@ -7,6 +8,7 @@ from mdit_py_plugins import front_matter
 
 register = template.Library()
 
+mdx_server = settings.MDX_SERVER
 
 md = MarkdownIt().use(front_matter.front_matter_plugin)
 
@@ -22,6 +24,6 @@ def markdown(md_text):
 def mdx(content: str):
     import requests
 
-    resp = requests.post("http://localhost:3000/", data={"mdx": content})
+    resp = requests.post(mdx_server, data={"mdx": content})
     js = resp.text
     return {"code": js, "content": content}

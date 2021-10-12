@@ -45,7 +45,7 @@ app.post("/", async (req, resp, next) => {
     }
 });
 
-app.listen(port, () => {
+app.listen({port}, () => {
     console.log(`MDX Server running at http://localhost:${port}`);
 });
 

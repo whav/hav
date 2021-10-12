@@ -11,8 +11,7 @@
             @apply relative;
 
             .preview-image {
-                @apply border border-gray-100 m-0;
-                max-width: 250px;
+                @apply border border-gray-100 m-0 max-w-full;
                 min-width: 150px;
             }
 

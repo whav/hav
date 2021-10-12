@@ -28,6 +28,7 @@ x-django: &django
         - CACHE_URL=${CACHE_URL}
         - SENTRY_DSN=${SENTRY_DSN}
         - RQ_SENTRY_DSN=${SENTRY_DSN}
+        - MDX_SERVER=mdx:3000
         - DRF_AUTH_TOKEN=${DRF_AUTH_TOKEN}
         - BASHHOMEDIR=/hav/.localhistory/bash
         - HISTFILE=/hav/.localhistory/bash/.bash_history
@@ -54,12 +55,12 @@ services:
             - imaginary
             - cms
 
-    cms:
+    mdx:
         build:
-            context: ./frontend/cms
-        image: whav/hav-cms:${TAG}
-        environment:
-            - HAV_URL=http://django-wsgi:8000/
+            context: .
+            dockerfile: ./Dockerfile.mdx
+        expose:
+            - 3000
 
     django-asgi:
         <<: *django

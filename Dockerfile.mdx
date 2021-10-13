@@ -1,0 +1,11 @@
+FROM node:14
+
+WORKDIR /code/
+
+# Link up the required build files
+COPY ./backend/apps/theme/package.json ./backend/apps/theme/package-lock.json ./
+RUN npm ci
+
+COPY ./backend/apps/theme/src/mdx .
+
+CMD node ./server.mjs

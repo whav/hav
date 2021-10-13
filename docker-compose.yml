@@ -28,7 +28,7 @@ x-django: &django
         - CACHE_URL=${CACHE_URL}
         - SENTRY_DSN=${SENTRY_DSN}
         - RQ_SENTRY_DSN=${SENTRY_DSN}
-        - MDX_SERVER=mdx:3000
+        - MDX_SERVER=http://mdx:3000
         - DRF_AUTH_TOKEN=${DRF_AUTH_TOKEN}
         - BASHHOMEDIR=/hav/.localhistory/bash
         - HISTFILE=/hav/.localhistory/bash/.bash_history
@@ -53,7 +53,6 @@ services:
             - django-asgi
             - django-wsgi
             - imaginary
-            - cms
 
     mdx:
         build:

@@ -7,8 +7,9 @@ from apps.media.models import Media
 from hav_utils.imaginary import (
     generate_thumbnail_url,
     generate_srcset_urls,
-    get_imaginary_path,
 )
+
+from .gallery_tags import can_view_media_webassets
 
 register = template.Library()
 
@@ -20,7 +21,6 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media]):
     if isinstance(obj, Media):
         media = obj
         webasset = media.primary_file.webasset_set.first()
-        # breakpoint()
     elif isinstance(obj, WebAsset):
         media = obj.archivefile.media_set.get()
         webasset = obj
@@ -32,30 +32,32 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media]):
 
     # TODO: access control
     user = context.get("user")
-    if user and user.is_authenticated:
-        pass
+    can_view = can_view_media_webassets(user, media)
 
-    media_type = None
-    template = None
-    mt = webasset.mime_type or guess_type(webasset.file)[0]
-    if mt:
-        media_type = mt.split("/")[0]
-        template = f"{template_base}/webassets/{media_type}.html"
+    if can_view:
+        media_type = None
+        template = None
+        mt = webasset.mime_type or guess_type(webasset.file)[0]
+        if mt:
+            media_type = mt.split("/")[0]
+            template = f"{template_base}/webassets/{media_type}.html"
 
-    context = {
-        "webasset": webasset,
-        "media": media,
-        "media_type": media_type,
-        "template": template,
-    }
+        context = {
+            "webasset": webasset,
+            "media": media,
+            "media_type": media_type,
+            "template": template,
+        }
 
-    if media_type == "image":
-        context.update(
-            {
-                "thumbnail_url": generate_thumbnail_url(webasset),
-                "srcset": generate_srcset_urls(webasset),
-            }
-        )
+        if media_type == "image":
+            context.update(
+                {
+                    "thumbnail_url": generate_thumbnail_url(webasset),
+                    "srcset": generate_srcset_urls(webasset),
+                }
+            )
+    else:
+        context = {"template": f"{template_base}/webassets/forbidden.html"}
     return context
 
 

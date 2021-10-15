@@ -1,4 +1,5 @@
 import math
+from datetime import date
 from typing import Union
 from django import template
 from apps.media.models import Media
@@ -7,8 +8,24 @@ from apps.sets.models import Node
 from apps.webassets.models import WebAsset
 from hav_utils.imaginary import generate_thumbnail_url
 from django.urls import reverse
+from django.templatetags.static import static
 
 register = template.Library()
+
+no_public_fallback = static("webassets/no_public_media_available.svg")
+no_webasset_fallback = static("webassets/no_image_available.svg")
+
+
+def can_view_media_webassets(user, media):
+    has_active_embargo = (
+        media.embargo_end_date and media.embargo_end_date >= date.today()
+    )
+    is_private = media.is_private
+
+    if is_private or has_active_embargo:
+        return False
+
+    return True
 
 
 @register.inclusion_tag("webassets/tags/media_tile.html", takes_context=True)
@@ -29,15 +46,12 @@ def media_tile(context, media: Media):
         ),
         "webasset": webasset,
         "media": media,
-        "thumbnail_url": generate_thumbnail_url(webasset, user=user),
     }
 
 
 @register.inclusion_tag("webassets/tags/node_tile.html", takes_context=True)
 def node_tile(context, node: Node):
     assert isinstance(node, Node)
-
-    user = context.get("user")
 
     media = node.get_representative_media()
     collection = node.get_collection()
@@ -51,18 +65,30 @@ def node_tile(context, node: Node):
         "webasset": webasset,
         "node": node,
         "media": media,
-        "thumbnail_url": generate_thumbnail_url(webasset, user=user),
     }
 
 
 @register.simple_tag(takes_context=True)
-def thumbnail_url(context, webasset: WebAsset):
-    return generate_thumbnail_url(
-        webasset,
-        width=300,
-        height=None,
-        operation="thumbnail",
-    )
+def thumbnail_url(context, media: Media, webasset: WebAsset = None):
+    if webasset is None:
+        webasset = media.primary_image_webasset
+
+    user = context.get("user")
+    can_view = can_view_media_webassets(user, media)
+    if webasset:
+        if can_view:
+            thumbnail_url = generate_thumbnail_url(
+                webasset,
+                width=300,
+                height=None,
+                operation="thumbnail",
+            )
+        else:
+            thumbnail_url = no_public_fallback
+    else:
+        thumbnail_url = no_webasset_fallback
+
+    return thumbnail_url
 
 
 @register.simple_tag
@@ -89,4 +115,11 @@ def icons(object: Union[Node, Media]):
             if mime:
                 icons.append(mime.split("/")[0])
         # TODO: protected
+        if object.embargo_end_date and object.embargo_end_date >= date.today():
+            # TODO embargo icon
+            icons.append("embargo")
+            pass
+        if object.is_private:
+            icons.append("locked")
+    print(icons)
     return {"icons": icons}

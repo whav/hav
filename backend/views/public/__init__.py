@@ -2,8 +2,9 @@ from django.views.generic import TemplateView, DetailView
 from apps.hav_collections.models import Collection
 from apps.sets.models import Node
 from apps.media.models import Media
-
+from apps.search.client import search
 from django.utils.functional import cached_property
+from .forms import SearchForm
 
 
 class LandingPage(TemplateView):
@@ -83,7 +84,36 @@ class FolderView(CollectionNodeMixin, DetailView):
         return ctx
 
 
-class MediaView(DetailView):
+class MediaView(CollectionNodeMixin, DetailView):
     model = Media
     template_name = "ui/media.html"
     pk_url_kwarg = "media_pk"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx.update(self.get_shared_context())
+        return ctx
+
+
+class SearchView(CollectionNodeMixin, TemplateView):
+    template_name = "ui/search.html"
+
+    def search(self, query, node=None):
+        return [{"query": query}]
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx.update(self.get_shared_context())
+        form = SearchForm(data=self.request.GET or None)
+        ctx.update({"search_form": form})
+
+        if form.is_valid():
+            query = form.cleaned_data.get("q")
+            node = form.cleaned_data.get("node")
+            results = search(query, node.pk if node else None)
+            from pprint import pprint
+
+            pprint(results)
+            ctx.update({"query": query, "search_results": results})
+
+        return ctx

@@ -6,6 +6,8 @@ services:
             - "8000:80"
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf
+
+
     django-asgi:
         depends_on:
           - redis

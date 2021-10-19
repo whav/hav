@@ -4,7 +4,7 @@ from rest_framework import serializers
 from hav_utils.imaginary import generate_thumbnail_url
 from apps.media.models import Media
 from apps.sets.models import Node
-import meilisearch
+
 from .client import get_index
 
 

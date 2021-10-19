@@ -1,0 +1,9 @@
+{% load search_results %}
+{% with url=result.object|target_url %}
+<div class="search-result-body">
+    <h2><a href="{{ result.object|target_url }}">{{ result.title }}</a></h2>
+    {% for line in lines %}
+    <p>{{ line|safe }}</p>
+    {% endfor %}
+</div>
+{% endwith %}

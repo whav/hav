@@ -110,7 +110,7 @@ services:
             - 6379
 
     search:
-        image: getmeili/meilisearch:v0.17.0
+        image: getmeili/meilisearch:v0.23.1
         volumes:
             - search-data:/data.ms
         ports:

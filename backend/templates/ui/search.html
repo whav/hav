@@ -1,0 +1,44 @@
+{% extends './base.html' %}
+{% load static daterange breadcrumbs webassets cache %}
+
+{%  block breadcrumbs %}
+{% endblock breadcrumbs %}
+
+{%  block searchbar %}
+{% endblock searchbar %}
+
+{% block title %}
+    Search
+{% endblock title %}
+
+{%  block description %}
+{%  endblock %}
+
+{%  block content %}
+{#{% include './components/search.html' %}#}
+<div class="django-form">
+<form method="get">
+    {{ search_form }}
+</form>
+</div>
+{% if query %}
+<p>Your search for <em>{{ query }}</em> found {{ search_results|length }} items:</p>
+
+{% if search_results|length == 0 %}
+    <em>No results...</em>
+{% else %}
+    <em>Results</em>
+    {%  for result in search_results %}
+        {% include './components/search_result.html' %}
+    {% endfor %}
+{% endif %}
+
+{#<hr />#}
+{##}
+{#<pre>#}
+{#    {{ search_results|pprint }}#}
+{#</pre>#}
+
+{% endif %}
+
+{% endblock content %}

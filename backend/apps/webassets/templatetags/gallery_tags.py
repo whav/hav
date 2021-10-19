@@ -69,7 +69,13 @@ def node_tile(context, node: Node):
 
 
 @register.simple_tag(takes_context=True)
-def thumbnail_url(context, media: Media, webasset: WebAsset = None):
+def thumbnail_url(context, object: Union[Media, Node], webasset: WebAsset = None):
+
+    media = object
+
+    if isinstance(object, Node):
+        media = object.get_representative_media()
+
     if webasset is None:
         webasset = media.primary_image_webasset
 
@@ -121,5 +127,5 @@ def icons(object: Union[Node, Media]):
             pass
         if object.is_private:
             icons.append("locked")
-    print(icons)
+
     return {"icons": icons}

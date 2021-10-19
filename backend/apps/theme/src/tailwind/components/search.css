@@ -1,0 +1,11 @@
+.search-result-body {
+    h2 {
+        @apply text-xl;
+    }
+    p {
+        @apply: pt-4;
+    }
+    em {
+        @apply font-semibold;
+    }
+}

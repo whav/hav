@@ -54,6 +54,8 @@ class Command(BaseCommand):
             self.index.update_searchable_attributes(searchable_attributes)
         )
 
+        self.index.update_filterable_attributes(["parents"])
+
     def index_collection(self, root_node):
         assert root_node in Node.get_collection_roots(), "Not a collection root node."
         for node in root_node.get_descendants().iterator():
@@ -77,9 +79,10 @@ class Command(BaseCommand):
                 break
             if status == "failed":
                 raise ValueError(response.get("error"), "Operation failed.")
-            elif status == "enqueued":
+            elif status in ["enqueued", "processing"]:
                 time.sleep(0.5)
                 continue
+
             raise NotImplementedError(f"Unknown status {status}.")
 
     def handle(self, *args, **options):

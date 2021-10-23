@@ -8,7 +8,7 @@
 {% endblock searchbar %}
 
 {% block title %}
-    Search
+    Search {% if collection %}in collection <em>{{ collection.short_name }}</em>{% endif %}
 {% endblock title %}
 
 {%  block description %}
@@ -16,29 +16,25 @@
 
 {%  block content %}
 {#{% include './components/search.html' %}#}
-<div class="django-form">
-<form method="get">
-    {{ search_form }}
+<div class="prose">
+<form class="django-form" method="get">
+    {{ search_form.q }}
 </form>
-</div>
+
 {% if query %}
-<p>Your search for <em>{{ query }}</em> found {{ search_results|length }} items:</p>
+    <p>Your search for <em>{{ response.query }}</em> found <em>{{ response.nbHits }}</em> items:</p>
 
-{% if search_results|length == 0 %}
-    <em>No results...</em>
-{% else %}
-    <em>Results</em>
-    {%  for result in search_results %}
-        {% include './components/search_result.html' %}
-    {% endfor %}
-{% endif %}
-
-{#<hr />#}
-{##}
-{#<pre>#}
-{#    {{ search_results|pprint }}#}
-{#</pre>#}
+    {% if search_results|length == 0 %}
+        <em>No results...</em>
+    {% else %}
+        <em>Results</em>
+        {%  for result in search_results %}
+            {% include './components/search_result.html' %}
+        {% endfor %}
+    {% endif %}
 
 {% endif %}
+
+</div>
 
 {% endblock content %}

@@ -17,7 +17,7 @@ def get_index():
     return get_client().index(index)
 
 
-def search(query, node=None):
+def search(query, node=None, offset=0):
     search_filters = ""
 
     if node:
@@ -29,6 +29,8 @@ def search(query, node=None):
         "attributesToCrop": ["*"],
         "cropLength": 200,
         "attributesToHighlight": ["*"],
+        "offset": offset,
+        "limit": 20,
     }
     if search_filters:
         search_options.update({"filter": search_filters})
@@ -55,9 +57,9 @@ def search(query, node=None):
         # and fetch in one query per type
         media_items = {
             media.pk: media
-            for media in Media.objects.filter(pk__in=media_pks).prefetch_related(
-                "collection"
-            )
+            for media in Media.objects.filter(pk__in=media_pks)
+            .prefetch_related("collection")
+            .prefetch_related("files__webasset_set", "collection")
         }
         nodes = {node.pk: node for node in Node.objects.filter(pk__in=node_pks)}
 

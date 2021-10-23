@@ -122,13 +122,14 @@ class SearchView(CollectionNodeMixin, TemplateView):
             query = form.cleaned_data.get("q")
             node = form.cleaned_data.get("node")
             search_response = search(query, node.pk if node else None)
-            psr = PaginatedSearchResults(search_response)
             ctx.update(
                 {
                     "query": query,
                     "search_results": search_response.get("hits"),
                     "response": search_response,
+                    "node": node,
                 }
             )
 
+            print("Searching inside", node, node.pk)
         return ctx

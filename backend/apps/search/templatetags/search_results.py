@@ -18,7 +18,13 @@ def render_search_result(result):
         output[match_field] = formatted[match_field]
 
     output = output.values()
-    return {"result": result, "lines": output}
+    return {
+        "result": result,
+        "lines": output,
+        "found_in_fields": list(matches.keys()),
+        "formatted": result.get("_formatted"),
+        "object": object,
+    }
 
 
 @register.filter

@@ -95,6 +95,17 @@ class MediaView(CollectionNodeMixin, DetailView):
         return ctx
 
 
+class PaginatedSearchResults:
+    def __init__(self, search_response):
+        self.response = search_response
+        self.nbHits = search_response["nbHits"]
+        self.offset = search_response["offset"]
+        self.limit = search_response["limit"]
+
+    def count(self):
+        return self.nbHits
+
+
 class SearchView(CollectionNodeMixin, TemplateView):
     template_name = "ui/search.html"
 
@@ -110,10 +121,14 @@ class SearchView(CollectionNodeMixin, TemplateView):
         if form.is_valid():
             query = form.cleaned_data.get("q")
             node = form.cleaned_data.get("node")
-            results = search(query, node.pk if node else None)
-            from pprint import pprint
-
-            pprint(results)
-            ctx.update({"query": query, "search_results": results})
+            search_response = search(query, node.pk if node else None)
+            psr = PaginatedSearchResults(search_response)
+            ctx.update(
+                {
+                    "query": query,
+                    "search_results": search_response.get("hits"),
+                    "response": search_response,
+                }
+            )
 
         return ctx

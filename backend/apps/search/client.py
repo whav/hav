@@ -71,4 +71,4 @@ def search(query, node=None):
 
             hit.update({"object": m})
 
-        return hits
+        return response

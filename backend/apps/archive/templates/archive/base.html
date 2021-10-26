@@ -1,4 +1,5 @@
 {% extends 'tw/base.html' %}
+{% load webassets %}
 {% block body %}
 <div class="mx-auto prose max-w-xl py-4">
 {% block content %}
@@ -11,7 +12,7 @@
 {% if media %}
 <p>
 This file is associated with the media entry {{ media.pk }}.
-    Please go to the <a href="{% frontend_url media %}">media detail page</a> to see all available metadata.
+    Please go to the <a href="{% url 'hav:media_view' collection_slug=collection.slug media_pk=media.pk %}">media detail page</a> to see all available metadata.
 </p>
 {% endif %}
 
@@ -21,7 +22,7 @@ This file is associated with the media entry {{ media.pk }}.
 The following webassets have been generated for this file:
 
 {% for wa in object.webasset_set.all %}
-    {% webasset_preview wa %}
+    {% render_webasset wa %}
     <hr />
 {% endfor %}
 {% endwith %}

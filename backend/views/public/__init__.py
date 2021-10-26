@@ -2,6 +2,7 @@ from django.views.generic import TemplateView, DetailView
 from apps.hav_collections.models import Collection
 from apps.sets.models import Node
 from apps.media.models import Media
+from apps.search.paginator import SearchPaginator
 from apps.search.client import search
 from django.utils.functional import cached_property
 from .forms import SearchForm
@@ -95,17 +96,6 @@ class MediaView(CollectionNodeMixin, DetailView):
         return ctx
 
 
-class PaginatedSearchResults:
-    def __init__(self, search_response):
-        self.response = search_response
-        self.nbHits = search_response["nbHits"]
-        self.offset = search_response["offset"]
-        self.limit = search_response["limit"]
-
-    def count(self):
-        return self.nbHits
-
-
 class SearchView(CollectionNodeMixin, TemplateView):
     template_name = "ui/search.html"
 
@@ -118,18 +108,32 @@ class SearchView(CollectionNodeMixin, TemplateView):
         form = SearchForm(data=self.request.GET or None)
         ctx.update({"search_form": form})
 
+        limit = 20
+
         if form.is_valid():
             query = form.cleaned_data.get("q")
             node = form.cleaned_data.get("node")
-            search_response = search(query, node.pk if node else None)
+            try:
+                page = self.request.GET.get("page", 1)
+                page = int(page)
+            except TypeError:
+                page = 1
+
+            results = search(
+                query,
+                node=node.pk if node else None,
+                limit=limit,
+                offset=limit * (page - 1),
+            )
+
+            paginator = SearchPaginator(results, limit)
             ctx.update(
                 {
                     "query": query,
-                    "search_results": search_response.get("hits"),
-                    "response": search_response,
+                    "search_results": paginator.page(page),
+                    "response": paginator._result,
+                    "paginator": paginator,
                     "node": node,
                 }
             )
-
-            print("Searching inside", node, node.pk)
         return ctx

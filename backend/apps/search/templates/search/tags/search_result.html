@@ -1,6 +1,7 @@
 {% load search_results %}
 {% with url=result.object|target_url %}
 <div class="search-result-body">
+{#    <pre>{{ result|pprint }}</pre>#}
     <h2>
         <a href="{{ result.object|target_url }}">
             {%  firstof formatted.title|safe result.object.title %}

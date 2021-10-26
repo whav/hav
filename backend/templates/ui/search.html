@@ -1,11 +1,13 @@
 {% extends './base.html' %}
-{% load static daterange breadcrumbs webassets cache %}
+{% load static daterange breadcrumbs webassets cache paginator %}
 
 {%  block breadcrumbs %}
+    {%  if node %}
     {%  render_breadcrumbs node %}
+    {% endif %}
 {% endblock breadcrumbs %}
 
-{%  block searchbar %}
+{% block searchbar %}
 {% endblock searchbar %}
 
 {% block title %}
@@ -24,7 +26,6 @@
 
 {% if query %}
     <p>Your search for <em>{{ response.query }}</em> found <em>{{ response.nbHits }}</em> items:</p>
-
     {% if search_results|length == 0 %}
         <em>No results...</em>
     {% else %}
@@ -32,6 +33,7 @@
         {%  for result in search_results %}
             {% include './components/search_result.html' %}
         {% endfor %}
+        {%  paginator search_results %}
     {% endif %}
 
 {% endif %}

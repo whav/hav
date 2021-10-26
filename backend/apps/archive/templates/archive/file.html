@@ -1,5 +1,5 @@
 {% extends './base.html' %}
-{% load webassets frontend_urls %}
+{% load webassets %}
 {% block content %}
 <div>
 
@@ -10,7 +10,7 @@
 {% if media %}
 <p>
 This file is associated with the media entry {{ media.pk }}.
-    Please go to the <a href="{% frontend_url media %}">media detail page</a> to see all available metadata.
+    Please go to the <a href="{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}">media detail page</a> to see all available metadata.
 </p>
 {% endif %}
 

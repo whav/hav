@@ -1,12 +1,11 @@
 from django.views.generic import DetailView
 from django.urls import reverse
 from .models import ArchiveFile
-from django.http.response import HttpResponse, Http404, HttpResponseForbidden
+from django.http.response import HttpResponse, HttpResponseForbidden
 import mimetypes
 from pathlib import Path
 from apps.media.models import Media
 from apps.sets.models import Node
-from apps.webassets.templatetags.frontend_urls import frontend_url
 
 
 class ArchiveFileBaseView(DetailView):
@@ -15,7 +14,8 @@ class ArchiveFileBaseView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx.update({"media": self.object.media_set.get()})
+        media = self.object.media_set.get()
+        ctx.update({"media": media, "collection": media.collection})
         return ctx
 
 

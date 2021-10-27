@@ -34,7 +34,11 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media]):
     user = context.get("user")
     can_view = can_view_media_webassets(user, media)
 
-    if can_view:
+    if webasset is None and can_view:
+        context = {"template": f"{template_base}/webassets/no_preview.html"}
+    elif webasset and not can_view:
+        context = {"template": f"{template_base}/webassets/forbidden.html"}
+    elif webasset and can_view:
         media_type = None
         template = None
         mt = webasset.mime_type or guess_type(webasset.file)[0]
@@ -56,8 +60,7 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media]):
                     "srcset": generate_srcset_urls(webasset),
                 }
             )
-    else:
-        context = {"template": f"{template_base}/webassets/forbidden.html"}
+
     return context
 
 

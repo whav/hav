@@ -230,17 +230,20 @@ class Media(models.Model):
 
     @cached_property
     def primary_image_webasset(self):
+
         primary_file = self.primary_file
         if primary_file is None:
             return None
 
         # performance optimization if the special manager was used
         if hasattr(primary_file, MediaPreviewManager.image_preview_attr):
-            return getattr(primary_file, MediaPreviewManager.image_preview_attr)[0]
+            qs = getattr(primary_file, MediaPreviewManager.image_preview_attr)
+        else:
+            # else hit the database
+            qs = primary_file.webasset_set.filter(mime_type__istartswith="image/")
 
-        # else hit the database
         try:
-            return primary_file.webasset_set.filter(mime_type__istartswith="image/")[0]
+            return qs[0]
         except IndexError:
             return None
 

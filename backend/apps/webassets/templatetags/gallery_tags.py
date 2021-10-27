@@ -104,7 +104,7 @@ def thumbnail_aspect_ratio(webasset: WebAsset):
 
 @register.simple_tag
 def thumbnail_width(webasset: WebAsset, base: int = 150, unit: str = "px"):
-    if webasset.aspect_ratio:
+    if webasset and webasset.aspect_ratio:
         width = math.floor(math.sqrt(48000 * webasset.aspect_ratio))
         return f"{width}{unit}"
     return ""

@@ -1,5 +1,5 @@
 {% extends './base.html' %}
-{% load static daterange breadcrumbs webassets cache %}
+{% load static daterange breadcrumbs webassets cache tagging %}
 
 {%  block breadcrumbs %}
     {% cache 60 'media' media.pk 'true' %}
@@ -60,7 +60,7 @@
                     <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">
                         <dt class="text-sm font-medium text-gray-500">keywords</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {%  include './components/tags/list.html'  with tags=media.tags.all %}
+                            {% render_tags tags=media.tags.all %}
                         </dd>
                     </div>
 {#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">#}

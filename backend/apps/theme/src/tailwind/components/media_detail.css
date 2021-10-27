@@ -1,0 +1,18 @@
+.media-detail-list > * {
+    @apply px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6;
+
+    &:nth-child(odd) {
+        @apply bg-gray-50;
+    }
+
+     &:nth-child(even) {
+        @apply bg-white;
+    }
+
+  dt {
+      @apply text-sm font-medium text-gray-500;
+  }
+  dd {
+      @apply mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2;
+  }
+}

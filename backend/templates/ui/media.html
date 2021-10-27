@@ -41,88 +41,76 @@
         </figure>
     </div>
 
+
     <div class="md:max-w-lg mr-4 mb-4">
         <div class="bg-white shadow overflow-hidden sm:rounded">
             <div class="px-4 py-5 sm:px-6">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Content Description</h3>
             </div>
             <div class="border-t border-gray-200">
-                <dl>
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                        <dt class="text-sm font-medium text-gray-500">title</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ media.title }}</dd>
-                    </div>
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">
-                        <dt class="text-sm font-medium text-gray-500">description</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ media.description }}</dd>
+                <dl class="media-detail-list">
+                    <div>
+                        <dt>title</dt>
+                        <dd>{{ media.title }}</dd>
                     </div>
 
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">
-                        <dt class="text-sm font-medium text-gray-500">keywords</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {%  if media.description %}
+                    <div>
+                        <dt>Description</dt>
+                        <dd>{{ media.description }}</dd>
+                    </div>
+                    {% endif %}
+
+                    <div>
+                        <dt>Keywords</dt>
+                        <dd>
                             {% render_tags tags=media.tags.all %}
                         </dd>
                     </div>
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">#}
-{#                        <dt class="text-sm font-medium text-gray-500">country</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>#}
+
+{#                    <div>#}
+{#                        <dt>country</dt>#}
+{#                        <dd>-</dd>#}
 {#                    </div>#}
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">#}
-{#                        <dt class="text-sm font-medium text-gray-500">location</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>#}
+{#                    <div>#}
+{#                        <dt>location</dt>#}
+{#                        <dd>-</dd>#}
 {#                    </div>#}
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">#}
-{#                        <dt class="text-sm font-medium text-gray-500">description author</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>#}
+{#                    <div>#}
+{#                        <dt>description author</dt>#}
+{#                        <dd>-</dd>#}
 {#                    </div>#}
                 </dl>
             </div>
         </div>
     </div>
+
     <div class="md:max-w-lg mr-4 mb-4">
         <div class="bg-white shadow overflow-hidden sm:rounded">
             <div class="px-4 py-5 sm:px-6"><h3 class="text-lg leading-6 font-medium text-gray-900">Media
                 Description</h3>
                 <p class="mt-1 max-w-2xl text-sm text-gray-500"></p></div>
             <div class="border-t border-gray-200">
-                <dl>
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                        <dt class="text-sm font-medium text-gray-500">hav media handle</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ media.pk }}</dd>
+                <dl class="media-detail-list">
+                    <div>
+                        <dt>hav media handle</dt>
+                        <dd>{{ media.pk }}</dd>
                     </div>
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">
-                        <dt class="text-sm font-medium text-gray-500">license</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <div>
+                        <dt>license</dt>
+                        <dd>
                             <a class="underline"                                                                                         href="https://creativecommons.org/licenses/by-sa/4.0/"><span
                                 title="{{ license.name }}">{{ license.short_name }}</span></a>
                         </dd>
                     </div>
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                        <dt class="text-sm font-medium text-gray-500">original media type</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ media.original_media_type }}</dd>
+                    <div>
+                        <dt>original media type</dt>
+                        <dd>{{ media.original_media_type }}</dd>
                     </div>
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">#}
-{#                        <dt class="text-sm font-medium text-gray-500">original file name</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">#}
-{#                            <ul class="inline-block list-none">#}
-{#                                <li>MG19 3000,2031.jpg <a#}
-{#                                        href="/archive/download/d85a50a3-3191-4343-952c-95550a11db97/">#}
-{#                                    <svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24"#}
-{#                                         class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">#}
-{#                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"#}
-{#                                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>#}
-{#                                    </svg>#}
-{#                                </a></li>#}
-{#                            </ul>#}
-{#                        </dd>#}
-{#                    </div>#}
-{#                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">#}
-{#                        <dt class="text-sm font-medium text-gray-500">available formats</dt>#}
-{#                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>#}
-{#                    </div>#}
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">
-                        <dt class="text-sm font-medium text-gray-500">creator(s)</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+
+                    <div>
+                        <dt>creator(s)</dt>
+                        <dd>
                             <ul class="inline-block list-none">
                                 {% for creator in media.creators.all %}
                                 <li>{{ creator }}</li>
@@ -130,66 +118,29 @@
                             </ul>
                         </dd>
                     </div>
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                        <dt class="text-sm font-medium text-gray-500">creation date</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+
+                    <div>
+                        <dt>creation date</dt>
+                        <dd>
                             <span title="{{ media.creation_date.lower }} - {{ media.creation_date.upper }}">{{ media.creation_date|daterange }}</span>
                         </dd>
                     </div>
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-white">
-                        <dt class="text-sm font-medium text-gray-500">archived by</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ media.created_by }}</dd>
+
+                    <div>
+                        <dt>archived by</dt>
+                        <dd>{{ media.created_by }}</dd>
                     </div>
-                    <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                        <dt class="text-sm font-medium text-gray-500">archiving date</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ media.created_at }}</dd>
+
+                    <div>
+                        <dt>archiving date</dt>
+                        <dd>{{ media.created_at }}</dd>
                     </div>
+
                 </dl>
             </div>
-{#        </div>#}
-{#        <div class="pt-4">#}
-{#            <table class="w-full bg-white shadow overflow-hidden sm:rounded">#}
-{#                <thead>#}
-{#                <tr class="text-left">#}
-{#                    <th class="px-4 py-5 sm:px-6">filename</th>#}
-{#                    <th class="px-4 py-5 sm:px-6">size</th>#}
-{#                    <th class="px-4 py-5 sm:px-6">permalink</th>#}
-{#                </tr>#}
-{#                </thead>#}
-{#                <tbody>#}
-{#                <tr class="bg-gray-100">#}
-{#                    <td class="px-4 py-5 sm:px-6">MG19 3000,2031.jpg</td>#}
-{#                    <td class="px-4 py-5 sm:px-6">4698238</td>#}
-{#                    <td class="px-4 py-5 sm:px-6"><a#}
-{#                            href="https://hav2.aussereurop.univie.ac.at/archive/file/hash/b2ef1e4f154a16a4e7e19f4370436cb5778e6220/">#}
-{#                        <svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24" class="inline"#}
-{#                             height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"#}
-{#                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>#}
-{#                        </svg>#}
-{#                    </a></td>#}
-{#                </tr>#}
-{#                </tbody>#}
-{#            </table>#}
-{#        </div>#}
+        </div>
     </div>
 </div>
 {% endwith %}
-
-
-{#{% for file in media.files.all %}#}
-{#    {% include './components/file_detail_table.html' with file=object %}#}
-{#{% endfor %}#}
-
-            {#{% with webassets=object.webasset_set.all %}#}
-            {#The following webassets have been generated for this file:#}
-            {##}
-            {#{% for wa in object.webasset_set.all %}#}
-            {#    {% webasset_preview wa %}#}
-            {#    <hr />#}
-            {#{% endfor %}#}
-            {#{% endwith %}#}
-
-            </div>
 
 {% endblock content %}

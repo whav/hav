@@ -75,7 +75,7 @@
                         <dd>
                             <ul>
                                 {% for tag in location_tags %}
-                                <li>{{ tag.type|capfirst }}: {{ tag.name }}</li>
+                                <li>{{ tag.type|capfirst }}: {{  tag.name|geotag }}</li>
                                 {% endfor %}
                             </ul>
                         </dd>

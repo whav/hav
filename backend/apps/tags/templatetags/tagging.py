@@ -1,6 +1,8 @@
 from typing import List
 from ..models import Tag
 from django import template
+from django.template.defaultfilters import stringfilter
+from django.utils.safestring import mark_safe
 import re
 
 register = template.Library()
@@ -79,3 +81,30 @@ def filter_tag(tag: Tag):
 @register.inclusion_tag("ui/components/tags/list.html")
 def render_tags(tags: List[Tag]):
     return {"tags": filter(filter_tag, tags)}
+
+
+geo_pattern = re.compile("(GEON|TGN):(\d+)")
+
+
+@register.filter
+@stringfilter
+def geotag(tag: str):
+
+    matches = re.findall(geo_pattern, tag)
+
+    if len(matches):
+        for provider, id in matches:
+            if provider == "GEON":
+                title = "geonames.org"
+                url = f"https://www.geonames.org/{id}/"
+            else:
+                title = "tgn"
+                url = f"http://vocab.getty.edu/page/tgn/{id}"
+
+            tag = tag.replace(
+                ":".join([provider, id]), f'<a href="{url}">{title}</a>', 1
+            )
+
+        return mark_safe(tag)
+
+    return tag

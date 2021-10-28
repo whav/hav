@@ -8,6 +8,7 @@ from model_utils.models import TimeStampedModel
 from apps.sets.models import Node
 from apps.hav_collections.models import Collection
 from apps.tags.models import Tag
+from apps.tags.utils import filter_by_prefix, filter_location_tags
 from apps.accounts.models import User
 from datetime import date
 
@@ -246,6 +247,14 @@ class Media(models.Model):
             return qs[0]
         except IndexError:
             return None
+
+    @cached_property
+    def description_authors(self):
+        return filter_by_prefix(self.tags.all(), "description_author:")
+
+    @cached_property
+    def location_tags(self):
+        return filter_location_tags(self.tags.all())
 
     objects = MediaManager()
 

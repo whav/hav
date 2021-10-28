@@ -19,7 +19,7 @@ ENV NODE_ENV "production"
 RUN npm run build
 
 
-FROM python:3.8-buster
+FROM python:3.9-buster
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && \

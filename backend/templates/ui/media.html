@@ -50,7 +50,7 @@
             <div class="border-t border-gray-200">
                 <dl class="media-detail-list">
                     <div>
-                        <dt>title</dt>
+                        <dt>Title</dt>
                         <dd>{{ media.title }}</dd>
                     </div>
 
@@ -68,18 +68,40 @@
                         </dd>
                     </div>
 
-{#                    <div>#}
-{#                        <dt>country</dt>#}
-{#                        <dd>-</dd>#}
-{#                    </div>#}
+                    {% with location_tags=media.location_tags %}
+                    {% if location_tags|length %}
+                    <div>
+                        <dt>Location</dt>
+                        <dd>
+                            <ul>
+                                {% for tag in location_tags %}
+                                <li>{{ tag.type|capfirst }}: {{ tag.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+
 {#                    <div>#}
 {#                        <dt>location</dt>#}
 {#                        <dd>-</dd>#}
 {#                    </div>#}
-{#                    <div>#}
-{#                        <dt>description author</dt>#}
-{#                        <dd>-</dd>#}
-{#                    </div>#}
+
+                    {% with description_authors=media.description_authors %}
+{#                    {%  if description_authors|length %}#}
+                        <div>
+                            <dt>description author(s)</dt>
+                            <dd>
+                                <ul>
+                                    {% for a in description_authors %}
+                                    <li>{{ a }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </dd>
+                        </div>
+{#                    {% endif %}#}
+                    {% endwith %}
                 </dl>
             </div>
         </div>

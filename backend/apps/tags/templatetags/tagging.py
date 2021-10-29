@@ -32,7 +32,7 @@ prefixes = [
     "media_shorthandle",
     "municipality",
     # "mythology",
-    # "node_media",
+    "node_media",
     # "note",
     # "object-type",
     "ordering",

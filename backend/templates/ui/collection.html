@@ -1,5 +1,5 @@
 {% extends './base.html' %}
-{% load static gallery_tags markdown breadcrumbs %}
+{% load static gallery_tags markdown breadcrumbs tagging %}
 
 {% block extra_head %}
     {{ block.super }}
@@ -22,8 +22,13 @@
 {% endblock title %}
 
 {%  block description %}
+
     <div class="prose">
         {% mdx node.description %}
+    </div>
+    
+    <div>
+        {% render_tags tags=node.tags.all %}
     </div>
 {% endblock description %}
 

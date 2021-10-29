@@ -4,7 +4,6 @@ from django.conf import settings
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import views as auth_views
-from django.http import HttpResponseRedirect
 from apps.archive.urls import urlpatterns as archive_urls
 from apps.media.urls import urlpatterns as media_urls
 from api.urls import api_urls
@@ -13,6 +12,13 @@ from .ui_urls import urlpatterns as dj_urlpatterns
 django_admin.site.site_header = "HAV Administration"
 django_admin.site.site_title = "HAV Admin"
 # django_admin.site.disable_action("delete_selected")
+
+
+def dummy_view(request):
+    from django.http import Http404
+
+    raise Http404("This should never hit the server.")
+
 
 hav_admin_patterns = (
     [
@@ -38,6 +44,10 @@ urlpatterns = [
     re_path(r"^dbadmin/", django_admin.site.urls),
     path("rq/", include("django_rq.urls")),
     path("account/", include((account_patterns, "auth"), namespace="auth")),
+    path("archive/", include((archive_urls, "archive"), namespace="archive")),
+    path("media/", include((media_urls, "media"), namespace="media")),
+    path("protected/download/<path:path>", dummy_view, name="protected_download"),
+    path("", include((dj_urlpatterns, "hav"), namespace="hav")),
 ]
 
 
@@ -54,30 +64,3 @@ if settings.DEBUG:
     urlpatterns += static(wa_config["base_url"], document_root=wa_config["location"])
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-def dummy_view(request):
-    from django.http import Http404
-
-    raise Http404("This should never hit the server.")
-
-
-def frontend_redirect(request, *args, **kwargs):
-    if settings.DEBUG and request.headers.get("host") in [
-        "localhost:8000",
-        "127.0.0.1:8000",
-    ]:
-        return HttpResponseRedirect("http://127.0.0.1:3000" + request.path)
-    raise NotImplementedError()
-
-
-# namespace the whole django patterns under /d
-urlpatterns = [
-    re_path(r"^$", TemplateView.as_view(template_name="hav/teaser.html")),
-    path("collections/<path:p>", frontend_redirect),
-    path("archive/", include((archive_urls, "archive"), namespace="archive")),
-    path("media/", include((media_urls, "media"), namespace="media")),
-    path("d/", include(urlpatterns)),
-    path("protected/download/<path:path>", dummy_view, name="protected_download"),
-    path("ui/", include((dj_urlpatterns, "hav"), namespace="hav")),
-]

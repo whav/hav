@@ -13,6 +13,10 @@ class NodeAdmin(TreeAdmin):
         "_position",
         "_ref_node_id",
         "tags",
+        "representative_media",
+    ]
+    raw_id_fields = [
+        "representative_media",
     ]
     filter_horizontal = ["tags"]
     form = movenodeform_factory(Node)

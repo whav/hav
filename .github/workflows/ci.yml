@@ -30,14 +30,24 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hav:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/hav:${{ github.run_id }}
 
-      - name: Build and push CMS
-        id: docker_cms_build
+      #- name: Build and push CMS
+      #  id: docker_cms_build
+      # uses: docker/build-push-action@v2
+      #  with:
+      #    context: ./frontend/cms/
+      #    file: ./frontend/cms/Dockerfile
+      #    push: true
+      #    tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hav-cms:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/hav-cms:${{ github.run_id }}
+
+      - name: Build and push MDX
+        id: docker_mdx_build
         uses: docker/build-push-action@v2
         with:
-          context: ./frontend/cms/
-          file: ./frontend/cms/Dockerfile
+          context: ./
+          file: ./Dockerfile.mdx
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hav-cms:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/hav-cms:${{ github.run_id }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hav-mdx:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/hav-mdx:${{ github.run_id }}
+
 
       - name: Build and push Nginx
         id: docker_nginx_build

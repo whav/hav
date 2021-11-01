@@ -23,7 +23,7 @@ const MediaSwitch = (props) => {
 
 const Media = (props) => {
   const { id, caption, sizes, width } = props;
-  const { data, error } = useSWR(`/d/api/public/media/${id}/`, fetcher);
+  const { data, error } = useSWR(`/api/public/media/${id}/`, fetcher);
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;

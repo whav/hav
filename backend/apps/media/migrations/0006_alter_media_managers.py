@@ -7,14 +7,14 @@ import django.db.models.manager
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('media', '0005_auto_20210329_1758'),
+        ("media", "0005_auto_20210329_1758"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='media',
+            name="media",
             managers=[
-                ('preview_manager', django.db.models.manager.Manager()),
+                ("preview_manager", django.db.models.manager.Manager()),
             ],
         ),
     ]

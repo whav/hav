@@ -206,7 +206,7 @@ STATIC_URL = "/static/"
 
 STATICFILES_DIRS = (
     django_root("static/"),
-    ("dj_static", django_root("static/")),
+    # ("dj_static", django_root("static/")),
 )
 
 STATIC_ROOT = project_root(env("STATIC_ROOT", default="dist/static/"))

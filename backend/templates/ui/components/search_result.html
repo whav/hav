@@ -1,12 +1,12 @@
 {% load gallery_tags search_results %}
 {% with url=result.object|target_url %}
-<div class="flex p-4 mb-4 border-2 border-gray-50">
-    <div class="w-1/4">
+<div class="md:flex md:align-top p-4 mb-4 border-2 border-gray-50">
+    <div class="md:w-1/4 md:flex-shrink-0">
         <a href="{{ url }}" class="object-contain">
             <img src="{% thumbnail_url result.object %}" />
         </a>
     </div>
-    <div class="p-4">
+    <div class="pl-4">
         {% render_search_result result %}
     </div>
 </div>

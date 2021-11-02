@@ -40,7 +40,7 @@ account_patterns = [
 
 urlpatterns = [
     re_path(r"^api/", include((api_urls, "api"), namespace="api")),
-    re_path(r"^admin/", include(hav_admin_patterns, namespace="hav_admin")),
+    # re_path(r"^admin/", include(hav_admin_patterns, namespace="hav_admin")),
     re_path(r"^dbadmin/", django_admin.site.urls),
     path("rq/", include("django_rq.urls")),
     path("account/", include((account_patterns, "auth"), namespace="auth")),

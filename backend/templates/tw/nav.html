@@ -46,12 +46,16 @@
       <li class="md:mt-2">
         <span class="text-base text-gray-500">Collections</span>
         <ul>
-        {% for collection in all_collections %}
-            <li>
-                {% url 'hav:collection_root' collection_slug=collection.slug as collection_root_url %}
-                {% active_link collection.short_name collection_root_url "true" %}
+		{% regroup all_collections by get_type_display as collections_by_type %}
+        {% for type in collections_by_type %}
+			<p class="mt-2 text-base italic text-gray-500">{{ type.grouper }}</p>
+			{% for collection in type.list %}
+				<li>
+					{% url 'hav:collection_root' collection_slug=collection.slug as collection_root_url %}
+					{% active_link collection.short_name collection_root_url "true" %}
 
-            </li>
+				</li>
+			{% endfor %}
         {% endfor %}
         </ul>
       </li>

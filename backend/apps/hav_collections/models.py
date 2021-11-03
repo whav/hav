@@ -9,10 +9,12 @@ def root_nodes():
 
 
 class Collection(models.Model):
+    TYPE_CHOICES = [(1, "private"), (2, "projects"), (3, "special")]
 
     slug = models.SlugField()
     name = models.CharField(unique=True, max_length=200)
     short_name = models.CharField(unique=True, max_length=30, blank=True)
+    type = models.IntegerField(choices=TYPE_CHOICES, default=1)
 
     administrators = models.ManyToManyField(User)
 

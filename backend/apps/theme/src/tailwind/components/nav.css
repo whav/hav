@@ -1,4 +1,7 @@
 #nav-main {
+    a {
+        @apply text-white;
+    }
     a.active {
         @apply underline;
     }

@@ -41,7 +41,7 @@ BASHHOMEDIR=/hav/.localhistory/bash \
 HISTFILE=$BASHHOMEDIR/.bash_history \
 IPYTHONDIR=/hav/.localhistory/ipython \
 IMAGINARY_SECRET=UNSAFE \
-PYTHONPATH=/venv/lib/python3.8/site-packages
+PYTHONPATH=/venv/lib/python3.9/site-packages
 
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads", "/hav/.localhistory/bash", "/hav/.localhistory/ipython"]
 

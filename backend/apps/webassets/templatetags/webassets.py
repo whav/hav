@@ -16,19 +16,40 @@ register = template.Library()
 template_base = "webassets/tags"
 
 
+def get_primary_webasset(archive_file):
+    archive_type = archive_file.mime_type.split("/")[0]
+    webassets = archive_file.webasset_set.all()
+    webassets_by_mime_type = {}
+
+    for wa in webassets:
+        wa_mime = wa.mime_type or guess_type(wa.file)[0]
+        webassets_by_mime_type.setdefault(wa_mime.split("/")[0], wa)
+
+    return webassets_by_mime_type.get(archive_type, webassets[0])
+
+
 @register.inclusion_tag(f"{template_base}/webasset.html", takes_context=True)
 def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media]):
     if isinstance(obj, Media):
         media = obj
-        webasset = media.primary_file.webasset_set.first()
+        archive_file = media.primary_file
+        webassets = archive_file.webasset_set.all()
     elif isinstance(obj, WebAsset):
         media = obj.archivefile.media_set.get()
-        webasset = obj
+        archive_file = obj.archivefile
+        webassets = [obj]
     elif isinstance(obj, ArchiveFile):
         media = obj.media_set.get()
-        webasset = obj.webasset_set.get()
+        archive_file = obj
+        webassets = obj.webasset_set.all()
     else:
         raise ValueError(f"Can not find webasset for object {obj}")
+
+    # breakpoint()
+
+    # TODO: figure out a better way to retrieve the correct webasset
+    webasset = webassets[0]
+    webasset = get_primary_webasset(archive_file)
 
     # TODO: access control
     user = context.get("user")

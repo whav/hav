@@ -56,6 +56,7 @@ class NodeSerializer(SimpleNodeSerializer):
 class MediaSerializer(serializers.ModelSerializer):
 
     url = serializers.SerializerMethodField()
+    set_url = serializers.SerializerMethodField()
     thumbnail = serializers.SerializerMethodField()
     srcset = serializers.SerializerMethodField()
     media_type = serializers.SerializerMethodField()
@@ -69,6 +70,12 @@ class MediaSerializer(serializers.ModelSerializer):
         return reverse(
             "hav:media_view",
             kwargs={"collection_slug": media.collection.slug, "media_pk": media.pk},
+        )
+
+    def get_set_url(self, media):
+        return reverse(
+            "hav:folder_view",
+            kwargs={"collection_slug": media.collection.slug, "node_pk": media.set.pk},
         )
 
     def get_thumbnail(self, media):
@@ -102,6 +109,7 @@ class MediaSerializer(serializers.ModelSerializer):
         fields = [
             "title",
             "url",
+            "set_url",
             "aspect_ratio",
             "thumbnail",
             "srcset",

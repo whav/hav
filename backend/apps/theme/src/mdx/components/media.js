@@ -22,7 +22,7 @@ const MediaSwitch = (props) => {
 };
 
 const Media = (props) => {
-  const { id, caption, sizes, width } = props;
+  const { id, caption, sizes, width, link_to_parent_node } = props;
   const { data, error } = useSWR(`/api/public/media/${id}/`, fetcher);
 
   if (error) return <div>failed to load</div>;
@@ -30,7 +30,7 @@ const Media = (props) => {
 
   // return <ImageMedia {...data} />;
   return (
-    <a href={data.url}>
+    <a href={link_to_parent_node ? data.set_url : data.url}>
         <div className="tile">
             <div className="preview">
                 <MediaSwitch {...data} {...props} />

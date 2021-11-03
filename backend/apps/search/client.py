@@ -42,6 +42,7 @@ def search(query, node=None, limit=20, offset=0):
     # get all folder and media pks in one go
     media_pks = []
     node_pks = []
+
     for hit in hits:
         type = hit.get("type")
         pk = hit.get("pk")
@@ -61,16 +62,22 @@ def search(query, node=None, limit=20, offset=0):
         .prefetch_related("collection")
         .prefetch_related("files__webasset_set", "collection")
     }
-    nodes = {node.pk: node for node in Node.objects.filter(pk__in=node_pks)}
+
+    nodes = {
+        node.pk: node
+        for node in Node.objects.filter(pk__in=node_pks).prefetch_related(
+            "representative_media"
+        )
+    }
 
     for hit in hits:
         type = hit.get("type")
         pk = hit.get("pk")
         if type == "media":
-            m = media_items[pk]
+            instance = media_items[pk]
         elif type == "folder":
-            m = nodes[pk].get_representative_media()
+            instance = nodes[pk]
 
-        hit.update({"object": m})
+        hit.update({"object": instance})
 
     return response

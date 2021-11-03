@@ -38,10 +38,10 @@ def target_url(obj: Union[Node, Media]):
         )
 
     if isinstance(obj, Node):
-        collection = obj.collection
+        collection = obj.get_collection()
         return reverse(
             "hav:folder_view",
-            kwargs={"collection_slug": collection.slug, "node_id": obj.pk},
+            kwargs={"collection_slug": collection.slug, "node_pk": obj.pk},
         )
 
     raise NotImplementedError(f"Can not deal with object {obj}")

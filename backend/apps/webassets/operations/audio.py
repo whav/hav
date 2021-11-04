@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 from .utils import FFMPEG
 
 
-def convert(source, target, *args):
+def convert(source, target, *args, **hints):
     logger.info("Audio conversion starting.")
     task = subprocess.run(
         [

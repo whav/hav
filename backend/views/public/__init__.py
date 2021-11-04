@@ -43,6 +43,7 @@ class CollectionNodeMixin:
     def get_media_entries(self):
         return (
             Media.preview_manager.with_image_previews()
+            .prefetch_related("files")
             .filter(set=self.node)
             .select_related("collection")
         )

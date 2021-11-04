@@ -1,4 +1,5 @@
 import math
+from functools import lru_cache
 from datetime import date
 from typing import Union
 from django import template
@@ -16,6 +17,7 @@ no_public_fallback = static("webassets/no_public_media_available.svg")
 no_webasset_fallback = static("webassets/no_image_available.svg")
 
 
+@lru_cache(maxsize=1, typed=True)
 def can_view_media_webassets(user, media):
     has_active_embargo = (
         media.embargo_end_date and media.embargo_end_date >= date.today()
@@ -94,20 +96,31 @@ def thumbnail_url(context, object: Union[Media, Node], webasset: WebAsset = None
     else:
         thumbnail_url = no_webasset_fallback
 
+    # from pprint import pprint
+    #
+    # pprint(can_view_media_webassets.cache_info())
     return thumbnail_url
 
 
-@register.simple_tag
-def thumbnail_aspect_ratio(webasset: WebAsset):
+@register.simple_tag(takes_context=True)
+def thumbnail_aspect_ratio(context, webasset: WebAsset):
+    user = context.get("user")
+    media = webasset.archivefile.media
+    can_view_media_webassets(user, media)
     return webasset.aspect_ratio
 
 
-@register.simple_tag
-def thumbnail_width(webasset: WebAsset, base: int = 150, unit: str = "px"):
-    if webasset and webasset.aspect_ratio:
+@register.simple_tag(takes_context=True)
+def thumbnail_width(context, webasset: WebAsset, base: int = 150, unit: str = "px"):
+    user = context.get("user")
+    media = webasset.archivefile.media
+    can_view = can_view_media_webassets(user, media)
+
+    if can_view and webasset and webasset.aspect_ratio:
         width = math.floor(math.sqrt(48000 * webasset.aspect_ratio))
         return f"{width}{unit}"
-    return ""
+
+    return f"{base}{unit}"
 
 
 @register.inclusion_tag("webassets/tags/icons.html")

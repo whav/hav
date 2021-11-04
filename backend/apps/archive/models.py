@@ -2,6 +2,7 @@ import uuid
 from pathlib import Path
 from mimetypes import guess_type
 
+from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import models
 from django.template.defaultfilters import filesizeformat
@@ -58,6 +59,10 @@ class ArchiveFile(models.Model):
                 return self.media_set.get().license
             except ObjectDoesNotExist:
                 pass
+
+    @cached_property
+    def media(self):
+        return self.media_set.get()
 
     @property
     def mime_type(self):

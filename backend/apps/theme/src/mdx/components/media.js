@@ -14,7 +14,7 @@ const ImageMedia = ({ title, thumbnail, aspect_ratio, srcset=[] }) => {
     //     )
     //     width = `${width}px`
     // }
-    return <img className={"preview-image"} alt={title} src={thumbnail} srcSet={srcset_attr} sizes="400px" />;
+    return <img className={"preview-image"} alt={title} src={thumbnail} srcSet={srcset_attr} sizes="300px" />;
 };
 
 const MediaSwitch = (props) => {

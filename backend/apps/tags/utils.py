@@ -4,15 +4,17 @@ from pydantic import BaseModel
 
 import re
 
-# ordering is important here as we use this lit to also order the tags
+# ordering is important here as we use this list to also order the tags
 location_prefixes = [
     "country",
     "province/state",
     "municipality",
     "city",
     "area",
+    "place",
     "location",
     "location_detail",
+
 ]
 
 

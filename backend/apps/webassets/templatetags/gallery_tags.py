@@ -96,9 +96,6 @@ def thumbnail_url(context, object: Union[Media, Node], webasset: WebAsset = None
     else:
         thumbnail_url = no_webasset_fallback
 
-    # from pprint import pprint
-    #
-    # pprint(can_view_media_webassets.cache_info())
     return thumbnail_url
 
 

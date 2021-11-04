@@ -1,5 +1,6 @@
 from typing import Union
 from django import template
+from functools import lru_cache
 from mimetypes import guess_type
 from apps.webassets.models import WebAsset
 from apps.archive.models import ArchiveFile
@@ -16,15 +17,28 @@ register = template.Library()
 template_base = "webassets/tags"
 
 
-def get_primary_webasset(archive_file):
-    archive_type = archive_file.mime_type.split("/")[0]
+@lru_cache(maxsize=1)
+def _get_webassets_by_type(archive_file):
     webassets = archive_file.webasset_set.all()
     webassets_by_mime_type = {}
+
     for wa in webassets:
         wa_mime = wa.mime_type or guess_type(wa.file)[0]
+        webassets_by_mime_type.setdefault(wa_mime, wa)
         webassets_by_mime_type.setdefault(wa_mime.split("/")[0], wa)
 
-    return webassets_by_mime_type.get(archive_type, webassets[0])
+    return webassets_by_mime_type
+
+
+def get_primary_webasset(archive_file):
+    archive_type = archive_file.mime_type.split("/")[0]
+    webassets_by_mime_type = _get_webassets_by_type(archive_file)
+    return webassets_by_mime_type.get(archive_type)
+
+
+def get_webasset_by_mime(archive_file, mime):
+    wa_by_mime = _get_webassets_by_type(archive_file)
+    return wa_by_mime.get(mime)
 
 
 @register.inclusion_tag(f"{template_base}/webasset.html", takes_context=True)
@@ -59,8 +73,12 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media]):
             media_type = mt.split("/")[0]
             template = f"{template_base}/webassets/{media_type}.html"
 
+        # get the primary image for things such as posters
+        secondary_webasset = get_webasset_by_mime(archive_file, "image")
+
         context = {
             "webasset": webasset,
+            "image_webasset": secondary_webasset,
             "media": media,
             "media_type": media_type,
             "template": template,

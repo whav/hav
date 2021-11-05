@@ -14,7 +14,6 @@ location_prefixes = [
     "place",
     "location",
     "location_detail",
-
 ]
 
 

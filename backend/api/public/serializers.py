@@ -36,11 +36,25 @@ class SimpleNodeSerializer(serializers.ModelSerializer):
 
 class NodeSerializer(SimpleNodeSerializer):
 
+    url = serializers.SerializerMethodField()
+
     children = SimpleNodeSerializer(many=True, read_only=True)
     ancestors = SimpleNodeSerializer(
         many=True, source="collection_ancestors", read_only=True
     )
     collection = CollectionSerializer(source="get_collection")
+
+    representative_media_id = serializers.SerializerMethodField()
+
+    def get_representative_media_id(self, node: Node):
+        return node.get_representative_media().pk
+
+    def get_url(self, node: Node):
+        collection = node.get_collection()
+        return reverse(
+            "hav:folder_view",
+            kwargs={"collection_slug": collection.slug, "node_pk": node.pk},
+        )
 
     class Meta(SimpleNodeSerializer.Meta):
         model = Node
@@ -50,6 +64,7 @@ class NodeSerializer(SimpleNodeSerializer):
             "children",
             "ancestors",
             "collection",
+            "representative_media_id",
         ]
 
 

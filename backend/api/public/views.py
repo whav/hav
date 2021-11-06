@@ -1,7 +1,10 @@
+from django.http import Http404
+
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from apps.hav_collections.models import Collection
 from apps.sets.models import Node
 from apps.media.models import Media
+
 from .serializers import CollectionSerializer, NodeSerializer, MediaSerializer
 
 
@@ -25,3 +28,9 @@ class MediaView(RetrieveAPIView):
     lookup_url_kwarg = "media_id"
 
     queryset = Media.objects.all()
+
+    def get_object(self):
+        media: Media = super().get_object()
+        if media.is_public:
+            return media
+        raise Http404("Non-public media not returned via API.")

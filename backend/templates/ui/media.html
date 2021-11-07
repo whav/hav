@@ -166,6 +166,41 @@
                 </dl>
             </div>
         </div>
+
+        {% if media.is_public %}
+        <div class="bg-white shadow overflow-hidden sm:rounded mt-4">
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Archived Files
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500"></p></div>
+            <div class="border-t border-gray-200">
+                <dl class="media-detail-list">
+
+                    {% for archive_file in media.files.all %}
+                    <div>
+                        <dt>{{ archive_file.original_filename }} ({{ archive_file.size|filesizeformat }})</dt>
+                        <dd>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'archive:download' pk=archive_file.pk %}">
+                                Download
+                            </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'archive:file_by_hash' hash=archive_file.hash %}">
+                                Permalink
+                            </a>
+                                </li>
+                            </ul>
+
+                        </dd>
+                    </div>
+                    {% endfor %}
+                </dl>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endwith %}

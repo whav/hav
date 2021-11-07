@@ -1,0 +1,6 @@
+{% load gallery_tags %}
+<div class="gallery">
+{% for media in media_entries %}
+    {% media_tile media=media %}
+{% endfor %}
+</div>

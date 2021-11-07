@@ -1,0 +1,51 @@
+{% extends './base.html' %}
+{% load static gallery_tags markdown breadcrumbs tagging %}
+
+{% block extra_head %}
+    {{ block.super }}
+    <script defer src="{% static 'theme/mdx_client.js' %}" ></script>
+{% endblock %}
+
+
+{%  block breadcrumbs %}
+{% render_breadcrumbs node %}
+{% endblock breadcrumbs %}
+
+{% block adminlinks %}
+{% if user and user.is_staff %}
+    <a href="{% url 'admin:sets_node_change' object_id=node.pk %}">Edit node</a>
+{% endif %}
+{% endblock %}
+
+{%  block title %}
+    {% firstof title node.name %}
+{% endblock title %}
+
+{%  block description %}
+
+    <div class="prose">
+        {% mdx node.description %}
+    </div>
+
+    <div>
+        {% render_tags tags=node.tags.all %}
+    </div>
+{% endblock description %}
+
+{% block content %}
+<div class="prose">
+	<h4>Browse Collection</h4>
+<div class="folder-bg">
+    <div class="gallery">
+    {% for node in children %}
+       {% node_tile node=node %}
+    {% endfor %}
+    </div>
+</div>
+<div class="gallery">
+	{% for media in media_entries %}
+		{% media_tile media=media %}
+	{% endfor %}
+</div>
+</div>
+{% endblock content %}

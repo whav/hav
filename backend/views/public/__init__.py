@@ -61,7 +61,7 @@ class CollectionNodeMixin:
 
 class CollectionRoot(CollectionNodeMixin, DetailView):
     model = Node
-    template_name = "ui/collection.html"
+    template_name = "ui/collection_root.html"
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

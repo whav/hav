@@ -31,7 +31,7 @@ def can_view_media_webassets(user, media):
 
 
 @register.inclusion_tag("webassets/tags/media_tile.html", takes_context=True)
-def media_tile(context, media: Media):
+def media_tile(context, media: Media, display_title: bool = True):
     assert isinstance(media, Media)
 
     user = context.get("user")
@@ -48,6 +48,7 @@ def media_tile(context, media: Media):
         ),
         "webasset": webasset,
         "media": media,
+        "title": media.title if display_title else "",
     }
 
 

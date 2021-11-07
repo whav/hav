@@ -1,0 +1,13 @@
+{% load gallery_tags %}
+
+{% regroup media_entries by title as grouped_media_list %}
+{%  for group in grouped_media_list %}
+<div class="mt-10">
+<h2 class="text-xl leading-6 font-bold mb-4">{{ group.grouper }}</h2>
+<div class="gallery">
+{% for media in group.list %}
+    {% media_tile media=media display_title=False %}
+{% endfor %}
+</div>
+{% endfor %}
+</div>

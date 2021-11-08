@@ -13,9 +13,8 @@ logger = getLogger(__name__)
 @register.filter
 def daterange(dt_range: DateTimeTZRange):
     rdt = ReverseDateTimeRange(dt_range.lower, dt_range.upper)
-    # breakpoint()
     resolution = rdt.get_resolution()
-    print(resolution, dt_range)
+
     logger.debug(f"{dt_range.lower} {dt_range.upper}")
     if resolution == Resolutions.YEAR:
         return dt_range.upper.strftime("%Y")

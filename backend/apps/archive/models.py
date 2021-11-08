@@ -103,6 +103,12 @@ class ArchiveFile(models.Model):
             except ValidationError as e:
                 raise ValidationError({"_webasset_hints": e})
 
+    def has_download_permission(self, user):
+        if self.prohibit_download:
+            return False
+
+        return self.media.is_public
+
     class Meta:
         ordering = ("archived_at",)
 

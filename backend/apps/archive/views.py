@@ -45,9 +45,9 @@ class ArchiveFileDownloadView(DetailView):
     model = ArchiveFile
 
     def get(self, request, *args, **kwargs):
-        archive_file = self.get_object()
+        archive_file: ArchiveFile = self.get_object()
 
-        if archive_file.prohibit_download:
+        if not archive_file.has_download_permission(request.user):
             return HttpResponseForbidden(
                 """
                 Downloading of this archived file has been blocked by the administrators.

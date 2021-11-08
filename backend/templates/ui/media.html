@@ -1,5 +1,5 @@
 {% extends './base.html' %}
-{% load static daterange breadcrumbs webassets cache tagging %}
+{% load static daterange breadcrumbs webassets cache tagging archive %}
 
 {%  block breadcrumbs %}
     {% cache 60 'media' media.pk 'true' %}
@@ -167,7 +167,6 @@
             </div>
         </div>
 
-        {% if media.is_public %}
         <div class="bg-white shadow overflow-hidden sm:rounded mt-4">
             <div class="px-4 py-5 sm:px-6">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -182,11 +181,14 @@
                         <dt>{{ archive_file.original_filename }} ({{ archive_file.size|filesizeformat }})</dt>
                         <dd>
                             <ul>
+                                {% archive_download_permission archive_file as download_permission %}
+                                {% if download_permission %}
                                 <li>
                                     <a href="{% url 'archive:download' pk=archive_file.pk %}">
-                                Download
-                            </a>
+                                        Download
+                                    </a>
                                 </li>
+                                {% endif %}
                                 <li>
                                     <a href="{% url 'archive:file_by_hash' hash=archive_file.hash %}">
                                 Permalink
@@ -200,7 +202,7 @@
                 </dl>
             </div>
         </div>
-        {% endif %}
+
     </div>
 </div>
 {% endwith %}

@@ -42,7 +42,7 @@ def get_webasset_by_mime(archive_file, mime):
 
 
 @register.inclusion_tag(f"{template_base}/webasset.html", takes_context=True)
-def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media], sizes="750px"):
+def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media], sizes=""):
     if isinstance(obj, Media):
         media = obj
         archive_file = media.primary_file

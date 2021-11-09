@@ -21,7 +21,7 @@
     <div class="flex-auto max-w-2xl mr-4 mb-4">
         <figure class="md:pr-10 md:pb-10">
 {#            <img src="{% static 'webassets/image.svg' %}"/>#}
-            {% render_webasset media %}
+            {% render_webasset media sizes="(min-width: 750px) 700px" %}
             <figcaption class="flex justify-between">
                 <div>
                     <ul class="inline-block list-none">

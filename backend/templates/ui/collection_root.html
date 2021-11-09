@@ -33,8 +33,9 @@
 {% endblock description %}
 
 {% block content %}
-<div class="prose">
-	<h4>Browse Collection</h4>
+{% if children %}
+<h4 class="font-semibold text-gray-900 mt-6 mb-2 leading-6">Browse Collection</h4>
+{% endif %}
 <div class="folder-bg">
     <div class="gallery">
     {% for node in children %}
@@ -46,6 +47,5 @@
 	{% for media in media_entries %}
 		{% media_tile media=media %}
 	{% endfor %}
-</div>
 </div>
 {% endblock content %}

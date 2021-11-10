@@ -60,7 +60,7 @@ for short_url, long_url in redirects:
     relative_redirects[media_id] = urlunsplit(
         (
             "https",
-            "hav2.aussereurop.univie.ac.at",
+            "hav.univie.ac.at",
             parts.path,
             parts.query,
             parts.fragment,

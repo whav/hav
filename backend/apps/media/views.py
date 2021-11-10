@@ -69,9 +69,6 @@ for short_url, long_url in redirects:
 
 
 def redirect_to_archive(request, media_id):
-
-    breakpoint()
-
     url = relative_redirects.get(media_id)
     if url:
         return HttpResponseRedirect(url)

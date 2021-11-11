@@ -109,12 +109,20 @@ def webasset_preview(webasset: WebAsset):
 
     if media.is_public:
 
+
         media_type = webasset.mime_type.split("/")[0]
 
         if media_type == "image":
             context.update({"preview_template": f"{template_base}/image.html"})
         if media_type in ["audio", "video"]:
-            context.update({"preview_template": f"{template_base}/video.html"})
+            # get the primary image for things such as posters
+            secondary_webasset = get_webasset_by_mime(archive_file, "image")
+            context.update(
+                {
+                    "preview_template": f"{template_base}/video.html",
+                    "image_webasset": secondary_webasset,
+                }
+            )
     else:
         del context["webasset"]
         context.update({"preview_template": f"{template_base}/prohibited.html"})

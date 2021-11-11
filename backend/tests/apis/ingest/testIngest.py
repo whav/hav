@@ -34,7 +34,9 @@ class IngestTest(APITransactionTestCase):
     def setUp(self):
         self.root = Node.add_root(name="testroot")
         self.target = self.root.add_child(name="testchild")
-        self.user = User.objects.create_superuser("tester", "test@example.com", uuid4())
+        self.user = User.objects.create_superuser(
+            "tester", "test@example.com", str(uuid4())
+        )
         self.creator = MediaCreator.objects.create(
             first_name="Tester", last_name="Testeroo"
         )

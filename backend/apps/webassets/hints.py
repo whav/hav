@@ -7,8 +7,12 @@ class ImageHints(BaseModel):
     rotation: Optional[Literal[0, 90, 180, 270]]
     maxResolution: Optional[int]
 
+    class Config:
+        extra = "forbid"
+
 
 def validate_webasset_hints(mime_type, value):
+
     if not value:
         return value
 

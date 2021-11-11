@@ -1,7 +1,6 @@
 from io import StringIO
 from uuid import uuid4
-import os
-import shutil
+
 import tempfile
 from unittest import skip
 from pathlib import Path

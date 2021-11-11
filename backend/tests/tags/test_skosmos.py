@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 from django.conf import settings
-from ..sources.skosmos import Source
-from ..sources import TAG_LABEL_TO_SOURCE
+from apps.tags.sources.skosmos import Source
+from apps.tags.sources import TAG_LABEL_TO_SOURCE
 
 import pytest
 

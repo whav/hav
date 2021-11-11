@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ..urls import urlpatterns
+from api.v1.misc_models.urls import urlpatterns
 
 
 class MiscModelsAPITest(APITestCase):
@@ -13,7 +13,9 @@ class MiscModelsAPITest(APITestCase):
     data = {"name": "Test Creator"}
 
     def setUp(self):
-        self.user = User.objects.create_superuser("tester", "test@example.com", uuid4())
+        self.user = User.objects.create_superuser(
+            "tester", "test@example.com", str(uuid4())
+        )
         self.url = reverse("api:v1:models:creators")
 
     def test_listings(self):

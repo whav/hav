@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from apps.accounts.models import User
 from apps.hav_collections.models import Collection
-from .permissions import has_collection_permission
+from api.v1.permissions import has_collection_permission
 
 
 class CollectionPermissionTest(TestCase):

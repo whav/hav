@@ -1,5 +1,5 @@
 import unittest
-from ..daterange import (
+from hav_utils.daterange import (
     parse,
     parse_date,
     parse_time,
@@ -103,7 +103,3 @@ class TestReverseDTRange(unittest.TestCase):
             ),
             Resolutions.DAY,
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

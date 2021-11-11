@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 from datetime import date, time, datetime
 
-from .utils.dtrange import range_from_partial_date
+from apps.media.utils.dtrange import range_from_partial_date
 
 
 class DateTimeRangeTest(SimpleTestCase):

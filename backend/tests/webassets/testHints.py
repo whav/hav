@@ -1,15 +1,13 @@
 from pathlib import Path
-import tempfile
 import pytest
 
 import tempfile
 from PIL import Image
-from ..hints import validate_webasset_hints
-from ..operations.hints import get_hints_from_tags, rotation_tags
-from ..operations.image import convert
+from apps.webassets.hints import validate_webasset_hints
+from apps.webassets.operations.hints import get_hints_from_tags, rotation_tags
+from apps.webassets.operations.image import convert
 from django.core.exceptions import ValidationError
 from apps.tags.models import Tag
-from apps.hav_collections.models import Collection
 
 
 def test_hints():
@@ -18,12 +16,12 @@ def test_hints():
         validate_webasset_hints("image/jpeg", {"runtime": 500})
 
     img_valid = {"rotation": 90}
+    assert (
+        img_valid.items() <= validate_webasset_hints("image/jpeg", img_valid).items()
+    ), "Valid does not raise"
 
     assert (
-        validate_webasset_hints("image/jpeg", img_valid) == img_valid
-    ), "Valid does not raise"
-    assert (
-        validate_webasset_hints("image", img_valid) == img_valid
+        img_valid.items() <= validate_webasset_hints("image", img_valid).items()
     ), "Incomplete mime type does not raise"
 
     with pytest.raises(ValidationError):

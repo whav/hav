@@ -17,7 +17,9 @@ class MediaCreatorAPITest(APITestCase):
     }
 
     def setUp(self):
-        self.user = User.objects.create_superuser("tester", "test@example.com", uuid4())
+        self.user = User.objects.create_superuser(
+            "tester", "test@example.com", str(uuid4())
+        )
         self.url = reverse("api:v1:models:creators")
 
     def test_permissions(self):

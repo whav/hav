@@ -113,9 +113,10 @@ class SearchView(CollectionNodeMixin, TemplateView):
 
         if form.is_valid():
             query = form.cleaned_data.get("q")
-            node = form.cleaned_data.get("node") or self.collection.root_node.pk
+            node = form.cleaned_data.get("node") or self.collection.root_node
 
-            assert node is not None
+            # safety measure
+            assert isinstance(node, Node)
 
             try:
                 page = self.request.GET.get("page", 1)
@@ -125,7 +126,7 @@ class SearchView(CollectionNodeMixin, TemplateView):
 
             results = search(
                 query,
-                node=node.pk if node else None,
+                node=node.pk,
                 limit=limit,
                 offset=limit * (page - 1),
             )

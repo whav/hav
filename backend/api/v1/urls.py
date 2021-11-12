@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls import url, include
+from django.urls import path, include
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse as django_reverse
@@ -46,16 +46,16 @@ def start(request):
 
 
 source_patterns = [
-    url(r"^incoming/", include(incoming_fss_source.urls)),
-    url(r"^whav/", include(whav_source.urls)),
-    url(r"^upload/", include(upload_source.urls)),
+    path("incoming/", include(incoming_fss_source.urls)),
+    path("whav/", include(whav_source.urls)),
+    path("upload/", include(upload_source.urls)),
 ]
 
 urlpatterns = [
-    url("^$", start, name="api_root"),
-    url("^auth/", AuthStatusView.as_view(), name="auth_status"),
-    url(r"^ingest/", include((ingest_urls, "ingest"))),
-    url(r"^sources/", include(source_patterns)),
-    url(r"^hav/", include((hav_urls("hav"), app_name), namespace="hav_browser")),
-    url(r"^models/", include((model_url_patterns, "models"))),
+    path("", start, name="api_root"),
+    path("auth/", AuthStatusView.as_view(), name="auth_status"),
+    path("ingest/", include((ingest_urls, "ingest"))),
+    path("sources/", include(source_patterns)),
+    path("hav/", include((hav_urls("hav"), app_name), namespace="hav_browser")),
+    path("models/", include((model_url_patterns, "models"))),
 ]

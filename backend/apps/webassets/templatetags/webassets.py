@@ -109,7 +109,6 @@ def webasset_preview(webasset: WebAsset):
 
     if media.is_public:
 
-
         media_type = webasset.mime_type.split("/")[0]
 
         if media_type == "image":

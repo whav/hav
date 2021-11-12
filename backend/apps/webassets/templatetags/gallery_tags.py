@@ -11,10 +11,15 @@ from hav_utils.imaginary import generate_thumbnail_url
 from django.urls import reverse
 from django.templatetags.static import static
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 register = template.Library()
 
 no_public_fallback = static("webassets/no_public_media_available.svg")
 no_webasset_fallback = static("webassets/no_image_available.svg")
+broken_fallback = static("webassets/no_image_available.svg")
 
 
 @lru_cache(maxsize=1, typed=True)
@@ -54,11 +59,13 @@ def media_tile(context, media: Media, display_title: bool = True):
 
 @register.inclusion_tag("webassets/tags/node_tile.html", takes_context=True)
 def node_tile(context, node: Node):
-    assert isinstance(node, Node)
 
     media = node.get_representative_media()
     collection = node.get_collection()
-    webasset = media.primary_image_webasset
+
+    webasset = None
+    if media:
+        webasset = media.primary_image_webasset
 
     return {
         "href": reverse(
@@ -73,6 +80,9 @@ def node_tile(context, node: Node):
 
 @register.simple_tag(takes_context=True)
 def thumbnail_url(context, object: Union[Media, Node], webasset: WebAsset = None):
+
+    if object is None:
+        return no_webasset_fallback
 
     media = object
 
@@ -110,6 +120,14 @@ def thumbnail_aspect_ratio(context, webasset: WebAsset):
 
 @register.simple_tag(takes_context=True)
 def thumbnail_width(context, webasset: WebAsset, base: int = 150, unit: str = "px"):
+    default = f"{base}{unit}"
+
+    if webasset is None:
+        logger.warning(
+            f"Invalid use of tag thumbnail_width: no webasset supplied {context}"
+        )
+        return default
+
     user = context.get("user")
     media = webasset.archivefile.media
     can_view = can_view_media_webassets(user, media)
@@ -118,7 +136,7 @@ def thumbnail_width(context, webasset: WebAsset, base: int = 150, unit: str = "p
         width = math.floor(math.sqrt(48000 * webasset.aspect_ratio))
         return f"{width}{unit}"
 
-    return f"{base}{unit}"
+    return default
 
 
 @register.inclusion_tag("webassets/tags/icons.html")

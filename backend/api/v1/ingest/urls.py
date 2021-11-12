@@ -1,4 +1,3 @@
-from django.conf.urls import url
 from django.urls import path
 from . import (
     IngestQueueView,
@@ -10,17 +9,17 @@ from . import (
 )
 
 ingest_urls = [
-    url(r"^options/$", IngestOptionsView.as_view()),
-    url(r"^$", IngestQueueView.as_view(), name="ingest"),
-    url(r"^single/$", SingleIngestView.as_view()),
-    path(r"q/<uuid:pk>/", IngestQueueDetailView.as_view(), name="ingest_queue"),
+    path("options/", IngestOptionsView.as_view()),
+    path("", IngestQueueView.as_view(), name="ingest"),
+    path("single/", SingleIngestView.as_view()),
+    path("q/<uuid:pk>/", IngestQueueDetailView.as_view(), name="ingest_queue"),
     path(
-        r"q/<uuid:pk>/ingest/",
+        "q/<uuid:pk>/ingest/",
         IngestQueueIngestionView.as_view(),
         name="ingest_queue_ingest",
     ),
     path(
-        r"q/<uuid:pk>/modify/",
+        "q/<uuid:pk>/modify/",
         IngestQueueModifier.as_view(),
         name="ingest_queue_modify",
     ),

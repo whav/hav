@@ -113,10 +113,8 @@ if DEBUG:
 
     INTERNAL_IPS = ["127.0.0.1"]
 
-    # show debugtoolbar when running dev in docker
-    DEBUG_TOOLBAR_CONFIG = {
-        'SHOW_TOOLBAR_CALLBACK': lambda request: False if request.is_ajax() else True,
-            }
+    # show debug toolbar when running dev in docker
+    DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": "hav_utils.debug.show_toolbar"}
 
 
 ROOT_URLCONF = "hav.urls"

@@ -1,6 +1,9 @@
 {% extends 'ui/base.html' %}
 
-{% load  markdown %}
+{% load static markdown %}
+{% block extra_head %}
+  <script defer src="{% static 'theme/mdx_client.js' %}" ></script>
+{% endblock %}
 
 {% block breadcrumbs %}
     <div></div>

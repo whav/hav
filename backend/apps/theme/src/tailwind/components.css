@@ -5,3 +5,4 @@
 @import "./components/gallery.css";
 @import "./components/search.css";
 @import "./components/media_detail.css";
+@import "leaflet/dist/leaflet.css";

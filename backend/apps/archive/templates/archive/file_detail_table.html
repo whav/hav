@@ -1,3 +1,4 @@
+{% load license %}
 <table class="table">
   <tbody>
     <tr>
@@ -19,7 +20,7 @@
     {% with file.get_license as license %}
     <tr>
         <td>License</td>
-        <td>{{ license.name }}</td>
+        <td>{% full_license_info license %}</td>
     </tr>
     {% endwith %}
     <tr>

@@ -44,6 +44,8 @@ services:
             - 5432
         ports:
             - "5433:5432"
+        volumes:
+          - ./dbdumps/:/dbdumps
 
     whav_db:
         image: mdillon/postgis:9.4
@@ -54,4 +56,6 @@ services:
             - 5432
         ports:
             - "5434:5432"
+        volumes:
+          - ./dbdumps/:/dbdumps
 

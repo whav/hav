@@ -139,8 +139,8 @@
                         <dt>creator(s)</dt>
                         <dd>
                             <ul class="inline-block list-none">
-                                {% for creator in media.creators.all %}
-                                <li>{{ creator }}</li>
+                                {%  for creator_role_pair in media.mediatocreator_set.all %}
+                                <li>{{ creator_role_pair.creator }} <span class="text-gray-700">({{ creator_role_pair.role }})</span></li>
                                 {% endfor %}
                             </ul>
                         </dd>

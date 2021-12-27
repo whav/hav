@@ -30,6 +30,9 @@ def can_view_media_webassets(user, media):
     is_private = media.is_private
 
     if is_private or has_active_embargo:
+        # breakpoint()
+        if user in media.collection.administrators.all():
+            return True
         return False
 
     return True
@@ -54,6 +57,7 @@ def media_tile(context, media: Media, display_title: bool = True):
         "webasset": webasset,
         "media": media,
         "title": media.title if display_title else "",
+        "user": user,
     }
 
 

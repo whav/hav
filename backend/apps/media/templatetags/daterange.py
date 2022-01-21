@@ -24,5 +24,5 @@ def daterange(dt_range: DateTimeTZRange):
         return django_date_filter(dt_range.upper, "DATE_FORMAT")
 
     return (
-        f"{django_date_filter(dt_range.lower)} - {django_date_filter(dt_range.lower)}"
+        f"{django_date_filter(dt_range.lower)} - {django_date_filter(dt_range.upper)}"
     )

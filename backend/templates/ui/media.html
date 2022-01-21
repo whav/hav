@@ -16,6 +16,11 @@
 
 
 {%  block content %}
+{% if media.currently_under_embargo %}
+  <p>
+  Note: This media is <b>under embargo</b> until {{ media.embargo_end_date|date:"F d Y" }}.</b>
+  </p>
+{% endif %}
 {% with license=media.license %}
 <div class="md:flex md:flex-row md:flex-wrap pt-6">
     <div class="flex-auto max-w-2xl mr-4 mb-4">

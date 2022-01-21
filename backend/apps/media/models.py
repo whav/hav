@@ -222,6 +222,13 @@ class Media(models.Model):
         return True
 
     @cached_property
+    def currently_under_embargo(self):
+        if self.embargo_end_date and self.embargo_end_date > date.today():
+            return True
+
+        return False
+
+    @cached_property
     def primary_file(self):
         try:
             return self.files.all()[0]

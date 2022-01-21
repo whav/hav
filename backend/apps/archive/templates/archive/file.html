@@ -8,20 +8,17 @@
 <p>This is the permanent representation of the file <span class="font-bold">{{ object.original_filename }}</span> ({{ object.size|filesizeformat }}, SHA-256 hash: {{ object.hash }}).</p>
 
 {% if media %}
+<h4>File Download and Metadata</h4>
 <p>
-This file is associated with the media entry {{ media.pk }}.
-    Please go to the <a href="{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}">media detail page</a> to see all available metadata.
+This archive file is associated with the <b>HAV media entry {{ media.pk }}</b>.</br>
+All currently available associated <b>data</b> and <b>metadata</b> can be found at the respective media detail page at <a href="{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}">{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}</a>.
 </p>
 {% endif %}
 
-{% include './file_detail_table.html' with file=object %}
-
 {% with webassets=object.webasset_set.all %}
-The following webassets have been generated for this file:
-
+<p>The <b>following webassets</b> have been generated for this file:</p>
 {% for wa in object.webasset_set.all %}
     {% webasset_preview wa %}
-    <hr />
 {% endfor %}
 {% endwith %}
 

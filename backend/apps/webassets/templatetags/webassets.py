@@ -89,7 +89,8 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media], sizes="")
             context.update(
                 {
                     "thumbnail_url": generate_thumbnail_url(webasset),
-                    "srcset": generate_srcset_urls(webasset),
+                    "srcset": generate_srcset_urls(webasset,
+                                                   res_limit=media.resolution_limit),
                 }
             )
 

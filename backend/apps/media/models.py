@@ -262,6 +262,14 @@ class Media(models.Model):
     def location_tags(self):
         return filter_location_tags(self.tags.all())
 
+    @cached_property
+    def resolution_limit(self):
+        from apps.webassets.operations.hints import max_resolution
+        try:
+            return max_resolution(self.tags.all())['max_resolution']
+        except TypeError:
+            return None
+
     objects = MediaManager()
 
     class Meta:

@@ -125,12 +125,20 @@ def generate_thumbnail_url(obj, **kwargs):
     return generate_imaginary_url(path, **thumbnail_kwargs)
 
 
-def generate_srcset_urls(file_path):
+def generate_srcset_urls(file_path, res_limit=None):
     path = get_imaginary_path(file_path)
     results = []
     if not is_image(path):
         return results
-    for kwargs in settings.IMAGE_RESOLUTIONS:
+
+    # Don't provide srcset_urls for resolutions beyond res_limit (needed to
+    # honor maxRes since Imaginary is upscaling beyond src-resolution)
+    if res_limit:
+        resolutions = [res for res in settings.IMAGE_RESOLUTIONS if res["width"] <= res_limit]
+    else:
+        resolutions = settings.IMAGE_RESOLUTIONS
+
+    for kwargs in resolutions:
         results.append(
             (
                 kwargs.get("width"),

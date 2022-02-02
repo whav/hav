@@ -23,7 +23,8 @@ import daphne.server  # noqa
 # register custom mimetypes
 import hav_utils.mimetypes  # noqa
 
-from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
+from .image_resolutions import (resolutions as IMAGE_RESOLUTIONS,
+                                download_resolutions as DOWNLOAD_RESOLUTIONS)
 
 project_root = environ.Path(__file__) - 3
 django_root = environ.Path(__file__) - 2

@@ -1,0 +1,19 @@
+<div class="border-t border-gray-200">
+    <dl class="media-detail-list">
+
+        <div>
+          <dt>available variants</dt>
+            <dd>
+                <ul>
+                  {% for var in variants %}
+                    <li>
+                      <a href="{{ var.url }}" download="{{ base_file_name }}_{{ var.width }}px.jpg">
+                            {{ var.variant_name }} ({{ var.width }}px, jpg)
+                        </a>
+                    </li>
+                   {% endfor %}
+                </ul>
+            </dd>
+        </div>
+    </dl>
+</div>

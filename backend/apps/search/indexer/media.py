@@ -2,6 +2,8 @@ from apps.media.models import Media
 import time
 from typing import Union
 from . import SearchIndexItem, ItemType
+from apps.tags.utils import filter_location_tags
+from apps.tags.templatetags.tagging import filter_tag
 
 
 def index(media: Union[Media, int]):
@@ -14,7 +16,9 @@ def index(media: Union[Media, int]):
     filenames = set()
     for file in archivefiles:
         filenames.add(file.original_filename)
-    tags = list(media.tags.all().values_list("name", flat=True))
+    _alltags = media.tags.all()
+    tags = [tag.name for tag in list(filter(filter_tag, _alltags))]
+    location_tags = [ltag.name for ltag in filter_location_tags(list(_alltags))]
 
     return SearchIndexItem(
         id=f"{type}_{media.pk}",
@@ -25,6 +29,7 @@ def index(media: Union[Media, int]):
         if media.original_media_identifier
         else [],
         tags=tags,
+        location_tags=location_tags,
         body=media.description,
         last_update=time.time(),
         parents=parents,

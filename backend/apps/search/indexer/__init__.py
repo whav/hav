@@ -16,6 +16,7 @@ class SearchIndexItem(BaseModel):
     additional_titles: List[str] = []
     body: str
     tags: List[str] = []
+    location_tags: List[str] = []
 
     # non-searchable attributes
     type: ItemType

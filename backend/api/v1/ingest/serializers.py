@@ -47,7 +47,7 @@ class FileToCreatorSerializer(serializers.ModelSerializer):
 
 class IngestionItemSerializer(serializers.Serializer):
 
-    path = serializers.ListField(serializers.CharField(max_length=200))
+    path = serializers.ListField(child=serializers.CharField(max_length=200))
 
     item = FinalIngestHyperlinkField()
 

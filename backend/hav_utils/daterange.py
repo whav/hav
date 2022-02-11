@@ -4,13 +4,12 @@ from datetime import datetime, time, date
 import calendar
 import re
 from enum import Enum
-from datetime import datetime
 from django.utils import formats
 
 split_date_time = re.compile(r"(?P<date>[\d\-]+)[\ T]?(?P<time>.*)?")
 
 
-def parse(dt_string):
+def _parse(dt_string):
     match = split_date_time.match(dt_string)
     if match is None:
         raise ValueError(f"Unable to parse {dt_string}.")
@@ -22,6 +21,35 @@ def parse(dt_string):
         d = start.date()
         tMin, tMax = parse_time(time_part)
         start, end = datetime.combine(d, tMin), datetime.combine(d, tMax)
+    return start, end
+
+
+def parse(dt_startend_string):
+    dt_string_list = [s.strip() for s in dt_startend_string.split("<>")]
+    dt_string_list_length = len(dt_string_list)
+
+    if dt_string_list_length == 1:
+        start, end = _parse(dt_string_list[0])
+
+    elif dt_string_list_length == 2:
+        parsed_dates = []
+        for dt_string in dt_string_list:
+            parsed_dates.append(_parse(dt_string))
+        # check that we got the parsed ranges in the correct order
+        if parsed_dates[0][1] <= parsed_dates[1][0]:
+            start = parsed_dates[0][0]
+            end = parsed_dates[1][1]
+        elif parsed_dates[1][1] <= parsed_dates[0][0]:
+            start = parsed_dates[1][0]
+            end = parsed_dates[0][1]
+        # ...and assume overlapping ranges are a mistake
+        else:
+            raise ValueError(f"Unable to parse '{dt_string_list}': \
+Overlapping start/end dateranges")
+
+    else:
+        raise ValueError(f"Unable to parse '{dt_string_list}': \
+zero or more than two datestrings for start/end'")
 
     return start, end
 

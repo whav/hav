@@ -75,6 +75,38 @@ class TestTopLevelParser(unittest.TestCase):
             ),
         )
 
+    def test_year_start_end(self):
+        self.assertEqual(
+            parse("2008<>2020"),
+            (
+                datetime.combine(date(2008, 1, 1), time.min),
+                datetime.combine(date(2020, 12, 31), time.max),
+            ),
+        )
+
+    def test_years_end_start(self):
+        self.assertEqual(
+            parse("2020<>2008"),
+            (
+                datetime.combine(date(2008, 1, 1), time.min),
+                datetime.combine(date(2020, 12, 31), time.max),
+            ),
+        )
+
+    def test_empty_error(self):
+        self.assertRaises(
+            ValueError,
+            parse,
+            ""
+        )
+
+    def test_overlap_error(self):
+        self.assertRaises(
+            ValueError,
+            parse,
+            "2020<>2020-03-03"
+        )
+
 
 class TestReverseDTRange(unittest.TestCase):
     def test_year(self):

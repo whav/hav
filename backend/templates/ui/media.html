@@ -69,11 +69,11 @@
                     <div>
                         <dt>Keywords</dt>
                         <dd>
-                            {% render_tags tags=media.tags.all %}
+                            {% render_tags tags=media.tags_plus_set_tags %}
                         </dd>
                     </div>
 
-                    {% with location_tags=media.location_tags %}
+                    {% with location_tags=media.location_tags_plus_set_location_tags %}
                     {% if location_tags|length %}
                     <div>
                         <dt>Location</dt>

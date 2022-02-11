@@ -270,6 +270,14 @@ class Media(models.Model):
         except TypeError:
             return None
 
+    @cached_property
+    def location_tags_plus_set_location_tags(self):
+        return filter_location_tags(self.tags_plus_set_tags)
+
+    @cached_property
+    def tags_plus_set_tags(self):
+        return self.tags.all().union(self.set.tags.all())
+
     objects = MediaManager()
 
     class Meta:

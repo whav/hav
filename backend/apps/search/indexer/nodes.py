@@ -11,6 +11,7 @@ def index(node: Union[Node, int]):
     type = ItemType.folder
     ancestors = node.get_ancestors().values_list("pk", flat=True)
     collection = node.get_collection()
+    tags = list(node.tags.all().values_list("name", flat=True))
 
     item = SearchIndexItem(
         id=f"{type}_{node.pk}",
@@ -18,6 +19,7 @@ def index(node: Union[Node, int]):
         pk=node.pk,
         title=node.name,
         body=node.description,
+        tags=tags,
         last_update=time.time(),
         parents=list(ancestors),
         collection=collection.slug,

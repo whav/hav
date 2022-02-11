@@ -14,6 +14,7 @@ def index(media: Union[Media, int]):
     filenames = set()
     for file in archivefiles:
         filenames.add(file.original_filename)
+    tags = list(media.tags.all().values_list("name", flat=True))
 
     return SearchIndexItem(
         id=f"{type}_{media.pk}",
@@ -23,6 +24,7 @@ def index(media: Union[Media, int]):
         additional_titles=[media.original_media_identifier, *list(filenames)]
         if media.original_media_identifier
         else [],
+        tags=tags,
         body=media.description,
         last_update=time.time(),
         parents=parents,

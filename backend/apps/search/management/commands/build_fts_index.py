@@ -16,6 +16,7 @@ searchable_attributes = [
     "title",
     "additional_titles",
     "body",
+    "tags",
 ]
 
 

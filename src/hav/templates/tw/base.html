@@ -13,11 +13,13 @@
 </head>
 <body class="w-full min-h-screen font-sans">
       <div class="flex flex-col md:flex-row md:items-stretch">
+        {% block navbar_container %}
         <div class="flex-none md:w-44 md:min-h-screen lg:w-64 bg-yellow-400">
             {% block navbar %}
             {% include './nav.html' %}
             {% endblock navbar %}
         </div>
+        {% endblock navbar_container %}
         <div class="flex-grow p-4 min-h-screen overflow-x-hidden">
             {% block body %}
             {% endblock body %}

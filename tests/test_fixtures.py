@@ -15,6 +15,8 @@ def test_media_fixture(media):
     for wa in archive_file.webasset_set.all():
         assert wa.file.storage.exists(wa.file.path)
 
+    assert media.primary_image_webasset in archive_file.webasset_set.all()
+
 
 @pytest.mark.django_db
 def test_collection_fixture(collection):

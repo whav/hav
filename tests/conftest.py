@@ -12,14 +12,6 @@ from apps.webassets.operations import create_webassets
 
 
 @pytest.fixture
-def user(django_user_model):
-    username = str(uuid4)[:30]
-    return django_user_model.objects.create(
-        username=username, email=f"{username}@example.com"
-    )
-
-
-@pytest.fixture
 def collection(user):
 
     name = f"Collection:{str(uuid4())}"[:30]
@@ -59,3 +51,19 @@ def media(collection, archive_file):
     )
     media.files.set([archive_file])
     return media
+
+
+@pytest.fixture
+def create_user(django_user_model):
+    def user_creator(**kwargs):
+        username = str(uuid4())
+        kwargs.setdefault("username", username)
+        kwargs.setdefault("email", f"{username}@example.com")
+        return django_user_model.objects.create(**kwargs)
+
+    return user_creator
+
+
+@pytest.fixture
+def user(create_user):
+    return create_user()

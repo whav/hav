@@ -21,9 +21,7 @@ def is_collection_admin(user: User, collection: Collection):
 
 
 def can_view_media(user: User, media: Media):
-    has_active_embargo = (
-        media.embargo_end_date and media.embargo_end_date >= date.today()
-    )
+    has_active_embargo = media.currently_under_embargo
     is_private = media.is_private
 
     if is_private or has_active_embargo:

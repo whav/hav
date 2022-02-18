@@ -1,5 +1,5 @@
 {% load gallery_tags %}
-{% thumbnail_width webasset as thumbnail_width %}
+{% thumbnail_width webasset media as thumbnail_width %}
 <div class="tile" {% if thumbnail_width %}style="width: {{ thumbnail_width }}"{% endif %}>
     <div class="preview">
         <img src="{% thumbnail_url media webasset %}" loading="lazy" title="{% firstof title caption %}" class="preview-image" sizes="300px">

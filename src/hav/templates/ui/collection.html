@@ -41,12 +41,10 @@
     </div>
 </div>
 
-
 {% if node.display_type == node.DisplayOptions.GROUPED_TITLE %}
     {% include "./components/gallery/grouped_by_title.html" with media_entries=media_entries %}
 {% else %}
-    {% include "./components/gallery/default.html" with media_entries=media_entries %}
-
+    {% gallery media_entries display_type=node.display_type %}
 {% endif %}
 
 {% endblock content %}

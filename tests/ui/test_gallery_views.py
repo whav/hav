@@ -18,6 +18,7 @@ def test_folder_view(client, create_media, django_assert_max_num_queries, media_
     )
 
     num_queries = []
+    resp_bodies = []
     for display_type in Node.DisplayOptions.values:
         node.display_type = display_type
         node.save()
@@ -25,7 +26,18 @@ def test_folder_view(client, create_media, django_assert_max_num_queries, media_
             resp = client.get(folder_view_url)
 
         num_queries.append(len(captured))
+        resp_bodies.append(resp.content)
         assert resp.status_code == 200
+
+        # now find links to the specific media item
+        # this is not exact ....
+        body = resp.content.decode("utf-8")
+        for m in media_items:
+            assert f"/{m.pk}/" in body
+
+    assert len(set(resp_bodies)) == len(
+        Node.DisplayOptions.values
+    ), "Display options lead to different response bodies"
 
     # TODO: this currently fails....
     # assert (

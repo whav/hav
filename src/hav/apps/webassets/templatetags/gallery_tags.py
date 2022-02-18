@@ -1,16 +1,19 @@
 import math
 from functools import lru_cache
+from dataclasses import dataclass
 from datetime import date
-from typing import Union
+from typing import Union, List
 from django import template
 from hav.apps.media.models import Media
 from hav.apps.accounts.models import User
 from hav.apps.sets.models import Node
 from hav.apps.webassets.models import WebAsset
+from hav.apps.archive.models import ArchiveFile
 from hav.utils.imaginary import generate_thumbnail_url
+
 from django.urls import reverse
 from django.templatetags.static import static
-
+from django.db.models import F
 import logging
 
 logger = logging.getLogger(__name__)
@@ -22,6 +25,15 @@ no_webasset_fallback = static("webassets/no_image_available.svg")
 broken_fallback = static("webassets/no_image_available.svg")
 
 
+@dataclass
+class GalleryItem:
+    """Helper class for constructing media galleries"""
+
+    media: Media
+    webasset: WebAsset
+    archive_file: ArchiveFile
+
+
 @lru_cache(maxsize=1, typed=True)
 def can_view_media_webassets(user, media):
     has_active_embargo = (
@@ -30,7 +42,6 @@ def can_view_media_webassets(user, media):
     is_private = media.is_private
 
     if is_private or has_active_embargo:
-        # breakpoint()
         if user in media.collection.administrators.all():
             return True
         return False
@@ -39,16 +50,38 @@ def can_view_media_webassets(user, media):
 
 
 @register.inclusion_tag("webassets/tags/media_tile.html", takes_context=True)
-def media_tile(context, media: Media, display_title: bool = True):
-    assert isinstance(media, Media)
+def media_tile(
+    context,
+    gallery_item: GalleryItem = None,
+    media: Media = None,
+    webasset=None,
+    display_title: bool = True,
+):
+
+    if not any([gallery_item, media]):
+        raise ValueError(
+            "Either media or gallery_item must be passed to this templatetag."
+        )
+
+    archivefile = None
+
+    # if passed a gallery item all data is pulled from there
+    if gallery_item:
+        media = gallery_item.media
+        webasset = gallery_item.webasset
+        archivefile = gallery_item.archive_file
+
+    if webasset is None:
+        webasset = media.primary_image_webasset
+
+    if archivefile is None:
+        archivefile = webasset.archivefile
 
     user = context.get("user")
     if user.is_authenticated:
         assert isinstance(user, User)
 
-    webasset = media.primary_image_webasset
     collection = media.collection
-
     return {
         "href": reverse(
             "hav:media_view",
@@ -123,7 +156,9 @@ def thumbnail_aspect_ratio(context, webasset: WebAsset):
 
 
 @register.simple_tag(takes_context=True)
-def thumbnail_width(context, webasset: WebAsset, base: int = 150, unit: str = "px"):
+def thumbnail_width(
+    context, webasset: WebAsset, media: Media = None, base: int = 150, unit: str = "px"
+):
     default = f"{base}{unit}"
 
     if webasset is None:
@@ -133,7 +168,11 @@ def thumbnail_width(context, webasset: WebAsset, base: int = 150, unit: str = "p
         return default
 
     user = context.get("user")
-    media = webasset.archivefile.media
+
+    if media is None:
+        media = webasset.archivefile.media
+
+    # TODO: What is the permission check doing here?
     can_view = can_view_media_webassets(user, media)
 
     if can_view and webasset and webasset.aspect_ratio:
@@ -154,11 +193,28 @@ def icons(object: Union[Node, Media]):
             if mime:
                 icons.append(mime.split("/")[0])
         # TODO: protected
-        if object.embargo_end_date and object.embargo_end_date >= date.today():
-            # TODO embargo icon
+        if object.currently_under_embargo:
             icons.append("embargo")
-            pass
         if object.is_private:
             icons.append("locked")
 
     return {"icons": icons}
+
+
+@register.inclusion_tag("ui/components/gallery/default.html", takes_context=True)
+def gallery(context, media_qs: List[Media], display_type=None):
+    media_pks = [m.pk for m in media_qs]
+    image_webassets = (
+        WebAsset.objects.filter(archivefile__media__in=media_pks)
+        .annotate(media_id=F("archivefile__media"))
+        .prefetch_related("archivefile")
+    )
+    image_webassets_by_media_id = {wa.media_id: wa for wa in image_webassets}
+    gallery_items = []
+    for media in media_qs:
+        webasset = image_webassets_by_media_id[media.pk]
+        gallery_items.append(GalleryItem(media, webasset, webasset.archivefile))
+
+    # TODO: is it really a good idea to clobber the global context?
+    context.update({"gallery_items": gallery_items, "display_type": display_type})
+    return context

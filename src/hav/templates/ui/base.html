@@ -1,17 +1,28 @@
 {% extends '../tw/base.html' %}
 
 {% block body %}
-    <div class="md:flex md:justify-between md:h-20 md:items-end">
-        {%  block breadcrumbs %}
-        {% include './components/breadcrumbs.html' with collection=collection ancestors=ancestors only%}
-        {% endblock breadcrumbs %}
+    <div class="md:flex md:justify-between md:h-20 md:items-end md:flex-row-reverse">
         {%  block searchbar %}
-        <div class="hidden lg:block">{% include './components/search.html' %}</div>
+        <div>
+            {% include './components/search.html' %}
+        </div>
         {% endblock searchbar %}
+
+        <div class="pt-4 md:pt-0">
+        {%  block breadcrumbs %}
+        {% endblock breadcrumbs %}
+        </div>
     </div>
 
-    <div class="text-right">
+    <div class="my-4 text-right">
     {% block adminlinks %}
+    {% if node and user and user.is_staff %}
+    <a title="Edit" href="{% url 'admin:sets_node_change' object_id=node.pk %}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+        </svg>
+    </a>
+    {% endif %}
     {% endblock %}
     </div>
 

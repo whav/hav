@@ -16,7 +16,7 @@
       @apply mb-2;
     } */
 
-  input {
+  input, textarea {
     @apply w-full rounded border-gray-300 focus:ring-blue-400 focus:shadow-md;
   }
 

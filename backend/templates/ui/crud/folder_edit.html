@@ -1,0 +1,13 @@
+{% extends '../collection.html' %}
+
+
+{% block adminlinks %}{% endblock %}
+{% block description %}
+    <form method="post" class="django-form">
+    {%  csrf_token %}
+    {{ form }}
+    <div class="submit-row">
+        <button type="submit">Save</button>
+    </div>
+    </form>
+{% endblock %}

@@ -1,7 +1,14 @@
 {% extends '../collection.html' %}
 
 
-{% block adminlinks %}{% endblock %}
+{% block adminlinks %}
+{% if user and user.is_staff %}
+    <a href="{% url 'admin:sets_node_change' object_id=node.pk %}">
+        Edit in Administrative Interface
+    </a>
+{% endif %}
+{% endblock %}
+
 {% block description %}
     <form method="post" class="django-form">
     {%  csrf_token %}

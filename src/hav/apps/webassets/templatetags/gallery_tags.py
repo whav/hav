@@ -11,6 +11,8 @@ from hav.apps.webassets.models import WebAsset
 from hav.apps.archive.models import ArchiveFile
 from hav.utils.imaginary import generate_thumbnail_url
 
+from hav.apps.accounts.permissions import can_view_media
+
 from django.urls import reverse
 from django.templatetags.static import static
 from django.db.models import F
@@ -34,19 +36,8 @@ class GalleryItem:
     archive_file: ArchiveFile
 
 
-@lru_cache(maxsize=1, typed=True)
 def can_view_media_webassets(user, media):
-    has_active_embargo = (
-        media.embargo_end_date and media.embargo_end_date >= date.today()
-    )
-    is_private = media.is_private
-
-    if is_private or has_active_embargo:
-        if user in media.collection.administrators.all():
-            return True
-        return False
-
-    return True
+    return can_view_media(user, media)
 
 
 @register.inclusion_tag("webassets/tags/media_tile.html", takes_context=True)
@@ -82,7 +73,8 @@ def media_tile(
         assert isinstance(user, User)
 
     collection = media.collection
-    return {
+
+    ctx = {
         "href": reverse(
             "hav:media_view",
             kwargs={"collection_slug": collection.slug, "media_pk": media.pk},
@@ -91,7 +83,9 @@ def media_tile(
         "media": media,
         "title": media.title if display_title else "",
         "user": user,
+        "archivefile": archivefile,
     }
+    return ctx
 
 
 @register.inclusion_tag("webassets/tags/node_tile.html", takes_context=True)
@@ -112,6 +106,7 @@ def node_tile(context, node: Node):
         "webasset": webasset,
         "node": node,
         "media": media,
+        "user": context.get("user"),
     }
 
 

@@ -1234,6 +1234,7 @@ table.table thead {
 
 .django-form label {
   margin-bottom: 0.25rem;
+  margin-top: 1rem;
   display: block;
   font-size: 1rem;
   line-height: 1.5rem;
@@ -1245,14 +1246,14 @@ table.table thead {
       @apply mb-2;
     } */
 
-.django-form input {
+.django-form input, .django-form textarea {
   width: 100%;
   border-radius: 0.25rem;
   --tw-border-opacity: 1;
   border-color: rgba(209, 213, 219, var(--tw-border-opacity));
 }
 
-.django-form input:focus {
+.django-form input:focus, .django-form textarea:focus {
   --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   --tw-ring-opacity: 1;
@@ -2181,6 +2182,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   border-right-color: #fff;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 .static {
   position: static;
 }
@@ -2196,6 +2201,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .mt-8 {
@@ -2262,6 +2272,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   display: inline-block;
 }
 
+.inline {
+  display: inline;
+}
+
 .flex {
   display: flex;
 }
@@ -2314,12 +2328,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   width: 1.5rem;
 }
 
-.w-0 {
-  width: 0px;
-}
-
 .w-5 {
   width: 1.25rem;
+}
+
+.w-0 {
+  width: 0px;
 }
 
 .max-w-xl {
@@ -2535,16 +2549,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
   padding-bottom: 0px;
 }
 
+.pt-4 {
+  padding-top: 1rem;
+}
+
 .pt-6 {
   padding-top: 1.5rem;
 }
 
 .pl-4 {
   padding-left: 1rem;
-}
-
-.pt-4 {
-  padding-top: 1rem;
 }
 
 .pr-1 {
@@ -2824,6 +2838,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     flex-direction: row;
   }
 
+  .md\:flex-row-reverse {
+    flex-direction: row-reverse;
+  }
+
   .md\:flex-col {
     flex-direction: column;
   }
@@ -2844,6 +2862,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     justify-content: space-between;
   }
 
+  .md\:pt-0 {
+    padding-top: 0px;
+  }
+
   .md\:pr-10 {
     padding-right: 2.5rem;
   }
@@ -2862,10 +2884,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 }
 
 @media (min-width: 1024px) {
-  .lg\:block {
-    display: block;
-  }
-
   .lg\:w-64 {
     width: 16rem;
   }

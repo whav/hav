@@ -2,11 +2,6 @@
 
 
 {% block adminlinks %}
-{% if user and user.is_staff %}
-    <a href="{% url 'admin:sets_node_change' object_id=node.pk %}">
-        Edit in Administrative Interface
-    </a>
-{% endif %}
 {% endblock %}
 
 {% block description %}
@@ -14,6 +9,11 @@
     {%  csrf_token %}
     {{ form }}
     <div class="submit-row">
+        {% if user and user.is_staff %}
+        <a href="{% url 'admin:sets_node_change' object_id=node.pk %}">
+            Edit in Administrative Interface
+        </a>
+        {% endif %}
         <button type="submit">Save</button>
     </div>
     </form>

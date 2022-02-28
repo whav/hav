@@ -17,11 +17,11 @@ def get_index():
     return get_client().index(index)
 
 
-def search(query, node=None, limit=20, offset=0):
-    search_filters = ""
+def search(query, node=None, filters="", limit=20, offset=0):
+    search_filters = str(filters or "")
 
     if node:
-        search_filters += f"parents = {node}"
+        search_filters = " AND ".join(filter(None, (search_filters, f"parents = {node}")))
 
     # build valid search options
     search_options = {
@@ -34,6 +34,7 @@ def search(query, node=None, limit=20, offset=0):
     }
     if search_filters:
         search_options.update({"filter": search_filters})
+    search_options.update({"facetsDistribution": ["creators", "creation_years"]})
 
     index = get_index()
     response = index.search(query, search_options)

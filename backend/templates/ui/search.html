@@ -1,5 +1,5 @@
 {% extends './base.html' %}
-{% load static daterange breadcrumbs webassets cache paginator %}
+{% load static daterange breadcrumbs webassets cache paginator search %}
 
 {%  block breadcrumbs %}
     {%  if node %}
@@ -18,25 +18,39 @@
 {%  endblock %}
 
 {%  block content %}
-{#{% include './components/search.html' %}#}
 <div class="prose">
-<form class="django-form" method="get">
-    {{ search_form.q }}
-</form>
+  <form class="django-form" method="get">
+      {{ search_form.q }}
+  </form>
 
-{% if query %}
-    <p>Your search for <em>{{ response.query }}</em> found <em>{{ response.nbHits }}</em> items:</p>
-    {% if search_results|length == 0 %}
-        <em>No results...</em>
+  {% if query %}
+    {% if not filters %}
+      <p>Your search for <em>{{ response.query }}</em> found <em>{{ response.nbHits }}</em> items:</p>
     {% else %}
-        <em>Results</em>
-        {%  for result in search_results %}
-            {% include './components/search_result.html' %}
-        {% endfor %}
-        {%  paginator search_results %}
+      <p>Your search for <em>{{ response.query }}</em> narrowed by <em>{{ filters }}</em> found <em>{{ response.nbHits }}</em> items:</p>
     {% endif %}
-
-{% endif %}
+    {% if search_results|length == 0 %}
+      <em>No results...</em>
+    {% else %}
+      <h4>Results</h4>
+      {% prepare_search_filters request.get_full_path response.facetsDistribution as facets %}
+      <p><b>filter by...</b><br/>
+      {% for facet, f_data in facets.items %}
+        {{ facet }}:
+        {% for fd in f_data %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mr-2 mb-2
+        {% if fd.state == "applied" %}bg-yellow-400{% endif %}
+          "><a href={{ fd.url }}>{{ fd.value }}</a> ({{ fd.hits }}){% if not forloop.last %}, {% endif %}</span>
+        {% endfor %}
+        <br/>
+      {% endfor %}
+      </p>
+    {% endif %}
+    {%  for result in search_results %}
+      {% include './components/search_result.html' %}
+    {% endfor %}
+    {%  paginator search_results %}
+  {% endif %}
 
 </div>
 

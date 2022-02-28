@@ -20,6 +20,5 @@ def paginator(context, page):
         "current_page_number": page.number,
         "pages": [{"page": p, "href": generate_link(p.number)} for p in page.paginator],
     }
-    print(ctx)
     # breakpoint()
     return ctx

@@ -114,6 +114,7 @@ class SearchView(CollectionNodeMixin, TemplateView):
         if form.is_valid():
             query = form.cleaned_data.get("q")
             node = form.cleaned_data.get("node") or self.collection.root_node
+            filters = form.cleaned_data.get("filters")
 
             # safety measure
             assert isinstance(node, Node)
@@ -127,6 +128,7 @@ class SearchView(CollectionNodeMixin, TemplateView):
             results = search(
                 query,
                 node=node.pk,
+                filters=filters,
                 limit=limit,
                 offset=limit * (page - 1),
             )
@@ -135,10 +137,12 @@ class SearchView(CollectionNodeMixin, TemplateView):
             ctx.update(
                 {
                     "query": query,
+                    "filters": filters,
                     "search_results": paginator.page(page),
                     "response": paginator._result,
                     "paginator": paginator,
                     "node": node,
                 }
             )
+
         return ctx

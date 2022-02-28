@@ -7,3 +7,4 @@ class SearchForm(forms.Form):
     node = forms.ModelChoiceField(
         Node.objects.all(), required=False, widget=forms.HiddenInput
     )
+    filters = forms.CharField(required=False, widget=forms.HiddenInput)

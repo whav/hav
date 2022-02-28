@@ -18,6 +18,13 @@ searchable_attributes = [
     "body",
     "tags",
     "location_tags",
+    "creation_years",
+]
+
+filterable_attributes = [
+    "parents",
+    "creators",
+    "creation_years",
 ]
 
 
@@ -56,7 +63,7 @@ class Command(BaseCommand):
             self.index.update_searchable_attributes(searchable_attributes)
         )
 
-        self.index.update_filterable_attributes(["parents"])
+        self.index.update_filterable_attributes(filterable_attributes)
 
     def index_collection(self, root_node):
         assert root_node in Node.get_collection_roots(), "Not a collection root node."

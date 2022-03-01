@@ -3,9 +3,10 @@
         @apply text-xl;
     }
     p {
-        @apply: pt-4;
+        @apply pt-4;
     }
     em {
         @apply font-semibold;
+        @apply not-italic;
     }
 }

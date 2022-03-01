@@ -537,14 +537,14 @@ samp {
  *    CSS Remedy, with `svg` added as well.
  *
  *    https://github.com/mozdevs/cssremedy/issues/14
- *
+ * 
  * 2. Add `vertical-align: middle` to align replaced elements more
  *    sensibly by default when overriding `display` by adding a
  *    utility like `inline`.
  *
  *    This can trigger a poorly considered linting error in some
  *    tools but is included by design.
- *
+ * 
  *    https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210
  */
 
@@ -1199,9 +1199,9 @@ table.table thead {
   margin: 0;
 }
 
-/*
+/* 
   this is an implementation of a trick found here
-  https://www.exratione.com/2011/09/how-to-overflow-a-background-image-using-css3/
+  https://www.exratione.com/2011/09/how-to-overflow-a-background-image-using-css3/ 
   sadly a styling wrapper is required.
   and it only works because overflow is hidden on the main content  area
   */
@@ -1369,11 +1369,12 @@ table.table thead {
 }
 
 .search-result-body p {
-  @apply: pt-4;
+  padding-top: 1rem;
 }
 
 .search-result-body em {
   font-weight: 600;
+  font-style: normal;
 }
 
 .media-detail-list > * {
@@ -2233,6 +2234,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   margin-top: 1rem;
 }
 
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
 .mt-10 {
   margin-top: 2.5rem;
 }
@@ -2247,10 +2252,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 .ml-3 {
   margin-left: 0.75rem;
-}
-
-.mr-2 {
-  margin-right: 0.5rem;
 }
 
 .block {
@@ -2635,6 +2636,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   color: rgba(55, 65, 81, var(--tw-text-opacity));
 }
 
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgba(31, 41, 55, var(--tw-text-opacity));
+}
+
 .text-orange {
   --tw-text-opacity: 1;
   color: rgba(230, 88, 37, var(--tw-text-opacity));
@@ -2648,11 +2654,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .text-indigo-600 {
   --tw-text-opacity: 1;
   color: rgba(79, 70, 229, var(--tw-text-opacity));
-}
-
-.text-gray-800 {
-  --tw-text-opacity: 1;
-  color: rgba(31, 41, 55, var(--tw-text-opacity));
 }
 
 .underline {
@@ -2695,10 +2696,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   .sm\:mt-0 {
     margin-top: 0px;
-  }
-
-  .sm\:block {
-    display: block;
   }
 
   .sm\:grid {

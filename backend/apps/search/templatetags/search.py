@@ -6,6 +6,11 @@ from urllib.parse import urlencode, unquote, urlparse, urlunparse, parse_qs
 
 register = template.Library()
 
+facet_names = {
+    "creators": "created by",
+    "creation_years": "created in",
+    }
+
 facet_item_status = ["available", "applied"]
 
 
@@ -76,7 +81,7 @@ def prepare_search_filters(url: str, facets_distribution: dict):
             fdict = {facet_item.name: [facet_item.value]}
             modify_filter_url = make_url(fdict, parsed_url_as_list, get_args)
             facets_distribution_with_state_and_url.setdefault(
-                facet_item.name, []).append(
+                facet_names.get(facet_item.name) or facet_item.name, []).append(
                     {
                         "value": facet_item.value,
                         "hits": facet_item.count,
@@ -106,7 +111,7 @@ def prepare_search_filters(url: str, facets_distribution: dict):
 
             modify_filter_url = make_url(fdict, parsed_url_as_list, get_args)
             facets_distribution_with_state_and_url.setdefault(
-                facet_item.name, []).append(
+                facet_names.get(facet_item.name) or facet_item.name, []).append(
                     {
                         "value": facet_item.value,
                         "hits": facet_item.count,
@@ -114,4 +119,5 @@ def prepare_search_filters(url: str, facets_distribution: dict):
                         "url": modify_filter_url
                     }
                 )
-    return facets_distribution_with_state_and_url
+    return {k: facets_distribution_with_state_and_url[k] for k in
+            sorted(facets_distribution_with_state_and_url)}

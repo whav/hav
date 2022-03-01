@@ -34,13 +34,10 @@
     {% else %}
       <h4>Results</h4>
       {% prepare_search_filters request.get_full_path response.facetsDistribution as facets %}
-      <p><b>filter by...</b><br/>
       {% for facet, f_data in facets.items %}
-        {{ facet }}:
+        <b>{{ facet }}:</b>
         {% for fd in f_data %}
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mr-2 mb-2
-        {% if fd.state == "applied" %}bg-yellow-400{% endif %}
-          "><a href={{ fd.url }}>{{ fd.value }}</a> ({{ fd.hits }}){% if not forloop.last %}, {% endif %}</span>
+        <a href={{ fd.url }}><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mr-2 mb-2 {% if fd.state == "applied" %}bg-yellow-400{% endif %}">{{ fd.value }} ({{ fd.hits }})</a></span>
         {% endfor %}
         <br/>
       {% endfor %}

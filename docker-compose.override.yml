@@ -58,4 +58,3 @@ services:
             - "5434:5432"
         volumes:
           - ./dbdumps/:/dbdumps
-

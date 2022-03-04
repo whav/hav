@@ -18812,7 +18812,7 @@
               if (didWarnAboutUnmockedScheduler === false && Scheduler.unstable_flushAllWithoutAsserting === void 0) {
                 if (fiber.mode & BlockingMode || fiber.mode & ConcurrentMode) {
                   didWarnAboutUnmockedScheduler = true;
-                  error(`In Concurrent or Sync modes, the "scheduler" module needs to be mocked to guarantee consistent behaviour across tests and browsers. For example, with jest: 
+                  error(`In Concurrent or Sync modes, the "scheduler" module needs to be mocked to guarantee consistent behaviour across tests and browsers. For example, with jest:
 jest.mock('scheduler', () => require('scheduler/unstable_mock'));
 
 For more info, visit https://reactjs.org/link/mock-scheduler`);

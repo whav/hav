@@ -25,4 +25,3 @@ const RouterState = connect(
 )(ReactRoute)
 
 export default RouterState
-

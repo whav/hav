@@ -21,7 +21,9 @@ def search(query, node=None, filters="", limit=20, offset=0):
     search_filters = str(filters or "")
 
     if node:
-        search_filters = " AND ".join(filter(None, (search_filters, f"parents = {node}")))
+        search_filters = " AND ".join(
+            filter(None, (search_filters, f"parents = {node}"))
+        )
 
     # build valid search options
     search_options = {

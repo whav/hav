@@ -537,14 +537,14 @@ samp {
  *    CSS Remedy, with `svg` added as well.
  *
  *    https://github.com/mozdevs/cssremedy/issues/14
- * 
+ *
  * 2. Add `vertical-align: middle` to align replaced elements more
  *    sensibly by default when overriding `display` by adding a
  *    utility like `inline`.
  *
  *    This can trigger a poorly considered linting error in some
  *    tools but is included by design.
- * 
+ *
  *    https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210
  */
 
@@ -1199,9 +1199,9 @@ table.table thead {
   margin: 0;
 }
 
-/* 
+/*
   this is an implementation of a trick found here
-  https://www.exratione.com/2011/09/how-to-overflow-a-background-image-using-css3/ 
+  https://www.exratione.com/2011/09/how-to-overflow-a-background-image-using-css3/
   sadly a styling wrapper is required.
   and it only works because overflow is hidden on the main content  area
   */

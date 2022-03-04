@@ -44,12 +44,16 @@ def parse(dt_startend_string):
             end = parsed_dates[0][1]
         # ...and assume overlapping ranges are a mistake
         else:
-            raise ValueError(f"Unable to parse '{dt_string_list}': \
-Overlapping start/end dateranges")
+            raise ValueError(
+                f"Unable to parse '{dt_string_list}': \
+Overlapping start/end dateranges"
+            )
 
     else:
-        raise ValueError(f"Unable to parse '{dt_string_list}': \
-zero or more than two datestrings for start/end'")
+        raise ValueError(
+            f"Unable to parse '{dt_string_list}': \
+zero or more than two datestrings for start/end'"
+        )
 
     return start, end
 

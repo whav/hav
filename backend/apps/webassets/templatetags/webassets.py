@@ -54,7 +54,7 @@ def get_media_plus_archivefile(obj: Union[WebAsset, ArchiveFile, Media]):
         archive_file = obj
     else:
         raise ValueError(f"Can not find webasset for object {obj}")
-    return(media, archive_file)
+    return (media, archive_file)
 
 
 @register.inclusion_tag(f"{template_base}/webasset.html", takes_context=True)
@@ -94,8 +94,9 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media], sizes="")
             context.update(
                 {
                     "thumbnail_url": generate_thumbnail_url(webasset),
-                    "srcset": generate_srcset_urls(webasset,
-                                                   res_limit=media.resolution_limit),
+                    "srcset": generate_srcset_urls(
+                        webasset, res_limit=media.resolution_limit
+                    ),
                 }
             )
 
@@ -110,16 +111,18 @@ def variant_download_links(context, obj: Union[WebAsset, ArchiveFile, Media], si
         mt = webasset.mime_type or guess_type(webasset.file)[0]
         user = context.get("user")
         DLR = settings.DOWNLOAD_RESOLUTIONS
-        if mt.split("/")[0] == 'image' and can_view_media_webassets(user, media):
+        if mt.split("/")[0] == "image" and can_view_media_webassets(user, media):
             srcset = generate_srcset_urls(webasset, res_limit=media.resolution_limit)
             context.update(
-                    {
-                        "base_file_name": f"{media.original_media_identifier}",
-                        "variants":
-                        ({"variant_name": DLR[_s[0]], "width": _s[0], "url": _s[1]}
-                         for _s in srcset if _s[0] in DLR)
-                    }
-                )
+                {
+                    "base_file_name": f"{media.original_media_identifier}",
+                    "variants": (
+                        {"variant_name": DLR[_s[0]], "width": _s[0], "url": _s[1]}
+                        for _s in srcset
+                        if _s[0] in DLR
+                    ),
+                }
+            )
     return context
 
 

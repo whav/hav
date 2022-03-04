@@ -5,10 +5,10 @@ date: 2017-08-07T00:33:01+02:00
 
 ## Himalaya Archive Vienna (HAV)
 
-_at the_  
-**Center for Interdisciplinary Research and Documentation of Inner and South Asian Cultural History (CIRDIS)**  
-Department for South Asian, Tibetan and Buddhist Studies  
-Spitalgasse 2-4, Hof 2.1  
+_at the_
+**Center for Interdisciplinary Research and Documentation of Inner and South Asian Cultural History (CIRDIS)**
+Department for South Asian, Tibetan and Buddhist Studies
+Spitalgasse 2-4, Hof 2.1
 A-1090 Vienna, Austria
 
 ## Layout

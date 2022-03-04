@@ -265,8 +265,9 @@ class Media(models.Model):
     @cached_property
     def resolution_limit(self):
         from apps.webassets.operations.hints import max_resolution
+
         try:
-            return max_resolution(self.tags.all())['max_resolution']
+            return max_resolution(self.tags.all())["max_resolution"]
         except TypeError:
             return None
 

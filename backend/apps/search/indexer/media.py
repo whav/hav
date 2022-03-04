@@ -20,8 +20,12 @@ def index(media: Union[Media, int]):
     tags = [tag.name for tag in list(filter(filter_tag, _alltags))]
     location_tags = [ltag.name for ltag in filter_location_tags(list(_alltags))]
     creators = [c.name for c in media.creators.all()]
-    creation_years = [y for y in range(media.creation_date.lower.year,
-                                       media.creation_date.upper.year + 1)]
+    creation_years = [
+        y
+        for y in range(
+            media.creation_date.lower.year, media.creation_date.upper.year + 1
+        )
+    ]
 
     return SearchIndexItem(
         id=f"{type}_{media.pk}",

@@ -10,8 +10,6 @@ x-django: &django
         - ${INCOMING_FILES_ROOT}:/archive/hav/incoming
         - ${WEBASSETS_ROOT}:/archive/hav/webassets
         - ${UPLOADS_ROOT}:/archive/hav/media
-        - ${LOCAL_BASH_HISTORY_DIR}:/hav/.localhistory/bash
-        - ${LOCAL_IPYTHON_HISTORY_DIR}:/hav/.localhistory/ipython
     environment:
         - IMAGINARY_SECRET=${IMAGINARY_SECRET}
         - IMAGINARY_URL_PREFIX=${IMAGINARY_URL_PREFIX}
@@ -31,9 +29,6 @@ x-django: &django
         - MDX_SERVER=http://mdx:3000
         - DRF_AUTH_TOKEN=${DRF_AUTH_TOKEN}
         - MEILISEARCH_URL=http://search:7700
-        - BASHHOMEDIR=/hav/.localhistory/bash
-        - HISTFILE=/hav/.localhistory/bash/.bash_history
-        - IPYTHONDIR=/hav/.localhistory/ipython
     working_dir: /hav/backend
     depends_on:
         - redis

@@ -12,7 +12,7 @@ def rotation_tags(tags: List[Tag]):
     pattern = re.compile(r"^rotate:(\d+)")
 
     for tag in tags:
-        if (match := pattern.match(tag.name)) :
+        if match := pattern.match(tag.name):
             return {"rotation": int((match.group(1)))}
 
 
@@ -20,7 +20,7 @@ def max_resolution(tags: List[Tag]):
     pattern = re.compile("^maxResolution:(\d+)")
 
     for tag in tags:
-        if (match := pattern.match(tag.name)) :
+        if match := pattern.match(tag.name):
             return {"max_resolution": int((match.group(1)))}
 
 

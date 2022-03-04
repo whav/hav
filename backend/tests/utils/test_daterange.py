@@ -94,18 +94,10 @@ class TestTopLevelParser(unittest.TestCase):
         )
 
     def test_empty_error(self):
-        self.assertRaises(
-            ValueError,
-            parse,
-            ""
-        )
+        self.assertRaises(ValueError, parse, "")
 
     def test_overlap_error(self):
-        self.assertRaises(
-            ValueError,
-            parse,
-            "2020<>2020-03-03"
-        )
+        self.assertRaises(ValueError, parse, "2020<>2020-03-03")
 
 
 class TestReverseDTRange(unittest.TestCase):

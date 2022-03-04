@@ -4,7 +4,7 @@
 
 ## Running locally
 
-After setting up your development environment (poetry install, npm install etc) we can now start 
+After setting up your development environment (poetry install, npm install etc) we can now start
 the services required to get the app running.
 
 ### Django services
@@ -17,7 +17,7 @@ poetry shell # activate the virtual environment
 ```
 
 Running the django dev server:
- 
+
 ```bash
 DEBUG=True ./manage.py runserver
 ```
@@ -48,6 +48,3 @@ yarn hmr
 cd frontend/cms
 yarn dev
 ```
-
-
-

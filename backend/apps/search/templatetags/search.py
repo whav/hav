@@ -9,7 +9,7 @@ register = template.Library()
 facet_names = {
     "creators": "created by",
     "creation_years": "created in",
-    }
+}
 
 facet_item_status = ["available", "applied"]
 
@@ -33,8 +33,13 @@ def filters_string_from_dict(filters_dict: dict):
     filter_name2: ...} and return a filters_string of form 'filter_name1=
     "filter_value1" AND filter_name1="filter_value2" AND filter_name2=...'.
     """
-    return " AND ".join([name + '="' + value + '"' for name, values in filters_dict.items()
-                         for value in values])
+    return " AND ".join(
+        [
+            name + '="' + value + '"'
+            for name, values in filters_dict.items()
+            for value in values
+        ]
+    )
 
 
 def filters_dict_add_filter(filters_dict, filter_name, filter_value):
@@ -65,11 +70,13 @@ def prepare_search_filters(url: str, facets_distribution: dict):
     get_args = parse_qs(parsed_url.query)
     filters_string = get_args.get("filters")
 
-    FacetItem = namedtuple('FacetItem', ['name', 'value', 'count'])
+    FacetItem = namedtuple("FacetItem", ["name", "value", "count"])
 
-    facets_distribution_list = [FacetItem(name, value, count) for name, items in
-                                facets_distribution.items() for value, count in
-                                items.items()]
+    facets_distribution_list = [
+        FacetItem(name, value, count)
+        for name, items in facets_distribution.items()
+        for value, count in items.items()
+    ]
 
     parsed_url_as_list = list(parsed_url)
     facets_distribution_with_state_and_url = {}
@@ -81,14 +88,15 @@ def prepare_search_filters(url: str, facets_distribution: dict):
             fdict = {facet_item.name: [facet_item.value]}
             modify_filter_url = make_url(fdict, parsed_url_as_list, get_args)
             facets_distribution_with_state_and_url.setdefault(
-                facet_names.get(facet_item.name) or facet_item.name, []).append(
-                    {
-                        "value": facet_item.value,
-                        "hits": facet_item.count,
-                        "state": state,
-                        "url": modify_filter_url
-                    }
-                )
+                facet_names.get(facet_item.name) or facet_item.name, []
+            ).append(
+                {
+                    "value": facet_item.value,
+                    "hits": facet_item.count,
+                    "state": state,
+                    "url": modify_filter_url,
+                }
+            )
 
     else:
         # get_args.get("filters") returns a list of strings. In the case &filters=
@@ -99,25 +107,28 @@ def prepare_search_filters(url: str, facets_distribution: dict):
             applied_values = applied_filters_dict.get(facet_item.name)
 
             if applied_values and str(facet_item.value) in applied_values:
-                fdict = filters_dict_remove_filter(applied_filters_dict,
-                                                   facet_item.name,
-                                                   facet_item.value)
+                fdict = filters_dict_remove_filter(
+                    applied_filters_dict, facet_item.name, facet_item.value
+                )
                 state = facet_item_status[1]  # applied
             else:
-                fdict = filters_dict_add_filter(applied_filters_dict,
-                                                facet_item.name,
-                                                facet_item.value)
+                fdict = filters_dict_add_filter(
+                    applied_filters_dict, facet_item.name, facet_item.value
+                )
                 state = facet_item_status[0]  # available
 
             modify_filter_url = make_url(fdict, parsed_url_as_list, get_args)
             facets_distribution_with_state_and_url.setdefault(
-                facet_names.get(facet_item.name) or facet_item.name, []).append(
-                    {
-                        "value": facet_item.value,
-                        "hits": facet_item.count,
-                        "state": state,
-                        "url": modify_filter_url
-                    }
-                )
-    return {k: facets_distribution_with_state_and_url[k] for k in
-            sorted(facets_distribution_with_state_and_url)}
+                facet_names.get(facet_item.name) or facet_item.name, []
+            ).append(
+                {
+                    "value": facet_item.value,
+                    "hits": facet_item.count,
+                    "state": state,
+                    "url": modify_filter_url,
+                }
+            )
+    return {
+        k: facets_distribution_with_state_and_url[k]
+        for k in sorted(facets_distribution_with_state_and_url)
+    }

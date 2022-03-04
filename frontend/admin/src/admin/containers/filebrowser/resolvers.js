@@ -1,5 +1,5 @@
 /*
-* A small collection of helpers to deal with frontend and 
+* A small collection of helpers to deal with frontend and
 * API urls, their generation and  interpretation.
 */
 

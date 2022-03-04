@@ -1,6 +1,6 @@
-/* 
+/*
   this is an implementation of a trick found here
-  https://www.exratione.com/2011/09/how-to-overflow-a-background-image-using-css3/ 
+  https://www.exratione.com/2011/09/how-to-overflow-a-background-image-using-css3/
   sadly a styling wrapper is required.
   and it only works because overflow is hidden on the main content  area
   */

@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hav_collections', '0003_collection_type'),
+        ("hav_collections", "0003_collection_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='collection',
-            name='type',
-            field=models.IntegerField(choices=[(1, 'private'), (2, 'projects'), (3, 'special')], default=1),
+            model_name="collection",
+            name="type",
+            field=models.IntegerField(
+                choices=[(1, "private"), (2, "projects"), (3, "special")], default=1
+            ),
         ),
     ]

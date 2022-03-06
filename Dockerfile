@@ -1,19 +1,19 @@
-FROM node:12 as theme
+FROM node:16 as theme
 
-WORKDIR /code/backend/apps/theme/
+WORKDIR /code/hav/apps/theme/
 
 # Link up the required build files
-COPY ./backend/apps/theme/package.json ./backend/apps/theme/package-lock.json ./
+COPY ./src/hav/apps/theme/package.json ./src/hav/apps/theme/package-lock.json ./
 RUN npm ci
 
 # now copy the backend folder where the django
 # templates live
-WORKDIR /code/backend/
+WORKDIR /code/hav/
 
 # copy the whole source folder
-COPY ./backend .
+COPY ./src/hav .
 
-WORKDIR /code/backend/apps/theme/
+WORKDIR /code/hav/apps/theme/
 
 ENV NODE_ENV "production"
 RUN npm run build
@@ -46,15 +46,15 @@ PYTHONPATH=/venv/lib/python3.9/site-packages
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads", "/hav/.localhistory/bash", "/hav/.localhistory/ipython"]
 
 # copy the frontend files
-WORKDIR /hav/backend/apps/theme/
-COPY --from=theme /code/backend/apps/theme/static ./static
+WORKDIR /code/hav/apps/theme/
+COPY --from=theme /code/hav/apps/theme/static ./static
 
 
-# install all the python stuff
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
+# install poetry
+RUN curl -sSL https://install.python-poetry.org | python -
 
-WORKDIR /hav/backend
-COPY backend/pyproject.toml backend/poetry.lock ./
+WORKDIR /code/
+COPY pyproject.toml poetry.lock ./
 RUN ~/.local/bin/poetry --version
 RUN ~/.local/bin/poetry export --format requirements.txt --without-hashes --dev -o requirements.txt
 RUN python -m venv /venv
@@ -62,10 +62,10 @@ RUN /venv/bin/pip install -r requirements.txt
 
 
 # Copy all backend files
-COPY ./backend .
+COPY ./src/hav ./hav
+
+COPY manage.py .
 
 RUN ["/venv/bin/python", "manage.py", "collectstatic", "--no-input"]
 
-WORKDIR /hav
-
-CMD ["/venv/bin/daphne", "-p", "8000",  "-b", "0.0.0.0",  "hav.asgi:application"]
+CMD ["/venv/bin/daphne", "-p", "8000",  "-b", "0.0.0.0",  "hav.conf.asgi:application"]

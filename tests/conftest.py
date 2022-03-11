@@ -4,12 +4,12 @@ from pathlib import Path
 
 from django.core.files import File
 
-from apps.archive.models import ArchiveFile
-from apps.media.models import Media, MediaType
-from apps.hav_collections.models import Collection
-from apps.sets.models import Node
-from apps.webassets.operations import create_webassets
-from apps.webassets.models import WebAsset
+from hav.apps.archive.models import ArchiveFile
+from hav.apps.media.models import Media, MediaType
+from hav.apps.hav_collections.models import Collection
+from hav.apps.sets.models import Node
+from hav.apps.webassets.operations import create_webassets
+from hav.apps.webassets.models import WebAsset
 
 
 @pytest.fixture

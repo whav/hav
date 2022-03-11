@@ -1,6 +1,6 @@
 import pytest
 from django.urls import reverse
-from apps.sets.models import Node
+from hav.apps.sets.models import Node
 
 
 @pytest.mark.django_db

@@ -2,8 +2,8 @@ from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse
 
-from apps.sets.models import Node
-from apps.sets.permissions import can_edit_node
+from hav.apps.sets.models import Node
+from hav.apps.sets.permissions import can_edit_node
 
 
 class FolderUpdateView(UserPassesTestMixin, UpdateView):

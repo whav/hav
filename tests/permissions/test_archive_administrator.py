@@ -1,6 +1,6 @@
 import pytest
 
-from apps.accounts.permissions import can_view_media, can_view_webassets
+from hav.apps.accounts.permissions import can_view_media, can_view_webassets
 from django.contrib.auth.models import AnonymousUser
 
 

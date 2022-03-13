@@ -10,23 +10,21 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import sys
 import logging.config
-from django.utils.log import DEFAULT_LOGGING
-import environ
+import sys
 from pathlib import Path
-from dj_database_url import parse as parse_db_url
 
 # this is needed to let daphne install the twisted reactor
 import daphne.server  # noqa
+import environ
+from dj_database_url import parse as parse_db_url
+from django.utils.log import DEFAULT_LOGGING
 
 # register custom mimetypes
 from hav.utils import mimetypes  # noqa
 
-from .image_resolutions import (
-    resolutions as IMAGE_RESOLUTIONS,
-    download_resolutions as DOWNLOAD_RESOLUTIONS,
-)
+from .image_resolutions import download_resolutions as DOWNLOAD_RESOLUTIONS
+from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
 
 project_root = environ.Path(__file__) - 4
 django_root = environ.Path(__file__) - 2

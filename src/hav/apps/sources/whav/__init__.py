@@ -1,11 +1,13 @@
+import logging
 import os
+
 from django.conf import settings
 from django.urls import path, reverse
-from hav.apps.whav.models import ImageCollection, MediaOrdering
-from .api.views import WHAVCollectionBrowser, WHAVMediaDetail
-from .. import Source
 
-import logging
+from hav.apps.whav.models import ImageCollection, MediaOrdering
+
+from .. import Source
+from .api.views import WHAVCollectionBrowser, WHAVMediaDetail
 
 logger = logging.getLogger(__name__)
 

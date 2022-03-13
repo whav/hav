@@ -1,20 +1,23 @@
+from datetime import date, datetime
 from itertools import chain
-from datetime import datetime, date
+
 import graphene
-from django.db.models import Q, F
+from django.db.models import F, Q
+from django.templatetags.static import static
 from graphene_django.types import DjangoObjectType
 
 from hav.apps.sets.models import Node, group_media_queryset
 from hav.apps.sets.schema import NodeType
 from hav.apps.tags.schema import TagType
-from hav.utils.imaginary import (
-    generate_thumbnail_url,
-    generate_srcset_urls,
-    generate_src_url,
-)
 from hav.utils.daterange import Resolutions, calculate_date_resolution, format_datetime
-from .models import Media, MediaCreator, License, MediaType as DBMediaType
-from django.templatetags.static import static
+from hav.utils.imaginary import (
+    generate_src_url,
+    generate_srcset_urls,
+    generate_thumbnail_url,
+)
+
+from .models import License, Media, MediaCreator
+from .models import MediaType as DBMediaType
 
 fallback_url = static("webassets/no_image_available.svg")
 fallback_url_is_private = static("webassets/no_public_media_available.svg")

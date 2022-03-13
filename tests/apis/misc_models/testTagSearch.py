@@ -1,10 +1,11 @@
-from rest_framework.test import APITestCase
-from django.urls import reverse
-from hav.apps.accounts.models import User
-from hav.apps.tags.models import Tag
-from hav.apps.hav_collections.models import Collection
-
 from unittest import skip
+
+from django.urls import reverse
+from rest_framework.test import APITestCase
+
+from hav.apps.accounts.models import User
+from hav.apps.hav_collections.models import Collection
+from hav.apps.tags.models import Tag
 
 
 @skip

@@ -1,8 +1,9 @@
+import django_rq
+from django.db.models.signals import post_save
 from django.dispatch import receiver
+
 from ..media.models import Media
 from ..sets.models import Node
-from django.db.models.signals import post_save
-import django_rq
 from .indexer.media import index as index_media
 from .indexer.nodes import index as index_node
 

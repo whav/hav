@@ -1,10 +1,11 @@
+from unittest import skip
+
+from rest_framework.test import APITestCase
+
 from hav.apps.hav_collections.models import Collection
 from hav.apps.tags.models import Tag, TagSource, search_tags
 from hav.apps.tags.sources import TagSourceResult
-from rest_framework.test import APITestCase
-from hav.views.api.v1.misc_models.serializers import TagSerializer, SimpleTagSerializer
-
-from unittest import skip
+from hav.views.api.v1.misc_models.serializers import SimpleTagSerializer, TagSerializer
 
 
 @skip

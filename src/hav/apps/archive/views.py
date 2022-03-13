@@ -1,11 +1,14 @@
-from django.views.generic import DetailView
-from django.urls import reverse
-from .models import ArchiveFile
-from django.http.response import HttpResponse, HttpResponseForbidden
 import mimetypes
 from pathlib import Path
+
+from django.http.response import HttpResponse, HttpResponseForbidden
+from django.urls import reverse
+from django.views.generic import DetailView
+
 from hav.apps.media.models import Media
 from hav.apps.sets.models import Node
+
+from .models import ArchiveFile
 
 
 class ArchiveFileBaseView(DetailView):

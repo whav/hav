@@ -1,6 +1,7 @@
 from django import template
-from hav.apps.media.models import License
 from django.db.models import Q
+
+from hav.apps.media.models import License
 
 register = template.Library()
 

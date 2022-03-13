@@ -1,7 +1,8 @@
-from importlib import import_module
-from django.conf import settings
 from dataclasses import dataclass, field
+from importlib import import_module
 from typing import List
+
+from django.conf import settings
 
 
 @dataclass
@@ -14,7 +15,7 @@ class TagSourceResult:
     id: str = None
 
     def to_tag(self):
-        from ..models import TagSource, Tag
+        from ..models import Tag, TagSource
 
         ts = TagSource(source=self.source, source_ref=self.source_ref)
         tag = Tag(name=self.name, id=self.id, source=ts)

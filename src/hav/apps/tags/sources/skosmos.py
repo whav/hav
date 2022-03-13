@@ -1,6 +1,7 @@
-from django.conf import settings
-from . import BaseSource, TagSourceResult
 import requests
+from django.conf import settings
+
+from . import BaseSource, TagSourceResult
 
 headers = {"Accept": "application/json"}
 

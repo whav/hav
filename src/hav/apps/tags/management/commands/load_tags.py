@@ -1,5 +1,6 @@
-from django.core.management.base import LabelCommand, CommandError
 from importlib import import_module
+
+from django.core.management.base import CommandError, LabelCommand
 
 from ...models import ManagedTag
 from ...sources import TAG_LABEL_TO_SOURCE

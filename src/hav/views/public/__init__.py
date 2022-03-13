@@ -1,10 +1,12 @@
-from django.views.generic import TemplateView, DetailView
-from hav.apps.hav_collections.models import Collection
-from hav.apps.sets.models import Node
-from hav.apps.media.models import Media
-from hav.apps.search.paginator import SearchPaginator
-from hav.apps.search.client import search
 from django.utils.functional import cached_property
+from django.views.generic import DetailView, TemplateView
+
+from hav.apps.hav_collections.models import Collection
+from hav.apps.media.models import Media
+from hav.apps.search.client import search
+from hav.apps.search.paginator import SearchPaginator
+from hav.apps.sets.models import Node
+
 from .forms import SearchForm
 
 

@@ -1,9 +1,12 @@
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from .models import Media
-from hav.apps.media.hashid import decode
 from urllib.parse import urlsplit, urlunsplit
+
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+
+from hav.apps.media.hashid import decode
+
+from .models import Media
 
 redirects = """
 https://hav.univie.ac.at/media/xyoby5	https://hav.univie.ac.at/archive/file/hash/ee156e224fd0aa9f54ea9ef8e9f1a70ee43c426d

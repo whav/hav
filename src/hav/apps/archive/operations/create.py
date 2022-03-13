@@ -1,9 +1,10 @@
-import os
 import logging
+import os
 
 from django.core.files import File
-from hav.apps.archive.models import ArchiveFile
 from django.utils.timezone import now
+
+from hav.apps.archive.models import ArchiveFile
 
 from .hash import generate_hash
 

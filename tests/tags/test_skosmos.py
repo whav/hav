@@ -1,9 +1,9 @@
-from django.test import SimpleTestCase
-from django.conf import settings
-from hav.apps.tags.sources.skosmos import Source
-from hav.apps.tags.sources import TAG_LABEL_TO_SOURCE
-
 import pytest
+from django.conf import settings
+from django.test import SimpleTestCase
+
+from hav.apps.tags.sources import TAG_LABEL_TO_SOURCE
+from hav.apps.tags.sources.skosmos import Source
 
 
 @pytest.mark.skip("Skosmos not working")

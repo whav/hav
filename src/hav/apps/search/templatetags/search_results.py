@@ -1,9 +1,11 @@
-from django import template
 from functools import lru_cache
 from typing import Union
-from hav.apps.sets.models import Node
-from hav.apps.media.models import Media
+
+from django import template
 from django.urls import reverse
+
+from hav.apps.media.models import Media
+from hav.apps.sets.models import Node
 
 register = template.Library()
 

@@ -1,4 +1,5 @@
 import pathlib
+
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 
 _sources = set()

@@ -1,6 +1,6 @@
-from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse
+from django.views.generic.edit import UpdateView
 
 from hav.apps.sets.models import Node
 from hav.apps.sets.permissions import can_edit_node

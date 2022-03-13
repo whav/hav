@@ -1,6 +1,6 @@
-from django.utils.module_loading import import_string
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage, DefaultStorage
+from django.core.files.storage import DefaultStorage, FileSystemStorage
+from django.utils.module_loading import import_string
 
 
 class ProtectedFileSystemStorage(FileSystemStorage):

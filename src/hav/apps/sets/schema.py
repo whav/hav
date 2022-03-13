@@ -1,10 +1,10 @@
 import graphene
-
 from graphene_django.types import DjangoObjectType
 
-from .models import Node
-from hav.apps.tags.schema import TagType
 from hav.apps.hav_collections.schema import CollectionType
+from hav.apps.tags.schema import TagType
+
+from .models import Node
 
 
 class NodeType(DjangoObjectType):

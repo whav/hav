@@ -1,9 +1,10 @@
-import aniso8601 as iso8601
-from aniso8601.resolution import DateResolution, TimeResolution
-from datetime import datetime, time, date
 import calendar
 import re
+from datetime import date, datetime, time
 from enum import Enum
+
+import aniso8601 as iso8601
+from aniso8601.resolution import DateResolution, TimeResolution
 from django.utils import formats
 
 split_date_time = re.compile(r"(?P<date>[\d\-]+)[\ T]?(?P<time>.*)?")

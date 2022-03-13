@@ -1,11 +1,11 @@
 import uuid
 
-from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.db import models
 
-from ..sets.models import Node
-from ..media.models import Media
 from ..accounts.models import User
+from ..media.models import Media
+from ..sets.models import Node
 
 
 class IngestQueue(models.Model):

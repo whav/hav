@@ -1,5 +1,6 @@
-from PIL import Image, ImageDraw, ImageFont
 import os
+
+from PIL import Image, ImageDraw, ImageFont
 
 font_path = os.path.join(os.path.dirname(__file__), "font.ttf")
 

@@ -1,11 +1,13 @@
+import math
+
 from django.urls import reverse
 from django.utils.functional import cached_property
 from rest_framework import serializers
+
 from hav.apps.hav_collections.models import Collection
-from hav.apps.sets.models import Node
 from hav.apps.media.models import Media
-from hav.utils.imaginary import generate_thumbnail_url, generate_srcset_urls
-import math
+from hav.apps.sets.models import Node
+from hav.utils.imaginary import generate_srcset_urls, generate_thumbnail_url
 
 
 class CollectionSerializer(serializers.ModelSerializer):

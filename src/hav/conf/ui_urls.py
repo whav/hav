@@ -1,8 +1,8 @@
-from django.urls import path, include
+from django.urls import include, path
 
+from hav.views.crud.folder import FolderUpdateView
 from hav.views.public import CollectionRoot, FolderView, MediaView, SearchView
 from hav.views.public.flatpages import FlatpageView
-from hav.views.crud.folder import FolderUpdateView
 
 urlpatterns = [
     path("", FlatpageView.as_view(slug="index"), name="landing_page"),

@@ -1,8 +1,9 @@
-from django import template
 from collections import namedtuple
 from copy import deepcopy
 from functools import lru_cache
-from urllib.parse import urlencode, unquote, urlparse, urlunparse, parse_qs
+from urllib.parse import parse_qs, unquote, urlencode, urlparse, urlunparse
+
+from django import template
 
 register = template.Library()
 

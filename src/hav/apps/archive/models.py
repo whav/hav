@@ -1,16 +1,17 @@
 import uuid
-from pathlib import Path
 from mimetypes import guess_type
+from pathlib import Path
 
-from django.utils.functional import cached_property
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import models
 from django.template.defaultfilters import filesizeformat
+from django.utils.functional import cached_property
 
 from hav.utils.fields import LanguageField
-from .storage import ArchiveStorage
-from ..media.models import CreatorBase, MediaCreator, License
+
 from ..accounts.models import User
+from ..media.models import CreatorBase, License, MediaCreator
+from .storage import ArchiveStorage
 
 
 class FileCreator(CreatorBase):

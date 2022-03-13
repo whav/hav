@@ -1,17 +1,20 @@
-from typing import Literal
+import copy
+import logging
 import mimetypes
 import os
-import copy
+from typing import Literal
+
 from django.core.exceptions import ObjectDoesNotExist
+
 from hav.apps.archive.models import ArchiveFile
 from hav.apps.webassets.models import WebAsset
 
-from .image import convert as image_convert
-from .audio import convert as audio_convert, create_waveform
-from .video import convert as video_convert, create_thumbnail
+from .audio import convert as audio_convert
+from .audio import create_waveform
 from .hints import get_hints_from_tags
-
-import logging
+from .image import convert as image_convert
+from .video import convert as video_convert
+from .video import create_thumbnail
 
 logger = logging.getLogger(__name__)
 

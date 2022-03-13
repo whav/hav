@@ -1,9 +1,8 @@
-import subprocess
-import logging
 import json
+import logging
 import os
 import re
-
+import subprocess
 from distutils.spawn import find_executable
 
 logger = logging.getLogger(__name__)

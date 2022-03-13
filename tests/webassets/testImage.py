@@ -1,5 +1,7 @@
-from hav.apps.webassets.operations import create_webassets
 from PIL import Image
+
+from hav.apps.webassets.operations import create_webassets
+
 from . import WebAssetTestCase
 
 

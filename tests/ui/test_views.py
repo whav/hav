@@ -1,5 +1,6 @@
 import pytest
 from django.urls import reverse
+
 from hav.apps.hav_collections.models import Collection
 
 

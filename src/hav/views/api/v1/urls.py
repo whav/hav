@@ -1,16 +1,16 @@
 from django.conf import settings
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse as django_reverse
 
 from hav.apps.sources.filesystem import FSSource
-from hav.apps.sources.whav import WHAVSource
 from hav.apps.sources.uploads import UploadSource
+from hav.apps.sources.whav import WHAVSource
 
+from .auth import AuthStatusView
 from .havBrowser.urls import hav_urls
 from .ingest.urls import ingest_urls
-from .auth import AuthStatusView
 from .misc_models.urls import urlpatterns as model_url_patterns
 
 # TODO: this is a duplication of the sources defined in settings.py

@@ -1,11 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
 from django.template.defaultfilters import filesizeformat
-from hav.apps.media.models import Media
-from hav.apps.hav_collections.models import Collection
+
 from hav.apps.archive.models import ArchiveFile
-from ...tasks import create
+from hav.apps.hav_collections.models import Collection
+from hav.apps.media.models import Media
+
 from ...models import WebAsset
+from ...tasks import create
 
 
 class Command(BaseCommand):

@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import CollectionListView, NodeView, MediaView
+
 from hav.apps.search.views import SearchView
+
+from .views import CollectionListView, MediaView, NodeView
 
 app_name = "api"
 

@@ -1,9 +1,11 @@
+import re
 from typing import List
-from ..models import Tag
+
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
-import re
+
+from ..models import Tag
 
 register = template.Library()
 

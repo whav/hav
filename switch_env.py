@@ -1,5 +1,6 @@
-from pick import pick
 from pathlib import Path
+
+from pick import pick
 
 env_files_dir = Path(__file__).parent.resolve().joinpath("./env_files/")
 

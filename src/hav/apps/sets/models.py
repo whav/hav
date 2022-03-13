@@ -1,12 +1,11 @@
+from itertools import chain
 from typing import Optional
 
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
 from django.utils.functional import cached_property
-
 from treebeard.mp_tree import MP_Node
-from itertools import chain
 
 
 class Node(MP_Node):

@@ -1,6 +1,7 @@
-from django.db import migrations
-from django.core.exceptions import ObjectDoesNotExist
 import warnings
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import migrations
 
 
 def forwards(apps, schema_editor):

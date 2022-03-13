@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import MediaCreatorRole, License, Media, MediaCreator, MediaType
+
+from .models import License, Media, MediaCreator, MediaCreatorRole, MediaType
 
 
 class MediaAdmin(admin.ModelAdmin):

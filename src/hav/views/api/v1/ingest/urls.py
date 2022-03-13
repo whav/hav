@@ -1,10 +1,11 @@
 from django.urls import path
+
 from . import (
-    IngestQueueView,
-    IngestQueueDetailView,
     IngestOptionsView,
+    IngestQueueDetailView,
     IngestQueueIngestionView,
     IngestQueueModifier,
+    IngestQueueView,
     SingleIngestView,
 )
 

@@ -1,8 +1,10 @@
 import graphene
-from graphene_django.types import DjangoObjectType
-from hav.utils.imaginary import generate_src_url
-from .models import WebAsset
 from django.templatetags.static import static
+from graphene_django.types import DjangoObjectType
+
+from hav.utils.imaginary import generate_src_url
+
+from .models import WebAsset
 
 fallback_url = static("webassets/no_image_available.svg")
 

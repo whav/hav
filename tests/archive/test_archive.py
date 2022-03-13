@@ -1,13 +1,14 @@
 import os
 from unittest.mock import patch
+
 from django.test import TestCase
+
 from hav.apps.accounts.models import User
-
-from hav.apps.archive.operations import archive_file
-from .test_hash import file_hash, file_path
-
-from hav.apps.media import utils, models
 from hav.apps.archive.models import ArchiveFile, AttachmentFile
+from hav.apps.archive.operations import archive_file
+from hav.apps.media import models, utils
+
+from .test_hash import file_hash, file_path
 
 attachment_hash = "4a4093cd339c3f4b2bd6229041140fe8ad496613"
 

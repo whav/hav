@@ -1,12 +1,11 @@
-from collections import OrderedDict
-from pathlib import Path
-
 import base64
 import hmac
-from django.conf import settings
+from collections import OrderedDict
 from mimetypes import guess_type
-from urllib.parse import urlencode, urlparse, urljoin
+from pathlib import Path
+from urllib.parse import urlencode, urljoin, urlparse
 
+from django.conf import settings
 from django.templatetags.static import static
 
 fallback_url = static("webassets/no_image_available.svg")
@@ -52,9 +51,9 @@ def get_imaginary_path(obj_or_path, user=None):
     # database stored file paths to imaginary mounted volumes and such
 
     # import here to avoid circular imports
-    from hav.apps.webassets.models import WebAsset
     from hav.apps.archive.models import ArchiveFile
     from hav.apps.sources.uploads.models import FileUpload
+    from hav.apps.webassets.models import WebAsset
 
     if isinstance(obj_or_path, WebAsset):
         path = Path("webassets/").joinpath(obj_or_path.file.name).as_posix()

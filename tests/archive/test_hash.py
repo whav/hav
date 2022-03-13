@@ -1,5 +1,6 @@
 import os
 from unittest import TestCase
+
 from hav.apps.archive.operations.hash import generate_hash
 
 file_path = os.path.join(os.path.dirname(__file__), "file.bin")

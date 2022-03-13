@@ -1,10 +1,11 @@
 from __future__ import absolute_import, unicode_literals
+
 import logging
-from django_rq import job, get_queue
+
+from django_rq import get_queue, job
 from rq import get_current_job
 
 from .operations import create_webassets
-
 
 logger = logging.getLogger(__name__)
 

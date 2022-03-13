@@ -1,7 +1,8 @@
 import graphene
-from graphene_django.types import DjangoObjectType
-from hav.apps.webassets.schema import WebAssetType
 from django.urls import reverse
+from graphene_django.types import DjangoObjectType
+
+from hav.apps.webassets.schema import WebAssetType
 
 from .models import ArchiveFile
 

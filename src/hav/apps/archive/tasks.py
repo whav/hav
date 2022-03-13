@@ -1,7 +1,10 @@
 from __future__ import absolute_import, unicode_literals
+
 import logging
-from .operations.create import archive_file
+
 from django_rq import job
+
+from .operations.create import archive_file
 
 logger = logging.getLogger(__name__)
 

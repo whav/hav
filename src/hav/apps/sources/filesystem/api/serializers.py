@@ -1,11 +1,12 @@
+import logging
 import os
 import stat
 from mimetypes import guess_type
+
 from rest_framework import serializers
 
-from hav.utils.imaginary import generate_thumbnail_url, generate_srcset_urls
 from hav.utils.exif import get_exif_data
-import logging
+from hav.utils.imaginary import generate_srcset_urls, generate_thumbnail_url
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,8 @@
 from typing import Union
-from django import template
-from hav.apps.media.models import Media
 
+from django import template
+
+from hav.apps.media.models import Media
 from hav.apps.sets.models import Node
 
 register = template.Library()

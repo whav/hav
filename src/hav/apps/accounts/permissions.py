@@ -1,9 +1,10 @@
 from functools import lru_cache
 
-from .models import User
+from hav.apps.hav_collections.models import Collection
 from hav.apps.media.models import Media
 from hav.apps.webassets.models import WebAsset
-from hav.apps.hav_collections.models import Collection
+
+from .models import User
 
 
 @lru_cache(maxsize=1, typed=True)

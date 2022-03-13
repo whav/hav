@@ -1,12 +1,11 @@
+import logging
+import os
+from pathlib import Path
+
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import path, reverse
-import os
 
-from pathlib import Path
 from .. import Source
-
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +54,7 @@ class UploadSource(Source):
         kwargs = {
             "source_config": self,
         }
-        from .api.views import FileUploadView, FileDetailView
+        from .api.views import FileDetailView, FileUploadView
 
         return [
             path("", FileUploadView.as_view(**kwargs), name="fileupload"),

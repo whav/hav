@@ -1,15 +1,14 @@
-from typing import Union
-from django import template
-from django.conf import settings
 from functools import lru_cache
 from mimetypes import guess_type
-from hav.apps.webassets.models import WebAsset
+from typing import Union
+
+from django import template
+from django.conf import settings
+
 from hav.apps.archive.models import ArchiveFile
 from hav.apps.media.models import Media
-from hav.utils.imaginary import (
-    generate_thumbnail_url,
-    generate_srcset_urls,
-)
+from hav.apps.webassets.models import WebAsset
+from hav.utils.imaginary import generate_srcset_urls, generate_thumbnail_url
 
 from .gallery_tags import can_view_media_webassets
 

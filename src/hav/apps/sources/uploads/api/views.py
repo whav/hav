@@ -1,20 +1,19 @@
-from pathlib import Path
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
 from django.shortcuts import get_object_or_404
-
-
-from rest_framework.views import APIView
-from rest_framework.parsers import FileUploadParser
 from rest_framework import serializers
+from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from hav.utils.imaginary import generate_thumbnail_url, generate_srcset_urls
-from ...permissions import IncomingBaseMixin
-
-from hav.apps.sources.uploads.models import FileUpload
 from hav.apps.sources.filesystem.api.serializers import (
     FileDetailSerializer as FSFileDetailSerializer,
 )
+from hav.apps.sources.uploads.models import FileUpload
+from hav.utils.imaginary import generate_srcset_urls, generate_thumbnail_url
+
+from ...permissions import IncomingBaseMixin
 
 
 class BaseFileSerializer(serializers.ModelSerializer):

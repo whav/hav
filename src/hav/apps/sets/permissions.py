@@ -1,5 +1,6 @@
-from .models import Node
 from hav.apps.accounts.models import User
+
+from .models import Node
 
 
 def can_edit_node(user: User, node: Node):

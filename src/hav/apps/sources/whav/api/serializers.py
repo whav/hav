@@ -1,7 +1,7 @@
 import os
 from mimetypes import guess_type
-from rest_framework import serializers
 
+from rest_framework import serializers
 
 from hav.apps.whav.models import ImageCollection, MediaOrdering
 from hav.utils.imaginary import generate_srcset_urls, generate_thumbnail_url

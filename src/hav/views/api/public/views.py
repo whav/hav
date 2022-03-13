@@ -1,11 +1,11 @@
 from django.http import Http404
-
 from rest_framework.generics import ListAPIView, RetrieveAPIView
-from hav.apps.hav_collections.models import Collection
-from hav.apps.sets.models import Node
-from hav.apps.media.models import Media
 
-from .serializers import CollectionSerializer, NodeSerializer, MediaSerializer
+from hav.apps.hav_collections.models import Collection
+from hav.apps.media.models import Media
+from hav.apps.sets.models import Node
+
+from .serializers import CollectionSerializer, MediaSerializer, NodeSerializer
 
 
 class CollectionListView(ListAPIView):

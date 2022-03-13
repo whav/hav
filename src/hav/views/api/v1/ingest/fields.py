@@ -1,10 +1,10 @@
 import logging
 from pathlib import Path
-from urllib.parse import urlparse, unquote
+from urllib.parse import unquote, urlparse
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.urls import resolve, get_script_prefix, Resolver404
+from django.urls import Resolver404, get_script_prefix, resolve
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 

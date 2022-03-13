@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from hav.apps.media.models import MediaCreator, MediaCreatorRole, License, MediaType
-from hav.apps.tags.models import Tag, TagSource
+
 from hav.apps.hav_collections.models import Collection
+from hav.apps.media.models import License, MediaCreator, MediaCreatorRole, MediaType
+from hav.apps.tags.models import Tag, TagSource
 from hav.apps.tags.sources import TAGGING_SOURCE_CHOICES
 
 

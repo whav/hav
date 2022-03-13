@@ -28,5 +28,8 @@ class Collection(models.Model):
         unique=True,
     )
 
+    def is_admin(self, user: User):
+        return user in self.administrators.all()
+
     def __str__(self):
         return self.slug

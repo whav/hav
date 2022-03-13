@@ -1,9 +1,9 @@
-from django.test import TestCase
-from hav.apps.tags.sources import search_tag_sources, TagSourceResult
-from hav.apps.tags.models import search_tags, Tag, TagSource
-from hav.apps.hav_collections.models import Collection
-
 import pytest
+from django.test import TestCase
+
+from hav.apps.hav_collections.models import Collection
+from hav.apps.tags.models import Tag, TagSource, search_tags
+from hav.apps.tags.sources import TagSourceResult, search_tag_sources
 
 
 @pytest.mark.skip("Skosmos not working")

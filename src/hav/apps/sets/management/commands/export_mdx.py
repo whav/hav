@@ -1,8 +1,10 @@
-from django.core.management.base import BaseCommand, CommandError
 import pathlib
-from ...models import Node
+
+from django.core.management.base import BaseCommand, CommandError
 from django.db import models
 from django.db.models.functions import Length
+
+from ...models import Node
 
 
 def export_descriptions(output_dir: pathlib.Path, nodes):

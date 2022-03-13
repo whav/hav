@@ -1,15 +1,17 @@
 import os
+
 from django.urls import reverse
 from rest_framework import serializers
 
-from hav.apps.sets.models import Node
-from hav.apps.media.models import Media
 from hav.apps.archive.models import ArchiveFile
-from hav.apps.webassets.models import WebAsset
 from hav.apps.hav_collections.models import Collection
+from hav.apps.media.models import Media
+from hav.apps.sets.models import Node
 from hav.apps.tags.models import Tag
-from ..misc_models.serializers import TagSerializer
+from hav.apps.webassets.models import WebAsset
 from hav.utils.imaginary import generate_thumbnail_url
+
+from ..misc_models.serializers import TagSerializer
 
 
 class HAVCollectionSerializer(serializers.ModelSerializer):

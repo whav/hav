@@ -1,6 +1,7 @@
 from rest_framework.permissions import IsAdminUser
-from hav.apps.hav_collections.models import Collection
+
 from hav.apps.accounts.models import User
+from hav.apps.hav_collections.models import Collection
 
 
 class IncomingBaseMixin(object):

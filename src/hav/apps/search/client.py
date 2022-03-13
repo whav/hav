@@ -1,5 +1,5 @@
-from django.conf import settings
 import meilisearch
+from django.conf import settings
 
 from hav.apps.media.models import Media
 from hav.apps.sets.models import Node

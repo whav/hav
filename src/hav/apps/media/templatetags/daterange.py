@@ -1,9 +1,10 @@
-from django import template
-from psycopg2.extras import DateTimeTZRange
-from hav.utils.daterange import ReverseDateTimeRange, Resolutions
-from django.template.defaultfilters import date as django_date_filter
-
 from logging import getLogger
+
+from django import template
+from django.template.defaultfilters import date as django_date_filter
+from psycopg2.extras import DateTimeTZRange
+
+from hav.utils.daterange import Resolutions, ReverseDateTimeRange
 
 register = template.Library()
 

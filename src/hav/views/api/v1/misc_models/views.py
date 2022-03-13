@@ -1,20 +1,21 @@
-from rest_framework import generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
-from ..permissions import IncomingBaseMixin, has_collection_permission
 import logging
+
 from django.http import HttpResponseForbidden
+from rest_framework import generics
+from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from hav.apps.media.models import License, MediaCreator, MediaCreatorRole
+from hav.apps.tags.models import Tag, search_tags
 
+from ..permissions import IncomingBaseMixin, has_collection_permission
 from .serializers import (
+    MediaCreatorRoleSerializer,
     MediaCreatorSerializer,
     MediaLicenseSerializer,
-    MediaCreatorRoleSerializer,
     SimpleTagSerializer,
 )
-from hav.apps.media.models import MediaCreator, License, MediaCreatorRole
-from hav.apps.tags.models import Tag, search_tags
 
 logger = logging.getLogger(__name__)
 

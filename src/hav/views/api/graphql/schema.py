@@ -1,10 +1,10 @@
 import graphene
 
+from hav.apps.archive.schema import Query as ArchivedFilesQuery
 from hav.apps.hav_collections.schema import Query as CollectionQuery
 from hav.apps.media.schema import Query as MediaQuery
 from hav.apps.sets.schema import Query as NodesQuery
 from hav.apps.webassets.schema import Query as AssetsQuery
-from hav.apps.archive.schema import Query as ArchivedFilesQuery
 
 
 class Query(

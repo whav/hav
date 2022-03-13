@@ -1,11 +1,13 @@
-import os
 import mimetypes
-from PIL import Image
+import os
+
 from django.db import models
 from django.utils.functional import cached_property
-from ..archive.models import ArchiveFile
+from PIL import Image
+
 from hav.utils.storages import getStorage
 
+from ..archive.models import ArchiveFile
 
 webasset_storage = getStorage("webassets")
 

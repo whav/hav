@@ -1,9 +1,10 @@
-from typing import List
-from hav.apps.tags.models import Tag
-import mimetypes
 import copy
-import re
 import logging
+import mimetypes
+import re
+from typing import List
+
+from hav.apps.tags.models import Tag
 
 logger = logging.getLogger(__name__)
 

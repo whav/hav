@@ -1,10 +1,9 @@
 import os
-from pathlib import Path
 from collections import namedtuple
 from itertools import chain
+from pathlib import Path
 
-from hav.apps.whav.models import MediaOrdering, ImageCollection
-
+from hav.apps.whav.models import ImageCollection, MediaOrdering
 
 ResolvedIngestionItems = namedtuple("IngestionItemsByPath", ["path", "items"])
 

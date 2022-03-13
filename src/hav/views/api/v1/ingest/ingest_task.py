@@ -1,13 +1,13 @@
+from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django_rq import get_queue
-from asgiref.sync import async_to_sync
+from rest_framework.exceptions import ValidationError
 
 from hav.apps.archive.tasks import archive
+from hav.apps.ingest.models import IngestQueue
 from hav.apps.webassets.tasks import (
     create_webassets_after_archive_task as create_webassets,
 )
-from hav.apps.ingest.models import IngestQueue
-from rest_framework.exceptions import ValidationError
 
 channel_layer = get_channel_layer()
 

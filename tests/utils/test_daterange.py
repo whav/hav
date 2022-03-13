@@ -1,12 +1,13 @@
 import unittest
+from datetime import date, datetime, time
+
 from hav.utils.daterange import (
+    Resolutions,
+    calculate_date_resolution,
     parse,
     parse_date,
     parse_time,
-    calculate_date_resolution,
-    Resolutions,
 )
-from datetime import date, datetime, time
 
 
 class TestDateString(unittest.TestCase):

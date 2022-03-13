@@ -1,11 +1,11 @@
-from django.test import TestCase
 from pathlib import Path
 from shutil import copyfile
 
-from hav.apps.archive.models import ArchiveFile
-from hav.apps.archive.operations.hash import generate_hash
+from django.test import TestCase
 
 from hav.apps.accounts.models import User
+from hav.apps.archive.models import ArchiveFile
+from hav.apps.archive.operations.hash import generate_hash
 
 testdata_dir = Path(__file__).parent.joinpath("./testdata/")
 

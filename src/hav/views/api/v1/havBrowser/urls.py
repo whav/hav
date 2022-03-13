@@ -1,5 +1,6 @@
-from django.urls import path, re_path, include
-from .views import HAVNodeBrowser, HAVMediaView
+from django.urls import include, path, re_path
+
+from .views import HAVMediaView, HAVNodeBrowser
 
 
 def hav_urls(identifier):

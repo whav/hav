@@ -1,9 +1,11 @@
 import uuid
+
 from django.db import models
 from django.utils.functional import cached_property
+
 from ..hav_collections.models import Collection
-from .sources import TAG_LABEL_TO_SOURCE, search_tag_sources
 from .fields import TagSourceChoiceField
+from .sources import TAG_LABEL_TO_SOURCE, search_tag_sources
 
 
 class TagManager(models.Manager):

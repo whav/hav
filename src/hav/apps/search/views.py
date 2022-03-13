@@ -1,9 +1,10 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import serializers
-from hav.utils.imaginary import generate_thumbnail_url
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from hav.apps.media.models import Media
 from hav.apps.sets.models import Node
+from hav.utils.imaginary import generate_thumbnail_url
 
 from .client import get_index
 

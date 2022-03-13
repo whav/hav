@@ -1,8 +1,9 @@
-from .models import Tag
+import re
 from typing import List
+
 from pydantic import BaseModel
 
-import re
+from .models import Tag
 
 # ordering is important here as we use this list to also order the tags
 location_prefixes = [

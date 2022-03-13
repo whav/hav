@@ -1,7 +1,8 @@
-from rest_framework.views import APIView
+from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.response import Response
-from django.urls import reverse
+from rest_framework.views import APIView
+
 from hav.apps.accounts.models import User
 
 

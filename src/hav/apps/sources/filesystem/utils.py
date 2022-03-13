@@ -1,6 +1,5 @@
 import base64
 import binascii
-
 import logging
 
 logger = logging.getLogger(__name__)

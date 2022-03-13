@@ -1,23 +1,25 @@
-from uuid import uuid4
 import os
+import random
 from decimal import Decimal
-from hav.apps.accounts.models import User
+from uuid import uuid4
+
 from django.conf import settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITransactionTestCase
-import random
+
+from hav.apps.accounts.models import User
+from hav.apps.hav_collections.models import Collection
+from hav.apps.ingest.models import IngestQueue
 from hav.apps.media.models import (
     License,
-    MediaCreator,
-    MediaType,
-    MediaCreatorRole,
     Media,
+    MediaCreator,
+    MediaCreatorRole,
+    MediaType,
 )
 from hav.apps.sets.models import Node
-from hav.apps.ingest.models import IngestQueue
 from hav.apps.tags.models import Tag
-from hav.apps.hav_collections.models import Collection
 from hav.utils.generate_image import generate_image
 
 

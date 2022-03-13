@@ -1,13 +1,14 @@
-from pathlib import Path
-import pytest
-
 import tempfile
+from pathlib import Path
+
+import pytest
+from django.core.exceptions import ValidationError
 from PIL import Image
+
+from hav.apps.tags.models import Tag
 from hav.apps.webassets.hints import validate_webasset_hints
 from hav.apps.webassets.operations.hints import get_hints_from_tags, rotation_tags
 from hav.apps.webassets.operations.image import convert
-from django.core.exceptions import ValidationError
-from hav.apps.tags.models import Tag
 
 
 def test_hints():

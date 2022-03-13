@@ -1,9 +1,9 @@
-from django.urls import include, path, re_path
-from django.contrib import admin as django_admin
 from django.conf import settings
-from django.views.generic import TemplateView
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib import admin as django_admin
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import user_passes_test
+from django.urls import include, path, re_path
+from django.views.generic import TemplateView
 
 from hav.apps.archive.urls import urlpatterns as archive_urls
 from hav.apps.media.urls import urlpatterns as media_urls

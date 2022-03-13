@@ -1,23 +1,24 @@
-import os
 import argparse
 import csv
+import os
 from datetime import datetime
 from pathlib import Path
-from rest_framework import status
-from rest_framework.test import RequestsClient
+
 from django.conf import settings
-from hav.apps.accounts.models import User
 from django.core.management.base import BaseCommand, CommandError
 from django.urls import reverse
-
-from hav.apps.sets.models import Node
-from hav.apps.ingest.models import IngestQueue
+from rest_framework import status
+from rest_framework.test import RequestsClient
 from sources.filesystem.utils import encodePath
+
+from hav.apps.accounts.models import User
+from hav.apps.ingest.models import IngestQueue
 from hav.apps.ingest.utils import (
     check_sanity,
-    media_data_from_csv,
     get_or_create_subnodes_from_path,
+    media_data_from_csv,
 )
+from hav.apps.sets.models import Node
 
 
 class Command(BaseCommand):

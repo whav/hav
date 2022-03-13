@@ -1,8 +1,10 @@
-from django.contrib import admin
-from .models import ArchiveFile, AttachmentFile
-from django.template.defaultfilters import filesizeformat
 from pathlib import Path
+
+from django.contrib import admin
+from django.template.defaultfilters import filesizeformat
+
 from ..hav_collections.models import Collection
+from .models import ArchiveFile, AttachmentFile
 
 
 class FileExtensionFilter(admin.SimpleListFilter):

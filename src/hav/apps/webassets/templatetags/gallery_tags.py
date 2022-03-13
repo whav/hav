@@ -1,22 +1,22 @@
+import logging
 import math
-from functools import lru_cache
 from dataclasses import dataclass
 from datetime import date
-from typing import Union, List
+from functools import lru_cache
+from typing import List, Union
+
 from django import template
-from hav.apps.media.models import Media
+from django.db.models import F
+from django.templatetags.static import static
+from django.urls import reverse
+
 from hav.apps.accounts.models import User
+from hav.apps.accounts.permissions import can_view_media
+from hav.apps.archive.models import ArchiveFile
+from hav.apps.media.models import Media
 from hav.apps.sets.models import Node
 from hav.apps.webassets.models import WebAsset
-from hav.apps.archive.models import ArchiveFile
 from hav.utils.imaginary import generate_thumbnail_url
-
-from hav.apps.accounts.permissions import can_view_media
-
-from django.urls import reverse
-from django.templatetags.static import static
-from django.db.models import F
-import logging
 
 logger = logging.getLogger(__name__)
 

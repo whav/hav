@@ -1,9 +1,11 @@
-from uuid import uuid4
-from hav.apps.accounts.models import User
 from datetime import datetime
+from uuid import uuid4
+
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+
+from hav.apps.accounts.models import User
 from hav.apps.media.models import MediaCreator
 
 

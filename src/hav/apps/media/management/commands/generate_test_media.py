@@ -1,11 +1,11 @@
-from django.core.management.base import BaseCommand
-from hav.apps.media.models import Media, License, MediaCreator, MediaType
-from hav.apps.hav_collections.models import Collection
-from hav.apps.accounts.models import User
-from django.utils import timezone
-
 import random
 
+from django.core.management.base import BaseCommand
+from django.utils import timezone
+
+from hav.apps.accounts.models import User
+from hav.apps.hav_collections.models import Collection
+from hav.apps.media.models import License, Media, MediaCreator, MediaType
 
 users = list(User.objects.all())
 licenses = list(License.objects.all())

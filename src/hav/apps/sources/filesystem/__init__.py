@@ -1,12 +1,13 @@
-from django.core.exceptions import ImproperlyConfigured
-from django.urls import path, reverse, re_path
+import logging
 import os
 from pathlib import Path
-from .. import Source
-from .utils import encodePath, decodePath
-from .api.views import FileBrowser, FileBrowserFileUpload
 
-import logging
+from django.core.exceptions import ImproperlyConfigured
+from django.urls import path, re_path, reverse
+
+from .. import Source
+from .api.views import FileBrowser, FileBrowserFileUpload
+from .utils import decodePath, encodePath
 
 logger = logging.getLogger(__name__)
 

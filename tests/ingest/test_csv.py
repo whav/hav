@@ -1,18 +1,18 @@
+import tempfile
 from io import StringIO
+from pathlib import Path
+from unittest import skip
 from uuid import uuid4
 
-import tempfile
-from unittest import skip
-from pathlib import Path
-from rest_framework.authtoken.models import Token
-from django.test import TransactionTestCase, override_settings
-from django.core.management import call_command, CommandError
-from hav.apps.accounts.models import User
 from django.conf import settings
+from django.core.management import CommandError, call_command
+from django.test import TransactionTestCase, override_settings
+from rest_framework.authtoken.models import Token
 
+from hav.apps.accounts.models import User
 from hav.apps.hav_collections.models import Collection
-from hav.apps.sets.models import Node
 from hav.apps.media.models import Media
+from hav.apps.sets.models import Node
 
 tmpdirs = {
     "archive": tempfile.TemporaryDirectory(),

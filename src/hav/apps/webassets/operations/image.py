@@ -1,10 +1,10 @@
-from tempfile import NamedTemporaryFile
-import pyvips
 import logging
 import mimetypes
-import imageio
-import rawpy
+from tempfile import NamedTemporaryFile
 
+import imageio
+import pyvips
+import rawpy
 
 logger = logging.getLogger(__name__)
 

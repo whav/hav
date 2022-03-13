@@ -1,15 +1,15 @@
-import pytest
-from uuid import uuid4
 from pathlib import Path
+from uuid import uuid4
 
+import pytest
 from django.core.files import File
 
 from hav.apps.archive.models import ArchiveFile
-from hav.apps.media.models import Media, MediaType
 from hav.apps.hav_collections.models import Collection
+from hav.apps.media.models import Media, MediaType
 from hav.apps.sets.models import Node
-from hav.apps.webassets.operations import create_webassets
 from hav.apps.webassets.models import WebAsset
+from hav.apps.webassets.operations import create_webassets
 
 
 @pytest.fixture

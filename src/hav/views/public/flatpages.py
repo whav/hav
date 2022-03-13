@@ -1,8 +1,8 @@
-from django.views.generic import TemplateView
-from django.http.response import Http404
-from django.template.loader import select_template, TemplateDoesNotExist
-
 from pathlib import Path
+
+from django.http.response import Http404
+from django.template.loader import TemplateDoesNotExist, select_template
+from django.views.generic import TemplateView
 
 
 class FlatpageView(TemplateView):

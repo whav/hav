@@ -1,34 +1,30 @@
 import logging
 from itertools import chain
+
 from django.db import transaction
+from django.urls import reverse
 from psycopg2.extras import DateTimeTZRange
 from rest_framework import serializers
-from django.urls import reverse
 
-from hav.views.api.v1.havBrowser.serializers import HAVMediaSerializer
-
+from hav.apps.archive.models import ArchiveFile, AttachmentFile, FileCreator
 from hav.apps.archive.operations.hash import generate_hash
 from hav.apps.ingest.models import IngestQueue
+from hav.apps.media.models import License, Media, MediaToCreator, MediaType
 from hav.apps.sets.models import Node
-from hav.apps.archive.models import AttachmentFile, ArchiveFile, FileCreator
-from hav.apps.media.models import (
-    MediaToCreator,
-    Media,
-    License,
-    MediaType,
-)
-from .fields import (
-    HAVTargetField,
-    IngestHyperlinkField,
-    FinalIngestHyperlinkField,
-    IngestionReferenceField,
-)
 from hav.utils.daterange import parse
+from hav.views.api.v1.havBrowser.serializers import HAVMediaSerializer
+
 from ..havBrowser.serializers import HAVCollectionSerializer
 from ..misc_models.serializers import SimpleTagSerializer
-from .ingest_task import archive_and_create_webassets
-from .fields import resolveURLtoFilePath
 from ..permissions import has_collection_permission
+from .fields import (
+    FinalIngestHyperlinkField,
+    HAVTargetField,
+    IngestHyperlinkField,
+    IngestionReferenceField,
+    resolveURLtoFilePath,
+)
+from .ingest_task import archive_and_create_webassets
 
 logger = logging.getLogger(__name__)
 

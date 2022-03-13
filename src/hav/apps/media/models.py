@@ -1,15 +1,17 @@
+from datetime import date
 from decimal import Decimal
-from django.db import models
+
 from django.contrib.postgres.fields import DateTimeRangeField
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from django.utils.functional import cached_property
 from model_utils.models import TimeStampedModel
-from ..sets.models import Node
+
+from ..accounts.models import User
 from ..hav_collections.models import Collection
+from ..sets.models import Node
 from ..tags.models import Tag
 from ..tags.utils import filter_by_prefix, filter_location_tags
-from ..accounts.models import User
-from datetime import date
 
 
 class MediaType(models.Model):

@@ -1,7 +1,8 @@
 import json
-from django.core.serializers.json import DjangoJSONEncoder
-from channels.generic.websocket import AsyncJsonWebsocketConsumer
+
 from channels.db import database_sync_to_async
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 class IngestUpdatesConsumer(AsyncJsonWebsocketConsumer):
@@ -25,8 +26,9 @@ class IngestUpdatesConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def serialize_media(self, media_id):
-        from hav.apps.media.models import Media
         from api.v1.havBrowser.serializers import HAVMediaSerializer
+
+        from hav.apps.media.models import Media
 
         media = Media.objects.get(pk=media_id)
         headers = self.scope["headers"]

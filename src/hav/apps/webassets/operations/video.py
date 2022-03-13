@@ -1,8 +1,8 @@
-import subprocess
 import logging
-from .utils import is_interlaced, FFProbe
-
+import subprocess
 from distutils.spawn import find_executable
+
+from .utils import FFProbe, is_interlaced
 
 logger = logging.getLogger(__name__)
 

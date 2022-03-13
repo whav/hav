@@ -1,8 +1,9 @@
 from datetime import timedelta
-from django.utils import timezone
-from hav.apps.accounts.models import User
 
-from hav.apps.media.models import Media, MediaCreator, License, MediaType
+from django.utils import timezone
+
+from hav.apps.accounts.models import User
+from hav.apps.media.models import License, Media, MediaCreator, MediaType
 from hav.apps.sets.models import Node
 
 

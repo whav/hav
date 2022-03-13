@@ -1,5 +1,6 @@
+from datetime import date, datetime, time
+
 from django.test import SimpleTestCase
-from datetime import date, time, datetime
 
 from hav.apps.media.utils.dtrange import range_from_partial_date
 

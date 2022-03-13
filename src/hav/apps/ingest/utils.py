@@ -1,14 +1,16 @@
 import os
 from collections import defaultdict
 from functools import lru_cache
+
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+
 from hav.apps.media.models import (
+    License,
     MediaCreator,
     MediaCreatorRole,
     MediaType,
-    License,
     Tag,
 )
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
 # MediaDescription Fieldnames from CSV
 md_origmdate = "HAV:MediaDescription:OriginalMediaDate"

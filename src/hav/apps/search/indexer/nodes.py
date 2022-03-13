@@ -1,9 +1,10 @@
-from ...sets.models import Node
 import time
 from typing import Union
-from . import SearchIndexItem, ItemType
-from ...tags.utils import filter_location_tags
+
+from ...sets.models import Node
 from ...tags.templatetags.tagging import filter_tag
+from ...tags.utils import filter_location_tags
+from . import ItemType, SearchIndexItem
 
 
 def index(node: Union[Node, int]):

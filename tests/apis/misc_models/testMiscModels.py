@@ -1,10 +1,10 @@
 from uuid import uuid4
 
-from hav.apps.accounts.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from hav.apps.accounts.models import User
 from hav.views.api.v1.misc_models.urls import urlpatterns
 
 

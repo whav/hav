@@ -11,7 +11,6 @@ from ...client import get_client, get_index
 from ...indexer.media import index as index_media
 from ...indexer.nodes import index as index_node
 
-
 searchable_attributes = [
     "title",
     "additional_titles",

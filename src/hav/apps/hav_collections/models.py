@@ -1,7 +1,7 @@
 from django.db import models
 
-from ..sets.models import Node
 from ..accounts.models import User
+from ..sets.models import Node
 
 
 def root_nodes():

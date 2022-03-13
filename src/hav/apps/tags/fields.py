@@ -1,7 +1,7 @@
 from django import forms
+from django.db import models
 
 from .sources import TAG_LABEL_TO_SOURCE, TAGGING_SOURCE_CHOICES
-from django.db import models
 
 available_sources = set(list(TAG_LABEL_TO_SOURCE.keys()))
 

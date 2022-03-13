@@ -1,6 +1,6 @@
-from treebeard.mp_tree import MP_Node
 from django.db import models
 from django.utils.functional import cached_property
+from treebeard.mp_tree import MP_Node
 
 
 class ImageCollection(MP_Node):

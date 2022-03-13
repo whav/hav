@@ -1,17 +1,15 @@
 import os
 from pathlib import Path
-from django.http import Http404
 
 from django.core.files.storage import FileSystemStorage
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.parsers import FileUploadParser
+from django.http import Http404
 from rest_framework.exceptions import APIException
+from rest_framework.parsers import FileUploadParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from ...permissions import IncomingBaseMixin
-
-from .serializers import FileSerializer, DirectorySerializer, FileDetailSerializer
+from .serializers import DirectorySerializer, FileDetailSerializer, FileSerializer
 
 
 class FileBrowserMixin(object):

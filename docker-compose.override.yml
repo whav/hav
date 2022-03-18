@@ -30,6 +30,7 @@ services:
         volumes:
             - ./src/hav:/code/hav
             - ./tests:/code/tests
+            - ./pytest.ini:/code/pytest.ini
             - ./dist/ingestlog:/archive/hav/ingestlog
         command: /venv/bin/python ./manage.py runserver --noasgi 0.0.0.0:8000
 

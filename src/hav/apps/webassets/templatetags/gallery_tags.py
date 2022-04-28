@@ -200,7 +200,9 @@ def icons(object: Union[Node, Media]):
 def gallery(context, media_qs: List[Media], display_type=None):
     media_pks = [m.pk for m in media_qs]
     image_webassets = (
-        WebAsset.objects.filter(archivefile__media__in=media_pks)
+        WebAsset.objects.filter(
+            archivefile__media__in=media_pks, mime_type__istartswith="image/"
+        )
         .annotate(media_id=F("archivefile__media"))
         .prefetch_related("archivefile")
     )

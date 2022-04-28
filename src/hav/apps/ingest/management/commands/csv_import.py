@@ -9,7 +9,6 @@ from django.core.management.base import BaseCommand, CommandError
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import RequestsClient
-from sources.filesystem.utils import encodePath
 
 from hav.apps.accounts.models import User
 from hav.apps.ingest.models import IngestQueue
@@ -19,6 +18,7 @@ from hav.apps.ingest.utils import (
     media_data_from_csv,
 )
 from hav.apps.sets.models import Node
+from hav.apps.sources.filesystem.utils import encodePath
 
 
 class Command(BaseCommand):
@@ -76,7 +76,8 @@ class Command(BaseCommand):
                 if status_code is None:
                     raise CommandError(
                         "You provided the '--resume' flag but your CSV-data does not contain a\
-csv_import_status field. Make sure you are using a tracklog of a previous import run as data source."
+csv_import_status field. Make sure you are using a tracklog of\
+a previous import run as data source."
                     )
                 if str(status_code) == "201":
                     # TODO: write code...status_code == "201":
@@ -84,7 +85,8 @@ csv_import_status field. Make sure you are using a tracklog of a previous import
                     continue
                 else:
                     print(
-                        f"Attemting to reimport {line['SourceFile']}(tracklog line numer: {line_number})…"
+                        f"Attemting to reimport {line['SourceFile']}(tracklog\
+line numer: {line_number})…"
                     )
 
             # clean up Sourcefile path given in CSV

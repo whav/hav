@@ -26,9 +26,8 @@ class IngestUpdatesConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def serialize_media(self, media_id):
-        from api.v1.havBrowser.serializers import HAVMediaSerializer
-
         from hav.apps.media.models import Media
+        from hav.views.api.v1.havBrowser.serializers import HAVMediaSerializer
 
         media = Media.objects.get(pk=media_id)
         headers = self.scope["headers"]

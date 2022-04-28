@@ -76,7 +76,7 @@ class ArchiveFile(models.Model):
             return "Unarchived File Instance: Source {0}".format(self.source_id)
 
     def resolve_source(self):
-        from api.v1.ingest.fields import resolveURLtoFilePath
+        from hav.views.api.v1.ingest.fields import resolveURLtoFilePath
 
         return Path(resolveURLtoFilePath(self.source_id))
 

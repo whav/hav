@@ -50,6 +50,7 @@ env = environ.Env(
     MEILISEARCH_KEY=(str, None),
     MEILISEARCH_INDEX=(str, "hav"),
     MDX_SERVER=(str, "http://127.0.0.1:3000/"),
+    WEBASSET_CREATION_TIMEOUT=(int, "300"),
 )
 
 # read the .env file
@@ -321,6 +322,8 @@ RQ_QUEUES = {
     "webassets": {"USE_REDIS_CACHE": "default"},
     "archive": {"USE_REDIS_CACHE": "default"},
 }
+
+WEBASSET_CREATION_TIMEOUT = env("WEBASSET_CREATION_TIMEOUT")
 
 GRAPHENE = {"SCHEMA": "api.graphql.schema"}
 

@@ -1,8 +1,6 @@
 import logging
 import math
 from dataclasses import dataclass
-from datetime import date
-from functools import lru_cache
 from typing import List, Union
 
 from django import template

@@ -23,7 +23,7 @@ def _get_webassets_by_type(archive_file):
     webassets_by_mime_type = {}
 
     for wa in webassets:
-        wa_mime = wa.mime_type or guess_type(wa.file)[0]
+        wa_mime = wa.mime_type or guess_type(wa.file.name)[0]
         webassets_by_mime_type.setdefault(wa_mime, wa)
         webassets_by_mime_type.setdefault(wa_mime.split("/")[0], wa)
 
@@ -72,7 +72,7 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media], sizes="")
     elif webasset and can_view:
         media_type = None
         template = None
-        mt = webasset.mime_type or guess_type(webasset.file)[0]
+        mt = webasset.mime_type or guess_type(webasset.file.name)[0]
         if mt:
             media_type = mt.split("/")[0]
             template = f"{template_base}/webassets/{media_type}.html"
@@ -107,7 +107,7 @@ def variant_download_links(context, obj: Union[WebAsset, ArchiveFile, Media], si
     media, archive_file = get_media_plus_archivefile(obj)
     webasset = get_primary_webasset(archive_file)
     if webasset:
-        mt = webasset.mime_type or guess_type(webasset.file)[0]
+        mt = webasset.mime_type or guess_type(webasset.file.name)[0]
         user = context.get("user")
         DLR = settings.DOWNLOAD_RESOLUTIONS
         if mt.split("/")[0] == "image" and can_view_media_webassets(user, media):

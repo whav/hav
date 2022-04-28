@@ -29,6 +29,7 @@ x-django: &django
         - MDX_SERVER=http://mdx:3000
         - DRF_AUTH_TOKEN=${DRF_AUTH_TOKEN}
         - MEILISEARCH_URL=http://search:7700
+        - WEBASSET_CREATION_TIMEOUT=${WEBASSET_CREATION_TIMEOUT}
     working_dir: /code
     depends_on:
         - redis

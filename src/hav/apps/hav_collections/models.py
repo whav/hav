@@ -15,6 +15,7 @@ class Collection(models.Model):
     name = models.CharField(unique=True, max_length=200)
     short_name = models.CharField(unique=True, max_length=30, blank=True)
     type = models.IntegerField(choices=TYPE_CHOICES, default=1)
+    hide_browser_at_root_level = models.BooleanField(default=False)
 
     administrators = models.ManyToManyField(User)
 

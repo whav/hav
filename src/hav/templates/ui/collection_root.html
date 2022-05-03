@@ -28,16 +28,16 @@
 {% endblock description %}
 
 {% block content %}
-{% if children %}
-<h4 class="font-semibold text-gray-900 mt-6 mb-2 leading-6">Browse Collection</h4>
+{% if not collection.hide_browser_at_root_level and children %}
+  <h4 class="font-semibold text-gray-900 mt-6 mb-2 leading-6">Browse Collection</h4>
+  <div class="folder-bg">
+      <div class="gallery">
+      {% for node in children %}
+        {% node_tile node=node %}
+      {% endfor %}
+      </div>
+  </div>
 {% endif %}
-<div class="folder-bg">
-    <div class="gallery">
-    {% for node in children %}
-       {% node_tile node=node %}
-    {% endfor %}
-    </div>
-</div>
 
 {% if node.display_type == node.DisplayOptions.GROUPED_TITLE %}
     {% include "./components/gallery/grouped_by_title.html" with media_entries=media_entries %}

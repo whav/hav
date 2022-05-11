@@ -1,7 +1,12 @@
 {% extends './base.html' %}
-{% load frontend_urls %}
 
 {% block content %}
-    <p>This is a permanent link to a resource of the <a href="/">Himalaya Archive Vienna</a>.</p>
-    <p>The actual resource can be found <a href="{% frontend_url object %}">here.</a></p>
+    <p>This is a short link to a resource of the <a href="/">Himalaya Archive Vienna</a>.</p>
+    <p>The actual resource can be found at <a href="{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}">{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}</a>.<br/>You should be redirected there automatically shortly...</p>
+
+    <script>
+      setTimeout(function(){
+              window.location.href = '{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}';
+      }, 3000);
+    </script>
 {% endblock content %}

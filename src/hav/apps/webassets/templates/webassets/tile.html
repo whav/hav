@@ -2,7 +2,7 @@
 {% thumbnail_width webasset media as thumbnail_width %}
 <div class="tile" {% if thumbnail_width %}style="width: {{ thumbnail_width }}"{% endif %}>
     <div class="preview">
-        <img src="{% thumbnail_url media webasset %}" loading="lazy" title="{% firstof title caption %}" class="preview-image" sizes="300px">
+      <img src="{% thumbnail_url media webasset %}" loading="lazy" alt="{% firstof title caption %}" title="{{ media.original_media_identifier }}" class="preview-image" sizes="300px">
         <div class="preview-icon">
             {% icons represents %}
         </div>

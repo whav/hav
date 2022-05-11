@@ -95,5 +95,4 @@ def redirect_to_archive(request, media_id):
             media = get_object_or_404(Media, pk=media_id)
 
     archive_media_url = reverse("archive:media", kwargs={"pk": media.id})
-    archive_media_url = "https://hav"
     return HttpResponseRedirect(archive_media_url)

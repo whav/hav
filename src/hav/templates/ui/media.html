@@ -173,7 +173,7 @@
         <div class="bg-white shadow overflow-hidden sm:rounded mt-4">
             <div class="px-4 py-5 sm:px-6">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">
-                    Archived Files
+                    Archived Files and Derivatives
                 </h3>
                 <p class="mt-1 max-w-2xl text-sm text-gray-500"></p></div>
             <div class="border-t border-gray-200">
@@ -181,25 +181,14 @@
 
                     {% for archive_file in media.files.all %}
                     <div>
-                        <dt>{{ archive_file.original_filename }} ({{ archive_file.size|filesizeformat }})</dt>
-                        <dd>
-                            <ul>
-                                {% archive_download_permission archive_file as download_permission %}
-                                {% if download_permission %}
-                                <li>
-                                    <a href="{% url 'archive:download' pk=archive_file.pk %}">
-                                        Download
-                                    </a>
-                                </li>
-                                {% endif %}
-                                <li>
-                                    <a href="{% url 'archive:file_by_hash' hash=archive_file.hash %}">
-                                Permalink
-                            </a>
-                                </li>
-                            </ul>
-
-                        </dd>
+                      <dt>file information</dt>
+                      <dd>{{ archive_file.original_filename }} ({{ archive_file.size|filesizeformat }})</dd>
+                      {% archive_download_permission archive_file as download_permission %}
+                      <dt>resource links</dt>
+                      <div><a href="{% url 'archive:file_by_hash' hash=archive_file.hash %}">permanent link</a></div>
+                      {% if download_permission %}
+                      <div><a href="{% url 'archive:download' pk=archive_file.pk %}">download link</a></div>
+                      {% endif %}
                     </div>
                     {% endfor %}
                 </dl>

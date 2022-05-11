@@ -62,7 +62,7 @@ class ArchiveFileModelAdmin(admin.ModelAdmin):
         return af.media_set.all()[0].collection.slug
 
     def filesize(self, af):
-        return filesizeformat(af.file)
+        return filesizeformat(af.file.size)
 
     def recreate_webassets(self, request, queryset):
         from ..webassets.tasks import create

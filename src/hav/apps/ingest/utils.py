@@ -31,6 +31,10 @@ cd_city = "HAV:ContentDescription:City"
 cd_location = "HAV:ContentDescription:Location"
 cd_locationdetail = "HAV:ContentDescription:LocationDetail"
 cd_author = "HAV:Description:Author"
+cd_relfile = "HAV:ContentDescription:RelatedFiles"
+cd_relfilecreator = "HAV:ContentDescription:RelatedFilesCreator"
+cd_relfilerole = "HAV:ContentDescription:RelatedFilesCreatorRole"
+cd_relfilelicense = "HAV:ContentDescription:RelatedFilesLicense"
 # new stuff
 md_embargoend = "HAV:MediaDescription:EmbargoEndDate"
 md_isprivate = "HAV:MediaDescription:IsPrivate"
@@ -48,10 +52,27 @@ def check_sanity(csv_data):
     print("\n================\nstarting sanity-check")
     to_check = defaultdict(set)
     for line_number, line in csv_data:
-        to_check[MediaCreator].update(line[md_creator].split("\n"))
-        to_check[MediaCreatorRole].update(line[md_role].split("\n"))
+        # multiple related files' creators seperated by newline
+        # multiple creators per related file separated by semicolon:
+        # "relfile1creator1; relfile1creator2\nrelfile2creator1; relfile2creator2"
+        relcreators = [
+            c for _c in line[cd_relfilecreator].split("\n") for c in _c.split("; ")
+        ]
+        # same for related file creator roles
+        relcreatorroles = [
+            cr for _cr in line[cd_relfilerole].split("\n") for cr in _cr.split("; ")
+        ]
+
+        creators = filter(None, line[md_creator].split("\n") + relcreators)
+        roles = filter(None, line[md_role].split("\n") + relcreatorroles)
+        # one media at a time > md_license is always only one
+        licenses = filter(
+            None, [line[md_license]] + line[cd_relfilelicense].split("\n")
+        )
+        to_check[MediaCreator].update(creators)
+        to_check[MediaCreatorRole].update(roles)
+        to_check[License].update(licenses)
         to_check[MediaType].add(line[md_origmtype])
-        to_check[License].add(line[md_license])
     pklist = []
     for model, values in to_check.items():
         for v in values:
@@ -142,7 +163,53 @@ def get_or_create_subnodes_from_path(relative_path, target_node, create_new_node
     return target_node
 
 
-def media_data_from_csv(source_id, csv_line_dict, collection):
+def generate_source_creators_license_data(scl_data, is_attachment=False):
+    """Prepare an the basic "source", "creators" and "license" json data for an
+    for archvive media or its related media files (i.e. attachments)."""
+
+    # Since multiple related media files can be provided per archive media in our
+    # import CSV rows, the data for the respective creators/roles is separeated
+    # by semicolons to allow for multiple creator/role pairs also there
+    cr_splitchar = "\n" if not is_attachment else "; "
+
+    # some naming inconsistancy here
+    license_keyname = "media_license" if not is_attachment else "license"
+
+    return {
+        "source": scl_data[0],
+        license_keyname: get_pk_from_csvfield(scl_data[3], License),
+        "creators": [
+            {
+                "creator": get_pk_from_csvfield(cr[0], MediaCreator),
+                "role": get_pk_from_csvfield(cr[1], MediaCreatorRole),
+            }
+            for cr in zip(
+                scl_data[1].split(cr_splitchar),
+                scl_data[2].split(cr_splitchar),
+            )
+        ],
+    }
+
+
+def media_data_from_csv(source_id, csv_line_dict, collection, attachment_ids):
+    archive_media_base_data = [
+        source_id,
+        csv_line_dict[md_creator],
+        csv_line_dict[md_role],
+        csv_line_dict[md_license],
+    ]
+
+    attachments_base_data = (
+        zip(
+            attachment_ids,
+            csv_line_dict[cd_relfilecreator].split("\n"),
+            csv_line_dict[cd_relfilerole].split("\n"),
+            csv_line_dict[cd_relfilelicense].split("\n"),
+        )
+        if attachment_ids
+        else []
+    )
+
     # throw all extra fields into tags for the time being
     tags = csv_line_dict.get(cd_tags, []).split("\n")
     extratags = [
@@ -174,24 +241,15 @@ def media_data_from_csv(source_id, csv_line_dict, collection):
         lat, lon = None, None
 
     md = {
+        # generate the source, creators, license JSON data for the archive media
+        **generate_source_creators_license_data(archive_media_base_data),
         "date": csv_line_dict[md_origmdate],
-        "creators": [
-            {
-                "creator": get_pk_from_csvfield(cr[0], MediaCreator),
-                "role": get_pk_from_csvfield(cr[1], MediaCreatorRole),
-            }
-            for cr in zip(
-                csv_line_dict[md_creator].split("\n"),
-                csv_line_dict[md_role].split("\n"),
-            )
-        ],
-        "media_license": get_pk_from_csvfield(csv_line_dict[md_license], License),
         "media_type": get_pk_from_csvfield(csv_line_dict[md_origmtype], MediaType),
-        "source": source_id,
         "media_title": csv_line_dict[cd_title],
-        "attachments": [],
-        "media_tags": [
-            {"id": str(cached_get_or_create_tags(t, collection)[0].id)} for t in tags
+        # generate the source, creators, license JSON data for attached media it any
+        "attachments": [
+            generate_source_creators_license_data(attachment_data, is_attachment=True)
+            for attachment_data in attachments_base_data
         ],
         "media_description": csv_line_dict.get(cd_description, ""),
         "media_identifier": ", ".join(
@@ -205,13 +263,14 @@ def media_data_from_csv(source_id, csv_line_dict, collection):
         ),
         "embargo_end_date": csv_line_dict.get(md_embargoend) or None,
         "is_private": True if csv_line_dict[md_isprivate].lower() == "true" else False,
-        "media_lat": lat,
-        "media_lon": lon,
+        "media_tags": [
+            {"id": str(cached_get_or_create_tags(t, collection)[0].id)} for t in tags
+        ],
     }
 
-    # DRF's decimalfield serializer is not accepting empty/none values (makes sense). => don't send 'em.
-    if not lat and not lon:
-        md.pop("media_lat")
-        md.pop("media_lon")
+    # DRF's decimalfield serializer is not accepting empty/none values
+    # so add lat/lon keys only if we got something.
+    if lat and lon:
+        md.update({"media_lat": lat, "media_lon": lon})
 
     return md

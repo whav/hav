@@ -98,7 +98,27 @@ line numer: {line_number})…"
                 + str(encodePath(rel_file_path))
                 + "=/"
             )
-            media_data = media_data_from_csv(source_id, line, collection)
+
+            # handle Attachment Files if any
+            attachments = line["HAV:ContentDescription:RelatedFiles"]
+            if attachments:
+                attachment_ids = []
+                for a in attachments:
+                    a_file_path = os.path.normpath(
+                        line["HAV:ContentDescription:RelatedFiles"]
+                    )
+
+                    attachment_ids.append(
+                        base_url
+                        + reverse("api:v1:filebrowser_root")
+                        + str(encodePath(a_file_path))
+                        + "=/"
+                    )
+
+            # prepare the actual JSON payload
+            media_data = media_data_from_csv(
+                source_id, line, collection, attachment_ids
+            )
             target_node_path = (
                 os.path.normpath(line["TargetNodePath"])
                 if line.get("TargetNodePath")

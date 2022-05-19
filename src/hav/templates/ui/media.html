@@ -88,10 +88,16 @@
                     {% endif %}
                     {% endwith %}
 
-{#                    <div>#}
-{#                        <dt>location</dt>#}
-{#                        <dd>-</dd>#}
-{#                    </div>#}
+                    {% with lat=media.coords_lat lon=media.coords_lon %}
+                    {% if lat and lon %}
+                    <div x-data="{ la:{{ lat }}, lo:{{ lon }} }">
+                          <dt>Coordinates</dt>
+                          <dd>{{ lat }}°, {{ lon }}°</dd>
+                          <div id="map" x-show="true" x-init="m=L.map($el).setView([la, lo],13);" style="height:180px; width:400px">
+                          </div>
+                      </div>
+                    {% endif %}
+                    {% endwith %}
 
                     {% with description_authors=media.description_authors %}
 {#                    {%  if description_authors|length %}#}

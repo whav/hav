@@ -6,6 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.functional import cached_property
 from model_utils.models import TimeStampedModel
+from publications.models.publication import Publication
 
 from ..accounts.models import User
 from ..hav_collections.models import Collection
@@ -207,6 +208,10 @@ class Media(models.Model):
     )
 
     tags = models.ManyToManyField(Tag)
+
+    literature = models.ManyToManyField(
+        Publication, blank=True, related_name="is_relevant_literature_for"
+    )
 
     objects = models.Manager()
     preview_manager = MediaPreviewManager()

@@ -88,10 +88,16 @@
                     {% endif %}
                     {% endwith %}
 
-{#                    <div>#}
-{#                        <dt>location</dt>#}
-{#                        <dd>-</dd>#}
-{#                    </div>#}
+                    {%  if media.literature.all  %}
+                    <div>
+                        <dt>Literature</dt>
+                        <dd>
+                        {% for l in media.literature.all %}
+                          {{ l.citekey }}
+                        {% endfor %}
+                        </dd>
+                    </div>
+                    {% endif %}
 
                     {% with description_authors=media.description_authors %}
 {#                    {%  if description_authors|length %}#}

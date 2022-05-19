@@ -417,6 +417,18 @@ python-versions = "*"
 Django = ">=2.0.1"
 
 [[package]]
+name = "django-publications"
+version = "1.1.0"
+description = "A Django app for managing scientific publications."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Django = ">=2.1.0"
+Pillow = ">=2.3.0"
+
+[[package]]
 name = "django-redis"
 version = "5.2.0"
 description = "Full featured redis cache backend for Django."
@@ -1594,7 +1606,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<4.0"
-content-hash = "c7c827a97c599aa8aa3fa0303d234ceef579d29e757117d8ce368428dca15e0b"
+content-hash = "2bfba11fee2571bc3b1a825bd34608102086181c249819681c7b1a1322a51286"
 
 [metadata.files]
 aioredis = [
@@ -1792,6 +1804,10 @@ django-extensions = [
 django-model-utils = [
     {file = "django-model-utils-4.2.0.tar.gz", hash = "sha256:e7a95e102f9c9653427eadab980d5d59e1dea972913b9c9e01ac37f86bba0ddf"},
     {file = "django_model_utils-4.2.0-py3-none-any.whl", hash = "sha256:a768a25c80514e0ad4e4a6f9c02c44498985f36c5dfdea47b5b1e8cf994beba6"},
+]
+django-publications = [
+    {file = "django-publications-1.1.0.tar.gz", hash = "sha256:2d044cdb41ad32c33c81c579e692103adb843207a35c7d4b6ce1d69c8ba351d4"},
+    {file = "django_publications-1.1.0-py3-none-any.whl", hash = "sha256:356202f7ba4f3132f2701d671f24f7c3784fb2c8817671af97d7cf69e8558372"},
 ]
 django-redis = [
     {file = "django-redis-5.2.0.tar.gz", hash = "sha256:8a99e5582c79f894168f5865c52bd921213253b7fd64d16733ae4591564465de"},

@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import include, path, re_path
 from django.views.generic import TemplateView
+from publications.urls import urlpatterns as publications_urls
 
 from hav.apps.archive.urls import urlpatterns as archive_urls
 from hav.apps.media.urls import urlpatterns as media_urls
@@ -48,6 +49,10 @@ urlpatterns = [
     path("account/", include((account_patterns, "auth"), namespace="auth")),
     path("archive/", include((archive_urls, "archive"), namespace="archive")),
     path("media/", include((media_urls, "media"), namespace="media")),
+    path(
+        "publications",
+        include((publications_urls, "publications"), namespace="publications"),
+    ),
     path("protected/download/<path:path>", dummy_view, name="protected_download"),
     path("", include((dj_urlpatterns, "hav"), namespace="hav")),
 ]

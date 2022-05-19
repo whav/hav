@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_rq",
     "graphene_django",
+    "publications",
     "hav.apps.whav",
     "hav.apps.sets",
     "hav.apps.archive",

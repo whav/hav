@@ -2,7 +2,9 @@ import uuid
 from mimetypes import guess_type
 from pathlib import Path
 
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.template.defaultfilters import filesizeformat
 from django.utils.functional import cached_property
@@ -107,8 +109,12 @@ class ArchiveFile(models.Model):
     def has_download_permission(self, user):
         if self.prohibit_download:
             return False
-
-        return self.media.is_public
+        try:
+            return self.media.is_public
+        except ObjectDoesNotExist:
+            # check if this archive file instance has been published as a
+            # media attachment
+            return AttachmentFile.objects.get(hash=self.hash).has_download_permission
 
     class Meta:
         ordering = ("archived_at",)
@@ -117,3 +123,58 @@ class ArchiveFile(models.Model):
 class AttachmentFile(ArchiveFile):
     class Meta:
         proxy = True
+
+    @cached_property
+    def get_media_attached_to(self):
+        # There is proably a better way to do this...
+        try:
+            af = SubtitleFile.objects.get(hash=self.hash)
+            media_set = af.is_subtitle_track_for.all().union(af.is_attachment_for.all())
+        except SubtitleFile.DoesNotExist:
+            media_set = self.is_attachment_for.all()
+        return media_set
+
+    def has_download_permission(self, user):
+        if self.prohibit_download:
+            return False
+
+        try:
+            # check if any media has published this attachment
+            return any([m.is_public for m in self.get_media_attached_to])
+        except ObjectDoesNotExist:
+            return False
+
+
+class SubtitleFileManager(models.Manager):
+    def __init__(self):
+        super().__init__()
+        filters = models.Q()
+        for ext in settings.SUPPORTED_SUBTITLE_FORMATS:
+            filters |= models.Q(original_filename__iendswith=ext)
+        self.filters = filters
+
+    def get_queryset(self):
+        return super().get_queryset().filter(self.filters)
+
+
+class SubtitleFile(AttachmentFile):
+    objects = SubtitleFileManager()
+    file_extension_validator = FileExtensionValidator(
+        allowed_extensions=settings.SUPPORTED_SUBTITLE_FORMATS
+    )
+    file_extension_check_passed = False
+
+    class Meta:
+        proxy = True
+
+    def clean(self, *args, **kwargs):
+        super().clean(*args, **kwargs)
+        self.file_extension_validator(self.file)
+        self.file_extension_check_passed = True
+
+    def save(self, *args, **kwargs):
+        # make sure we check extension in save() only
+        # when invoking from shell (i.e. csv_import management command)
+        if not self.file_extension_check_passed:
+            self.file_extension_validator(self.file)
+        super().save(*args, **kwargs)

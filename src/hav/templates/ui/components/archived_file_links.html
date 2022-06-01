@@ -1,0 +1,13 @@
+{% load archive %}
+{% for file in files %}
+<div>
+  <dt>file information</dt>
+  <dd>{{ file.original_filename }} ({{ file.size|filesizeformat }})</dd>
+  {% archive_download_permission file as download_permission %}
+  <dt>resource links</dt>
+  <div><a href="{% url 'archive:file_by_hash' hash=file.hash %}">permanent link</a></div>
+  {% if download_permission %}
+  <div><a href="{% url 'archive:download' pk=file.pk %}">download link</a></div>
+  {% endif %}
+</div>
+{% endfor %}

@@ -60,6 +60,8 @@ def get_media_plus_archivefile(obj: Union[WebAsset, ArchiveFile, Media]):
 def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media], sizes=""):
     media, archive_file = get_media_plus_archivefile(obj)
     webasset = get_primary_webasset(archive_file)
+    attachments = media.cached_attachments
+    subtitletracks = media.cached_subtitle_tracks
 
     # TODO: access control
     user = context.get("user")
@@ -87,6 +89,7 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media], sizes="")
             "media_type": media_type,
             "template": template,
             "sizes": sizes,
+            "attachments": attachments,
         }
 
         if media_type == "image":
@@ -96,6 +99,12 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media], sizes="")
                     "srcset": generate_srcset_urls(
                         webasset, res_limit=media.resolution_limit
                     ),
+                }
+            )
+        elif media_type == "video" or media_type == "audio":
+            context.update(
+                {
+                    "subtitletracks": subtitletracks,
                 }
             )
 

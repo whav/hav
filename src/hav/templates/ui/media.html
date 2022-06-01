@@ -118,10 +118,12 @@
                         <dt>hav media handle</dt>
                         <dd>{{ media.pk }}</dd>
                     </div>
+                    {% if media.original_media_identifier %}
                     <div>
                         <dt>original media identifier</dt>
                         <dd>{{ media.original_media_identifier }}</dd>
                     </div>
+                    {% endif %}
                     <div>
                         <dt>license</dt>
                         <dd>{% full_license_info license %}</dd>
@@ -173,19 +175,15 @@
                 <p class="mt-1 max-w-2xl text-sm text-gray-500"></p></div>
             <div class="border-t border-gray-200">
                 <dl class="media-detail-list">
-
-                    {% for archive_file in media.files.all %}
-                    <div>
-                      <dt>file information</dt>
-                      <dd>{{ archive_file.original_filename }} ({{ archive_file.size|filesizeformat }})</dd>
-                      {% archive_download_permission archive_file as download_permission %}
-                      <dt>resource links</dt>
-                      <div><a href="{% url 'archive:file_by_hash' hash=archive_file.hash %}">permanent link</a></div>
-                      {% if download_permission %}
-                      <div><a href="{% url 'archive:download' pk=archive_file.pk %}">download link</a></div>
-                      {% endif %}
-                    </div>
-                    {% endfor %}
+                    <h5>Archive Files</h5>
+                    {% include './components/archived_file_links.html' with files=media.files.all %}
+                    {% if media.cached_attachments %}
+                    <h5>Attachment Files</h5>
+                    {% include './components/archived_file_links.html' with files=media.cached_attachments %}
+                    {% endif %}
+                    {% if media.cached_subtitle_tracks %}
+                    {% include './components/archived_subtitle_links.html' with subtitle_tracks=media.cached_subtitle_tracks %}
+                    {% endif %}
                 </dl>
             </div>
             {% variant_download_links media %}

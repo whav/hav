@@ -8,7 +8,7 @@ from django.views.generic import DetailView
 from hav.apps.media.models import Media
 from hav.apps.sets.models import Node
 
-from .models import ArchiveFile
+from .models import ArchiveFile, AttachmentFile
 
 
 class ArchiveFileBaseView(DetailView):
@@ -17,8 +17,30 @@ class ArchiveFileBaseView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        media = self.object.media_set.get()
-        ctx.update({"media": media, "collection": media.collection})
+
+        try:
+            media = self.object.media_set.get()
+            collection = media.collection
+        except Media.DoesNotExist:
+            media, collection = None, None
+
+        # Not sure if it makes sense to allow regular archive files to be one
+        # media's primary_file and other media's attachment. So far it is possible,
+        # but we might just wand to prevent this at the model level. If we should
+        # decide to do so, we would could move the query below into the previous except.
+
+        # cast to AttachmentFile proxy and check if the archive file is (also) an attachment
+        media_attached_to = AttachmentFile.objects.get(
+            hash=self.object.hash
+        ).get_media_attached_to
+
+        ctx.update(
+            {
+                "media": media,
+                "collection": collection,
+                "media_attached_to": media_attached_to,
+            }
+        )
         return ctx
 
 

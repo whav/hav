@@ -7,20 +7,30 @@
 
 <p>This is the permanent representation of the file <span class="font-bold">{{ object.original_filename }}</span> ({{ object.size|filesizeformat }}, SHA-256 hash: {{ object.hash }}).</p>
 
-{% if media %}
+{% if media or media_attached_to %}
 <h4>File Download and Metadata</h4>
+{% endif %}
+{% if media %}
 <p>
 This archive file is associated with the <b>HAV media entry {{ media.pk }}</b>.</br>
 All currently available associated <b>data</b> and <b>metadata</b> can be found at the respective media detail page at <a href="{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}">{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}</a>.
 </p>
 {% endif %}
+{% for media in media_attached_to %}
+<p>
+This is an attachment file to the <b>HAV media entry {{ media.pk }}</b>.</br>
+All currently available associated <b>data</b> and <b>metadata</b> can be found at the respective media detail page at <a href="{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}">{% url 'hav:media_view' collection_slug=media.collection.slug media_pk=media.pk %}</a>.
+</p>
+{% endfor %}
 
+{% if objects.webasset_set %}
 {% with webassets=object.webasset_set.all %}
 <p>The <b>following webassets</b> have been generated for this file:</p>
 {% for wa in object.webasset_set.all %}
     {% webasset_preview wa %}
 {% endfor %}
 {% endwith %}
+{% endif %}
 
 </div>
 

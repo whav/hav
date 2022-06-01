@@ -1,0 +1,26 @@
+{% load archive %}
+<h5>Subtitle Files</h5>
+{% for s in subtitle_tracks %}
+{% with s.subtitle_track as file %}
+<div>
+  <dt>file information</dt>
+  <dd>{{ file.original_filename }} ({{ file.size|filesizeformat }})</dd>
+  {% archive_download_permission file as download_permission %}
+  {% if file.language %}
+  <dt>language</dt>
+  <dd>{{ file.language }}</dd>
+  {% endif %}
+  {% if s.label %}
+  <dt>label</dt>
+  <dd>{{ s.label }}</dd>
+  {% endif %}
+  <dt>resource links</dt>
+  <dd>
+  <div><a href="{% url 'archive:file_by_hash' hash=file.hash %}">permanent link</a></div>
+  {% if download_permission %}
+  <div><a href="{% url 'archive:download' pk=file.pk %}">download link</a></div>
+  {% endif %}
+  </dd>
+</div>
+{% endwith %}
+{% endfor %}

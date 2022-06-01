@@ -1,6 +1,18 @@
 from django.contrib import admin
 
-from .models import License, Media, MediaCreator, MediaCreatorRole, MediaType
+from .models import (
+    License,
+    Media,
+    MediaCreator,
+    MediaCreatorRole,
+    MediaToSubtitleTrack,
+    MediaType,
+)
+
+
+class MediaToSubtitleTrackInline(admin.TabularInline):
+    model = MediaToSubtitleTrack
+    extra = 2
 
 
 class MediaAdmin(admin.ModelAdmin):
@@ -14,6 +26,7 @@ class MediaAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     exclude = ["files", "attachments"]
     search_fields = ["original_media_identifier"]
+    inlines = (MediaToSubtitleTrackInline,)
 
 
 admin.site.register(MediaType)

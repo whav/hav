@@ -51,6 +51,13 @@ env = environ.Env(
     MEILISEARCH_INDEX=(str, "hav"),
     MDX_SERVER=(str, "http://127.0.0.1:3000/"),
     WEBASSET_CREATION_TIMEOUT=(int, "300"),
+    SUPPORTED_SUBTITLE_FORMATS=(
+        list,
+        [
+            "vtt",
+            "srt",
+        ],
+    ),
 )
 
 # read the .env file
@@ -368,6 +375,9 @@ TAGGING_SOURCES = {
 MEILISEARCH_URL = env("MEILISEARCH_URL")
 MEILISEARCH_KEY = env("MEILISEARCH_KEY")
 MEILISEARCH_INDEX = env("MEILISEARCH_INDEX")
+
+
+SUPPORTED_SUBTITLE_FORMATS = env("SUPPORTED_SUBTITLE_FORMATS")
 
 # TEST Setup
 if "test" in sys.argv:

@@ -94,6 +94,19 @@ class MediaToCreator(CreatorBase):
         unique_together = [("creator", "role", "media")]
 
 
+class MediaToSubtitleTrack(models.Model):
+    KIND_CHOICES = [(1, "subtitles"), (2, "captions"), (3, "chapters"), (4, "metadata")]
+
+    media = models.ForeignKey("Media", on_delete=models.CASCADE)
+    subtitle_track = models.ForeignKey("archive.SubtitleFile", on_delete=models.CASCADE)
+    is_default_track = models.BooleanField(default=False)
+    label = models.CharField(max_length=200, blank=True, null=True)
+    kind = models.IntegerField(choices=KIND_CHOICES)
+
+    class Meta:
+        unique_together = [("media", "subtitle_track")]
+
+
 class License(models.Model):
     name = models.CharField(max_length=200)
     short_name = models.CharField(max_length=40, unique=True)
@@ -205,6 +218,12 @@ class Media(models.Model):
     attachments = models.ManyToManyField(
         "archive.AttachmentFile", blank=True, related_name="is_attachment_for"
     )
+    subtitle_tracks = models.ManyToManyField(
+        "archive.SubtitleFile",
+        blank=True,
+        related_name="is_subtitle_track_for",
+        through=MediaToSubtitleTrack,
+    )
 
     tags = models.ManyToManyField(Tag)
 
@@ -256,6 +275,14 @@ class Media(models.Model):
             return qs[0]
         except IndexError:
             return None
+
+    @cached_property
+    def cached_attachments(self):
+        return self.attachments.all()
+
+    @cached_property
+    def cached_subtitle_tracks(self):
+        return self.mediatosubtitletrack_set.all()
 
     @cached_property
     def description_authors(self):

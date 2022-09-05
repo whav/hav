@@ -101,8 +101,8 @@ line numer: {line_number})…"
 
             # handle Attachment Files if any
             attachments = line["HAV:ContentDescription:RelatedFiles"]
+            attachment_ids = []
             if attachments:
-                attachment_ids = []
                 for a in attachments:
                     a_file_path = os.path.normpath(
                         line["HAV:ContentDescription:RelatedFiles"]

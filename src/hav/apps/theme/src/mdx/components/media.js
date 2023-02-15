@@ -5,7 +5,7 @@ import fetcher from "../utils/fetcher";
 const ImageMedia = ({ title, thumbnail, aspect_ratio, srcset = [] }) => {
   let srcset_attr = "";
   if (srcset.length) {
-    srcset_attr = srcset.map(([width, url]) => `${url} ${width}w`).join(", ");
+    srcset_attr = srcset.map(([width, url]) => `${url} ${width}w`).join(", ")
   }
 
   return (

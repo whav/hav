@@ -1,8 +1,8 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
-  // mode: "jit",
-  purge: [
+  mode: "jit",
+  content: [
     // js templates
     "./src/mdx/",
     // app templates
@@ -11,7 +11,6 @@ module.exports = {
     "../../templates/**/*.html",
   ],
 
-  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       typography: {

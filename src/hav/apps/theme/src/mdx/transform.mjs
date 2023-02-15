@@ -12,7 +12,7 @@ const mdx_content = await readFile(mdx_file, 'utf-8');
 
 console.log(mdx_content);
 
-const bundle = await bundleMDX(mdx_content, {cwd: __dirname, esbuildOptions: (options) => {
+const bundle = await bundleMDX({source: mdx_content, cwd: __dirname, esbuildOptions: (options) => {
     options.loader = {
         '.js': 'jsx'
     };

@@ -24,7 +24,8 @@ app.get("/", (req, res) => {
 app.post("/", async (req, resp, next) => {
     try {
         const mdx_content = req.body.mdx || "";
-        const bundle = await bundleMDX(mdx_content || "", {
+        const bundle = await bundleMDX({
+            source: mdx_content || "",
             cwd: __dirname,
             esbuildOptions: (options) => {
                 options.loader = {
@@ -34,7 +35,6 @@ app.post("/", async (req, resp, next) => {
                 options.target = [
                     'es2020',
                 ];
-                return options;
                 return options;
             }
         });

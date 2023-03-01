@@ -2,7 +2,7 @@
     <li class="inline-block"><a href="{% url 'hav:collection_root' collection_slug=collection.slug %}">Collection</a></li>
     {% for ancestor in ancestors %}
     <li class="inline-block before:content-['>'] before:block">
-        > <a href="{% url 'hav:folder_view' collection_slug=collection.slug node_pk=ancestor.pk %}">{{ ancestor }}</a>
+        <a href="{% url 'hav:folder_view' collection_slug=collection.slug node_pk=ancestor.pk %}">{{ ancestor }}</a>
     </li>
     {% endfor %}
 </ul>

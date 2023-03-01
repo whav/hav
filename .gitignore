@@ -164,3 +164,6 @@ hav/settings/secrets.py
 apps/theme/static/theme/
 !apps/theme/static/theme/.gitkeep
 !apps/theme/static/theme/fonts/
+
+# exclude local dirs
+not_in_repo

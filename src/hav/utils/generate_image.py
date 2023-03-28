@@ -14,7 +14,9 @@ def generate_image(text, width=800, height=600, output=None, margin=80):
     desired_text_size = (img.width - margin * 2, img.height - margin * 2)
     while (text_width, text_height) < desired_text_size:
         fnt = ImageFont.truetype(font_path, size=size)
-        text_width, text_height = draw.textsize(text, font=fnt)
+        l, t, r, b = draw.textbbox((0, 0), text, font=fnt)
+        text_width = r - l
+        text_height = b - t
         size += 10
 
     # calculate position of top left corner of text

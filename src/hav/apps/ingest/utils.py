@@ -40,7 +40,7 @@ md_embargoend = "HAV:MediaDescription:EmbargoEndDate"
 md_isprivate = "HAV:MediaDescription:IsPrivate"
 cd_gpsdata = "HAV:ContentDescription:GPSData"
 md_rotate = "HAV:MediaDescription:Rotate"
-md_maxres = "HAV:MediaDescription:MaxResolution"
+md_maxres = "HAV:MediaDescription:ResolutionLimit"
 md_shorthandle = "HAV:MediaDescription:ShortHandleOverride"
 
 
@@ -221,7 +221,7 @@ def media_data_from_csv(source_id, csv_line_dict, collection, attachment_ids):
         ("location_detail", csv_line_dict.get(cd_locationdetail)),
         ("media_shorthandle", csv_line_dict.get(md_shorthandle)),
         ("rotate", csv_line_dict.get(md_rotate)),
-        ("resolution_limit", csv_line_dict.get(md_maxres)),
+        ("MaxResolution", csv_line_dict.get(md_maxres)),
     ]
     extratags.extend(
         [

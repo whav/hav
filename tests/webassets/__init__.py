@@ -11,11 +11,12 @@ testdata_dir = Path(__file__).parent.joinpath("./testdata/")
 
 
 class WebAssetTestCase(TestCase):
-
     testfiles = {
         "audio": testdata_dir.joinpath("sound.mp3"),
         "video": testdata_dir.joinpath("video.webm"),
         "image": testdata_dir.joinpath("image.jpg"),
+        "image_raw_dng": testdata_dir.joinpath("image.dng"),
+        "image_raw_nef": testdata_dir.joinpath("image.nef"),
     }
 
     def setUp(self):

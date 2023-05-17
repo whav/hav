@@ -5,9 +5,9 @@ from hav.apps.webassets.operations import create_webassets
 from . import WebAssetTestCase
 
 
-class VideoTestCase(WebAssetTestCase):
-    def test_image_file_creation(self):
-        afs = self.create_archive_file(self.testfiles["image"])
+class ImageTestCase(WebAssetTestCase):
+    def _test_image_file_creation(self, testfile):
+        afs = self.create_archive_file(testfile)
         # self.assertEqual(len(afs), ArchiveFile.objects.count())
         create_webassets(afs.pk)
         self.assertEqual(afs.webasset_set.count(), 1)
@@ -22,3 +22,12 @@ class VideoTestCase(WebAssetTestCase):
         self.assertEqual(
             image.width, pil_img.width, "Original dimensions of the source are kept."
         )
+
+    def test_image_file_creation(self):
+        self._test_image_file_creation(self.testfiles["image"])
+
+    def test_nef_image_file_creation(self):
+        self._test_image_file_creation(self.testfiles["image_raw_nef"])
+
+    def test_dng_image_file_creation(self):
+        self._test_image_file_creation(self.testfiles["image_raw_dng"])

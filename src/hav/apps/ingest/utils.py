@@ -20,6 +20,12 @@ md_role = "HAV:MediaDescription:MediaCreatorRole"
 md_license = "HAV:MediaDescription:License"
 md_sig = "HAV:MediaDescription:Signature"
 md_origsig = "HAV:MediaDescription:OriginalSignature"
+md_embargoend = "HAV:MediaDescription:EmbargoEndDate"
+md_isprivate = "HAV:MediaDescription:IsPrivate"
+md_rotate = "HAV:MediaDescription:Rotate"
+md_maxres = "HAV:MediaDescription:ResolutionLimit"
+md_shorthandle = "HAV:MediaDescription:ShortHandleOverride"
+
 # ContentDescription Fieldnames from CSV
 cd_title = "HAV:ContentDescription:Title"
 cd_description = "HAV:ContentDescription:Description"
@@ -35,13 +41,7 @@ cd_relfile = "HAV:ContentDescription:RelatedFiles"
 cd_relfilecreator = "HAV:ContentDescription:RelatedFilesCreator"
 cd_relfilerole = "HAV:ContentDescription:RelatedFilesCreatorRole"
 cd_relfilelicense = "HAV:ContentDescription:RelatedFilesLicense"
-# new stuff
-md_embargoend = "HAV:MediaDescription:EmbargoEndDate"
-md_isprivate = "HAV:MediaDescription:IsPrivate"
 cd_gpsdata = "HAV:ContentDescription:GPSData"
-md_rotate = "HAV:MediaDescription:Rotate"
-md_maxres = "HAV:MediaDescription:ResolutionLimit"
-md_shorthandle = "HAV:MediaDescription:ShortHandleOverride"
 
 
 class SanityCheckError(Exception):
@@ -164,8 +164,8 @@ def get_or_create_subnodes_from_path(relative_path, target_node, create_new_node
 
 
 def generate_source_creators_license_data(scl_data, is_attachment=False):
-    """Prepare an the basic "source", "creators" and "license" json data for an
-    for archvive media or its related media files (i.e. attachments)."""
+    """Prepare the basic "source", "creators" and "license" json data for an
+    archvive media or its related media files (i.e. attachments)."""
 
     # Since multiple related media files can be provided per archive media in our
     # import CSV rows, the data for the respective creators/roles is separeated
@@ -221,7 +221,7 @@ def media_data_from_csv(source_id, csv_line_dict, collection, attachment_ids):
         ("location_detail", csv_line_dict.get(cd_locationdetail)),
         ("media_shorthandle", csv_line_dict.get(md_shorthandle)),
         ("rotate", csv_line_dict.get(md_rotate)),
-        ("MaxResolution", csv_line_dict.get(md_maxres)),
+        ("maxResolution", csv_line_dict.get(md_maxres)),
     ]
     extratags.extend(
         [

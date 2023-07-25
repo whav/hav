@@ -19,7 +19,6 @@ class FileCreator(CreatorBase):
 
 
 class ArchiveFile(models.Model):
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     file = models.FileField(
@@ -50,7 +49,7 @@ class ArchiveFile(models.Model):
 
     prohibit_download = models.BooleanField(default=False, blank=True)
 
-    _webasset_hints = models.JSONField(default=dict)
+    _webasset_hints = models.JSONField(default=dict, blank=True)
 
     def get_license(self):
         if self.license:

@@ -44,7 +44,6 @@ class CollectionListFilter(admin.SimpleListFilter):
 
 
 class ArchiveFileModelAdmin(admin.ModelAdmin):
-
     list_display = [
         "original_filename",
         "filesize",
@@ -62,7 +61,10 @@ class ArchiveFileModelAdmin(admin.ModelAdmin):
         return af.media_set.all()[0].collection.slug
 
     def filesize(self, af):
-        return filesizeformat(af.file.size)
+        try:
+            return filesizeformat(af.file.size)
+        except FileNotFoundError:
+            return "N/A"
 
     def recreate_webassets(self, request, queryset):
         from ..webassets.tasks import create

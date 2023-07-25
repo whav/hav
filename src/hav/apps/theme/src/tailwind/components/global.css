@@ -37,3 +37,37 @@ table.table {
 .featured_media_set img {
   margin: 0;
 }
+
+div.modal {
+  background: rgba(0.1, 0.1, 0.1, 0.8);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  left: 0;
+}
+.modal .wrapper {
+  max-width: min(80vw, 1000px);
+  margin: 2rem auto;
+  display: block;
+  position: relative;
+}
+.modal .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: 1rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+  background: #333;
+  color: #ddd;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 0.5rem;
+}
+.modal .close:hover {
+  color: #eee;
+  background: #111;
+}

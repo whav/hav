@@ -1,8 +1,24 @@
-<img src="{{ thumbnail_url }}"
-    {% if srcset %}
-     srcset="{% for width, src in srcset %}{{ src }} {{ width }}w{% if not forloop.last %}, {% endif %}{% endfor %}"
-    {% endif %}
-    {% if sizes %}
-     sizes="{{ sizes }}"
-    {% endif %}
-/>
+<div class="relative">
+  <img src="{{ thumbnail_url }}"
+      {% if srcset %}
+      srcset="{% for width, src in srcset %}{{ src }} {{ width }}w{% if not forloop.last %}, {% endif %}{% endfor %}"
+      {% endif %}
+      {% if sizes %}
+      sizes="{{ sizes }}"
+      {% endif %}
+  />
+  {% if modal %}
+    <div x-data="{ open: false }" >
+        <a href="{{ modal.1 }}" @click.prevent="open = true" title="enlarge"
+          class="block absolute top-1 right-1 text-white text-xl transform rotate-90">
+              ⤡
+          </a>
+      <div x-show="open" class="modal">
+        <div class="wrapper" @click.away="open = false">
+          <img src="{{ modal.1 }}" />
+          <button class="close" @click="open = false" title="close">⮾</button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>

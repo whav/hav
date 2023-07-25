@@ -90,12 +90,12 @@ def render_webasset(context, obj: Union[WebAsset, ArchiveFile, Media], sizes="")
         }
 
         if media_type == "image":
+            sset = generate_srcset_urls(webasset, res_limit=media.resolution_limit)
             context.update(
                 {
                     "thumbnail_url": generate_thumbnail_url(webasset),
-                    "srcset": generate_srcset_urls(
-                        webasset, res_limit=media.resolution_limit
-                    ),
+                    "srcset": sset,
+                    "modal": next(filter(lambda x: x[0] == 1500, sset), None),
                 }
             )
 

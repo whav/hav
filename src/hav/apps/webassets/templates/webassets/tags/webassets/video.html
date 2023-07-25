@@ -1,3 +1,3 @@
-<video controls {% if image_webasset %}poster="{{  image_webasset.file.url }}"{% endif %}>
+<video controls controlsList="nodownload" {% if image_webasset %}poster="{{  image_webasset.file.url }}"{% endif %} oncontextmenu="return false;">
     <source src="{{ webasset.file.url }}" type="{{ wa.mime_type }}"/>
 </video>

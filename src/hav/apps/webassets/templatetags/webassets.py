@@ -137,7 +137,6 @@ def webasset_preview(webasset: WebAsset):
     }
 
     if media.is_public:
-
         media_type = webasset.mime_type.split("/")[0]
 
         if media_type == "image":
@@ -147,13 +146,15 @@ def webasset_preview(webasset: WebAsset):
             secondary_webasset = get_webasset_by_mime(archive_file, "image")
             context.update(
                 {
-                    "preview_template": f"{template_base}/video.html",
+                    "preview_template": f"{template_base}/webassets/{media_type}.html",
                     "image_webasset": secondary_webasset,
                 }
             )
     else:
         del context["webasset"]
-        context.update({"preview_template": f"{template_base}/prohibited.html"})
+        context.update(
+            {"preview_template": f"{template_base}/webassets/forbidden.html"}
+        )
 
     return context
 

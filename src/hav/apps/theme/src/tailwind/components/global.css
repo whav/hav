@@ -53,7 +53,7 @@ div.modal {
   display: block;
   position: relative;
 }
-.modal .close {
+.modal .close, .modal_opener .close {
   position: absolute;
   top: 0;
   right: 0;
@@ -67,7 +67,7 @@ div.modal {
   margin: 0;
   padding: 0.5rem;
 }
-.modal .close:hover {
+.modal .close:hover, .modal_opener .close {
   color: #eee;
   background: #111;
 }

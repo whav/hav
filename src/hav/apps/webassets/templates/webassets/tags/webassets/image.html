@@ -8,9 +8,9 @@
       {% endif %}
   />
   {% if modal %}
-    <div x-data="{ open: false }" >
+    <div x-data="{ open: false }" class="modal_opener" >
         <a href="{{ modal.1 }}" @click.prevent="open = true" title="enlarge"
-          class="block absolute top-1 right-1 text-white text-xl transform rotate-90">
+          class="close block transform rotate-90">
               ⤡
           </a>
       <div x-show="open" class="modal">

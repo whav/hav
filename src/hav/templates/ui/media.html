@@ -1,5 +1,5 @@
 {% extends './base.html' %}
-{% load static daterange breadcrumbs webassets cache tagging archive license %}
+{% load static media breadcrumbs webassets cache tagging archive license %}
 
 {%  block breadcrumbs %}
     {% cache 60 'media' media.pk 'true' %}
@@ -87,6 +87,16 @@
                     </div>
                     {% endif %}
                     {% endwith %}
+
+                    {% if media.coords_lon %}
+                      {% maplink media.coords_lat media.coords_lon as maplink %}
+                      <div>
+                        <dt>GPS Coordinates</dt>
+                        <dd>
+                          {{ maplink }}
+                        </dd>
+                      </div>
+                    {% endif %}
 
                     {% with description_authors=media.description_authors %}
 {#                    {%  if description_authors|length %}#}

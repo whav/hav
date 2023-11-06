@@ -131,7 +131,7 @@ line numer: {line_number})…"
                 target_q = IngestQueue.objects.create(
                     target=target_file_node,
                     created_by=user,
-                    name=f"CSV-Ingest to {target_file_node.name}",
+                    name=f"CSV-Ingest to {target_file_node.name[:50]} (Node: {target_file_node.id})",
                 )
                 ingest_url = reverse(
                     "api:v1:ingest:ingest_queue_ingest", kwargs={"pk": str(target_q.pk)}

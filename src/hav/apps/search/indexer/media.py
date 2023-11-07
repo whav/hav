@@ -10,7 +10,7 @@ from . import ItemType, SearchIndexItem
 def index(media: Union[Media, int]):
     if isinstance(media, int):
         media = Media.objects.get(pk=media)
-    type = ItemType.media
+    type = ItemType["media"]
     ancestors = media.set.get_ancestors().values_list("pk", flat=True)
     parents = [*list(ancestors), media.set.pk]
     archivefiles = media.files.all()

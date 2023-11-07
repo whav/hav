@@ -3,10 +3,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-
-class ItemType(str, Enum):
-    folder = "folder"
-    media = "media"
+ItemType = {"folder": "folder", "media": "media"}
 
 
 class SearchIndexItem(BaseModel):
@@ -22,7 +19,7 @@ class SearchIndexItem(BaseModel):
     creation_years: List[int] = []
 
     # non-searchable attributes
-    type: ItemType
+    type: str
     collection: str
     pk: int
     parents: List[int] = []

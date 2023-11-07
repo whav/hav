@@ -11,7 +11,7 @@ def index(node: Union[Node, int]):
     if isinstance(node, int):
         node = Node.objects.get(pk=node)
 
-    type = ItemType.folder
+    type = ItemType["folder"]
     ancestors = node.get_ancestors().values_list("pk", flat=True)
     collection = node.get_collection()
     _alltags = node.tags.all()

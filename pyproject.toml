@@ -1,11 +1,11 @@
-
 [tool]
 [tool.poetry]
 name = "hav"
-version = "0.1.0"
+version = "0.2.0"
 description = "The Himalaya Archive Vienna."
 authors = [
-    "Sean McAllister <sean@brickwall.at>"
+    "Sean McAllister <sean@brickwall.at>",
+    "Jürgen Schörlfinger <juergen.schoerflinger@univie.ac.at>"
 ]
 packages = [
  { include = "hav", from = "src" },
@@ -13,47 +13,46 @@ packages = [
 
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4.0"
 channels = "^3.0.4"
 channels-redis = "*"
+cryptography = "^42"
 dj-database-url = "*"
-django = "^3.2"
+django = "^4.2"
 django-cors-headers = "*"
 django-environ = "==0.4.4"
-django-extensions = "==2.1.5"
 django-model-utils = "^4.1.1"
 django-redis = "*"
 django-rq = "*"
 django-treebeard = "^4.5.1"
 django-webpack-loader = "==1.4.1"
-djangorestframework = "^3.11"
+djangorestframework = "^3.15"
 graphene-django = "*"
+hashids = "^1.3.1"
+imageio = "^2.16.1"
 ipython = "*"
+markdown-it-py = {extras = ["plugins"], version = "^2.2.0"}
+meilisearch = "^0.16.2"
 pick = "*"
 pillow = "*"
 pip = "*"
 psycopg2 = "*"
 pycountry = "*"
+pydantic = "^1.7.3"
 pyexiftool = {git = "https://github.com/whav/pyexiftool.git", branch = "master"}
 pylint = "*"
+python = ">=3.9,<4.0"
 python-dotenv = "==0.7.1"
 pyvips = "^2.1.15"
+rawpy = "^0.17.0"
 redis = "^4.3.0"
 requests = "*"
 sentry-sdk = "*"
 uwsgi = "*"
 whitenoise = "*"
-meilisearch = "^0.16.2"
-pydantic = "^1.7.3"
-rawpy = "^0.17.0"
-imageio = "^2.16.1"
-hashids = "^1.3.1"
-#Django = "^3.2.5"
-markdown-it-py = {extras = ["plugins"], version = "^2.2.0"}
-cryptography = "^42"
 
 [tool.poetry.dev-dependencies]
 django-debug-toolbar = "*"
+django-extensions = "==2.1.5"
 ipdb = "*"
 pytest = "*"
 pytest-django = "*"

@@ -23,8 +23,8 @@ from django.utils.log import DEFAULT_LOGGING
 # register custom mimetypes
 from hav.utils import mimetypes  # noqa
 
-from .image_resolutions import download_resolutions as DOWNLOAD_RESOLUTIONS
-from .image_resolutions import resolutions as IMAGE_RESOLUTIONS
+from .image_resolutions import download_resolutions as DOWNLOAD_RESOLUTIONS  # NOQA F401
+from .image_resolutions import resolutions as IMAGE_RESOLUTIONS  # NOQA F401
 
 project_root = environ.Path(__file__) - 4
 django_root = environ.Path(__file__) - 2
@@ -201,7 +201,7 @@ WEBPACK_LOADER = {
         "STATS_FILE": Path(WEBPACK_BUILD_PATH) / "webpack-stats.json",
         "POLL_INTERVAL": 0.1,
         "TIMEOUT": None,
-        "IGNORE": [".+\.hot-update.js", ".+\.map"],
+        "IGNORE": [".+\.hot-update.js", ".+\.map"],  # NOQA W605
     }
 }
 
@@ -214,18 +214,24 @@ STATICFILES_DIRS = (django_root("static/"),)
 STATIC_ROOT = project_root(env("STATIC_ROOT", default=project_root("dist/static/")))
 
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = project_root(env("DJANGO_MEDIA_ROOT", default="dist/media/"))
 
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+    },
     "webassets": {
         "location": project_root(env("WEBASSET_ROOT", default="dist/webassets/")),
         "base_url": env("WEBASSET_BASE_URL"),
         "storage_class": "hav.utils.storages.ProtectedFileSystemStorage",
-    }
+    },
 }
 
 LOGIN_URL = "auth:login"

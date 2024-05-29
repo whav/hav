@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 from itertools import chain
 
 from django.db import transaction
@@ -42,14 +43,12 @@ class FileToCreatorSerializer(serializers.ModelSerializer):
 
 
 class IngestionItemSerializer(serializers.Serializer):
-
     path = serializers.ListField(child=serializers.CharField(max_length=200))
 
     item = FinalIngestHyperlinkField()
 
 
 class PrepareIngestSerializer(serializers.Serializer):
-
     target = HAVTargetField()
 
     items = serializers.ListField(child=IngestHyperlinkField())
@@ -97,7 +96,6 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
 
 class IngestSerializer(serializers.Serializer):
-
     source = IngestionReferenceField()
     target = serializers.HyperlinkedRelatedField(
         view_name="api:v1:hav_browser:hav_set",
@@ -119,10 +117,18 @@ class IngestSerializer(serializers.Serializer):
     media_tags = SimpleTagSerializer(many=True, required=False)
 
     media_lat = serializers.DecimalField(
-        max_digits=9, decimal_places=6, min_value=-90, max_value=90, required=False
+        max_digits=9,
+        decimal_places=6,
+        min_value=Decimal(-90),
+        max_value=Decimal(90),
+        required=False,
     )
     media_lon = serializers.DecimalField(
-        max_digits=9, decimal_places=6, min_value=-180, max_value=180, required=False
+        max_digits=9,
+        decimal_places=6,
+        min_value=Decimal(-180),
+        max_value=Decimal(180),
+        required=False,
     )
 
     attachments = AttachmentSerializer(many=True, allow_empty=True)
@@ -153,7 +159,8 @@ class IngestSerializer(serializers.Serializer):
         collection = target.get_collection()
         if not has_collection_permission(user, collection):
             raise serializers.ValidationError(
-                'You do not have the appropriate permissions to ingest into the collection "{}"'.format(
+                'You do not have the appropriate permissions to ingest into the \
+collection "{}"'.format(
                     collection.name
                 )
             )
@@ -258,7 +265,8 @@ class IngestSerializer(serializers.Serializer):
 
 
 def validate_initial_ingest(source, target):
-    serializer = IngestSerializer({"source": source, "target": target})
+    # serializer = IngestSerializer({"source": source, "target": target})
+    IngestSerializer({"source": source, "target": target})
 
 
 class SimpleIngestQueueSerializer(serializers.ModelSerializer):
@@ -294,7 +302,6 @@ class SimpleMediaSerializer(HAVMediaSerializer):
 
 
 class IngestQueueSerializer(serializers.ModelSerializer):
-
     target = HAVTargetField()
 
     target_collection = serializers.SerializerMethodField()

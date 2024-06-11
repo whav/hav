@@ -1,6 +1,5 @@
 from collections import namedtuple
 from copy import deepcopy
-from functools import lru_cache
 from urllib.parse import parse_qs, unquote, urlencode, urlparse, urlunparse
 
 from django import template
@@ -60,6 +59,9 @@ def filters_dict_remove_filter(filters_dict, filter_name, filter_value):
 
 
 def make_url(filters_dict, url_as_list, get_args):
+    get_args.pop(
+        "page", None
+    )  # remove page ro not brake pagination when restricting search with additional filters
     get_args["filters"] = filters_string_from_dict(filters_dict)
     url_as_list[4] = urlencode(get_args, doseq=True)
     return urlunparse(url_as_list)

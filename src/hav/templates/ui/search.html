@@ -33,7 +33,7 @@
       <em>No results...</em>
     {% else %}
       <h4>Results</h4>
-      {% prepare_search_filters request.get_full_path response.facetsDistribution as facets %}
+      {% prepare_search_filters request.get_full_path response.facetDistribution as facets %}
       {% for facet, f_data in facets.items %}
         <b>{{ facet }}:</b>
         {% for fd in f_data %}

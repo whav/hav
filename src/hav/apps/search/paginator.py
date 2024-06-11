@@ -5,7 +5,7 @@ class SearchPaginator(Paginator):
     def __init__(self, search_results, *args, **kwargs):
         super().__init__(search_results, *args, **kwargs)
         self._result = search_results
-        self.nbHits = self._result["nbHits"]
+        self.nbHits = self._result["estimatedTotalHits"]
 
     @property
     def count(self):

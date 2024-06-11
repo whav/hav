@@ -10,6 +10,8 @@ x-django: &django
         - ${INCOMING_FILES_ROOT}:/archive/hav/incoming
         - ${WEBASSETS_ROOT}:/archive/hav/webassets
         - ${UPLOADS_ROOT}:/archive/hav/media
+        - ${LOCAL_BASH_HISTORY_DIR}:/hav/.localhistory/bash
+        - ${LOCAL_IPYTHON_HISTORY_DIR}:/hav/.localhistory/ipython
     environment:
         - IMAGINARY_SECRET=${IMAGINARY_SECRET}
         - IMAGINARY_URL_PREFIX=${IMAGINARY_URL_PREFIX}
@@ -30,6 +32,8 @@ x-django: &django
         - DRF_AUTH_TOKEN=${DRF_AUTH_TOKEN}
         - MEILISEARCH_URL=http://search:7700
         - WEBASSET_CREATION_TIMEOUT=${WEBASSET_CREATION_TIMEOUT}
+        - HISTFILE=/hav/.localhistory/bash/.bash_history
+        - IPYTHONDIR=/hav/.localhistory/ipython
     working_dir: /code
     depends_on:
         - redis
@@ -107,9 +111,9 @@ services:
             - 6379
 
     search:
-        image: getmeili/meilisearch:v0.23.1
+        image: getmeili/meilisearch:v1.8
         volumes:
-            - search-data:/data.ms
+            - search-data:/meili_data
         ports:
             - "7700:7700"
 

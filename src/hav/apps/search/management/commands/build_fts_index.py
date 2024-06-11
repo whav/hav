@@ -1,5 +1,3 @@
-import time
-
 import meilisearch
 from django.core.management.base import BaseCommand
 from django.utils.functional import cached_property
@@ -10,6 +8,7 @@ from hav.apps.sets.models import Node
 from ...client import get_client, get_index
 from ...indexer.media import index as index_media
 from ...indexer.nodes import index as index_node
+from ...utils import wait_for_processing
 
 searchable_attributes = [
     "title",
@@ -31,7 +30,9 @@ class Command(BaseCommand):
     help = "Re-index everything!"
 
     items = []
-    media_pks = set()
+
+    # this would only be relevant if we include many2many-relations between media<>set (and use them a lot)
+    # media_pks = set()
 
     def __init__(self, *args, **kwargs):
         super(*args, **kwargs)
@@ -50,59 +51,65 @@ class Command(BaseCommand):
         # attempt to delete index
         try:
             self.index.delete()
+            print(f"Deleting existing index: {self.index}")
+            print("=" * 30)
         except meilisearch.errors.MeiliSearchApiError:
             pass
 
-        self.client.create_index("hav")
-        self.wait_for_processing(
-            self.index.add_documents([i.dict() for i in self.items])
+        # self.client.create_index("hav")  # needed?!
+        wait_for_processing(
+            self.index,
+            self.index.add_documents([i.dict() for i in self.items]),
+            progress_to_stdout=True,
         )
 
-        self.wait_for_processing(
-            self.index.update_searchable_attributes(searchable_attributes)
+        wait_for_processing(
+            self.index,
+            self.index.update_searchable_attributes(searchable_attributes),
+            progress_to_stdout=True,
         )
 
         self.index.update_filterable_attributes(filterable_attributes)
 
-    def index_collection(self, root_node):
-        assert root_node in Node.get_collection_roots(), "Not a collection root node."
-        for node in root_node.get_descendants().iterator():
-            item = index_node(node)
-            self.items.append(item)
-
-    def index_media(self, media):
-        if media.pk in self.media_pks:
-            return
-
-        index_item = index_media(media)
-        self.items.append(index_item)
-        self.media_pks.add(media.pk)
-
-    def wait_for_processing(self, response):
-        update_id = response.get("updateId")
-        while True:
-            response = self.index.get_update_status(update_id)
-            status = response.get("status")
-            if status == "processed":
+    def create_and_append_index_items(self, items, type=None):
+        total = items.count()
+        print("\n", "---" * 20)
+        for i, item in enumerate(items.iterator()):
+            i += 1
+            if type == "node":
+                _item = index_node(item)
+            elif type == "media":
+                # this would only be relevant if we include many2many-relations between media<>set (and use them a lot)
+                # if media.pk not in self.media_pks:
+                #      self.index_media(media)
+                #      self.media_pks.add(media.pk)
+                _item = index_media(item)
+            else:
+                print(f"SKIPPING: Unknown item type: {type}")
                 break
-            if status == "failed":
-                raise ValueError(response.get("error"), "Operation failed.")
-            elif status in ["enqueued", "processing"]:
-                time.sleep(0.5)
-                continue
 
-            raise NotImplementedError(f"Unknown status {status}.")
+            if i == 1 or i % 100 == 0 or i == total:
+                print(f"Pre-processing {i} of {total} {type}: {item}")
+
+            self.items.append(_item)
 
     def handle(self, *args, **options):
-        # index nodes
+        # index nodes one collection at a time
         root_nodes = Node.get_collection_roots()
-        for root in root_nodes:
-            self.index_collection(root)
+        for i, root_node in enumerate(root_nodes):
+            assert (
+                root_node in Node.get_collection_roots()
+            ), "Not a collection root node."  # double check?!
+            print(
+                f"Processing {i+1} of {root_nodes.count()} collections: {root_node.name}"
+            )
+            self.create_and_append_index_items(root_node.get_descendants(), type="node")
 
         # index media items
-        media_entries = Media.objects.select_related("collection", "set").iterator()
-        for media in media_entries:
-            if media.pk not in self.media_pks:
-                self.index_media(media)
+        media_entries = Media.objects.select_related("collection", "set")
+        self.create_and_append_index_items(media_entries, type="media")
 
-        self.index_items()
+        if self.items:
+            self.index_items()
+        else:
+            print("Nothing to index")

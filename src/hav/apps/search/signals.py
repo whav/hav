@@ -4,15 +4,15 @@ from django.dispatch import receiver
 
 from ..media.models import Media
 from ..sets.models import Node
-from .indexer.media import index as index_media
-from .indexer.nodes import index as index_node
+from .client import get_index as get_search_index
+from .utils import update_document_in_index
 
 
 @receiver(post_save, sender=Media)
 def media_update(sender, instance, **kwargs):
-    django_rq.enqueue(index_media, instance.pk)
+    django_rq.enqueue(update_document_in_index, instance.pk, sender, get_search_index())
 
 
 @receiver(post_save, sender=Node)
 def node_update(sender, instance, **kwargs):
-    django_rq.enqueue(index_node, instance.pk)
+    django_rq.enqueue(update_document_in_index, instance.pk, sender, get_search_index())

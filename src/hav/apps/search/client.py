@@ -10,7 +10,7 @@ index = settings.MEILISEARCH_INDEX
 
 
 def get_client():
-    return meilisearch.Client(url, apiKey=master_key)
+    return meilisearch.Client(url, master_key)
 
 
 def get_index():
@@ -27,7 +27,8 @@ def search(query, node=None, filters="", limit=20, offset=0):
 
     # build valid search options
     search_options = {
-        "matches": True,
+        # "matches": True,
+        "showMatchesPosition": True,
         "attributesToCrop": ["*"],
         "cropLength": 200,
         "attributesToHighlight": ["*"],
@@ -36,7 +37,7 @@ def search(query, node=None, filters="", limit=20, offset=0):
     }
     if search_filters:
         search_options.update({"filter": search_filters})
-    search_options.update({"facetsDistribution": ["creators", "creation_years"]})
+    search_options.update({"facets": ["creators", "creation_years"]})
 
     index = get_index()
     response = index.search(query, search_options)

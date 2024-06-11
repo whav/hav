@@ -13,7 +13,7 @@ register = template.Library()
 @register.inclusion_tag("search/tags/search_result.html")
 def render_search_result(result):
     object = result["object"]
-    matches = result["_matchesInfo"]
+    matches = result["_matchesPosition"]
     formatted = result["_formatted"]
     output = {}
     for match_field in matches.keys():

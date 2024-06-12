@@ -167,3 +167,6 @@ src/hav/apps/theme/static/theme/
 
 # exclude local dirs
 not_in_repo
+
+# local docker-compose.overrides
+docker-compose.override_*yml

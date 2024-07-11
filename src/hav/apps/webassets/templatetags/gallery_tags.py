@@ -46,7 +46,6 @@ def media_tile(
     webasset=None,
     display_title: bool = True,
 ):
-
     if not any([gallery_item, media]):
         raise ValueError(
             "Either media or gallery_item must be passed to this templatetag."
@@ -88,7 +87,6 @@ def media_tile(
 
 @register.inclusion_tag("webassets/tags/node_tile.html", takes_context=True)
 def node_tile(context, node: Node):
-
     media = node.get_representative_media()
     collection = node.get_collection()
 
@@ -110,20 +108,22 @@ def node_tile(context, node: Node):
 
 @register.simple_tag(takes_context=True)
 def thumbnail_url(context, object: Union[Media, Node], webasset: WebAsset = None):
-
     if object is None:
         return no_webasset_fallback
 
-    media = object
-
     if isinstance(object, Node):
         media = object.get_representative_media()
+    else:
+        media = object
+
+    if not media:
+        return no_webasset_fallback
 
     if webasset is None:
         webasset = media.primary_image_webasset
-
     user = context.get("user")
     can_view = can_view_media_webassets(user, media)
+
     if webasset:
         if can_view:
             thumbnail_url = generate_thumbnail_url(

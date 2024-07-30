@@ -40,10 +40,6 @@ def is_image(filename):
 
 def protected_src(media, user, path):
     raise NotImplementedError("This should not be used anymore")
-    if media.is_public:
-        return path
-
-    return fallback_url_is_private
 
 
 def get_imaginary_path(obj_or_path, user=None):
@@ -150,7 +146,6 @@ def generate_srcset_urls(file_path, res_limit=None):
 
 
 def generate_src_url(file_path):
-
     path = get_imaginary_path(file_path)
     if not is_image(path):
         return ""

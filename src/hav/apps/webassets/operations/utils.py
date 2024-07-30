@@ -3,13 +3,13 @@ import logging
 import os
 import re
 import subprocess
-from distutils.spawn import find_executable
+from shutil import which as find_executable_file
 
 logger = logging.getLogger(__name__)
 
 
-FFMPEG = find_executable("ffmpeg")
-FFPROBE = find_executable("ffprobe")
+FFMPEG = find_executable_file("ffmpeg")
+FFPROBE = find_executable_file("ffprobe")
 
 
 class FFProbe(object):
@@ -58,7 +58,7 @@ ffprobe = BatchFFProbe().ffprobe
 
 
 IDET_RESULT_PARSER = re.compile(
-    r"TFF:\s*(?P<tff>\d+)\s*BFF:\s*(?P<bff>\d+)\s*Progressive:\s*(?P<progressive>\d+)\s*Undetermined:\s*(?P<undetermined>\d+)",
+    r"TFF:\s*(?P<tff>\d+)\s*BFF:\s*(?P<bff>\d+)\s*Progressive:\s*(?P<progressive>\d+)\s*Undetermined:\s*(?P<undetermined>\d+)",  # NOQA E501
     re.MULTILINE,
 )
 

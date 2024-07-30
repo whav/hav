@@ -1,6 +1,4 @@
-import copy
 import logging
-import mimetypes
 import re
 from typing import List
 
@@ -18,7 +16,7 @@ def rotation_tags(tags: List[Tag]):
 
 
 def max_resolution(tags: List[Tag]):
-    pattern = re.compile("^maxResolution:(\d+)")
+    pattern = re.compile(r"^maxResolution:(\d+)")
 
     for tag in tags:
         if match := pattern.match(tag.name):

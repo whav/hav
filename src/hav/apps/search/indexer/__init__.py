@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import List, Optional
 
 from pydantic import BaseModel
@@ -23,5 +22,5 @@ class SearchIndexItem(BaseModel):
     collection: str
     pk: int
     parents: List[int] = []
-    node: Optional[int]
+    node: Optional[int] = None
     last_update: float

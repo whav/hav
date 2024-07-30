@@ -1,10 +1,9 @@
 from itertools import chain
-from typing import Optional
+from typing import Union
 
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
-from django.utils.functional import cached_property
 from treebeard.mp_tree import MP_Node
 
 
@@ -76,7 +75,9 @@ class Node(MP_Node):
         qs = Tag.objects.filter(node__in=self.get_ancestors()).order_by("node__depth")
         return qs
 
-    def get_representative_media(self) -> Optional["apps.media.models"]:
+    def get_representative_media(
+        self,
+    ) -> Union["hav.apps.media.models", None]:  # noqa: F821
         if self.representative_media:
             return self.representative_media
 
@@ -89,6 +90,8 @@ class Node(MP_Node):
                 return Media.objects.publicly_available().filter(set=node)[0]
             except IndexError:
                 continue
+
+        return None
 
     def __str__(self):
         return self.name

@@ -1,13 +1,13 @@
 import logging
 import subprocess
-from distutils.spawn import find_executable
+from shutil import which as find_executable_file
 
-from .utils import FFProbe, is_interlaced
+from .utils import is_interlaced
 
 logger = logging.getLogger(__name__)
 
 
-FFMPEG = find_executable("ffmpeg")
+FFMPEG = find_executable_file("ffmpeg")
 
 
 def convert(source, target, *args, **hints):
@@ -73,7 +73,7 @@ def create_thumbnail(source, target, *args, **hints):
             source, target
         )
     )
-    duration = FFProbe(source).duration
+    # duration = FFProbe(source).duration
     args = [
         "-y",
         # "-ss", str(int(duration / 2)),

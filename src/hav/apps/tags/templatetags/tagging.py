@@ -85,13 +85,12 @@ def render_tags(tags: List[Tag]):
     return {"tags": filter(filter_tag, tags)}
 
 
-geo_pattern = re.compile("(GEON|TGN):(\d+)")
+geo_pattern = re.compile(r"(GEON|TGN):(\d+)")
 
 
 @register.filter
 @stringfilter
 def geotag(tag: str):
-
     matches = re.findall(geo_pattern, tag)
 
     if len(matches):

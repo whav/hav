@@ -5,15 +5,14 @@ from pydantic import BaseModel, ValidationError
 
 
 class ImageHints(BaseModel):
-    rotation: Optional[Literal[0, 90, 180, 270]]
-    maxResolution: Optional[int]
+    rotation: Optional[Literal[0, 90, 180, 270]] = None
+    maxResolution: Optional[int] = None
 
     class Config:
         extra = "forbid"
 
 
 def validate_webasset_hints(mime_type, value):
-
     if not value:
         return value
 
@@ -29,6 +28,6 @@ def validate_webasset_hints(mime_type, value):
         except ValidationError as e:
             raise DjangoValidationError(str(e))
         else:
-            return validated.dict()
+            return validated.model_dump()
 
     raise DjangoValidationError(f"Invalid hints for mime type {mime_type}.")

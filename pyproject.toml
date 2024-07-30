@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "hav"
-version = "0.2.0"
+version = "0.3.0"
 description = "The Himalaya Archive Vienna."
 authors = [
     "Sean McAllister <sean@brickwall.at>",
@@ -13,9 +13,10 @@ packages = [
 
 
 [tool.poetry.dependencies]
-channels = "^3.0.4"
+channels = "^4.1"
 channels-redis = "*"
 cryptography = "^42"
+daphne = "^4.1"
 dj-database-url = "*"
 django = "^4.2"
 django-cors-headers = "*"
@@ -37,7 +38,7 @@ pillow = "*"
 pip = "*"
 psycopg2 = "*"
 pycountry = "*"
-pydantic = "^1.7.3"
+pydantic = "^2.8"
 pyexiftool = {git = "https://github.com/whav/pyexiftool.git", branch = "master"}
 pylint = "*"
 python = ">=3.9,<4.0"

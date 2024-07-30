@@ -65,7 +65,7 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 DRF_AUTH_TOKEN = env("DRF_AUTH_TOKEN")
 
 INSTALLED_APPS = [
-    "channels",
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

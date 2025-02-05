@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "hav"
-version = "0.4.0"
+version = "0.5.0"
 description = "The Himalaya Archive Vienna."
 authors = [
     "Sean McAllister <sean@brickwall.at>",
@@ -11,6 +11,10 @@ packages = [
  { include = "hav", from = "src" },
 ]
 
+requires-poetry = ">=2.0"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.8.0"
 
 [tool.poetry.dependencies]
 aniso8601 = "^9"
@@ -52,7 +56,7 @@ sentry-sdk = "*"
 uwsgi = "*"
 whitenoise = "*"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "*"
 django-extensions = "^3.2"
 ipdb = "*"

@@ -28,7 +28,7 @@ RUN apt-get update && \
     apt-get autoremove && \
     apt-get autoclean
 
-# Create appropriate directories set env variables pointing to them
+# Create appropriate directories and set env variables during build time
 ENV DEBUG=False \
 INCOMING_FILES_ROOT=/archive/incoming \
 HAV_ARCHIVE_PATH=/archive/hav \
@@ -49,26 +49,27 @@ RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/arch
 WORKDIR /code/hav/apps/theme/
 COPY --from=theme /code/hav/apps/theme/static ./static
 
-
 # install poetry
 RUN curl -sSL https://install.python-poetry.org | python -
 
 WORKDIR /code/
 COPY pyproject.toml poetry.lock ./
 RUN ~/.local/bin/poetry --version
-RUN ~/.local/bin/poetry export --format requirements.txt --without-hashes --dev -o requirements.txt
+# install poetry's export plugin explicitly for poetry v2 compatability
+RUN ~/.local/bin/poetry self add poetry-plugin-export
+RUN ~/.local/bin/poetry export --format requirements.txt --without-hashes --with dev -o requirements.txt
 RUN python -m venv /venv
 RUN /venv/bin/pip install -r requirements.txt
+
+# remove build deps
+RUN apt-get purge -y git && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y
 
 # Copy all backend files
 COPY ./src/hav ./hav
 
 COPY manage.py .
-
-# clean up
-RUN apt-get remove -y git && \
-    apt-get autoremove -y && \
-    apt-get autoclean -y
 
 RUN ["/venv/bin/python", "manage.py", "collectstatic", "--no-input"]
 

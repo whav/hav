@@ -1,9 +1,10 @@
-FROM node:18-bullseye-slim
+FROM node:23-bullseye-slim
 
 WORKDIR /code/
 
 # Link up the required build files
 COPY ./src/hav/apps/theme/package.json ./src/hav/apps/theme/package-lock.json ./
+ENV NODE_ENV=production
 RUN npm ci
 
 COPY ./src/hav/apps/theme/src/mdx .

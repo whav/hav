@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "esbuild": "^0.14",
+    "esbuild": "^0.25.1",
     "express": "^4.17.1",
     "leaflet": "^1.7.1",
     "mdx-bundler": "^9.2",

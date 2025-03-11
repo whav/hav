@@ -45,21 +45,22 @@ PYTHONPATH=/venv/lib/python3.11/site-packages
 
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads", "/hav/.localhistory/bash", "/hav/.localhistory/ipython"]
 
-# copy the frontend files
-WORKDIR /code/hav/apps/theme/
-COPY --from=theme /code/hav/apps/theme/static ./static
-
 # install poetry
 RUN curl -sSL https://install.python-poetry.org | python -
 
 WORKDIR /code/
-COPY pyproject.toml poetry.lock ./
 RUN ~/.local/bin/poetry --version
 # install poetry's export plugin explicitly for poetry v2 compatability
 RUN ~/.local/bin/poetry self add poetry-plugin-export
+COPY pyproject.toml poetry.lock ./
 RUN ~/.local/bin/poetry export --format requirements.txt --without-hashes --with dev -o requirements.txt
 RUN python -m venv /venv
 RUN /venv/bin/pip install -r requirements.txt
+
+# copy the frontend files
+WORKDIR /code/hav/apps/theme/
+COPY --from=theme /code/hav/apps/theme/static ./static
+
 
 # remove build deps
 RUN apt-get purge -y git && \
@@ -67,6 +68,7 @@ RUN apt-get purge -y git && \
     apt-get autoclean -y
 
 # Copy all backend files
+WORKDIR /code/
 COPY ./src/hav ./hav
 
 COPY manage.py .

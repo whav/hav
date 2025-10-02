@@ -1,9 +1,14 @@
-"SourceFile","HAV:MediaDescription:MediaCreator","HAV:MediaDescription:MediaCreatorRole","HAV:MediaDescription:License","HAV:MediaDescription:Signature","HAV:MediaDescription:OriginalSignature","HAV:MediaDescription:OriginalMediaType","HAV:MediaDescription:OriginalMediaDate","HAV-MediaDescription-OriginalArchiveMedia-CreationDate","HAV:MediaDescription:EmbargoEndDate","HAV:MediaDescription:IsPrivate","HAV:MediaDescription:Creator","HAV:ContentDescription:Title","HAV:ContentDescription:Description","HAV:ContentDescription:Tags","HAV:ContentDescription:Country","HAV:ContentDescription:Province-State","HAV:ContentDescription:City","HAV:ContentDescription:GPSData","HAV:ContentDescription:DescriptionLangauge","HAV:ContentDescription:RelatedFiles","HAV:Description:Author","HAV:MediaDescription:Rotate","HAV:MediaDescription:MaxResolution"
-"./test__files__only/4891/Nepal/Bhaktapur/Bhaktapur/HAV-MG-1984AIII-03.jpg","Martin Gaenszle
+SourceFile,TargetNodePath,HAV:Description:Author,HAV:MediaDescription:MediaCreator,HAV:MediaDescription:MediaCreatorRole,HAV:MediaDescription:License,HAV:MediaDescription:Signature,HAV:MediaDescription:OriginalSignature,HAV:MediaDescription:OriginalMediaType,HAV:MediaDescription:OriginalMediaDate,HAV-MediaDescription-OriginalArchiveMedia-CreationDate,HAV:MediaDescription:EmbargoEndDate,HAV:MediaDescription:IsPrivate,HAV:MediaDescription:Rotate,HAV:MediaDescription:MaxResolution,HAV:ContentDescription:Title,HAV:ContentDescription:Description,HAV:ContentDescription:Tags,HAV:ContentDescription:Country,HAV:ContentDescription:Province-State,HAV:ContentDescription:Municipality,HAV:ContentDescription:City,,,HAV:ContentDescription:GPSData,HAV:ContentDescription:RelatedFiles,HAV:ContentDescription:RelatedFilesCreator,HAV:ContentDescription:RelatedFilesCreatorRole
+./test__files__only/a/b/3/4/HAV-MMU-1970-01.jpg,,"Musterfrau, Maxine","Musterfrau, Maxine
 An Onym
 Ox Bow","photographer
 stringpuller
-noisemaker","wk",,"HAV-MG-1984AIII-03","analoge:trans_35","1984-04-13","2016-02-22","2022-02-22",,"Martin Gaenszle","Bisket Jatra (New Year), Varahi temple",,"Bhaktapur, Bisket Jatra Varahi temple, festival, procession","Nepal","Bhaktapur","Bhaktapur","23.1233, 89.2132","eng",,"Martin Gaenszle","90","2000"
-"./test__files__only/4891/Nepal/Bhaktapur/Bhaktapur/HAV-MG-1984AIII-05.jpg","Martin Gaenszle","photographer","ccbysa4.0",,"HAV-MG-1984AIII-05","analoge:trans_35","1984-04-13","2016-02-22",,"True","Martin Gaenszle","Bisket Jatra (New Year), Varahi temple",,"Bhaktapur, Bisket Jatra Varahi temple, festival, procession","Nepal","Bhaktapur","Bhaktapur",,"eng",,"Martin Gaenszle","",""
-"./test__files__only/4891/Nepal/Bhaktapur/Bhaktapur/HAV-MG-1984AIII-06.jpg","Martin Gaenszle","photographer","ccbysa4.0",,"HAV-MG-1984AIII-06","analoge:trans_35","1984-04-13","2016-02-22","2023-02-22",,"Martin Gaenszle","Bisket Jatra (New Year), Varahi temple",,"Bhaktapur, Bisket Jatra Varahi temple, festival, procession","Nepal","Bhaktapur","Bhaktapur","23.1233, 89.2132","eng",,"Martin Gaenszle","270",""
-"./test__files__only/4891/Nepal/Bhaktapur/Bhaktapur/HAV-MG-1984AIII-07.jpg","Martin Gaenszle","photographer","ccbysa4.0",,"HAV-MG-1984AIII-07","analoge:trans_35","1984-04-13","2016-02-22",,,"Martin Gaenszle","Bisket Jatra (New Year), Varahi temple",,"Bhaktapur, Bisket Jatra Varahi temple, festival, procession","Nepal","Bhaktapur","Bhaktapur",,"eng",,"Martin Gaenszle","","1000"
+noisemaker",wtfpl,,HAV-MMU-1970-01,analoge:trans_35,1970-01-02,2016-02-22,2022-02-22,,90,2000,A picture of a cat,,"feline
+portrait
+mock-up",Nepal,Bhaktapur,,Bhaktapur,,,"23.1233, 89.2132",,,
+./test__files__only/a/b/3/4/HAV-MMU-1970-02.jpg,,"Musterfrau, Maxine","Musterfrau, Maxine",photographer,bw,,HAV-MMU-1970-02,analoge:trans_35,1970-03-04,2016-02-22,,TRUE,,,A picture of a cat,,"feline
+portrait
+mock-up",Nepal,Bhaktapur,,Bhaktapur,,,,,,
+./test__files__only/a/b/3/4/HAV-MMU-1970-03.jpg,,"Musterfrau, Maxine","Musterfrau, Maxine",photographer,bw,,HAV-MMU-1970-03,analoge:trans_35,1970-05-06,2016-02-22,2222-02-22,,270,,A picture of a cat,,"feline
+portrait
+mock-up",Nepal,Bhaktapur,,Bhaktapur,,,"23.1233, 89.2132",,,

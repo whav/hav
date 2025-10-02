@@ -1,7 +1,9 @@
+import shutil
 import tempfile
 from io import StringIO
 from pathlib import Path
-from unittest import skip
+
+# from unittest import skip
 from uuid import uuid4
 
 from django.conf import settings
@@ -24,21 +26,30 @@ tmpdirs = {
 # skip for now
 # the main problem seems to be that INGESTION_SOURCES settings are
 # actually ignored and the api urls build their own source instances
-@skip
+# @skip
+
+
 @override_settings(
-    HAV_ARCHIVE_PATH=tmpdirs["archive"].name,
-    WEBASSET_ROOT=tmpdirs["webassets"].name,
-    INCOMING_FILES_ROOT=tmpdirs["incoming"].name,
-    INGEST_LOG_DIR=tmpdirs["logs"].name,
+    # HAV_ARCHIVE_PATH=tmpdirs["archive"].name,
+    # WEBASSET_ROOT=tmpdirs["webassets"].name,
+    # INCOMING_FILES_ROOT=tmpdirs["incoming"].name,
+    # INGEST_LOG_DIR=tmpdirs["logs"].name,
+    FIXTURE_DIRS=["/fixtures"],
 )
 class TestCSVImport(TransactionTestCase):
     fixtures = ["ingest-test-fixtures_media"]
 
     csv_file = Path(__file__).parent / "./meta.csv"
+    shutil.copytree(
+        Path(__file__).parent / "./test__files__only",
+        # Path(tmpdirs["incoming"].name) / "test__files__only",
+        Path(settings.INCOMING_FILES_ROOT) / "test__files__only",
+        dirs_exist_ok=True,
+    )
 
     def setUp(self) -> None:
         self.user = User.objects.create_superuser(
-            "batch_import_user", "batch@import.user", uuid4
+            "batch_import_user", "batch@import.user", str(uuid4())
         )
         self.root_node = Node.add_root(name="test")
         self.collection = Collection.objects.create(
@@ -56,18 +67,22 @@ class TestCSVImport(TransactionTestCase):
             self.run_command()
             self.run_command(self.csv_file)
 
-    def testOverrides(self):
-        assert settings.INCOMING_FILES_ROOT == tmpdirs["incoming"].name
-        assert settings.HAV_ARCHIVE_PATH == tmpdirs["archive"].name
-        assert settings.WEBASSET_ROOT == tmpdirs["webassets"].name
-        assert settings.INGEST_LOG_DIR == tmpdirs["logs"].name
+    # def testOverrides(self):
+    #     assert settings.INCOMING_FILES_ROOT == tmpdirs["incoming"].name
+    #     assert settings.HAV_ARCHIVE_PATH == tmpdirs["archive"].name
+    #     assert settings.WEBASSET_ROOT == tmpdirs["webassets"].name
+    #     assert settings.INGEST_LOG_DIR == tmpdirs["logs"].name
 
     def testCommandSuccess(self):
-
         self.usertoken = Token.objects.create(user=self.user).key
 
         # The actual Test
         with self.settings(DRF_AUTH_TOKEN=self.usertoken):
-            self.run_command(self.csv_file, self.root_node.pk, self.user.username)
+            print("_________")
+            print(settings.INCOMING_FILES_ROOT)
+            print("_________")
+            print(
+                self.run_command(self.csv_file, self.root_node.pk, self.user.username)
+            )
 
-        self.assertEqual(Media.objects.all().count(), 4)
+        self.assertEqual(Media.objects.all().count(), 3)

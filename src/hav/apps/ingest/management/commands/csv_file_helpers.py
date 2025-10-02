@@ -22,7 +22,7 @@ csv_headers = {
     "md_embargoend": "HAV:MediaDescription:EmbargoEndDate",
     "md_isprivate": "HAV:MediaDescription:IsPrivate",
     "md_rotate": "HAV:MediaDescription:Rotate",
-    "md_maxres": "HAV:MediaDescription:ResolutionLimit",
+    "md_maxres": "HAV:MediaDescription:MaxResolution",
     "md_shorthandle": "HAV:MediaDescription:ShortHandleOverride",
     # Content Description field headers
     "cd_title": "HAV:ContentDescription:Title",

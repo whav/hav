@@ -20,18 +20,16 @@ from hav.apps.ingest.utils import (
 from hav.apps.sets.models import Node
 from hav.apps.sources.filesystem.utils import encodePath
 
-from .csv_file_helpers import csv_headers
+from .csv_file_helpers import csv_headers, mandatory_csv_headers
 
 logger = logging.getLogger(__name__)
 
 
 def _check_logfile_path_permissions(path):
-    logger.debug(f"Checking file permissions for CSV-Logfile path '{path}'.")
-    assert os.path.isdir(path), "CSV-Logfile path does not exist."
+    assert os.path.isdir(path), f"CSV-Logfile path {path} does not exist."
     assert os.access(
         path, os.W_OK
-    ), "CSV-Logfile path is not writeable by current user."
-    logger.debug("Basic CSV-Logfile path checks passed.")
+    ), f"CSV-Logfile path {path} is not writeable by current user."
 
 
 def _check_optional_retry_run_data_validity(is_retry_run, import_status_row):
@@ -107,12 +105,29 @@ to a maximum of 10 errors by type to increase readability)",
         # read data from ingest CSV-file
         csv_reader = csv.DictReader(csv_file)
         fieldnames = csv_reader.fieldnames
+
+        # check if we can write our logfile
+        logger.debug("Checking file permissions for CSV-Logfile path.")
+        _check_logfile_path_permissions(csv_logfile_path)
+
+        # check if we got all the mandatory columns in our ingest CSV file
+        logger.debug("Checking CSV data headers.")
+        header_errors = []
+        for header in mandatory_csv_headers.values():
+            if header not in fieldnames:
+                header_errors.append(
+                    f'Mandatory column "{header}" missing in CSV-data.'
+                )
+
+        if header_errors:
+            raise CommandError("\n" + "\n".join(header_errors))
+
         csv_data = []
         for line_number, line in enumerate(csv_reader):
             csv_data.append([line_number, line])
 
-        # some sanity checks before we proceed
-        _check_logfile_path_permissions(csv_logfile_path)
+        # run some more detailed sanity checks on import data before we proceed
+        logger.debug("Running some basic sanity checks on provided data and metadata.")
         _check_optional_retry_run_data_validity(
             options["retry"], csv_data[0][1].get("csv_import_status")
         )
@@ -190,7 +205,8 @@ to a maximum of 10 errors by type to increase readability)",
             self.stdout.write(f"Source file: {rel_file_path}")
             self.stdout.write(f"Target node: {target_file_node}")
             self.stdout.write(str(media_data))
-
+            self.stdout.write(str(target_q))
+            self.stdout.write(base_url + str(ingest_url))
             resp = client.post(
                 base_url + str(ingest_url), json=media_data, headers=headers
             )

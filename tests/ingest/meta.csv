@@ -1,14 +1,14 @@
-SourceFile,TargetNodePath,HAV:Description:Author,HAV:MediaDescription:MediaCreator,HAV:MediaDescription:MediaCreatorRole,HAV:MediaDescription:License,HAV:MediaDescription:Signature,HAV:MediaDescription:OriginalSignature,HAV:MediaDescription:OriginalMediaType,HAV:MediaDescription:OriginalMediaDate,HAV-MediaDescription-OriginalArchiveMedia-CreationDate,HAV:MediaDescription:EmbargoEndDate,HAV:MediaDescription:IsPrivate,HAV:MediaDescription:Rotate,HAV:MediaDescription:MaxResolution,HAV:ContentDescription:Title,HAV:ContentDescription:Description,HAV:ContentDescription:Tags,HAV:ContentDescription:Country,HAV:ContentDescription:Province-State,HAV:ContentDescription:Municipality,HAV:ContentDescription:City,,,HAV:ContentDescription:GPSData,HAV:ContentDescription:RelatedFiles,HAV:ContentDescription:RelatedFilesCreator,HAV:ContentDescription:RelatedFilesCreatorRole
+SourceFile,TargetNodePath,HAV:Description:Author,HAV:MediaDescription:MediaCreator,HAV:MediaDescription:MediaCreatorRole,HAV:MediaDescription:License,HAV:MediaDescription:Signature,HAV:MediaDescription:OriginalSignature,HAV:MediaDescription:OriginalMediaType,HAV:MediaDescription:OriginalMediaDate,HAV-MediaDescription-OriginalArchiveMedia-CreationDate,HAV:MediaDescription:EmbargoEndDate,HAV:MediaDescription:IsPrivate,HAV:MediaDescription:Rotate,HAV:MediaDescription:MaxResolution,HAV:ContentDescription:Title,HAV:ContentDescription:Description,HAV:ContentDescription:Tags,HAV:ContentDescription:Country,HAV:ContentDescription:Province-State,HAV:ContentDescription:Municipality,HAV:ContentDescription:City,,,HAV:ContentDescription:GPSData,HAV:ContentDescription:RelatedFiles,HAV:ContentDescription:RelatedFilesCreator,HAV:ContentDescription:RelatedFilesCreatorRole,HAV:ContentDescription:RelatedFilesLicense
 ./test__files__only/a/b/3/4/HAV-MMU-1970-01.jpg,,"Musterfrau, Maxine","Musterfrau, Maxine
 An Onym
 Ox Bow","photographer
 stringpuller
 noisemaker",wtfpl,,HAV-MMU-1970-01,analoge:trans_35,1970-01-02,2016-02-22,2022-02-22,,90,2000,A picture of a cat,,"feline
 portrait
-mock-up",Nepal,Bhaktapur,,Bhaktapur,,,"23.1233, 89.2132",,,
+mock-up",Nepal,Bhaktapur,,Bhaktapur,,,"23.1233, 89.2132",,,,
 ./test__files__only/a/b/3/4/HAV-MMU-1970-02.jpg,,"Musterfrau, Maxine","Musterfrau, Maxine",photographer,bw,,HAV-MMU-1970-02,analoge:trans_35,1970-03-04,2016-02-22,,TRUE,,,A picture of a cat,,"feline
 portrait
-mock-up",Nepal,Bhaktapur,,Bhaktapur,,,,,,
+mock-up",Nepal,Bhaktapur,,Bhaktapur,,,,,,,
 ./test__files__only/a/b/3/4/HAV-MMU-1970-03.jpg,,"Musterfrau, Maxine","Musterfrau, Maxine",photographer,bw,,HAV-MMU-1970-03,analoge:trans_35,1970-05-06,2016-02-22,2222-02-22,,270,,A picture of a cat,,"feline
 portrait
-mock-up",Nepal,Bhaktapur,,Bhaktapur,,,"23.1233, 89.2132",,,
+mock-up",Nepal,Bhaktapur,,Bhaktapur,,,"23.1233, 89.2132",,,,

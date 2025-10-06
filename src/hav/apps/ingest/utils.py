@@ -392,11 +392,13 @@ def media_data_from_csv(source_id, csv_line_dict, collection, attachment_ids):
     tags.extend(f"{e[0]}:{e[1]}" for e in extratags if e[1])
 
     # try splitting csv_headers["cd_gpsdata"] in lat and lon
-    try:
-        lat, lon = csv_line_dict[csv_headers["cd_gpsdata"]].split(", ")
+    _gpsdata = csv_line_dict[csv_headers["cd_gpsdata"]]
+    if _gpsdata:
+        lat, lon = _gpsdata.split(", ")
         lat, lon = round(float(lat), 6), round(float(lon), 6)
-    except ValueError as err:
-        print(err)
+        print(f"GPS data provided: {lat}, {lon}")
+    else:
+        print("No GPS data provided.")
         lat, lon = None, None
 
     md = {

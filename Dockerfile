@@ -1,4 +1,4 @@
-FROM node:23-bullseye-slim as theme
+FROM node:23-bullseye-slim AS theme
 
 WORKDIR /code/hav/apps/theme/
 

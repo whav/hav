@@ -17,7 +17,7 @@ requires-poetry = ">=2.0"
 poetry-plugin-export = ">=1.8.0"
 
 [tool.poetry.dependencies]
-aniso8601 = "^9"
+aniso8601 = "^10"
 channels = "^4.1"
 channels-redis = "*"
 colorama = "*"

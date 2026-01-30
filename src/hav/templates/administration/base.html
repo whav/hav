@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% comment %}
 {% load render_bundle from webpack_loader %}
+{% endcomment %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,9 +9,11 @@
     <title>{% block title %}HAV Admin{% endblock %}</title>
 </head>
 <body>
+{% comment %}
 <div id="root"></div>
 {% block webpackEntryPoint %}
     {% render_bundle 'havAdmin' %}
 {% endblock %}
+{% endcomment %}
 </body>
 </html>

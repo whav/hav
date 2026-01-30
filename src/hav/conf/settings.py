@@ -73,7 +73,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
-    "webpack_loader",
+    # "webpack_loader",
     "rest_framework",
     "rest_framework.authtoken",
     "treebeard",
@@ -192,6 +192,7 @@ REST_FRAMEWORK = {
     )
 }
 
+"""
 WEBPACK_BUILD_PATH = project_root("frontend/admin/build/")
 
 WEBPACK_LOADER = {
@@ -204,6 +205,7 @@ WEBPACK_LOADER = {
         "IGNORE": [".+\.hot-update.js", ".+\.map"],  # NOQA W605
     }
 }
+"""
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/

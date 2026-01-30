@@ -59,7 +59,7 @@ whitenoise = "*"
 
 [tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "*"
-django-extensions = "^3.2"
+django-extensions = "^4.1"
 ipdb = "*"
 pytest = "*"
 pytest-django = "*"

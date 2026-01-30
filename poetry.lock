@@ -2246,18 +2246,18 @@ six = ">=1.5"
 
 [[package]]
 name = "python-dotenv"
-version = "0.7.1"
-description = "Add .env support to your django/flask apps in development and deployments"
+version = "1.2.1"
+description = "Read key-value pairs from a .env file and set them as environment variables"
 optional = false
-python-versions = "*"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "python-dotenv-0.7.1.tar.gz", hash = "sha256:45e927c34204c90f5faa35ea8709b894f6b1a7712d77eb50940601068040993b"},
-    {file = "python_dotenv-0.7.1-py2.py3-none-any.whl", hash = "sha256:dc7940052cfe170e881aea40feb4ea7776e6a97170ed038fd2ee7e26e47585f2"},
+    {file = "python_dotenv-1.2.1-py3-none-any.whl", hash = "sha256:b81ee9561e9ca4004139c6cbba3a238c32b03e4894671e181b671e8cb8425d61"},
+    {file = "python_dotenv-1.2.1.tar.gz", hash = "sha256:42667e897e16ab0d66954af0e60a9caa94f0fd4ecf3aaf6d2d260eec1aa36ad6"},
 ]
 
-[package.dependencies]
-click = ">=5.0"
+[package.extras]
+cli = ["click (>=5.0)"]
 
 [[package]]
 name = "pytokens"
@@ -3053,4 +3053,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4.0"
-content-hash = "7c6493d1972f57521c3e72f976ef6fdb9158ef4730a16b478093a91fc7bda634"
+content-hash = "e5dee10fd5dda52c57665391fa94d9d9bb6eb0e1ef814c2771de86d88d031ef3"

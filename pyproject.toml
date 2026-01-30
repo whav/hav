@@ -48,7 +48,7 @@ pydantic = "^2.8"
 pyexiftool = {git = "https://github.com/whav/pyexiftool.git", branch = "master"}
 pylint = "*"
 python = ">=3.11,<4.0"
-python-dotenv = "==0.7.1"
+python-dotenv = "^1.2"
 pyvips = "^2.1.15"
 rawpy = "^0.22.0"
 redis = "^4.3.0"

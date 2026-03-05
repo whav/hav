@@ -1,4 +1,5 @@
-FROM node:23-bullseye-slim AS theme
+### temporary buildstage container for frontend themes
+FROM node:24-trixie-slim AS theme
 
 WORKDIR /code/hav/apps/theme/
 
@@ -19,14 +20,40 @@ ENV NODE_ENV "production"
 RUN npm run build
 
 
-FROM python:3.11-slim-bullseye
+### setup basic updated and cleaned stage for reuse in build and the actual output image
+FROM python:3.11-slim-trixie AS python_base
 ENV PYTHONUNBUFFERED 1
 
+# upgrade install build-time deps
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y libpq-dev gcc ffmpeg libimage-exiftool-perl libvips-dev dcraw git && \
-    apt-get autoremove && \
-    apt-get autoclean
+    apt-get install -y libpq-dev && \
+	apt-get autoremove -y
+
+
+#### temporary buildstage for building and installing all backend dependencies
+FROM python_base AS backend_deps
+RUN apt-get install -y gcc git pipx
+
+# install poetry and poetry-plugin-export
+RUN pipx install poetry
+RUN pipx inject poetry poetry-plugin-export
+
+WORKDIR /build/
+# Check Poetry version so we got it in the buildlogs
+RUN ~/.local/bin/poetry --version
+# copy projects backend dependency devinitions into the container
+COPY pyproject.toml poetry.lock ./
+# export to requirements.txt
+RUN ~/.local/bin/poetry export --format requirements.txt --without-hashes --with dev -o requirements.txt
+# setup new python venv and install all deps via pip
+RUN python -m venv /venv
+RUN /venv/bin/pip install -r requirements.txt
+
+
+
+### actual HAV container
+FROM python_base
 
 # Create appropriate directories and set env variables during build time
 ENV DEBUG=False \
@@ -45,34 +72,29 @@ PYTHONPATH=/venv/lib/python3.11/site-packages
 
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads", "/hav/.localhistory/bash", "/hav/.localhistory/ipython"]
 
-# install poetry
-RUN curl -sSL https://install.python-poetry.org | python -
+# install basic deps for running KAAMA
+RUN apt-get install -y ffmpeg libimage-exiftool-perl libvips-dev dcraw && \
+    apt-get autoremove -y && \
+	apt-get clean && \
+	rm -r /var/lib/apt/lists/*lz4
 
 WORKDIR /code/
-RUN ~/.local/bin/poetry --version
-# install poetry's export plugin explicitly for poetry v2 compatability
-RUN ~/.local/bin/poetry self add poetry-plugin-export
-COPY pyproject.toml poetry.lock ./
-RUN ~/.local/bin/poetry export --format requirements.txt --without-hashes --with dev -o requirements.txt
+# setup venv and copy installed deps from backend_deps buildstage
 RUN python -m venv /venv
-RUN /venv/bin/pip install -r requirements.txt
+COPY --from=backend_deps /venv/ /venv/
 
 # copy the frontend files
 WORKDIR /code/hav/apps/theme/
 COPY --from=theme /code/hav/apps/theme/static ./static
 
 
-# remove build deps
-RUN apt-get purge -y git && \
-    apt-get autoremove -y && \
-    apt-get autoclean -y
-
-# Copy all backend files
+# Copy all backend files from the local src dir into the container
 WORKDIR /code/
 COPY ./src/hav ./hav
-
 COPY manage.py .
 
+# collect the project's static files
 RUN ["/venv/bin/python", "manage.py", "collectstatic", "--no-input"]
 
+# and finally run kaama
 CMD ["/venv/bin/daphne", "-p", "8000",  "-b", "0.0.0.0",  "hav.conf.asgi:application"]

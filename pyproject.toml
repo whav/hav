@@ -42,7 +42,7 @@ meilisearch = "^0.40"
 pick = "*"
 pillow = "*"
 pip = "*"
-psycopg2 = "*"
+psycopg = "*"
 pycountry = "*"
 pydantic = "^2.8"
 pyexiftool = {git = "https://github.com/whav/pyexiftool.git", branch = "master"}

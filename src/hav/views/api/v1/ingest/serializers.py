@@ -4,7 +4,7 @@ from itertools import chain
 
 from django.db import transaction
 from django.urls import reverse
-from psycopg2.extras import DateTimeTZRange
+from psycopg.types.range import TimestamptzRange
 from rest_framework import serializers
 
 from hav.apps.archive.models import ArchiveFile, AttachmentFile, FileCreator
@@ -160,9 +160,7 @@ class IngestSerializer(serializers.Serializer):
         if not has_collection_permission(user, collection):
             raise serializers.ValidationError(
                 'You do not have the appropriate permissions to ingest into the \
-collection "{}"'.format(
-                    collection.name
-                )
+collection "{}"'.format(collection.name)
             )
 
         if (
@@ -181,7 +179,7 @@ collection "{}"'.format(
         source = validated_data["source"]
         collection = self.target_node.get_collection()
         start, end = parse(validated_data["date"])
-        dt_range = DateTimeTZRange(lower=start, upper=end)
+        dt_range = TimestamptzRange(lower=start, upper=end)
         # actually create the media object
         media = Media.objects.create(
             creation_date=dt_range,

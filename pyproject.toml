@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "hav"
-version = "0.6.0"
+version = "0.7.0"
 description = "The Himalaya Archive Vienna."
 authors = [
     "Sean McAllister <sean@brickwall.at>",
@@ -24,7 +24,7 @@ colorama = "*"
 cryptography = "^46"
 daphne = "^4.1"
 dj-database-url = "*"
-django = "^4.2"
+django = "^5.2"
 django-cors-headers = "*"
 django-environ = "^0.12"
 django-model-utils = "^5"

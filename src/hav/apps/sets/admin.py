@@ -50,6 +50,7 @@ class HasDescriptionFilter(admin.SimpleListFilter):
         return queryset
 
 
+@admin.register(Node)
 class NodeAdmin(TreeAdmin):
     list_display = ["name", "description_length"]
     list_filter = [HasDescriptionFilter]
@@ -77,6 +78,3 @@ class NodeAdmin(TreeAdmin):
 
     def get_queryset(self, request):
         return Node.objects.annotate(description_length=Length("description"))
-
-
-admin.site.register(Node, NodeAdmin)

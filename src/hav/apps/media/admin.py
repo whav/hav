@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import License, Media, MediaCreator, MediaCreatorRole, MediaType
 
 
+@admin.register(Media)
 class MediaAdmin(admin.ModelAdmin):
     list_display = [
         "pk",
@@ -20,4 +21,3 @@ admin.site.register(MediaType)
 admin.site.register(MediaCreator)
 admin.site.register(MediaCreatorRole)
 admin.site.register(License)
-admin.site.register(Media, MediaAdmin)

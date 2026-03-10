@@ -43,6 +43,7 @@ class CollectionListFilter(admin.SimpleListFilter):
             return queryset.filter(media__collection__slug=self.value())
 
 
+@admin.register(ArchiveFile, AttachmentFile)
 class ArchiveFileModelAdmin(admin.ModelAdmin):
     list_display = [
         "original_filename",
@@ -66,6 +67,7 @@ class ArchiveFileModelAdmin(admin.ModelAdmin):
         except FileNotFoundError:
             return "N/A"
 
+    @admin.action(description="Recreate webassets for the selected files.")
     def recreate_webassets(self, request, queryset):
         from ..webassets.tasks import create
 
@@ -77,9 +79,3 @@ class ArchiveFileModelAdmin(admin.ModelAdmin):
             request,
             f"{queryset.count()} files have been queued for webasset generation.",
         )
-
-    recreate_webassets.short_description = "Recreate webassets for the selected files."
-
-
-admin.site.register(ArchiveFile, ArchiveFileModelAdmin)
-admin.site.register(AttachmentFile, ArchiveFileModelAdmin)

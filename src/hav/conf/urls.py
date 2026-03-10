@@ -41,7 +41,7 @@ account_patterns = [
 ]
 
 urlpatterns = [
-    re_path(r"^api/", include((api_urls, "api"), namespace="api")),
+    path("api/", include((api_urls, "api"), namespace="api")),
     # re_path(r"^admin/", include(hav_admin_patterns, namespace="hav_admin")),
     re_path(r"^dbadmin/", django_admin.site.urls),
     path("rq/", include("django_rq.urls")),
@@ -58,7 +58,7 @@ if settings.DEBUG:
     from django.conf.urls.static import static
 
     urlpatterns += [
-        re_path(r"^__debug__/", include(debug_toolbar.urls)),
+        path("__debug__/", include(debug_toolbar.urls)),
     ]
 
     # serve webassets in development

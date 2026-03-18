@@ -12,18 +12,24 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="w-full min-h-screen font-sans">
+      <a
+        href="#main-content"
+        class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:text-black focus:ring"
+      >
+        Skip to main content
+      </a>
       <div class="flex flex-col md:flex-row md:items-stretch">
         {% block navbar_container %}
-        <div class="flex-none md:w-44 md:min-h-screen lg:w-64 bg-yellow-400">
+        <aside class="flex-none md:w-44 md:min-h-screen lg:w-64 bg-yellow-400">
             {% block navbar %}
             {% include './nav.html' %}
             {% endblock navbar %}
-        </div>
+        </aside>
         {% endblock navbar_container %}
-        <div class="flex-grow p-4 min-h-screen overflow-x-hidden">
+        <main id="main-content" tabindex="-1" class="flex-grow p-4 min-h-screen overflow-x-hidden">
             {% block body %}
             {% endblock body %}
-        </div>
+        </main>
       </div>
 </body>
 </html>

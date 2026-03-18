@@ -3,16 +3,23 @@
   <div class="md:flex md:flex-col md:h-screen md:sticky top-0 p-4 text-xl">
     <div class="flex flex-row justify-between">
       <div class="flex-grow md:h-20">
-        <Link href="/">
-          <a href="/">
+          <a href="/" aria-label="Home">
             <img
               class="block h-8 md:h-20 w-auto md:mx-auto"
               src="{%  static 'logos/hav.svg' %}"
+              alt="HAV"
             />
           </a>
       </div>
       <div class="flex-none text-2xl md:hidden">
-        <button class="js-hamburger" @click="toggle()">
+        <button
+          type="button"
+          class="js-hamburger"
+          @click="toggle()"
+          :aria-expanded="open.toString()"
+          aria-controls="nav-main"
+          aria-label="Toggle navigation menu"
+        >
             <div class="block h-6 w-6">
                 {% include 'svg/hamburger.svg' %}
             </div>
@@ -20,7 +27,9 @@
       </div>
     </div>
 
-    <nav :class="{ 'block': open, 'hidden': ! open }"
+    <nav
+      aria-label="Primary"
+      :class="{ 'block': open, 'hidden': ! open }"
          x-transition
       class="text-lg tracking-tight mt-8 hidden md:flex-grow md:flex md:flex-col md:justify-between md:text-right md:block"
          id="nav-main"
@@ -48,7 +57,7 @@
         <ul>
 		{% regroup all_collections by get_type_display as collections_by_type %}
         {% for type in collections_by_type %}
-			<p class="mt-2 text-base italic text-gray-500">{{ type.grouper }}</p>
+			<li class="mt-2 text-base italic text-gray-500">{{ type.grouper }}</li>
 			{% for collection in type.list %}
 				<li>
 					{% url 'hav:collection_root' collection_slug=collection.slug as collection_root_url %}
@@ -92,8 +101,8 @@
         <div class="sm:mt-32 text-base text-gray-500">
           <ul>
             <li class="flex flex-row flex-wrap justify-between">
-              <img class="block h-8 w-auto" src="{% static 'logos/cirdis.svg' %}" >
-              <img class="block h-8 w-auto" src="{% static 'logos/univie.svg' %}" >
+              <img class="block h-8 w-auto" src="{% static 'logos/cirdis.svg' %}" alt="CIRDIS logo" >
+              <img class="block h-8 w-auto" src="{% static 'logos/univie.svg' %}" alt="UNIVIE logo" >
             </li>
             <li class="flex flex-row flex-wrap justify-between md:mt-10"></li>
           </ul>

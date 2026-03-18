@@ -1,3 +1,7 @@
-<a class="{% if active %}active{% endif %}" href="{{ href }}">
+<a
+  class="{% if active %}active{% endif %}"
+  href="{{ href }}"
+  {% if active %}aria-current="page"{% endif %}
+>
 {{ title }}
 </a>

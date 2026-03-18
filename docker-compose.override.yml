@@ -33,6 +33,12 @@ services:
             - ./dist/ingestlog:/archive/hav/ingestlog
             - ./fixtures:/fixtures
         command: /venv/bin/python ./manage.py runserver --noasgi 0.0.0.0:8000
+        healthcheck:
+          test: curl --fail -s http://localhost:8000/dbadmin/ || exit 1
+          start_period: 30s
+          interval: 20s
+          timeout: 3s
+          retries: 4
 
     imaginary:
         ports:

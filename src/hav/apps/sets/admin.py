@@ -59,8 +59,8 @@ class NodeAdmin(TreeAdmin):
         "name",
         "description",
         "display_type",
-        "_position",
-        "_ref_node_id",
+        "treebeard_position",
+        "treebeard_ref",
         "tags",
         "representative_media",
     ]

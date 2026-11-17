@@ -4,6 +4,7 @@ from django.views.generic.edit import UpdateView
 
 from hav.apps.sets.models import Node
 from hav.apps.sets.permissions import can_edit_node
+from hav.apps.theme.content import validate_content
 
 
 class FolderUpdateView(UserPassesTestMixin, UpdateView):
@@ -14,6 +15,11 @@ class FolderUpdateView(UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return can_edit_node(self.request.user, self.get_object())
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["description"].validators.append(validate_content)
+        return form
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

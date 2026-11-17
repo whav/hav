@@ -172,3 +172,26 @@ def test_invalid_content(source, message):
     with pytest.raises(ValidationError) as e:
         validate_content(source)
     assert e.value.messages == [message]
+
+
+# integration
+
+
+@pytest.mark.django_db
+def test_collection_root_renders_description(client, collection):
+    node = collection.root_node
+    node.description = "# Hello\n\n<script>alert(1)</script>"
+    node.save()
+    url = reverse("hav:collection_root", kwargs={"collection_slug": collection.slug})
+    resp = client.get(url)
+    assert resp.status_code == 200
+    assert b"<h1>Hello</h1>" in resp.content
+    assert b"<script>alert(1)" not in resp.content
+
+
+@pytest.mark.django_db
+def test_landing_page_map(client):
+    resp = client.get("/")
+    assert resp.status_code == 200
+    assert b"data-hav-map" in resp.content
+    assert b"components/map" not in resp.content

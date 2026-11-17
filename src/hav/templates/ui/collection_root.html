@@ -3,7 +3,6 @@
 
 {% block extra_head %}
     {{ block.super }}
-    <script defer src="{% static 'theme/mdx_client.js' %}" ></script>
 {% endblock %}
 
 
@@ -19,7 +18,7 @@
 {%  block description %}
 
     <div class="prose">
-        {% mdx node.description %}
+        {% render_content node.description %}
     </div>
 
     <div>

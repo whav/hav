@@ -5,7 +5,7 @@ from hav.apps.hav_collections.models import Collection
 from hav.apps.media.models import Media
 from hav.apps.search.client import search
 from hav.apps.search.paginator import SearchPaginator
-from hav.apps.sets.models import Node
+from hav.apps.sets.models import Node, group_media_queryset
 
 from .forms import SearchForm
 
@@ -43,12 +43,13 @@ class CollectionNodeMixin:
         return node.get_children()
 
     def get_media_entries(self):
-        return (
+        qs = (
             Media.preview_manager.with_image_previews()
             .prefetch_related("files")
             .filter(set=self.node)
             .select_related("collection")
         )
+        return group_media_queryset(qs, self.node.display_type)
 
     def get_shared_context(self):
         return {

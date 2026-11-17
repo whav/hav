@@ -3,7 +3,7 @@ from typing import Union
 
 from django.db import models
 from django.db.models import F
-from django.db.models.functions import Lower
+from django.db.models.functions import TruncDate
 from treebeard.mp_tree import MP_Node
 
 
@@ -102,7 +102,8 @@ def group_media_queryset(qs, display_type=Node.DisplayOptions.DEFAULT):
     if display_type == dtypes.GROUPED_TITLE:
         qs = qs.order_by("title").annotate(grouper=F("title"))
     elif display_type == dtypes.GROUPED_CREATION_DATE:
-        qs = qs.order_by(Lower("creation_date")).annotate(
-            grouper=Lower("creation_date")
+        # group by the calendar day of the range's lower bound, undated last
+        qs = qs.annotate(grouper=TruncDate("creation_date__startswith")).order_by(
+            F("grouper").asc(nulls_last=True), "pk"
         )
     return qs

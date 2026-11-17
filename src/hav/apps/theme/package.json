@@ -11,7 +11,7 @@
     "build:client": "esbuild --bundle --loader:.js=jsx src/mdx/client.jsx --outfile=static/theme/mdx_client.js",
     "dev:tw": "tailwindcss --postcss --watch --jit -i ./src/tailwind/styles.css -o ./static/theme/styles.css",
     "build:tw": "NODE_ENV=production tailwindcss --postcss --jit -i ./src/tailwind/styles.css -o ./static/theme/styles.css",
-    "export_deps:leaflet": "/bin/sh -c 'cp -r node_modules/leaflet/dist/images static/theme/'",
+    "export_deps:leaflet": "/bin/sh -c 'cp -r node_modules/leaflet/dist/images static/theme/ && cp node_modules/leaflet/dist/leaflet.js node_modules/leaflet/dist/leaflet.js.map static/theme/ && cp src/content/content.js static/theme/'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

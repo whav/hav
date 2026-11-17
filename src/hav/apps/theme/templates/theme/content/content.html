@@ -1,0 +1,3 @@
+{% load static %}
+{{ html }}
+{% if has_map %}<script defer src="{% static 'theme/content.js' %}" data-leaflet="{% static 'theme/leaflet.js' %}"></script>{% endif %}

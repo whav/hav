@@ -34,7 +34,7 @@ RUN apt-get update && \
 #### temporary buildstage for building and installing all backend dependencies
 FROM python_base AS backend_deps
 # poetry and its export plugin from Debian, versions fixed by the trixie release
-RUN apt-get install -y gcc git python3-poetry python3-poetry-plugin-export
+RUN apt-get install -y gcc python3-poetry python3-poetry-plugin-export
 
 WORKDIR /build/
 # Check Poetry version so we got it in the buildlogs

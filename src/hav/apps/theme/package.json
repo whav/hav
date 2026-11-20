@@ -4,8 +4,8 @@
   "description": "The nodejs components of the hav stack.",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently -n mdx-server,mdx-client,tailwind,leaflet,alpine \"npm:dev:mdx-server\" \"npm:dev:client\" \"npm:dev:tw\" \"npm:export_deps:leaflet\" \"npm:export_deps:alpine\"",
-    "build": "concurrently -n mdx-client,tailwind,leaflet,alpine \"npm:build:client\" \"npm:build:tw\" \"npm:export_deps:leaflet\" \"npm:export_deps:alpine\"",
+    "dev": "concurrently -n mdx-server,mdx-client,tailwind,leaflet,alpine,fonts \"npm:dev:mdx-server\" \"npm:dev:client\" \"npm:dev:tw\" \"npm:export_deps:leaflet\" \"npm:export_deps:alpine\" \"npm:export_deps:fonts\"",
+    "build": "concurrently -n mdx-client,tailwind,leaflet,alpine,fonts \"npm:build:client\" \"npm:build:tw\" \"npm:export_deps:leaflet\" \"npm:export_deps:alpine\" \"npm:export_deps:fonts\"",
     "dev:mdx-server": "nodemon src/mdx/server.mjs",
     "dev:client": "esbuild --watch --loader:.js=jsx --bundle src/mdx/client.jsx --outfile=static/theme/mdx_client.js",
     "build:client": "esbuild --bundle --loader:.js=jsx src/mdx/client.jsx --outfile=static/theme/mdx_client.js",
@@ -13,11 +13,14 @@
     "build:tw": "NODE_ENV=production tailwindcss --postcss --jit -i ./src/tailwind/styles.css -o ./static/theme/styles.css",
     "export_deps:leaflet": "/bin/sh -c 'cp -r node_modules/leaflet/dist/images static/theme/'",
     "export_deps:alpine": "cp node_modules/alpinejs/dist/cdn.min.js static/theme/alpine.min.js",
+    "export_deps:fonts": "/bin/sh -c 'N=node_modules/@fontsource-variable && mkdir -p static/theme/noto-sans/files static/theme/noto-serif-tibetan/files && cp $N/noto-sans/wdth.css $N/noto-sans/wdth-italic.css static/theme/noto-sans/ && cp $N/noto-sans/files/*-wdth-*.woff2 static/theme/noto-sans/files/ && cp $N/noto-serif-tibetan/wght.css static/theme/noto-serif-tibetan/ && cp $N/noto-serif-tibetan/files/*.woff2 static/theme/noto-serif-tibetan/files/'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fontsource-variable/noto-sans": "~5.3",
+    "@fontsource-variable/noto-serif-tibetan": "~5.3",
     "alpinejs": "~3.17",
     "esbuild": "^0.28.1",
     "express": "^4.17.1",

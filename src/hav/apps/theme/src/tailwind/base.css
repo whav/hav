@@ -1,0 +1,13 @@
+/* Noto Sans at 95% width matches the line length of the former DejaVu Sans Condensed */
+html {
+  font-stretch: 95%;
+}
+
+/* the preflight reset makes form controls inherit the font, but not its width */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-stretch: inherit;
+}

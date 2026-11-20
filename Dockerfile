@@ -42,7 +42,7 @@ RUN poetry --version
 # copy projects backend dependency devinitions into the container
 COPY pyproject.toml poetry.lock ./
 # export to requirements.txt
-RUN poetry export --format requirements.txt --without-hashes --with dev -o requirements.txt
+RUN poetry export --format requirements.txt --with dev -o requirements.txt
 # setup new python venv and install all deps via pip
 RUN python -m venv /venv
 RUN /venv/bin/pip install -r requirements.txt

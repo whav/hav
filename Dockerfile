@@ -33,19 +33,16 @@ RUN apt-get update && \
 
 #### temporary buildstage for building and installing all backend dependencies
 FROM python_base AS backend_deps
-RUN apt-get install -y gcc git pipx
-
-# install poetry and poetry-plugin-export
-RUN pipx install poetry
-RUN pipx inject poetry poetry-plugin-export
+# poetry and its export plugin from Debian, versions fixed by the trixie release
+RUN apt-get install -y gcc git python3-poetry python3-poetry-plugin-export
 
 WORKDIR /build/
 # Check Poetry version so we got it in the buildlogs
-RUN ~/.local/bin/poetry --version
+RUN poetry --version
 # copy projects backend dependency devinitions into the container
 COPY pyproject.toml poetry.lock ./
 # export to requirements.txt
-RUN ~/.local/bin/poetry export --format requirements.txt --without-hashes --with dev -o requirements.txt
+RUN poetry export --format requirements.txt --without-hashes --with dev -o requirements.txt
 # setup new python venv and install all deps via pip
 RUN python -m venv /venv
 RUN /venv/bin/pip install -r requirements.txt

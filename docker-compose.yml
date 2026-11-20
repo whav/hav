@@ -102,7 +102,7 @@ services:
         command: -enable-url-source -mount /www -enable-url-signature -http-cache-ttl 31536000
 
     redis:
-        image: redis
+        image: redis:8
         volumes:
             - redis-data:/data
         expose:

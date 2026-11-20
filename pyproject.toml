@@ -45,7 +45,6 @@ pip = "*"
 psycopg = "*"
 pycountry = "*"
 pydantic = "^2.8"
-pyexiftool = {git = "https://github.com/whav/pyexiftool.git", branch = "master"}
 pylint = "*"
 python = "^3.11"
 python-dotenv = "^1.2"

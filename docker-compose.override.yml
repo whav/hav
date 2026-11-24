@@ -26,6 +26,8 @@ services:
         #  - whav_db
         environment:
           - DEBUG=True
+          # /code is not writable for the container user
+          - PYTEST_ADDOPTS=-o cache_dir=/tmp/pytest_cache
         volumes:
             - ./src/hav:/code/hav
             - ./tests:/code/tests

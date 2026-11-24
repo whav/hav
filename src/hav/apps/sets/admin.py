@@ -69,6 +69,23 @@ class NodeAdmin(TreeAdmin):
     ]
     filter_horizontal = ["tags"]
     form = movenodeform_factory(Node)
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        from django.utils.html import escape
+
+        from hav.apps.theme.content import validate_content
+
+        field = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == "description":
+            field.validators.append(validate_content)
+            # admin renders help_text unescaped
+            field.help_text = escape(
+                "Markdown. Embed archive objects with ![caption](media:ID), "
+                "![caption](node:ID) or ![](geo:LAT,LNG?z=ZOOM); link a tile with "
+                "[![caption](media:ID)](node:ID). Paragraphs of tiles become galleries."
+            )
+        return field
+
     search_fields = [
         "name",
     ]

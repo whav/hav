@@ -12,9 +12,8 @@ class FlatpageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         slug = kwargs.pop("slug", self.slug)
-        suffixes = "mdx", "md"
         try:
-            template = select_template([f"flatpages/{slug}.{s}" for s in suffixes])
+            template = select_template([f"flatpages/{slug}.md"])
         except TemplateDoesNotExist:
             raise Http404("Template not found")
 

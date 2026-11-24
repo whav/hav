@@ -26,7 +26,6 @@ x-django: &django
         - CACHE_URL=${CACHE_URL}
         - SENTRY_DSN=${SENTRY_DSN}
         - RQ_SENTRY_DSN=${SENTRY_DSN}
-        - MDX_SERVER=http://mdx:3000
         - DRF_AUTH_TOKEN=${DRF_AUTH_TOKEN}
         - MEILISEARCH_URL=http://search:7700
         - WEBASSET_CREATION_TIMEOUT=${WEBASSET_CREATION_TIMEOUT}
@@ -52,13 +51,6 @@ services:
             - django-asgi
             - django-wsgi
             - imaginary
-
-    mdx:
-        build:
-            context: .
-            dockerfile: ./Dockerfile.mdx
-        expose:
-            - 3000
 
     django-asgi:
         <<: *django

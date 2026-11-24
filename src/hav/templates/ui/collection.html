@@ -3,7 +3,6 @@
 
 {% block extra_head %}
     {{ block.super }}
-    <script defer src="{% static 'theme/mdx_client.js' %}" ></script>
 {% endblock %}
 
 
@@ -19,7 +18,7 @@
 {%  block description %}
 
     <div class="prose">
-        {% mdx node.description %}
+        {% render_content node.description %}
     </div>
 
     <div>
@@ -38,6 +37,8 @@
 
 {% if node.display_type == node.DisplayOptions.GROUPED_TITLE %}
     {% include "./components/gallery/grouped_by_title.html" with media_entries=media_entries %}
+{% elif node.display_type == node.DisplayOptions.GROUPED_CREATION_DATE %}
+    {% include "./components/gallery/grouped_by_creation_date.html" with media_entries=media_entries %}
 {% else %}
     {% gallery media_entries display_type=node.display_type %}
 {% endif %}

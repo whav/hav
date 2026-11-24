@@ -3,8 +3,6 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   mode: "jit",
   content: [
-    // js templates
-    "./src/mdx/",
     // app templates
     "../**/templates/**/*.html",
     // project template dir

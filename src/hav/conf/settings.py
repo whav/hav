@@ -49,7 +49,6 @@ env = environ.Env(
     MEILISEARCH_URL=(str, "http://127.0.0.1:7700/"),
     MEILISEARCH_KEY=(str, None),
     MEILISEARCH_INDEX=(str, "hav"),
-    MDX_SERVER=(str, "http://127.0.0.1:3000/"),
     WEBASSET_CREATION_TIMEOUT=(int, "300"),
 )
 
@@ -139,8 +138,6 @@ TEMPLATES = [
         },
     }
 ]
-
-MDX_SERVER = env("MDX_SERVER")
 
 WSGI_APPLICATION = "hav.conf.wsgi.application"
 

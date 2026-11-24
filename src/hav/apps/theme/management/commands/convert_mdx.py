@@ -1,4 +1,7 @@
-"""Preview (or apply) the MDX to Markdown conversion of node descriptions."""
+"""Preview (or apply) the MDX to Markdown conversion of node descriptions.
+
+The conversion also runs automatically as a data migration (sets 0005).
+"""
 
 import difflib
 

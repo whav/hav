@@ -1,3 +1,8 @@
+import importlib
+
+import pytest
+from django.apps import apps
+
 from hav.apps.theme.mdx import convert as _convert
 from hav.apps.theme.mdx import is_changed
 
@@ -129,3 +134,29 @@ def test_leftover_components_are_reported():
 def test_is_changed_ignores_line_endings_and_blank_lines():
     assert not is_changed("a\r\n\r\n\r\nb\r\n", "a\n\nb\n")
     assert is_changed("<Media id='1' />", "![](media:1)\n")
+
+
+# data migration
+
+
+@pytest.mark.django_db
+def test_data_migration_converts_descriptions(collection, create_media):
+    migration = importlib.import_module(
+        "hav.apps.sets.migrations.0005_convert_mdx_descriptions"
+    )
+    media = create_media()
+    node = collection.root_node
+    node.description = (
+        "import Media from './components/media';\n\n"
+        f'<Gallery>\n<Media id="{media.pk}" caption="A" link_to_parent_node />\n</Gallery>'
+    )
+    node.save()
+    markdown = "# Already Markdown\r\n\r\n\r\nText"
+    other = node.add_child(name="other", description=markdown)
+
+    migration.convert_descriptions(apps, None)
+
+    node.refresh_from_db()
+    other.refresh_from_db()
+    assert node.description == f"[![A](media:{media.pk})](node:{media.set_id})\n"
+    assert other.description == markdown  # untouched

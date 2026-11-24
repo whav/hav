@@ -56,7 +56,7 @@ services:
           - ./dist/pg_data:/var/lib/postgresql/data
 
 #    whav_db:
-#        image: postgis/postgis:13-master
+#        image: postgis/postgis:15-3.7
 #        environment:
 #            - POSTGRES_PASSWORD=opensesame
 #            - POSTGRES_USER=whav

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import logging.config
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 # this is needed to let daphne install the twisted reactor
 import daphne.server  # noqa
@@ -374,9 +375,15 @@ MEILISEARCH_URL = env("MEILISEARCH_URL")
 MEILISEARCH_KEY = env("MEILISEARCH_KEY")
 MEILISEARCH_INDEX = env("MEILISEARCH_INDEX")
 
-# TEST Setup
-if "test" in sys.argv:
+# TEST Setup (manage.py test or pytest)
+if "test" in sys.argv or "pytest" in sys.modules:
+    # run jobs synchronously, in a separate redis database: otherwise test
+    # jobs end up in the real queues and the workers run them against the
+    # development database
+    test_redis_url = urlsplit(cache_config["LOCATION"])._replace(path="/5").geturl()
     for key in RQ_QUEUES:
-        RQ_QUEUES[key].update({"ASYNC": False, "DB": 5})
+        RQ_QUEUES[key] = {"URL": test_redis_url, "ASYNC": False}
+    # the jobs update the search index: keep test documents out of the real one
+    MEILISEARCH_INDEX = f"{MEILISEARCH_INDEX}_test"
 
     FIXTURE_DIRS = (project_root("fixtures"),)

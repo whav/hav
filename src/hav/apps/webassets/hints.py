@@ -1,15 +1,14 @@
 from typing import Literal, Optional
 
 from django.core.exceptions import ValidationError as DjangoValidationError
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 
 class ImageHints(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     rotation: Optional[Literal[0, 90, 180, 270]] = None
     maxResolution: Optional[int] = None
-
-    class Config:
-        extra = "forbid"
 
 
 def validate_webasset_hints(mime_type, value):

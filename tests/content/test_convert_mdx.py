@@ -1,7 +1,8 @@
 import importlib
 
 import pytest
-from django.apps import apps
+from django.db import connection
+from django.db.migrations.loader import MigrationLoader
 
 from hav.apps.theme.mdx import convert as _convert
 from hav.apps.theme.mdx import is_changed
@@ -154,7 +155,11 @@ def test_data_migration_converts_descriptions(collection, create_media):
     markdown = "# Already Markdown\r\n\r\n\r\nText"
     other = node.add_child(name="other", description=markdown)
 
-    migration.convert_descriptions(apps, None)
+    # the historical models, as the migration sees them (no custom managers)
+    state = MigrationLoader(connection).project_state(
+        ("sets", "0005_convert_mdx_descriptions")
+    )
+    migration.convert_descriptions(state.apps, None)
 
     node.refresh_from_db()
     other.refresh_from_db()

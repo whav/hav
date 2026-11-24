@@ -15,13 +15,19 @@ def convert_descriptions(apps, schema_editor):
 
     def media_folder(media_id):
         return (
-            Media.objects.filter(pk=media_id).values_list("set_id", flat=True).first()
+            Media._default_manager.filter(pk=media_id)
+            .values_list("set_id", flat=True)
+            .first()
         )
 
     def node_name(node_id):
-        return Node.objects.filter(pk=node_id).values_list("name", flat=True).first()
+        return (
+            Node._default_manager.filter(pk=node_id)
+            .values_list("name", flat=True)
+            .first()
+        )
 
-    for node in Node.objects.exclude(description=""):
+    for node in Node._default_manager.exclude(description=""):
         converted, warnings = convert(node.description, media_folder, node_name)
         for warning in warnings:
             print(f"\n  node {node.pk}: {warning}", end="")

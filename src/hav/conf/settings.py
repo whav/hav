@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     "hav.apps.search",
     "hav.apps.accounts",
     "hav.apps.theme",
+    "hav.apps.pages",
     "hav.apps.sources.uploads",
 ]
 

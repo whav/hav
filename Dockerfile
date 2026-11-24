@@ -24,10 +24,10 @@ RUN npm run build
 FROM python:3.11-slim-trixie AS python_base
 ENV PYTHONUNBUFFERED 1
 
-# upgrade install build-time deps
+# upgrade, and install the PostgreSQL client library (psycopg loads it at runtime)
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y libpq-dev && \
+    apt-get install -y --no-install-recommends libpq5 && \
 	apt-get autoremove -y
 
 
@@ -69,8 +69,10 @@ PYTHONPATH=/venv/lib/python3.11/site-packages
 
 RUN ["mkdir", "-p", "/archive/incoming", "/archive/hav", "/archive/whav", "/archive/webassets/", "/archive/uploads", "/hav/.localhistory/bash", "/hav/.localhistory/ipython"]
 
-# install basic deps for running KAAMA
-RUN apt-get install -y ffmpeg libimage-exiftool-perl libvips-dev dcraw && \
+# runtime deps only: pyvips loads libvips directly (ABI mode), no headers needed;
+# media-types provides /etc/mime.types for python's mimetypes (e.g. .m4a);
+# curl is used by the docker-compose healthcheck
+RUN apt-get install -y --no-install-recommends ffmpeg libimage-exiftool-perl libvips42t64 dcraw media-types curl && \
     apt-get autoremove -y && \
 	apt-get clean && \
 	rm -r /var/lib/apt/lists/*lz4

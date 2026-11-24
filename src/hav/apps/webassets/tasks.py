@@ -22,7 +22,7 @@ def create_webassets_after_archive_task():
     current_job = get_current_job()
     previous_job_id = current_job.dependency.id
     archive_queue = get_queue("archive")
-    archived_file_id = archive_queue.fetch_job(previous_job_id).result
+    archived_file_id = archive_queue.fetch_job(previous_job_id).return_value()
     webassets = create_webassets(archived_file_id)
     return [wa.pk for wa in webassets]
 

@@ -9,10 +9,8 @@ from .indexer.nodes import index as index_node
 
 def wait_for_processing(search_client, indexing_process, progress_to_stdout=False):
     if progress_to_stdout:
-        print(
-            f"running: SearchIndex - {indexing_process.type} \
-(TaskUID: {indexing_process.task_uid})"
-        )
+        print(f"running: SearchIndex - {indexing_process.type} \
+(TaskUID: {indexing_process.task_uid})")
         print("-" * 30)
     while True:
         resp = search_client.get_task(indexing_process.task_uid)
@@ -38,4 +36,4 @@ def update_document_in_index(item_pk, document_type, index):
         raise NotImplementedError(
             f'Unknown item_type "{type}". Unable to update search index.'
         )
-    wait_for_processing(index, index.update_documents([search_item.dict()]))
+    wait_for_processing(index, index.update_documents([search_item.model_dump()]))

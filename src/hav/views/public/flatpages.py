@@ -1,8 +1,7 @@
-from pathlib import Path
-
-from django.http.response import Http404
-from django.template.loader import TemplateDoesNotExist, select_template
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+
+from hav.apps.pages.models import Page
 
 
 class FlatpageView(TemplateView):
@@ -12,14 +11,8 @@ class FlatpageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         slug = kwargs.pop("slug", self.slug)
-        try:
-            template = select_template([f"flatpages/{slug}.md"])
-        except TemplateDoesNotExist:
-            raise Http404("Template not found")
-
-        template_path = Path(template.origin.name).resolve()
-        content = open(template_path).read()
+        page = get_object_or_404(Page, slug=slug)
 
         ctx = super().get_context_data(**kwargs)
-        ctx.update({"content": content})
+        ctx.update({"page": page, "content": page.content})
         return ctx

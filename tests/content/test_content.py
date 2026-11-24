@@ -195,3 +195,42 @@ def test_landing_page_map(client):
     assert resp.status_code == 200
     assert b"data-hav-map" in resp.content
     assert b"components/map" not in resp.content
+
+
+# objects outside a collection (no public URL)
+
+
+@pytest.mark.django_db
+def test_media_without_collection(request_, create_media):
+    media = create_media()
+    media.collection = None
+    media.save()
+    source = f"A ![x](media:{media.pk}) [link](media:{media.pk}) B"
+    html = render_content(source, request_)
+    assert "content-tile" not in html
+    assert '<a href="#">link</a>' in html
+    with pytest.raises(ValidationError) as e:
+        validate_content(source)
+    assert e.value.messages == [f"media:{media.pk} does not belong to a collection"] * 2
+
+
+@pytest.mark.django_db
+def test_node_without_collection(request_):
+    from hav.apps.sets.models import Node
+
+    node = Node.add_root(name="not in a collection")
+    assert "content-tile" not in render_content(f"![](node:{node.pk})", request_)
+    with pytest.raises(ValidationError) as e:
+        validate_content(f"![](node:{node.pk})")
+    assert e.value.messages == [f"node:{node.pk} does not belong to a collection"]
+
+
+@pytest.mark.django_db
+def test_validation_does_not_build_tiles(collection, monkeypatch):
+    from hav.apps.sets.models import Node
+
+    def fail(*args, **kwargs):
+        raise AssertionError("validation should not look up preview media")
+
+    monkeypatch.setattr(Node, "get_representative_media", fail)
+    validate_content(f"![](node:{collection.root_node.pk})")

@@ -51,10 +51,13 @@ def _object(address):
 
 
 def _url(kind, obj):
+    collection = obj.collection if kind == "media" else obj.get_collection()
+    if collection is None:
+        raise ContentError(f"{kind}:{obj.pk} does not belong to a collection")
     if kind == "media":
-        kwargs = {"collection_slug": obj.collection.slug, "media_pk": obj.pk}
+        kwargs = {"collection_slug": collection.slug, "media_pk": obj.pk}
         return reverse("hav:media_view", kwargs=kwargs)
-    kwargs = {"collection_slug": obj.get_collection().slug, "node_pk": obj.pk}
+    kwargs = {"collection_slug": collection.slug, "node_pk": obj.pk}
     return reverse("hav:folder_view", kwargs=kwargs)
 
 
@@ -65,18 +68,27 @@ def _href(address):
     return address
 
 
-def _component(src, caption, href):
-    """Template and context for an embedded object."""
+def _resolve(src, href):
+    """Check an embedded object and resolve its link: (kind, object, href).
+
+    Cheap enough for validation; the template context is built separately.
+    """
     if src.startswith("geo:"):
         m = GEO_RE.fullmatch(src)
         if m is None:
             raise ContentError(f"{src} is not a valid address, use geo:LAT,LNG?z=ZOOM")
-        lat, lng, zoom = m.groups()
+        return "geo", m.groups(), None
+    kind, obj = _object(src)
+    return kind, obj, _href(href) if href else _url(kind, obj)
+
+
+def _component(kind, obj, href, caption):
+    """Template and context for a resolved object."""
+    if kind == "geo":
+        lat, lng, zoom = obj
         context = {"lat": float(lat), "lng": float(lng), "zoom": int(zoom or 5)}
         return "theme/content/map.html", context
 
-    kind, obj = _object(src)
-    href = _href(href) if href else _url(kind, obj)
     if kind == "media":
         context = {"media": obj, "webasset": obj.primary_image_webasset}
         return "theme/content/media.html", {**context, "href": href, "caption": caption}
@@ -130,16 +142,15 @@ def _render_image(self, tokens, idx, options, env):
     token = tokens[idx]
     if not _is_object(token):
         return self.image(tokens, idx, options, env)
-    caption = self.renderInlineAsText(token.children, options, env)
     try:
-        template, context = _component(
-            token.attrGet("src"), caption, token.meta.get("href")
-        )
+        resolved = _resolve(token.attrGet("src"), token.meta.get("href"))
     except ContentError as e:
         env["errors"].append(str(e))
         return ""
     if not env["render"]:
         return ""
+    caption = self.renderInlineAsText(token.children, options, env)
+    template, context = _component(*resolved, caption)
     return render_to_string(template, context, request=env.get("request"))
 
 

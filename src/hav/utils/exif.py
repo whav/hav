@@ -1,20 +1,16 @@
-import exiftool
-
-# from collections import Counter
+import json
+import subprocess
 
 
 def get_exif_data(file):
-
-    file = str(file)
-
-    with exiftool.ExifTool() as et:
-        meta = et.get_metadata(file)
+    """All metadata exiftool finds, keyed "Group:Tag", without file system info."""
+    result = subprocess.run(
+        ["exiftool", "-json", "-G", "-n", "--", str(file)],
+        capture_output=True,
+        check=True,
+    )
+    meta = json.loads(result.stdout)[0]
 
     # remove some possibly sensitive data from the metadata
-    if "SourceFile" in meta:
-        meta.pop("SourceFile")
-
-    meta = {k: v for k, v in meta.items() if not str(k).startswith("File:")}
-    # category_keys = [k.split(':', maxsplit=1)[0] for k in meta.keys()]
-
-    return meta
+    meta.pop("SourceFile", None)
+    return {k: v for k, v in meta.items() if not k.startswith("File:")}

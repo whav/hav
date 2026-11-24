@@ -25,11 +25,10 @@ module.exports = {
 
     fontFamily: {
       sans: [
-        "DejaVu Sans Condensed",
-        "Noto Sans",
+        "Noto Sans Variable",
+        "Noto Serif Tibetan Variable",
         ...defaultTheme.fontFamily.sans,
       ],
-      serif: ["Noto Serif", ...defaultTheme.fontFamily.serif],
     },
   },
   // variants: {

@@ -1,17 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Serif&display=swap");
-
-@font-face {
-  font-family: "DejaVu Sans Condensed";
-  src: url("./DejaVuSansCondensed.woff2") format("woff2"),
-    url("./DejaVuSansCondensed.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "DejaVu Sans Condensed";
-  src: url("./DejaVuSansCondensed-Bold.woff2") format("woff2"),
-    url("./DejaVuSansCondensed-Bold.ttf") format("truetype");
-  font-weight: bold;
-  font-style: normal;
-}
+/* Self-hosted Noto fonts (Fontsource, copied by `npm run export_deps:fonts`).
+   Each font is split by unicode-range, browsers only load the subsets a page uses. */
+@import url("../noto-sans/wdth.css");
+@import url("../noto-sans/wdth-italic.css");
+@import url("../noto-serif-tibetan/wght.css");

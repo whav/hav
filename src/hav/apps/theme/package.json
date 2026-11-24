@@ -4,16 +4,21 @@
   "description": "Frontend assets (tailwind css, leaflet) of the hav stack.",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently -n tailwind,leaflet \"npm:dev:tw\" \"npm:export_deps:leaflet\"",
-    "build": "concurrently -n tailwind,leaflet \"npm:build:tw\" \"npm:export_deps:leaflet\"",
+    "dev": "concurrently -n tailwind,leaflet,alpine,fonts \"npm:dev:tw\" \"npm:export_deps:leaflet\" \"npm:export_deps:alpine\" \"npm:export_deps:fonts\"",
+    "build": "concurrently -n tailwind,leaflet,alpine,fonts \"npm:build:tw\" \"npm:export_deps:leaflet\" \"npm:export_deps:alpine\" \"npm:export_deps:fonts\"",
     "dev:tw": "tailwindcss --postcss --watch --jit -i ./src/tailwind/styles.css -o ./static/theme/styles.css",
     "build:tw": "NODE_ENV=production tailwindcss --postcss --jit -i ./src/tailwind/styles.css -o ./static/theme/styles.css",
     "export_deps:leaflet": "/bin/sh -c 'cp -r node_modules/leaflet/dist/images static/theme/ && cp node_modules/leaflet/dist/leaflet.js node_modules/leaflet/dist/leaflet.js.map static/theme/ && cp src/content/content.js static/theme/'",
+    "export_deps:alpine": "cp node_modules/alpinejs/dist/cdn.min.js static/theme/alpine.min.js",
+    "export_deps:fonts": "/bin/sh -c 'N=node_modules/@fontsource-variable && mkdir -p static/theme/noto-sans/files static/theme/noto-serif-tibetan/files && cp $N/noto-sans/wdth.css $N/noto-sans/wdth-italic.css static/theme/noto-sans/ && cp $N/noto-sans/files/*-wdth-*.woff2 static/theme/noto-sans/files/ && cp $N/noto-serif-tibetan/wght.css static/theme/noto-serif-tibetan/ && cp $N/noto-serif-tibetan/files/*.woff2 static/theme/noto-serif-tibetan/files/'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fontsource-variable/noto-sans": "~5.3",
+    "@fontsource-variable/noto-serif-tibetan": "~5.3",
+    "alpinejs": "~3.17",
     "leaflet": "^1.7.1"
   },
   "devDependencies": {

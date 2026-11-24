@@ -27,3 +27,10 @@ def test_values():
 def test_missing_file(tmp_path):
     with pytest.raises(subprocess.CalledProcessError):
         get_exif_data(tmp_path / "missing.jpg")
+
+
+def test_unprocessable_file_is_reported_not_raised(tmp_path):
+    # exiftool exits with 1 here, but still returns its findings as JSON
+    empty = tmp_path / "empty.jpg"
+    empty.touch()
+    assert get_exif_data(empty)["ExifTool:Error"] == "File is empty"

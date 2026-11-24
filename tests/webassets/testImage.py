@@ -15,12 +15,13 @@ class ImageTestCase(WebAssetTestCase):
         self.assertIsNotNone(image.width)
         self.assertIsNotNone(image.height)
 
-        pil_img = Image.open(afs.file.path)
+        with Image.open(afs.file.path) as pil_img:
+            width, height = pil_img.size
         self.assertEqual(
-            image.height, pil_img.height, "Original dimensions of the source are kept."
+            image.height, height, "Original dimensions of the source are kept."
         )
         self.assertEqual(
-            image.width, pil_img.width, "Original dimensions of the source are kept."
+            image.width, width, "Original dimensions of the source are kept."
         )
 
     def test_image_file_creation(self):

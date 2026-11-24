@@ -38,28 +38,28 @@ def test_hints_from_tags():
     assert get_hints_from_tags([tag]) == {"rotation": 270}
 
 
+def image_size(path):
+    with Image.open(path) as img:
+        return list(img.size)
+
+
 def test_max_resolution_hints():
     image_path = Path(__file__).parent / "testdata/image.jpg"
     with tempfile.NamedTemporaryFile(
         suffix=".jpg"
     ) as first_thumb, tempfile.NamedTemporaryFile(suffix="jpg") as second_thumb:
         convert(image_path.as_posix(), first_thumb.name, max_resolution=500)
-        img = Image.open(first_thumb.name)
-        assert max(img.width, img.height) <= 500
-
-        first_thumb_dimensions = [img.width, img.height]
+        first_thumb_dimensions = image_size(first_thumb.name)
+        assert max(first_thumb_dimensions) <= 500
 
         # now rotate the image and check for equal dimensions
-        original_image = Image.open(image_path)
-        original_image = original_image.rotate(90, expand=True)
-        original_image.save(second_thumb.name, "JPEG")
+        with Image.open(image_path) as original_image:
+            original_image.rotate(90, expand=True).save(second_thumb.name, "JPEG")
 
         convert(second_thumb.name, first_thumb.name, max_resolution=500)
 
-        img = Image.open(first_thumb.name)
-        assert max(img.width, img.height) <= 500
-
-        second_thumb_dimensions = [img.width, img.height]
+        second_thumb_dimensions = image_size(first_thumb.name)
+        assert max(second_thumb_dimensions) <= 500
         # reverse height and width since we are dealing with a rotated image
         second_thumb_dimensions.reverse()
         assert first_thumb_dimensions == second_thumb_dimensions

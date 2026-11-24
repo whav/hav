@@ -78,6 +78,11 @@ to a maximum of 10 errors by type to increase readability)",
         )
 
     def handle(self, *args, **options):
+        # argparse opens the csv file, make sure it gets closed again
+        with options["csv_file"]:
+            return self._import(*args, **options)
+
+    def _import(self, *args, **options):
         # get parameters from CLI
         base_url = options["api_base_url"]
         csv_file = options["csv_file"]

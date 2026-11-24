@@ -55,7 +55,7 @@ class WebAsset(models.Model):
             self.mime_type = mimetypes.guess_type(self.file.name)[0]
 
         if self.is_image():
-            img = Image.open(self.file.path)
-            self.width, self.height = img.size
+            with Image.open(self.file.path) as img:
+                self.width, self.height = img.size
 
         return super().save(*args, **kwargs)
